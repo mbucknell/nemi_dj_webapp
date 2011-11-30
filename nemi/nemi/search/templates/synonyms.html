@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}NEMI Analyte Synonyms{% endblock %}
+{% block content %}
+	<h3>Synonym{{ qs|pluralize }} for {{ name }} ({{ code }})</h3>
+	<ul>
+	{% for d in qs %}
+		<li>{{ d.analyte_name }}</li>
+	{% endfor %}
+	</ul>
+{% endblock %}

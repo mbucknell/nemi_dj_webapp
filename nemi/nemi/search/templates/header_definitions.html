@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}NEMI Header Definition Popup{% endblock %}
+{% block page_script %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$(".description img").each(function(){
+				var src = $(this).attr("src");
+				$(this).attr("src", "{{ STATIC_URL }}" + src);
+			});
+		});
+	</script>
+{% endblock %}
+{% block content %}
+	{% if data %}
+		<h3>{{ data.definition_name }}:</h3>
+		<hr/>
+		<div class="description">{{ data.definition_description|safe }}</div>
+	{% else %}
+		<p>No definition available</p>
+	{% endif %}
+{% endblock %}

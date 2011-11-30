@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico" type="image/vnd.microsoft.icon">
+		<title>{% block title %}National Environmental Methods Index{% endblock %}</title>
+	    <script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery-latest.js"></script>		
+		<script type="text/javascript">
+			function winPopup(url) {
+				w = window.open(url, 'winPopup', 'Scrollbars=1, resizable=1, width=400, height=400');
+				if (w.opener == null) {
+					w.opener = self;
+				}
+				w.focus();
+			}
+		</script>
+		{% block page_script %}{% endblock %}
+   		<link rel="stylesheet" href="{{ STATIC_URL }}/styles/tablesort/style.css" media="screen" type="text/css">
+		<link rel="stylesheet" href="{{ STATIC_URL }}/styles/custom.css" media="screen" type="text/css">
+		{% block page_style %}{% endblock %}
+	</head>
+	
+	<body>
+		<div class="page-header">
+			<img src="{{ STATIC_URL }}/images/bannerv3.7.gif" alt="NEMI Logo"></img>
+		</div>
+		{% block content %}
+		{% endblock %}
+	</body>	

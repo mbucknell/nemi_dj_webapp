@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}NEMI Method Summary{% endblock %}
+{% block page_script %}
+{% endblock %}
+{% block page_style %}
+	<link rel="stylesheet" href="{{ STATIC_URL }}/styles/tablesort/style.css" media="screen" type="text/css">
+{% endblock %}
+{% block content %}
+	<h2>Method Summary</h2>
+	<table class="info-table">
+		<tr>
+			<th>Method Information</th>
+			<td><b>Descriptive Name: </b>{{ data.method_descriptive_name }}<br/>
+				<b>Official Name: </b>{{ data.method_official_name }}<br/>
+				<b>Method Number: </b>{{ data.source_method_identifier|safe }}<br/>
+				<b>Revision: </b>{{ data.revision_information }}
+			</td>
+		</tr>
+		<tr>
+			<th>Media</th>
+			<td><b>Media: </b>{{ data.media_name }}&nbsp;&nbsp;&nbsp;&nbsp;
+				{% if data.waterbody_type %}
+				   <b>       Waterbody type: </b>{{ data.waterbody_type }}
+				{% endif %}
+			</td>
+		</tr>
+		<tr><th>Subcategory</th><td>{{ data.method_subcategory }}</td></tr>
+		<tr><th>Method Source</th><td><a class="popup" title="Method source details (in a new window)" href="javascript:winPopup('{% url search-method_source data.method_id %}')">{{ data.method_source_name }}</a></td></tr>
+		<tr><th>Citation</th><td><a class="popup" title="Citation Information details (in a new window)" href="javascript:winPopup('{% url search-citation_information data.method_id %}')">{{ data.source_citation_name }}</a></td></tr>
+		<tr><th>Brief Method Summary</th><td>{{ data.brief_method_summary|safe }}</td></tr>
+		<tr><th>Scope and Application</th><td>{{ data.scope_and_application|safe }}</td></tr>
+		<tr><th>Applicable Conc Range</th><td>{{ data.applicable_conc_range }}</td></tr>
+		<tr><th>Method Download</th>
+			<td>
+				{% if data.link_to_full_method %}
+					This is a proprietary method. <br/>
+					<a class="popup" href="{{ data.link_to_full_method }}" title="Link to method owner's method documention(in a new window)">
+					Please visit the method owner's site for method documentation
+					</a>
+				{% else %}
+					{% if data.mimetype %}
+						<a href="https://www.nemi.gov/pls/nemi_pdf/nemi_data.download_pdf?p_file={{ data.revision_id }}" 
+							title="Click to download Adobe Acrobat PDF version of this method's documentation">
+							<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat(pdf) icon">Download full method now (PDF file)
+						</a>
+					{% else %}
+						Method .pdf has not yet been loaded into NEMI.
+					{% endif %}
+				{% endif %}
+			</td>
+		</tr>
+		<tr><th>Interferences</th><td>{{ data.interferences|safe }}</td></tr>
+		<tr><th>QC Requirements</th><td>{{ data.qc_requirements|safe }}</td></tr>
+		<tr><th>Sample Handling</th><td>{{ data.sample_handling|safe }}</td></tr>
+		<tr><th>Max Holding Time</th><td>{{ data.max_holding_time }}</td></tr>
+		<tr><th>Relative Cost/Effort</th><td>{{ data.relative_cost }}</td></tr>
+		<tr><th>Sample Prep Method(s)</th><td>{{ data.sample_prep_methods }}</td></tr>
+	</table>
+	<hr/>
+	<h4>Method <i>{{data.source_method_identifier|safe }}</i> has {{ analyte_data|length }} analyte{{ analyte_data|pluralize }} associated with it.</h4>
+	<table class="data-table">
+		<tr>
+			<th>Analyte</th>
+			<th>Detection<br/>Level</th>
+			<th>Bias</th>
+			<th>Precision</th>
+			<th>Pct False<br/>Positive</th>
+			<th>Pct False<br/>Negative</th>
+			<th>Spiking<br/>Level</th>
+		</tr>
+		{% for a in analyte_data %}
+			<tr>
+				<td><a  class="popup" title="Analyte synonym listing in a new window" href="javascript:winPopup('{% url search-synonyms %}?name={{ a.analyte_name|escapejs }}&code={{ a.analyte_code|escapejs }}')">{{ a.analyte_name }}<br/>{{ a.analyte_name|force_escape }}<br/>({{ a.analyte_code }})</a></td>
+				<td>
+					{% if a.dl_value == 999 %}
+						N/A
+					{% else %}
+						{{ a.dl_value|floatformat:2 }} <abbr title="{{ a.dl_units_description }}"><span title="{{ a.dl_units_description }}">{{ a.dl_units }}</span></abbr>
+					{% endif %}
+				</td>
+				<td>
+					{% if a.accuracy == -999 %}
+						N/A
+					{% else %}
+						{{ a.accuracy|floatformat:0}}<abbr title="{{ a.accuracy_units_description }}"><span title="{{ a.accuracy_units_description }}">{{ a.accuracy_units }}</span></abbr>
+					{% endif %}
+				</td>
+				<td>
+					{% if a.precision == 999 %}
+						N/A
+					{% else %}
+						{{ a.precision|floatformat:2 }} <abbr title="{{ a.precision_units_description }}"><span title="{{ a.precision_units_description }}">{{ a.precision_units }}</span></abbr>
+					{% endif %}
+				</td>
+				<td>{{ a.false_positive_value|default_if_none:"" }}</td>
+				<td>{{ a.false_negative_value|default_if_none:"" }}</td>
+				<td>
+					{% if a.prec_acc_conc_used %}
+						{{ a.prec_acc_conc_used|floatformat:2 }} <abbr title="{{ a.dl_units_description }}"><span title="{{ a.dl_units_description }}">{{ a.dl_units }}</span></abbr>
+					{% endif %}
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
+	<div style="position: relative; top: 20px;">
+		<table class="info-table">
+			<tr><th>Precision Descriptor Notes</th><td>{{ notes.0.precision_descriptor_notes }}</td></tr>
+			<tr><th>Detection Level Note</th><td>{{ notes.0.dl_note }}</td></tr>
+		</table>
+		<hr/>
+		<br/>
+	</div>
+{% endblock %}
+	
