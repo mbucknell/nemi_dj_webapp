@@ -13,6 +13,7 @@
 				},
 				sortList: [[0,1]]
 	        });
+			// Function implements search box show/hide feature 
 			$("#search-box-toggle").click(function(){
 				if ($("#search-box-body").is(":hidden")) {
 					$("#search-box-body").show()
@@ -22,6 +23,7 @@
 					$("#search-box-toggle").text("+")
 				}
 			})
+			// Function implements header information button
 			$("#data-table th a").click(function(){
 				window.location=$(this).attr("href");
 				return false;
@@ -30,7 +32,7 @@
 	</script>
 	<script type="text/javascript">
 		function winSummary(url) {
-			w = window.open(url, 'winLov', 'toolbars=1, location=1, status=1, menubar=1,scrollbars=1, resizable=1, width=600, height=700');
+			w = window.open(url, 'winSummary', 'toolbars=1, location=1, status=1, menubar=1,scrollbars=1, resizable=1, width=600, height=700');
 			if (w.opener == null) {
 				w.opener = self;
 			}
@@ -38,6 +40,7 @@
 		}
 	</script>
 {% block page_style %}
+   	<link rel="stylesheet" href="{{ STATIC_URL }}/styles/tablesort/style.css" media="screen" type="text/css">
 {% endblock %}
 {% endblock %}
 {% block content %}
@@ -89,115 +92,126 @@
 			href={% url search-general_export_tsv %}{{ query_string }}>Export results as a tab separated text file (can be opened in any text editor or spreadsheet)
 		</a>
 	{% endif %}
-	<h4>Total records found: {{ results|length }}</h4>
-	<h4>Criteria summary:</h4>
-	<ul>
-		{% if criteria %}
-			{% for c in criteria %}
-				<li>{{ c.0 }} equals {{ c.1 }}</li>
-			{% endfor %}
-		{% endif %}
-		{% if selected_method_types %}
-			<li>Method types:
-			{% for mt in selected_method_types %}
-				{% if forloop.last %}
-					{{ mt }}.
-				{% else %}
-					{{ mt }},
-				{% endif %}
-			{% endfor %}
-			</li>
-		{% endif %}
-	</ul>
-	{% if results %}
-		<table id="data-table" class="tablesorter">
-			<thead>
-			<tr>
-				<th>Method Number
-					<a title="Click to display definition in a new window." 
-						href="javascript:winPopup('{% url search-header_definitions abbrev="SOURCE_METHOD_IDENTIFIER" %}')">
-						<img src="{{ STATIC_URL }}images/q_mark.gif">
-					</a>
-				</th>
-				<th>Descriptive Method Name
-					<a title="Click to display definition in a new window."
-						href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_DESCRIPTIVE_NAME" %}')">
-						<img src="{{ STATIC_URL }}images/q_mark.gif">
-					</a>
-				</th>
-				<th>Media
-					<a title="Click to display definition in a new window."
-						href="javascript:winPopup('{% url search-header_definitions abbrev="MEDIA_NAME" %}')">
-						<img src="{{ STATIC_URL }}images/q_mark.gif">
-					</a>
-				</th>
-				<th>Source
-					<a title="Click to display definition in a new window."
-						href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_SOURCE" %}')">
-						<img src="{{ STATIC_URL }}images/q_mark.gif">
-					</a>
-				</th>
-				<th>Instrumentation
-					<a title="Click to display definition in a new window."
-						href="javascript:winPopup('{% url search-header_definitions abbrev="INSTRUMENTATION" %}')">
-						<img src="{{ STATIC_URL }}images/q_mark.gif">
-					</a>
-				</th>
-				<th>Method Category
-					<a title="Click to display definition in a new window."
-						href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_CATEGORY" %}')">
-						<img src="{{ STATIC_URL }}images/q_mark.gif">
-					</a>
-				</th>
-				<th>Method Subcategory
-					<a title="Click to display definition in a new window."
-						href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_SUBCATEGORY" %}')">
-						<img src="{{ STATIC_URL }}images/q_mark.gif">
-					</a>
-				</th>
-				<th>Method Type
-					<a title="Click to display definition in a new window."
-						href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_TYPE" %}')">
-						<img src="{{ STATIC_URL }}images/q_mark.gif">
-					</a>
-				</th>
-				<th>Greenness Rating
-					<a title="Click to display definition in a new window."
-						href="javascript:winPopup('{% url search-header_definitions abbrev="GREENNESS" %}')">
-						<img src="{{ STATIC_URL }}images/q_mark.gif">
-					</a>
-				</th>
-			</tr>
-			</thead>
-			<tbody>
-			{% for r in results %}
-				<tr>
-    				<td><a class="popup" title="Method details (in a new window)" href="javascript:winSummary('{% url search-method_summary r.m.method_id %}')">{{ r.m.source_method_identifier|safe }}</a></td>
-					<td>{{ r.m.method_descriptive_name }}</td>
-					<td>{{ r.m.media_name|lower|capfirst }}</td>
-					<td>{{ r.m.method_source }}</td>
-					<td>{{ r.m.instrumentation_description }}</td>
-					<td>{{ r.m.method_category|lower|capfirst }}</td>
-					<td>{{ r.m.method_subcategory }}</td>
-					<td>{{ r.m.method_type_desc }}</td>
-					<td>
-					{% if r.greenness|length == 4 %}
-						<div style="line-height: 0px;">
-						    <a href="javascript:winPopup('{% url search-greenness r.m.method_id %}')">
-							<img src="{{ STATIC_URL }}/images/{{ r.greenness.0 }}"><img src="{{ STATIC_URL }}/images/{{ r.greenness.1 }}">
-							</br>
-							<img src="{{ STATIC_URL }}/images/{{ r.greenness.2 }}"><img src="{{ STATIC_URL }}/images/{{ r.greenness.3 }}">
-							</a>
-						</div>
+	{% if show_results %}
+		<h4>Total records found: {{ results|length }}</h4>
+		<h4>Criteria summary:</h4>
+		<ul>
+			{% if criteria %}
+				{% for c in criteria %}
+					<li>{{ c.0 }} equals {{ c.1 }}</li>
+				{% endfor %}
+			{% endif %}
+			{% if selected_method_types %}
+				<li>Method types:
+				{% for mt in selected_method_types %}
+					{% if forloop.last %}
+						{{ mt }}.
 					{% else %}
-						{{ r.m.assumptions_comments }}
+						{{ mt }},
 					{% endif %}
-					</td>
+				{% endfor %}
+				</li>
+			{% endif %}
+		</ul>
+		{% if results %}
+			<table id="data-table" class="tablesorter" style="width: 100%">
+				<thead>
+				<tr>
+					<th>Method Number
+						<a title="Click to display definition in a new window." 
+							href="javascript:winPopup('{% url search-header_definitions abbrev="SOURCE_METHOD_IDENTIFIER" %}')">
+							<br/>
+							<img src="{{ STATIC_URL }}images/q_mark.gif">
+						</a>
+					</th>
+					<th>Descriptive Method Name
+						<a title="Click to display definition in a new window."
+							href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_DESCRIPTIVE_NAME" %}')">
+							<br/>
+							<img src="{{ STATIC_URL }}images/q_mark.gif">
+						</a>
+					</th>
+					<th>Media
+						<a title="Click to display definition in a new window."
+							href="javascript:winPopup('{% url search-header_definitions abbrev="MEDIA_NAME" %}')">
+							<br/>
+							<img src="{{ STATIC_URL }}images/q_mark.gif">
+						</a>
+					</th>
+					<th>Source
+						<a title="Click to display definition in a new window."
+							href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_SOURCE" %}')">
+							<br/>
+							<img src="{{ STATIC_URL }}images/q_mark.gif">
+						</a>
+					</th>
+					<th>Instrumentation
+						<a title="Click to display definition in a new window."
+							href="javascript:winPopup('{% url search-header_definitions abbrev="INSTRUMENTATION" %}')">
+							<br/>
+							<img src="{{ STATIC_URL }}images/q_mark.gif">
+						</a>
+					</th>
+					<th>Method Category
+						<a title="Click to display definition in a new window."
+							href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_CATEGORY" %}')">
+							<br/>
+							<img src="{{ STATIC_URL }}images/q_mark.gif">
+						</a>
+					</th>
+					<th>Method Subcategory
+						<a title="Click to display definition in a new window."
+							href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_SUBCATEGORY" %}')">
+							<br/>
+							<img src="{{ STATIC_URL }}images/q_mark.gif">
+						</a>
+					</th>
+					<th>Method Type
+						<a title="Click to display definition in a new window."
+							href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_TYPE" %}')">
+							<br/>
+							<img src="{{ STATIC_URL }}images/q_mark.gif">
+						</a>
+					</th>
+					<th>Greenness Rating
+						<a title="Click to display definition in a new window."
+							href="javascript:winPopup('{% url search-header_definitions abbrev="GREENNESS" %}')">
+							<br/>
+							<img src="{{ STATIC_URL }}images/q_mark.gif">
+						</a>
+					</th>
 				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
-	{% else %}
-		<h4> No methods were found that match your criteria.</h4>
+				</thead>
+				<tbody>
+				{% for r in results %}
+					<tr>
+	    				<td><a class="popup" title="Method details (in a new window)" href="javascript:winSummary('{% url search-method_summary r.m.method_id %}')">{{ r.m.source_method_identifier|safe }}</a></td>
+						<td>{{ r.m.method_descriptive_name }}</td>
+						<td>{{ r.m.media_name|lower|capfirst }}</td>
+						<td>{{ r.m.method_source }}</td>
+						<td>{{ r.m.instrumentation_description }}</td>
+						<td>{{ r.m.method_category|lower|capfirst }}</td>
+						<td>{{ r.m.method_subcategory }}</td>
+						<td>{{ r.m.method_type_desc }}</td>
+						<td>
+						{% if r.greenness|length == 4 %}
+							<div style="line-height: 0px;">
+							    <a href="javascript:winPopup('{% url search-greenness r.m.method_id %}')">
+								<img src="{{ STATIC_URL }}/images/{{ r.greenness.0 }}"><img src="{{ STATIC_URL }}/images/{{ r.greenness.1 }}">
+								</br>
+								<img src="{{ STATIC_URL }}/images/{{ r.greenness.2 }}"><img src="{{ STATIC_URL }}/images/{{ r.greenness.3 }}">
+								</a>
+							</div>
+						{% else %}
+							{{ r.m.assumptions_comments }}
+						{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<h4> No methods were found that match your criteria.</h4>
+		{% endif %}
 	{% endif %}
 {% endblock %}

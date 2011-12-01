@@ -1,4 +1,7 @@
 
+''' This module contains the url conf for the nemi search pages.
+'''
+
 from django.conf.urls.defaults import patterns, url
 import views;
 

@@ -70,7 +70,13 @@
 		</tr>
 		{% for a in analyte_data %}
 			<tr>
-				<td><a  class="popup" title="Analyte synonym listing in a new window" href="javascript:winPopup('{% url search-synonyms %}?name={{ a.analyte_name|escapejs }}&code={{ a.analyte_code|escapejs }}')">{{ a.analyte_name }}<br/>{{ a.analyte_name|force_escape }}<br/>({{ a.analyte_code }})</a></td>
+				<td>
+					<a class="popup" 
+						title="Analyte synonym listing in a new window" 
+						href="javascript:winPopup('{% url search-synonyms %}?name={{ a.analyte_name|escapejs }}&code={{ a.analyte_code|escapejs }}')">
+						{{ a.analyte_name|force_escape }}<br/>({{ a.analyte_code }})
+					</a>
+				</td>
 				<td>
 					{% if a.dl_value == 999 %}
 						N/A
@@ -104,8 +110,8 @@
 	</table>
 	<div style="position: relative; top: 20px;">
 		<table class="info-table">
-			<tr><th>Precision Descriptor Notes</th><td>{{ notes.0.precision_descriptor_notes }}</td></tr>
-			<tr><th>Detection Level Note</th><td>{{ notes.0.dl_note }}</td></tr>
+			<tr><th>Precision Descriptor Notes</th><td>{{ notes.0.precision_descriptor_notes|safe }}</td></tr>
+			<tr><th>Detection Level Note</th><td>{{ notes.0.dl_note|safe }}</td></tr>
 		</table>
 		<hr/>
 		<br/>

@@ -14,16 +14,17 @@
 				w.focus();
 			}
 		</script>
-		{% block page_script %}{% endblock %}
-   		<link rel="stylesheet" href="{{ STATIC_URL }}/styles/tablesort/style.css" media="screen" type="text/css">
-		<link rel="stylesheet" href="{{ STATIC_URL }}/styles/custom.css" media="screen" type="text/css">
-		{% block page_style %}{% endblock %}
+		{% block page_script %}<!-- Put page specific script here -->{% endblock %}
+		
+		<link rel="stylesheet" href="{{ STATIC_URL }}styles/custom.css" media="screen" type="text/css">
+		{% block page_style %}<!-- Put page specific style here -->{% endblock %}
 	</head>
 	
 	<body>
 		<div class="page-header">
-			<img src="{{ STATIC_URL }}/images/bannerv3.7.gif" alt="NEMI Logo"></img>
+			<img src="{{ STATIC_URL }}images/bannerv3.7.gif" alt="NEMI Logo"></img>
 		</div>
 		{% block content %}
+		<!-- Put all non header content here -->
 		{% endblock %}
 	</body>	

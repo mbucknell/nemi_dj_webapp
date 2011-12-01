@@ -1,0 +1,121 @@
+body {
+	font-family: Arial;
+	font-size: 12px;
+}
+table{
+	border-collapse: collapse;
+}
+th{
+	background-color: DarkSeaGreen;	
+	border-bottom: solid #aaaaaa 1px;
+}
+td{
+	color: black;
+	border-bottom: solid #aaaaaa 1px;
+}
+a:link{
+	color: black;
+}
+a:visited {
+	color: black;
+}
+a:hover{
+	color: red;
+}
+a[class='popup']{
+   padding-left: 18px;
+   background: transparent url(/static/images/Icon-Extlink.png) no-repeat center left;
+}
+.page-header{
+	width: 100%;
+	margin: 0px;
+	border-bottom: solid darkred 2px;
+}
+/* Used to style form error message */
+.errorlist{
+	color: red;
+}
+#search-button {
+	border: solid 1px grey;
+	background-color: DarkSeaGreen;
+	color: white;
+	font-weight: bold;
+}
+#search-button:hover {
+	background-color: lightgrey;
+	color: black;
+}
+#search-box {
+	margin-top: 10px;
+	border: solid DarkSeaGreen 1px;
+	padding: 0px;
+	width: 700px;
+}
+#search-box p{
+	padding: 4px;
+}
+#search-box form{
+	padding: 4px;
+}
+#search-box th {
+	background-color: white;
+	text-align: right;
+	vertical-align: top;
+	padding: 4px;
+	width: 1px;
+	border-style: none;
+}
+#search-box td {
+	text-align: left;
+	color: black;
+	padding: 2px;
+	width: 1px;
+	border-style: none;
+}
+#search-box ul{
+	list-style-type: none;
+	padding: 2px;
+	margin: 0px;
+}
+#search-box-header {
+	background-color: DarkSeaGreen;
+	color: white;
+	padding: 10px;
+	margin: 0px;
+}
+#search-box-header div{
+	border: solid black 1px;
+	padding: 2px 4px 2px 6px;
+	color: black;
+	background-color: white;
+	width: 1em;
+	cursor: pointer;
+}
+/* data-tables will have the headers at the top and are used
+to represent a set of data */
+table.data-table {
+	text-align: left;
+	border-collapse: collapse;
+}
+table.data-table th {
+	vertical-align: center;
+	padding: 4px 15px 4px 4px;
+}
+table.data-table td {
+	padding: 4px;	
+}
+/* info-tables use the table format to list information
+about an object. The headers are meant to be the left most
+column in the table */
+table.info-table {
+	text-align: left;
+	border: solid #aaaaaa 1px;
+}
+table.info-table th {
+	vertical-align: center;
+	padding: 4px;	
+	white-space: nowrap
+}
+table.info-table td {
+	padding: 4px;
+}

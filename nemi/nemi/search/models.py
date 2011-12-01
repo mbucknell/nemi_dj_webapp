@@ -1,6 +1,9 @@
-from django.db import models
+''' This module contain the model class defintions for the tables and views
+that are used to implement the NEMI search pages. All tables and views are read
+only and therefore have managed set to Fasle in each model's Meta data.
+'''
 
-# Create your models here.
+from django.db import models
 
 class MethodVW(models.Model):
     method_id = models.IntegerField(primary_key=True)
@@ -70,6 +73,7 @@ class MethodVW(models.Model):
         managed = False
         
     def pbt_greenness(self):
+        ''' Return a verbose string which represents the pbt field.'''
         if self.pbt == 'N':
             return 'Green'
         elif self.pbt == 'Y':
@@ -78,6 +82,7 @@ class MethodVW(models.Model):
             return 'N.S.'
         
     def hazardous_greenness(self):
+        ''' Return a verbose string which represents the toxic field.'''        
         if self.toxic == 'N':
             return 'Green'
         elif self.toxic == 'Y':
@@ -86,6 +91,7 @@ class MethodVW(models.Model):
             return 'N.S.'
         
     def corrosive_greenness(self):
+        ''' Return a verbose string which represents the corrosive field.'''
         if self.corrosive == 'N':
             return 'Green'
         elif self.corrosive == 'Y':
@@ -94,6 +100,7 @@ class MethodVW(models.Model):
             return 'N.S.'
         
     def waste_amt_greenness(self):
+        ''' Return a verbose string which represent the wasted field.'''
         if self.waste == 'N':
             return 'Green'
         elif self.waste == 'Y':
@@ -249,6 +256,7 @@ class DefinitionsDOM(models.Model):
         managed = False
 
 class AnalyteCodeRel(models.Model):
+    
     analyte_code = models.CharField(max_length=20)
     analyte_name = models.CharField(max_length=240, primary_key=True)
     preferred = models.IntegerField(null=True)

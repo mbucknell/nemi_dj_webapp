@@ -1,0 +1,27 @@
+/* Based on the blue style theme that comes with the jquery_tablesorter plug-in
+I'm using the same sort direction indicators put have moved color definitions, text placement, and 
+border definitions out of this style sheet contains only those definitions necessary to implement
+sorting.
+
+Tables that wish to use this plug-in should define a class of "tablesorter".
+*/
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	width: 20px; /* I had to put this in in order for the columns to be a reasonable width when
+	the table was short */
+}
+
+table.tablesorter thead tr .header {
+	background-image: url(bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.tablesorter tbody td {
+	padding: 2px;
+}
+table.tablesorter thead tr .headerSortUp {
+	background-image: url(asc.gif);
+}
+table.tablesorter thead tr .headerSortDown {
+	background-image: url(desc.gif);
+}

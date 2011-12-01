@@ -1,28 +1,50 @@
+''' This module includes the view functions which implement the various
+search pages.
+'''
+
+# standard python packages
 import types
 
-from django.core.urlresolvers import reverse
-from django.db.models import Model, Q
+# django packages
+from django.db.models import Q
 from django.http import HttpResponse, Http404
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.views.generic import View, DetailView, ListView
 from django.views.generic.edit import TemplateResponseMixin
 
+# Provides conversion to Excel format
 from xlwt import Workbook
 
+# project specific packages
 from forms import GeneralSearchForm
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel
 
 class GeneralSearchView(View, TemplateResponseMixin):
     
+    '''Extends the standard View to implement the General Search Page. If no
+    This view only processes get requests. 
+    
+    Optional keyword arguments are:
+    export -- kind is either tsv or xls and if specified the query results are used to 
+              produce the indicated file.
+              
+    If export is not specified, the queryset is passed back to the view with additional information
+    derived from the queryset. In addition the search criteria is returned as well as the
+    form query used to create the queryset.
+    '''
+    
     template_name = 'general_search.html'
     
     def get(self, request, *args, **kwargs):
         def _choice_select(field):
+            '''Return the visible choice from the form field variable. Function
+            assumes choice values are integer or string'''
             if type(field.field.choices[1][0]) is types.IntType:
                 return dict(field.field.choices).get(int(field.data))
             return dict(field.field.choices).get(field.data)
         
         if request.GET:
+            # Request includes search form parameters. Retrieve them, validate, and get data.
             search_form = GeneralSearchForm(request.GET)
             if search_form.is_valid():
                 # Create queryset from form data
@@ -56,6 +78,8 @@ class GeneralSearchView(View, TemplateResponseMixin):
                 
                 qs = qs.filter(method_type_id__in=search_form.cleaned_data['method_types'])
                     
+                # If the data should be exported, then retrieve the columns needed and generate
+                # the requested export kind.    
                 if 'export' in kwargs:
                     # Create file for tab separated
                     HEADINGS = ('Method ID', 
@@ -75,7 +99,7 @@ class GeneralSearchView(View, TemplateResponseMixin):
                                         'instrumentation_description',
                                         'method_subcategory',
                                         'method_category',
-                                        'method_type_desc').order_by('source_method_identifier')
+                                        'method_type_desc').order_by('source_method_identifier').distinct()
                     if kwargs['export'] == 'tsv':
                         response = HttpResponse(mimetype='text/tab-separated-values')
                         response['Content-Disposition'] = 'attachment; filename=general_search.tsv'
@@ -155,7 +179,8 @@ class GeneralSearchView(View, TemplateResponseMixin):
                             results.append({'m': m, 'greenness' : g})
                         else:
                             results.append({'m': m, 'greenness' : []})
-                            
+                     
+                    # Get the query string and pass to view to form the export urls.        
                     fpath = request.get_full_path()
                     query_string = '?' + fpath.split('&',1)[1]  
                                         
@@ -163,22 +188,36 @@ class GeneralSearchView(View, TemplateResponseMixin):
                                                     'results' : results,
                                                     'criteria' : criteria,
                                                     'selected_method_types' : selected_method_types,
-                                                    'hide_search': True,
+                                                    'hide_search' : True,
+                                                    'show_results' : True,
                                                     'query_string' : query_string,
                                                     })
             else:
-                return self.render_to_response({'search_form' : search_form})
+                # There is an error in validation so resubmit the search form
+                return self.render_to_response({'search_form' : search_form,
+                                                'hide_search' : False,
+                                                'show_results' : False,
+                                                })
         else:
+            # Show empty form
             search_form = GeneralSearchForm()
-            return self.render_to_response({'search_form' : search_form})        
+            return self.render_to_response({'search_form' : search_form,
+                                            'hide_search' : False,
+                                            'show_results' : False})        
 
         
 class GreennessView(DetailView):
+
+    '''Extends the DetailView using model MethodVW with keyword argument pk'''
+    
     model = MethodVW
     template_name = 'greenness_profile.html'
     context_object_name = 'data'
 
 class MethodSummaryView(View, TemplateResponseMixin):
+    ''' Extends the standard view. This view only processes GET requests. The
+    keyword argument method_id is used to retrieve the MethodSummaryVW and MethodAnalyteVW ifnroatmion
+    '''
 
     template_name="method_summary.html"
     
@@ -209,16 +248,22 @@ class MethodSummaryView(View, TemplateResponseMixin):
             raise Http404
  
 class MethodSourceView(DetailView):
+    ''' Extends the DetailView for the MethodSummaryVW and keyword argument pk'''
     model = MethodSummaryVW
     template_name = 'method_source.html'
     context_object_name = 'data'
     
 class CitationInformationView(DetailView):
+    '''Extends the DetailView for the MethodSummaryVW model and keyword argument pk'''
     model = MethodSummaryVW
     template_name = 'citation_information.html'
     context_object_name = 'data' 
     
 class HeaderDefinitionsView(DetailView):
+    ''' Extends the DetailView for the DefintionsDOM model.
+    The view shows the object with the definition_abbrev contained
+    in keyword argument 'abbrev'.
+    '''
     model = DefinitionsDOM
     template_name = 'header_definitions.html'
     context_object_name = 'data'
@@ -230,6 +275,10 @@ class HeaderDefinitionsView(DetailView):
             return None
 
 class SynonymView(ListView):
+    '''Extends the ListView using the queryset returned from the get_queryset function.
+    Also adds the analyte name and code to the context data. These are retrieved from 
+    keyword arguments.
+    '''
     template_name = 'synonyms.html'
     context_object_name = 'qs'
     

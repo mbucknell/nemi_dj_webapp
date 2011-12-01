@@ -1,20 +1,15 @@
-# Django settings for nemi project.
+''' Module contains Django settings for nemi project. All sensitive settings and
+server specific settings should be in the local_settings module which is not under version control
+In particular any constant that contains passwords or resources that vary depending on the server should
+go in the local_settings module. This module will contain fallback resources for all essential settings.
+Note that this module expects additional apps or middleware to be defined in local_settings with the
+constants ADDITIONAL_APPS and ADDITIONAL_MW_CLASSES, respectively.
+'''
+
 import os
-from sys import argv
 
-def _is_sandbox():
-    return os.environ['LIFECYCLE_STAGE'] == 'sandbox'
-def _is_prod():
-    return os.environ['LIFECYCLE_STAGE'] == 'prod'
-def _is_test():
-    return os.environ['LIFECYCLE_STAGE'] == 'test'
-def _is_dev():
-    return os.environ['LIFECYCLE_STAGE'] == 'dev' or (not _is_prod() and not _is_test() and not _is_sandbox())
-
-DEBUG = _is_dev() or _is_sandbox()
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-
-SHOW_DEBUG_TOOLBAR = False #_is_sandbox()
 
 PROJECT_HOME = os.path.dirname(__file__)
 
@@ -24,6 +19,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+# The real database should be defined in local_settings.py
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -158,3 +154,10 @@ LOGGING = {
     }
 }
 from local_settings import *
+
+# Add any apps and middleware classes defined in local_settings
+if ADDITIONAL_APPS:
+    INSTALLED_APPS += ADDITIONAL_APPS
+    
+if ADDITIONAL_MW_CLASSES:
+    MIDDLEWARE_CLASSES += ADDITIONAL_MW_CLASSES
