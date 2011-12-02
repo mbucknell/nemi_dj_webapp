@@ -94,14 +94,15 @@ a[class='popup']{
 /* data-tables will have the headers at the top and are used
 to represent a set of data */
 table.data-table {
-	text-align: left;
 	border-collapse: collapse;
 }
 table.data-table th {
 	vertical-align: center;
+	text-align: left;
 	padding: 4px 15px 4px 4px;
 }
 table.data-table td {
+	text-align: left;
 	padding: 4px;	
 }
 /* info-tables use the table format to list information
