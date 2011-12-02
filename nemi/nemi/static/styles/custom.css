@@ -25,6 +25,7 @@ a:hover{
 a img{
 	border: none;
 	padding: 0px;
+	margin: 0px;
 }
 a[class='popup']{
    padding-left: 18px;
