@@ -22,6 +22,9 @@ a:visited {
 a:hover{
 	color: red;
 }
+a img{
+	border: none;
+}
 a[class='popup']{
    padding-left: 18px;
    background: transparent url(Icon-Extlink.png) no-repeat center left;
