@@ -24,7 +24,7 @@ a:hover{
 }
 a[class='popup']{
    padding-left: 18px;
-   background: transparent url(/static/images/Icon-Extlink.png) no-repeat center left;
+   background: transparent url(Icon-Extlink.png) no-repeat center left;
 }
 .page-header{
 	width: 100%;
