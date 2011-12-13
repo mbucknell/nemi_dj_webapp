@@ -16,8 +16,8 @@ from django.views.generic.edit import TemplateResponseMixin
 from xlwt import Workbook
 
 # project specific packages
-from forms import GeneralSearchForm
-from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel
+from forms import GeneralSearchForm, AnalyteSearchForm, AnalyteSelectForm
+from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW
 
 class GeneralSearchView(View, TemplateResponseMixin):
     
@@ -294,3 +294,121 @@ class SynonymView(ListView):
         context['name'] = self.request.GET.get('name', None)
         context['code'] = self.request.GET.get('code', None)
         return context
+
+class AnalyteSearchView(View, TemplateResponseMixin):
+    template_name = 'analyte_search.html'
+    
+    def get(self, request, *args, **kwargs):
+        if request.GET:
+            search_form = AnalyteSearchForm(request.GET)
+            if search_form.is_valid():
+                qs = MethodAnalyteAllVW.objects.all()
+                
+                if search_form.cleaned_data['analyte_kind'] == 'code':
+                    qs = qs.filter(analyte_code__iexact=search_form.cleaned_data['analyte_value'])
+                else: # assume analyte kind is name
+                    qs = qs.filter(analyte_name__iexact=search_form.cleaned_data['analyte_value'])
+                    
+                if search_form.cleaned_data['media_name'] != 'all':
+                    qs = qs.filter(media_name__exact=search_form.cleaned_data['media_name'])
+                
+                if search_form.cleaned_data['source'] != 'all':
+                    qs = qs.filter(method_source__contains=search_form.cleaned_data['source'])
+                    
+                if search_form.cleaned_data['instrumentation'] != 'all':
+                    qs = qs.filter(instrumentation_id__exact=search_form.cleaned_data['instrumentation'])
+                    
+                if search_form.cleaned_data['method_subcategory'] != 'all':
+                    qs = qs.filter(method_subcategory__exact=search_form.cleaned_data['method_subcategory'])
+
+                qs = qs.filter(method_type_desc__in=search_form.cleaned_data['method_types'])
+                
+                # Get only columns that are needed for display
+                qs = qs.values('method_source_id',
+                               'method_id',
+                               'source_method_identifier',
+                               'method_source',
+                               'method_descriptive_name',
+                               'dl_value',
+                               'dl_units_description',
+                               'dl_type_description',
+                               'dl_type',
+                               'accuracy',
+                               'accuracy_units_description',
+                               'accuracy_units',
+                               'precision',
+                               'precision_units_description',
+                               'precision_units',
+                               'prec_acc_conc_used',
+                               'dl_units',
+                               'instrumentation_description',
+                               'instrumentation',
+                               'relative_cost',
+                               'relative_cost_symbol',
+                               'pbt',
+                               'toxic',
+                               'corrosive',
+                               'waste',
+                               'assumptions_comments').order_by('source_method_identifier').distinct()
+                               
+                # Determine Greenness rating if any 
+                results = []
+                for m in qs:
+                    g = []
+                    if m['pbt'] == 'N':
+                        g.append('ULG2.gif')
+                    elif m['pbt'] == 'Y':
+                        g.append('ULW2.gif')
+                        
+                    if m['toxic'] == 'N':
+                        g.append('URG2.gif')
+                    elif m['toxic'] == 'Y':
+                        g.append('URW2.gif')
+                        
+                    if m['corrosive'] == 'N':
+                        g.append('LLG2.gif')
+                    elif m['corrosive'] == 'Y':
+                        g.append('LLW2.gif')
+                        
+                    if m['waste'] == 'N':
+                        g.append('LRG2.gif')
+                    elif m['waste']== 'Y':
+                        g.append('LRW2.gif')
+                        
+                    if len(g) == 4:
+                        results.append({'m': m, 'greenness' : g})
+                    else:
+                        results.append({'m': m, 'greenness' : []})
+                        
+                return self.render_to_response({'search_form' : search_form,
+                                                'results' : results,
+                                                'hide_search' : True,
+                                                'show_results' : True})
+            else:
+                # There is an error in validation so resbumit the search_from
+                return self.render_to_response({'search_form' : search_form,
+                                                'hide_search' : False,
+                                                'show_results' : False
+                                                })
+                
+        else:
+            # Show empty form
+            search_form = AnalyteSearchForm()
+            return self.render_to_response({'search_form' : search_form,
+                                            'hide_search' : False,
+                                            'show_results' : False})
+            
+class AnalyteSelectView(View, TemplateResponseMixin):
+    template_name = 'find_analyte.html'
+    
+    def get(self, request, *args, **kwargs):
+        if request.GET:
+            select_form = AnalyteSelectForm(request.GET)
+            kind = request.GET.get('kind', 'name')
+            
+        else:
+            select_form = AnalyteSelectForm(request.GET)
+            kind = 'name'
+            
+        return self.render_to_response({'select_form' : select_form,
+                                        'kind' : kind})            
