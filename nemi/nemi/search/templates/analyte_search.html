@@ -4,7 +4,7 @@
 	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$("#data-table").tablesorter({
+			$("#sort-table").tablesorter({
 				headers: {
 					10: { // disable sorting on greenness column since it seems ill-defined 
 						sorter: false
@@ -23,7 +23,7 @@
 				}
 			})
 			// Function implements header information button
-			$("#data-table th a").click(function(){
+			$("#sort-table th a").click(function(){
 				window.location=$(this).attr("href");
 				return false;
 			})
@@ -149,7 +149,7 @@
 			{% endif %}
 		</ul>
 		{% if results %}
-			<table id="data-table" class="tablesorter" style="width: 100%">
+			<table class="data-table tablesorter" id="sort-table" style="width: 100%">
 				<thead>
 				<tr>
 					<th>Method Number<br/>
@@ -230,31 +230,31 @@
 							{% if r.m.dl_value.normalize == 999 %}
 								N/A
 							{% else %}
-								 {{ r.m.dl_value|decimal_format }} <abbr title="{{ r.m.dl_units_description }}">{{ r.m.dl_units }}</abbr>
+								 {{ r.m.dl_value|decimal_format }} <span class="abbrev" title="{{ r.m.dl_units_description }}">{{ r.m.dl_units }}</span>
 							{% endif %}
 						</td>
-						<td><abbr title="{{ r.m.dl_type_description }}">{{ r.m.dl_type }}</abbr>
+						<td><span class="abbrev" title="{{ r.m.dl_type_description }}">{{ r.m.dl_type }}</span></td>
 						<td>
 							{% if r.m.accuracy.normalize == -999 %}
 								N/A
 							{% else %}
-								{{ r.m.accuracy|decimal_format }} <abbr title="{{ r.m.accuracy_units_description }}">{{ r.m.accuracy_units }}</abbr>
+								{{ r.m.accuracy|decimal_format }} <span class="abbrev" title="{{ r.m.accuracy_units_description }}">{{ r.m.accuracy_units }}</span>
 							{% endif %}
 						</td>
 						<td>
 							{% if r.m.precision.normalize == 999 %}
 								N/A
 							{% else %}
-								{{ r.m.precision|decimal_format }} <abbr title="{{ r.m.precision_units_description }}">{{ r.m.precision_units }}</abbr>
+								{{ r.m.precision|decimal_format }} <span class="abbrev" title="{{ r.m.precision_units_description }}">{{ r.m.precision_units }}</span>
 							{% endif %}
 						</td>
 						<td>
 							{% if r.m.prec_acc_conc_used %}
-								{{ r.m.prec_acc_conc_used|decimal_format }} <abbr title="{{ r.m.dl_units_description }}">{{ r.m.dl_units }}</abbr>
+								{{ r.m.prec_acc_conc_used|decimal_format }} <span class="abbrev" title="{{ r.m.dl_units_description }}">{{ r.m.dl_units }}</span>
 							{% endif %}
 						</td>
-						<td><abbr title="{{ r.m.instrumentation_description }}">{{ r.m.instrumentation }}</abbr></td>
-						<td><abbr title="{{ r.m.relative_cost }}">{{ r.m.relative_cost_symbol }}</abbr>
+						<td><span class="abbrev" title="{{ r.m.instrumentation_description }}">{{ r.m.instrumentation }}</span></td>
+						<td><span class="abbrev" title="{{ r.m.relative_cost }}">{{ r.m.relative_cost_symbol }}</span></td>
 						<td>
 						{% if r.greenness|length == 4 %}
 							<div style="line-height: 0px;">

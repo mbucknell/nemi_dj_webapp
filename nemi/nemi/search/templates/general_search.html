@@ -4,7 +4,7 @@
 	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$("#data-table").tablesorter({
+			$("#sort-table").tablesorter({
 				headers: {
 					8: { // disable sorting on greenness column since it seems ill-defined 
 						sorter: false
@@ -22,8 +22,8 @@
 					$("#search-box-toggle").text("+")
 				}
 			})
-			// Function implements header information button
-			$("#data-table th a").click(function(){
+			// Function implements header information button 
+			$("#sort-table th a").click(function(){
 				window.location=$(this).attr("href");
 				return false;
 			})
@@ -113,7 +113,7 @@
 			{% endif %}
 		</ul>
 		{% if results %}
-			<table id="data-table" class="tablesorter" style="width: 100%">
+			<table class="tablesorter data-table" id="sort-table" style="width: 100%">
 				<thead>
 				<tr>
 					<th>Method Number<br/>

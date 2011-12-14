@@ -81,28 +81,28 @@
 					{% if a.dl_value == 999 %}
 						N/A
 					{% else %}
-						{{ a.dl_value|floatformat:2 }} <abbr title="{{ a.dl_units_description }}">{{ a.dl_units }}</abbr>
+						{{ a.dl_value|floatformat:2 }} <span class="abbrev" title="{{ a.dl_units_description }}">{{ a.dl_units }}</span>
 					{% endif %}
 				</td>
 				<td>
 					{% if a.accuracy == -999 %}
 						N/A
 					{% else %}
-						{{ a.accuracy|floatformat:0}}<abbr title="{{ a.accuracy_units_description }}">{{ a.accuracy_units }}</abbr>
+						{{ a.accuracy|floatformat:0}}<span class="abbrev" title="{{ a.accuracy_units_description }}">{{ a.accuracy_units }}</span>
 					{% endif %}
 				</td>
 				<td>
 					{% if a.precision == 999 %}
 						N/A
 					{% else %}
-						{{ a.precision|floatformat:2 }} <abbr title="{{ a.precision_units_description }}">{{ a.precision_units }}</abbr>
+						{{ a.precision|floatformat:2 }} <span class="abbrev" title="{{ a.precision_units_description }}">{{ a.precision_units }}</span>
 					{% endif %}
 				</td>
 				<td>{{ a.false_positive_value|default_if_none:"" }}</td>
 				<td>{{ a.false_negative_value|default_if_none:"" }}</td>
 				<td>
 					{% if a.prec_acc_conc_used %}
-						{{ a.prec_acc_conc_used|floatformat:2 }} <abbr title="{{ a.dl_units_description }}">{{ a.dl_units }}</span></abbr>
+						{{ a.prec_acc_conc_used|floatformat:2 }} <span class="abbrev" title="{{ a.dl_units_description }}">{{ a.dl_units }}</span>
 					{% endif %}
 				</td>
 			</tr>
