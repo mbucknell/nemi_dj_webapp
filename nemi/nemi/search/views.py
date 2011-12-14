@@ -56,6 +56,46 @@ def _greenness_profile(d):
         return g
     else:
         return []
+    
+def _tsv_response(headings, vl_qs):
+    ''' Return an http response which contains a tab-separate-values file
+    representing the values list query set, vl_qs, and using headings as the 
+    column headers.
+    '''
+    response = HttpResponse(mimetype='text/tab-separated-values')
+    response['Content-Disposition'] = 'attachment; filename=general_search.tsv'
+
+    response.write('\t'.join(headings))
+    response.write('\n')
+
+    for row in vl_qs:
+        for col in row:
+            response.write('%s\t' % str(col))
+        response.write('\n')
+
+    return response
+
+def _xls_response(headings, vl_qs):
+    '''Return an http response which contains an EXCEl file
+    representing the values list query set, vl_qs, and using headings
+    as the column headers.
+    '''
+    response = HttpResponse(mimetype='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=general_search.xls'
+    
+    wb = Workbook()
+    ws = wb.add_sheet('sheet 1')
+    
+    for col_i in range(len(headings)):
+        ws.write(0, col_i, headings[col_i])
+    
+    for row_i in range(len(vl_qs)):
+        for col_i in range(len(vl_qs[row_i])):
+            ws.write(row_i + 1, col_i, vl_qs[row_i][col_i])
+    
+    wb.save(response)
+    
+    return response
 
 class GeneralSearchView(View, TemplateResponseMixin):
     
@@ -112,56 +152,23 @@ class GeneralSearchView(View, TemplateResponseMixin):
                 # If the data should be exported, then retrieve the columns needed and generate
                 # the requested export kind.    
                 if 'export' in kwargs:
-                    # Create file for tab separated
-                    HEADINGS = ('Method ID', 
-                                'Source Method Identifier', 
-                                'Method Descriptive Name', 
-                                'Media Name', 
-                                'Method Source', 
-                                'Instrumentation Description',
-                                'Method Subcategory',
-                                'Method Category',
-                                'Method Type')
-                    qs = qs.values_list('method_id', 
-                                        'source_method_identifier',
-                                        'method_descriptive_name', 
-                                        'media_name', 
-                                        'method_source',
-                                        'instrumentation_description',
-                                        'method_subcategory',
-                                        'method_category',
-                                        'method_type_desc').order_by('source_method_identifier').distinct()
+                    FIELD_NAMES = ('method_id', 
+                                   'source_method_identifier',
+                                   'method_descriptive_name', 
+                                   'media_name', 
+                                   'method_source',
+                                   'instrumentation_description',
+                                   'method_subcategory',
+                                   'method_category',
+                                   'method_type_desc')
+                    HEADINGS = [name.replace('_', ' ').title() for name in FIELD_NAMES]
+                    qs = qs.values_list(*FIELD_NAMES).order_by('source_method_identifier').distinct()
+                    
                     if kwargs['export'] == 'tsv':
-                        response = HttpResponse(mimetype='text/tab-separated-values')
-                        response['Content-Disposition'] = 'attachment; filename=general_search.tsv'
-                    
-                        response.write('\t'.join(HEADINGS))
-                        response.write('\n')
-                    
-                        for row in qs:
-                            for col in row:
-                                response.write('%s\t' % str(col))
-                            response.write('\n')
-                    
-                        return response
+                        return _tsv_response(HEADINGS, qs)
                     
                     if kwargs['export'] == 'xls':
-                        response = HttpResponse(mimetype='application/vnd.ms-excel')
-                        response['Content-Disposition'] = 'attachment; filename=general_search.xls'
-                        
-                        wb = Workbook()
-                        ws = wb.add_sheet('sheet 1')
-                        
-                        for col_i in range(len(HEADINGS)):
-                            ws.write(0, col_i, HEADINGS[col_i])
-                        
-                        for row_i in range(len(qs)):
-                            for col_i in range(len(qs[row_i])):
-                                ws.write(row_i + 1, col_i, qs[row_i][col_i])
-                        
-                        wb.save(response)
-                        
-                        return response
+                        return _xls_response(HEADINGS, qs)
                     
                     else: 
                         return Http404
@@ -340,46 +347,95 @@ class AnalyteSearchView(View, TemplateResponseMixin):
                     selected_method_types = []
                 else:
                     selected_method_types = [method_type_dict.get(k) for k in search_form.cleaned_data['method_types']]
-                
-                # Get only columns that are needed for display
-                qs = qs.values('method_source_id',
-                               'method_id',
-                               'source_method_identifier',
-                               'method_source',
-                               'method_descriptive_name',
-                               'dl_value',
-                               'dl_units_description',
-                               'dl_type_description',
-                               'dl_type',
-                               'accuracy',
-                               'accuracy_units_description',
-                               'accuracy_units',
-                               'precision',
-                               'precision_units_description',
-                               'precision_units',
-                               'prec_acc_conc_used',
-                               'dl_units',
-                               'instrumentation_description',
-                               'instrumentation',
-                               'relative_cost',
-                               'relative_cost_symbol',
-                               'pbt',
-                               'toxic',
-                               'corrosive',
-                               'waste',
-                               'assumptions_comments').order_by('source_method_identifier').distinct()
-                               
-                # Determine Greenness rating if any 
-                results = []
-                for m in qs:
-                    results.append({'m' : m, 'greenness' : _greenness_profile(m)})
-                      
-                return self.render_to_response({'search_form' : search_form,
-                                                'results' : results,
-                                                'criteria' : criteria,
-                                                'selected_method_types' : selected_method_types,
-                                                'hide_search' : True,
-                                                'show_results' : True})
+                    
+                #If the data should be exported, then retriev the columns needed and generate
+                # the requested export kind
+                if 'export' in kwargs:
+                    FIELD_NAMES = ('method_id',
+                                   'method_descriptive_name',
+                                   'method_subcategory',
+                                   'method_category',
+                                   'method_source_id',
+                                   'method_source',
+                                   'source_method_identifier',
+                                   'analyte_name',
+                                   'analyte_code',
+                                   'media_name',
+                                   'instrumentation',
+                                   'instrumentation_description',
+                                   'sub_dl_value',
+                                   'dl_units',
+                                   'dl_type',
+                                   'dl_type_description',
+                                   'dl_units_description',
+                                   'sub_accuracy',
+                                   'accuracy_units',
+                                   'accuracy_units_description',
+                                   'sub_precision',
+                                   'precision_units',
+                                   'precision_units_description',
+                                   'false_negative_value',
+                                   'false_positive_value',
+                                   'prec_acc_conc_used',
+                                   'precision_descriptor_notes',
+                                   'relative_cost',
+                                   'relative_cost_symbol')
+                    HEADINGS = [name.replace('_', ' ').title() for name in FIELD_NAMES]
+                    qs = qs.values_list(*FIELD_NAMES).order_by('method_id').distinct()
+                    if kwargs['export'] == 'tsv':
+                        return _tsv_response(HEADINGS, qs)
+                    
+                    if kwargs['export'] == 'xls':
+                        return _xls_response(HEADINGS, qs)
+                    
+                    else: 
+                        return Http404
+                else:    
+                    
+                    # Get only columns that are needed for display
+                    qs = qs.values('method_source_id',
+                                   'method_id',
+                                   'source_method_identifier',
+                                   'method_source',
+                                   'method_descriptive_name',
+                                   'dl_value',
+                                   'dl_units_description',
+                                   'dl_type_description',
+                                   'dl_type',
+                                   'accuracy',
+                                   'accuracy_units_description',
+                                   'accuracy_units',
+                                   'precision',
+                                   'precision_units_description',
+                                   'precision_units',
+                                   'prec_acc_conc_used',
+                                   'dl_units',
+                                   'instrumentation_description',
+                                   'instrumentation',
+                                   'relative_cost',
+                                   'relative_cost_symbol',
+                                   'pbt',
+                                   'toxic',
+                                   'corrosive',
+                                   'waste',
+                                   'assumptions_comments').order_by('source_method_identifier').distinct()
+                                   
+                    # Determine Greenness rating if any 
+                    results = []
+                    for m in qs:
+                        results.append({'m' : m, 'greenness' : _greenness_profile(m)})
+                          
+                    # Get the query string and pass to view to form the export urls.        
+                    fpath = request.get_full_path()
+                    query_string = '?' + fpath.split('&',1)[1]  
+                                        
+                    return self.render_to_response({'search_form' : search_form,
+                                                    'results' : results,
+                                                    'criteria' : criteria,
+                                                    'selected_method_types' : selected_method_types,
+                                                    'hide_search' : True,
+                                                    'show_results' : True,
+                                                    'query_string' : query_string})
             else:
                 # There is an error in validation so resbumit the search_from
                 return self.render_to_response({'search_form' : search_form,

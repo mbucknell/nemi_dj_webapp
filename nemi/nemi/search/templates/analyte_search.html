@@ -117,6 +117,17 @@
 		</script>
 	{% endif %}
 	<br/>
+	{% if results %}
+		<a class="popup"
+			title="Download the results in Microsoft's proprietary Excel format."
+			href={% url search-analyte_export_xls %}{{ query_string }}>Export results for Microsoft Excel
+		</a>
+		<br/>
+		<a class="popup"
+			title="Download the results as a tab-separated values format, which can be opened by any spreadsheet application." 
+			href={% url search-analyte_export_tsv %}{{ query_string }}>Export results as a tab separated text file (can be opened in any text editor or spreadsheet)
+		</a>
+	{% endif %}
 	{% if show_results %}
 		<h4>Total records found: {{ results|length }}</h4>
 		<h4>Criteria summary:</h4>
