@@ -26,6 +26,36 @@ def _choice_select(field):
         return dict(field.field.choices).get(int(field.data))
     return dict(field.field.choices).get(field.data)
 
+def _greenness_profile(d):
+    '''Return a list of four gifs representing the greenness profile of the dictionary d.
+    The quer should contain the fields pbt, toxic, corrosive, and waste. If there is not
+    enough information for a complete greenness profile list, return an empty list.
+    '''
+    g = []
+    if d['pbt'] == 'N':
+        g.append('ULG2.gif')
+    elif d['pbt'] == 'Y':
+        g.append('ULW2.gif')
+        
+    if d['toxic'] == 'N':
+        g.append('URG2.gif')
+    elif d['toxic'] == 'Y':
+        g.append('URW2.gif')
+        
+    if d['corrosive'] == 'N':
+        g.append('LLG2.gif')
+    elif d['corrosive'] == 'Y':
+        g.append('LLW2.gif')
+        
+    if d['waste'] == 'N':
+        g.append('LRG2.gif')
+    elif d['waste']== 'Y':
+        g.append('LRW2.gif')
+        
+    if len(g) == 4:
+        return g
+    else:
+        return []
 
 class GeneralSearchView(View, TemplateResponseMixin):
     
@@ -155,31 +185,7 @@ class GeneralSearchView(View, TemplateResponseMixin):
                     # Determine Greenness rating if any 
                     results = []
                     for m in qs:
-                        g = []
-                        if m['pbt'] == 'N':
-                            g.append('ULG2.gif')
-                        elif m['pbt'] == 'Y':
-                            g.append('ULW2.gif')
-                            
-                        if m['toxic'] == 'N':
-                            g.append('URG2.gif')
-                        elif m['toxic'] == 'Y':
-                            g.append('URW2.gif')
-                            
-                        if m['corrosive'] == 'N':
-                            g.append('LLG2.gif')
-                        elif m['corrosive'] == 'Y':
-                            g.append('LLW2.gif')
-                            
-                        if m['waste'] == 'N':
-                            g.append('LRG2.gif')
-                        elif m['waste']== 'Y':
-                            g.append('LRW2.gif')
-                            
-                        if len(g) == 4:
-                            results.append({'m': m, 'greenness' : g})
-                        else:
-                            results.append({'m': m, 'greenness' : []})
+                        results.append({'m': m, 'greenness' : _greenness_profile(m)})
                      
                     # Get the query string and pass to view to form the export urls.        
                     fpath = request.get_full_path()
@@ -366,32 +372,8 @@ class AnalyteSearchView(View, TemplateResponseMixin):
                 # Determine Greenness rating if any 
                 results = []
                 for m in qs:
-                    g = []
-                    if m['pbt'] == 'N':
-                        g.append('ULG2.gif')
-                    elif m['pbt'] == 'Y':
-                        g.append('ULW2.gif')
-                        
-                    if m['toxic'] == 'N':
-                        g.append('URG2.gif')
-                    elif m['toxic'] == 'Y':
-                        g.append('URW2.gif')
-                        
-                    if m['corrosive'] == 'N':
-                        g.append('LLG2.gif')
-                    elif m['corrosive'] == 'Y':
-                        g.append('LLW2.gif')
-                        
-                    if m['waste'] == 'N':
-                        g.append('LRG2.gif')
-                    elif m['waste']== 'Y':
-                        g.append('LRW2.gif')
-                        
-                    if len(g) == 4:
-                        results.append({'m': m, 'greenness' : g})
-                    else:
-                        results.append({'m': m, 'greenness' : []})
-                        
+                    results.append({'m' : m, 'greenness' : _greenness_profile(m)})
+                      
                 return self.render_to_response({'search_form' : search_form,
                                                 'results' : results,
                                                 'criteria' : criteria,
