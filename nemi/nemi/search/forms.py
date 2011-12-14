@@ -77,9 +77,9 @@ class GeneralSearchForm(Form):
         self.fields['method_subcategory'].choices = [(u'all', u'Any')] + [(s_id, s) for (s_id, s) in sub_qs]
         
         #Method type choice fields. We initialize this to all values being set.
-        mt_qs = qs.values_list('method_type_id', 'method_type_desc').distinct().order_by('method_type_desc')
-        self.fields['method_types'].choices = [(t_id, desc) for (t_id, desc) in mt_qs]  
-        self.fields['method_types'].initial = [t_id for (t_id, desc) in mt_qs] 
+        mt_qs = qs.values('method_type_desc', 'method_type_id').distinct().order_by('method_type_desc')
+        self.fields['method_types'].choices = [(d['method_type_id'], d['method_type_desc']) for d in mt_qs]  
+        self.fields['method_types'].initial = [d['method_type_id'] for d in mt_qs] 
         
 class AnalyteSearchForm(Form):
     analyte_kind = ChoiceField(choices=[('name', 'Name'), ('code', 'Code')],
@@ -116,7 +116,8 @@ class AnalyteSearchForm(Form):
         qs = MethodVW.objects.order_by('method_type_desc').values_list('method_type_desc', flat=True).distinct()
         self.fields['method_types'].choices = [(desc, desc) for desc in qs]
         self.fields['method_types'].initial = [desc for desc in qs]
-            
+
+                  
 class AnalyteSelectForm(Form):
     kind = CharField(widget=HiddenInput())
     selection = CharField()

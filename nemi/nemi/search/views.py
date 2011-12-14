@@ -19,6 +19,14 @@ from xlwt import Workbook
 from forms import GeneralSearchForm, AnalyteSearchForm, AnalyteSelectForm
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW
 
+def _choice_select(field):
+    '''Return the visible choice from the form field variable. Function
+    assumes choice values are integer or string'''
+    if type(field.field.choices[1][0]) is types.IntType:
+        return dict(field.field.choices).get(int(field.data))
+    return dict(field.field.choices).get(field.data)
+
+
 class GeneralSearchView(View, TemplateResponseMixin):
     
     '''Extends the standard View to implement the General Search Page. If no
@@ -36,13 +44,6 @@ class GeneralSearchView(View, TemplateResponseMixin):
     template_name = 'general_search.html'
     
     def get(self, request, *args, **kwargs):
-        def _choice_select(field):
-            '''Return the visible choice from the form field variable. Function
-            assumes choice values are integer or string'''
-            if type(field.field.choices[1][0]) is types.IntType:
-                return dict(field.field.choices).get(int(field.data))
-            return dict(field.field.choices).get(field.data)
-        
         if request.GET:
             # Request includes search form parameters. Retrieve them, validate, and get data.
             search_form = GeneralSearchForm(request.GET)
@@ -303,25 +304,36 @@ class AnalyteSearchView(View, TemplateResponseMixin):
             search_form = AnalyteSearchForm(request.GET)
             if search_form.is_valid():
                 qs = MethodAnalyteAllVW.objects.all()
-                
+                criteria = []
                 if search_form.cleaned_data['analyte_kind'] == 'code':
                     qs = qs.filter(analyte_code__iexact=search_form.cleaned_data['analyte_value'])
+                    criteria.append(('Analyte code', search_form.cleaned_data['analyte_value']))
                 else: # assume analyte kind is name
                     qs = qs.filter(analyte_name__iexact=search_form.cleaned_data['analyte_value'])
+                    criteria.append(('Analyte name', search_form.cleaned_data['analyte_value']))
                     
                 if search_form.cleaned_data['media_name'] != 'all':
                     qs = qs.filter(media_name__exact=search_form.cleaned_data['media_name'])
+                    criteria.append((search_form['media_name'].label, _choice_select(search_form['media_name'])))
                 
                 if search_form.cleaned_data['source'] != 'all':
                     qs = qs.filter(method_source__contains=search_form.cleaned_data['source'])
+                    criteria.append((search_form['source'].label, _choice_select(search_form['source'])))
                     
                 if search_form.cleaned_data['instrumentation'] != 'all':
                     qs = qs.filter(instrumentation_id__exact=search_form.cleaned_data['instrumentation'])
+                    criteria.append((search_form['instrumentation'].label, _choice_select(search_form['instrumentation'])))
                     
                 if search_form.cleaned_data['method_subcategory'] != 'all':
-                    qs = qs.filter(method_subcategory__exact=search_form.cleaned_data['method_subcategory'])
+                    qs = qs.filter(method_subcategory_id__exact=search_form.cleaned_data['method_subcategory'])
+                    criteria.append((search_form['method_subcategory'].label, _choice_select(search_form['method_subcategory'])))
 
                 qs = qs.filter(method_type_desc__in=search_form.cleaned_data['method_types'])
+                method_type_dict = dict(search_form['method_types'].field.choices)
+                if len(search_form.cleaned_data['method_types']) == len(method_type_dict):
+                    selected_method_types = []
+                else:
+                    selected_method_types = [method_type_dict.get(k) for k in search_form.cleaned_data['method_types']]
                 
                 # Get only columns that are needed for display
                 qs = qs.values('method_source_id',
@@ -382,6 +394,8 @@ class AnalyteSearchView(View, TemplateResponseMixin):
                         
                 return self.render_to_response({'search_form' : search_form,
                                                 'results' : results,
+                                                'criteria' : criteria,
+                                                'selected_method_types' : selected_method_types,
                                                 'hide_search' : True,
                                                 'show_results' : True})
             else:

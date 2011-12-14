@@ -119,6 +119,25 @@
 	<br/>
 	{% if show_results %}
 		<h4>Total records found: {{ results|length }}</h4>
+		<h4>Criteria summary:</h4>
+		<ul>
+			{% if criteria %}
+				{% for c in criteria %}
+					<li>{{ c.0 }} equals {{ c.1 }}</li>
+				{% endfor %}
+			{% endif %}
+			{% if selected_method_types %}
+				<li>Method types:
+				{% for mt in selected_method_types %}
+					{% if forloop.last %}
+						{{ mt }}.
+					{% else %}
+						{{ mt }},
+					{% endif %}
+				{% endfor %}
+				</li>
+			{% endif %}
+		</ul>
 		{% if results %}
 			<table id="data-table" class="tablesorter" style="width: 100%">
 				<thead>
@@ -194,7 +213,7 @@
 				<tbody>
 				{% for r in results %}
 					<tr>
-						<td>{{ r.m.source_method_identifier|safe }}</td>
+						<td><a class="popup" title="Method details (in a new window)" href="javascript:winSummary('{% url search-method_summary r.m.method_id %}')">{{ r.m.source_method_identifier|safe }}</a></td>
 						<td>{{ r.m.method_source }}</td>
 						<td>{{ r.m.method_descriptive_name }}</td>						
 						<td>
