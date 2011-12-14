@@ -6,7 +6,8 @@ search pages.
 import types
 
 # django packages
-from django.db.models import Q
+from django.db.models import Model, Q
+from django.forms import Form
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.views.generic import View, DetailView, ListView
@@ -97,127 +98,159 @@ def _xls_response(headings, vl_qs):
     
     return response
 
-class GeneralSearchView(View, TemplateResponseMixin):
-    
-    '''Extends the standard View to implement the General Search Page. If no
-    This view only processes get requests. 
-    
+class SearchView(View):
+    ''' Extends the generic mixin to handle method search pages 
     Optional keyword arguments are:
     export -- kind is either tsv or xls and if specified the query results are used to 
               produce the indicated file.
               
     If export is not specified, the queryset is passed back to the view with additional information
     derived from the queryset. In addition the search criteria is returned as well as the
-    form query used to create the queryset.
+    form query used to create the queryset.        
     '''
+    form = Form #Search form which generates the result query set
     
-    template_name = 'general_search.html'
+    result_fields = () # Fields to be displayed on the results page
+    result_field_order_by = '' #Field to order the query results
     
+    export_fields = () # Fields to be exported to file
+    export_field_order_by = '' # Field name to order the export query results by.
+   
+    def generate_form_data_and_context(self):
+        '''Generate the query set that is a derived from the form along with any additional context
+        data that is required from the form.
+        This function assumes that the form has been validated
+        '''
+        self.qs = Model.objects.all()
+        self.context = {}
+        
     def get(self, request, *args, **kwargs):
         if request.GET:
-            # Request includes search form parameters. Retrieve them, validate, and get data.
-            search_form = GeneralSearchForm(request.GET)
-            if search_form.is_valid():
-                # Create queryset from form data
-                qs = MethodVW.objects.all()
-                criteria = []
-                if search_form.cleaned_data['media_name'] != 'all':
-                    qs = qs.filter(media_name__exact=search_form.cleaned_data['media_name'])
-                    criteria.append((search_form['media_name'].label, _choice_select(search_form['media_name'])))
-     
-                if search_form.cleaned_data['source'] != 'all':
-                    qs = qs.filter(method_source__contains=search_form.cleaned_data['source'])
-                    criteria.append((search_form['source'].label, _choice_select(search_form['source'])))
-                                    
-                if search_form.cleaned_data['method_number'] != 'all':
-                    qs = qs.filter(method_id__exact=int(search_form.cleaned_data['method_number']))
-                    criteria.append((search_form['method_number'].label, _choice_select(search_form['method_number'])))
-                    
-                if search_form.cleaned_data['instrumentation'] != 'all':
-                    qs = qs.filter(instrumentation_id__exact=int(search_form.cleaned_data['instrumentation']))  
-                    criteria.append((search_form['instrumentation'].label, _choice_select(search_form['instrumentation'])))
+            self.search_form = self.form(request.GET)
+            if self.search_form.is_valid():
+                self.generate_form_data_and_context()
                 
-                if search_form.cleaned_data['method_subcategory'] != 'all':
-                    qs = qs.filter(method_subcategory_id__exact=int(search_form.cleaned_data['method_subcategory']))
-                    criteria.append((search_form['method_subcategory'].label, _choice_select(search_form['method_subcategory'])))
-                    
-                method_type_dict = dict(search_form['method_types'].field.choices)
-                if len(search_form.cleaned_data['method_types']) == len(method_type_dict):
-                    selected_method_types = []
-                else:
-                    selected_method_types = [method_type_dict.get(int(k)) for k in search_form.cleaned_data['method_types']]
-                
-                qs = qs.filter(method_type_id__in=search_form.cleaned_data['method_types'])
-                    
-                # If the data should be exported, then retrieve the columns needed and generate
-                # the requested export kind.    
                 if 'export' in kwargs:
-                    FIELD_NAMES = ('method_id', 
-                                   'source_method_identifier',
-                                   'method_descriptive_name', 
-                                   'media_name', 
-                                   'method_source',
-                                   'instrumentation_description',
-                                   'method_subcategory',
-                                   'method_category',
-                                   'method_type_desc')
-                    HEADINGS = [name.replace('_', ' ').title() for name in FIELD_NAMES]
-                    qs = qs.values_list(*FIELD_NAMES).order_by('source_method_identifier').distinct()
+                    # Export data to the requested file kind
+                    HEADINGS = [name.replace('_', ' ').title() for name in self.export_fields]
+                    self.qs = self.qs.values_list(*self.export_fields).distinct()
+                    if self.export_field_order_by:
+                        self.qs = self.qs.order_by(self.export_field_order_by)
                     
                     if kwargs['export'] == 'tsv':
-                        return _tsv_response(HEADINGS, qs)
+                        return _tsv_response(HEADINGS, self.qs)
                     
                     if kwargs['export'] == 'xls':
-                        return _xls_response(HEADINGS, qs)
+                        return _xls_response(HEADINGS, self.qs)
                     
-                    else: 
+                    else:
                         return Http404
-                else:    
-                    qs = qs.values('source_method_identifier',
-                                   'method_source',
-                                   'instrumentation_description',
-                                   'method_descriptive_name',
-                                   'media_name',
-                                   'method_category',
-                                   'method_subcategory',
-                                   'method_type_desc',
-                                   'method_id',
-                                   'assumptions_comments',
-                                   'pbt',
-                                   'toxic',
-                                   'corrosive',
-                                   'waste'
-                                   ).distinct()
-        
-                    # Determine Greenness rating if any 
+                    
+                else:
+                    # Get data to display on page.
+                    self.qs = self.qs.values(*self.result_fields).distinct()
+                    if self.result_field_order_by:
+                        self.qs = self.qs.order_by(self.result_field_order_by)
+                    #Determine Greenness rating if any
                     results = []
-                    for m in qs:
+                    for m in self.qs:
                         results.append({'m': m, 'greenness' : _greenness_profile(m)})
-                     
+    
                     # Get the query string and pass to view to form the export urls.        
                     fpath = request.get_full_path()
-                    query_string = '?' + fpath.split('&',1)[1]  
-                                        
-                    return self.render_to_response({'search_form' : search_form,
-                                                    'results' : results,
-                                                    'criteria' : criteria,
-                                                    'selected_method_types' : selected_method_types,
-                                                    'hide_search' : True,
-                                                    'show_results' : True,
-                                                    'query_string' : query_string,
-                                                    })
+                    query_string = '?' + fpath.split('&',1)[1] 
+                    
+                    self.context['results'] = results
+                    self.context['search_form'] = self.search_form
+                    self.context['hide_search'] = True
+                    self.context['show_results'] = True
+                    self.context['query_string'] = query_string
+                    
+                    return self.render_to_response(self.context) 
+                
             else:
                 # There is an error in validation so resubmit the search form
-                return self.render_to_response({'search_form' : search_form,
+                return self.render_to_response({'search_form' : self.search_form,
                                                 'hide_search' : False,
-                                                'show_results' : False,
+                                                'show_results' : False
                                                 })
+                
         else:
-            # Show empty form
-            search_form = GeneralSearchForm()
-            return self.render_to_response({'search_form' : search_form,
+            #Show an empty form
+            self.search_form = self.form()
+            return self.render_to_response({'search_form' : self.search_form,
                                             'hide_search' : False,
-                                            'show_results' : False})        
+                                            'show_results' : False})
+        
+    
+class GeneralSearchView(SearchView, TemplateResponseMixin):
+    
+    '''Extends the SearchView to implement the General Search Page. '''
+    
+    template_name = 'general_search.html'
+    form = GeneralSearchForm
+    
+    result_fields = ('source_method_identifier',
+                     'method_source',
+                     'instrumentation_description',
+                     'method_descriptive_name',
+                     'media_name',
+                     'method_category',
+                     'method_subcategory',
+                     'method_type_desc',
+                     'method_id',
+                     'assumptions_comments',
+                     'pbt',
+                     'toxic',
+                     'corrosive',
+                     'waste')
+    export_fields = ('method_id', 
+                     'source_method_identifier',
+                     'method_descriptive_name', 
+                     'media_name', 
+                     'method_source',
+                     'instrumentation_description',
+                     'method_subcategory',
+                     'method_category',
+                     'method_type_desc')
+    export_field_order_by = 'source_method_identifier'
+    
+    def generate_form_data_and_context(self):
+        self.context = {}
+        self.qs = MethodVW.objects.all()
+        criteria = []
+        if self.search_form.cleaned_data['media_name'] != 'all':
+            self.qs = self.qs.filter(media_name__exact=self.search_form.cleaned_data['media_name'])
+            criteria.append((self.search_form['media_name'].label, _choice_select(self.search_form['media_name'])))
+        
+        if self.search_form.cleaned_data['source'] != 'all':
+            self.qs = self.qs.filter(method_source__contains=self.search_form.cleaned_data['source'])
+            criteria.append((self.search_form['source'].label, _choice_select(self.search_form['source'])))
+                            
+        if self.search_form.cleaned_data['method_number'] != 'all':
+            self.qs = self.qs.filter(method_id__exact=int(self.search_form.cleaned_data['method_number']))
+            criteria.append((self.search_form['method_number'].label, _choice_select(self.search_form['method_number'])))
+            
+        if self.search_form.cleaned_data['instrumentation'] != 'all':
+            self.qs = self.qs.filter(instrumentation_id__exact=int(self.search_form.cleaned_data['instrumentation']))  
+            criteria.append((self.search_form['instrumentation'].label, _choice_select(self.search_form['instrumentation'])))
+        
+        if self.search_form.cleaned_data['method_subcategory'] != 'all':
+            self.qs = self.qs.filter(method_subcategory_id__exact=int(self.search_form.cleaned_data['method_subcategory']))
+            criteria.append((self.search_form['method_subcategory'].label, _choice_select(self.search_form['method_subcategory'])))
+            
+        method_type_dict = dict(self.search_form['method_types'].field.choices)
+        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
+            selected_method_types = []
+        else:
+            selected_method_types = [method_type_dict.get(int(k)) for k in self.search_form.cleaned_data['method_types']]
+        
+        self.qs = self.qs.filter(method_type_id__in=self.search_form.cleaned_data['method_types']) 
+        
+        self.context['criteria'] = criteria
+        self.context['selected_method_types'] = selected_method_types       
+         
+    
 
         
 class GreennessView(DetailView):
@@ -309,91 +342,12 @@ class SynonymView(ListView):
         context['code'] = self.request.GET.get('code', None)
         return context
 
-class AnalyteSearchView(View, TemplateResponseMixin):
+class AnalyteSearchView(SearchView, TemplateResponseMixin):
     template_name = 'analyte_search.html'
     
-    def get(self, request, *args, **kwargs):
-        if request.GET:
-            search_form = AnalyteSearchForm(request.GET)
-            if search_form.is_valid():
-                qs = MethodAnalyteAllVW.objects.all()
-                criteria = []
-                if search_form.cleaned_data['analyte_kind'] == 'code':
-                    qs = qs.filter(analyte_code__iexact=search_form.cleaned_data['analyte_value'])
-                    criteria.append(('Analyte code', search_form.cleaned_data['analyte_value']))
-                else: # assume analyte kind is name
-                    qs = qs.filter(analyte_name__iexact=search_form.cleaned_data['analyte_value'])
-                    criteria.append(('Analyte name', search_form.cleaned_data['analyte_value']))
-                    
-                if search_form.cleaned_data['media_name'] != 'all':
-                    qs = qs.filter(media_name__exact=search_form.cleaned_data['media_name'])
-                    criteria.append((search_form['media_name'].label, _choice_select(search_form['media_name'])))
-                
-                if search_form.cleaned_data['source'] != 'all':
-                    qs = qs.filter(method_source__contains=search_form.cleaned_data['source'])
-                    criteria.append((search_form['source'].label, _choice_select(search_form['source'])))
-                    
-                if search_form.cleaned_data['instrumentation'] != 'all':
-                    qs = qs.filter(instrumentation_id__exact=search_form.cleaned_data['instrumentation'])
-                    criteria.append((search_form['instrumentation'].label, _choice_select(search_form['instrumentation'])))
-                    
-                if search_form.cleaned_data['method_subcategory'] != 'all':
-                    qs = qs.filter(method_subcategory_id__exact=search_form.cleaned_data['method_subcategory'])
-                    criteria.append((search_form['method_subcategory'].label, _choice_select(search_form['method_subcategory'])))
-
-                qs = qs.filter(method_type_desc__in=search_form.cleaned_data['method_types'])
-                method_type_dict = dict(search_form['method_types'].field.choices)
-                if len(search_form.cleaned_data['method_types']) == len(method_type_dict):
-                    selected_method_types = []
-                else:
-                    selected_method_types = [method_type_dict.get(k) for k in search_form.cleaned_data['method_types']]
-                    
-                #If the data should be exported, then retriev the columns needed and generate
-                # the requested export kind
-                if 'export' in kwargs:
-                    FIELD_NAMES = ('method_id',
-                                   'method_descriptive_name',
-                                   'method_subcategory',
-                                   'method_category',
-                                   'method_source_id',
-                                   'method_source',
-                                   'source_method_identifier',
-                                   'analyte_name',
-                                   'analyte_code',
-                                   'media_name',
-                                   'instrumentation',
-                                   'instrumentation_description',
-                                   'sub_dl_value',
-                                   'dl_units',
-                                   'dl_type',
-                                   'dl_type_description',
-                                   'dl_units_description',
-                                   'sub_accuracy',
-                                   'accuracy_units',
-                                   'accuracy_units_description',
-                                   'sub_precision',
-                                   'precision_units',
-                                   'precision_units_description',
-                                   'false_negative_value',
-                                   'false_positive_value',
-                                   'prec_acc_conc_used',
-                                   'precision_descriptor_notes',
-                                   'relative_cost',
-                                   'relative_cost_symbol')
-                    HEADINGS = [name.replace('_', ' ').title() for name in FIELD_NAMES]
-                    qs = qs.values_list(*FIELD_NAMES).order_by('method_id').distinct()
-                    if kwargs['export'] == 'tsv':
-                        return _tsv_response(HEADINGS, qs)
-                    
-                    if kwargs['export'] == 'xls':
-                        return _xls_response(HEADINGS, qs)
-                    
-                    else: 
-                        return Http404
-                else:    
-                    
-                    # Get only columns that are needed for display
-                    qs = qs.values('method_source_id',
+    form = AnalyteSearchForm
+    
+    result_fields = ('method_source_id',
                                    'method_id',
                                    'source_method_identifier',
                                    'method_source',
@@ -418,39 +372,79 @@ class AnalyteSearchView(View, TemplateResponseMixin):
                                    'toxic',
                                    'corrosive',
                                    'waste',
-                                   'assumptions_comments').order_by('source_method_identifier').distinct()
-                                   
-                    # Determine Greenness rating if any 
-                    results = []
-                    for m in qs:
-                        results.append({'m' : m, 'greenness' : _greenness_profile(m)})
-                          
-                    # Get the query string and pass to view to form the export urls.        
-                    fpath = request.get_full_path()
-                    query_string = '?' + fpath.split('&',1)[1]  
-                                        
-                    return self.render_to_response({'search_form' : search_form,
-                                                    'results' : results,
-                                                    'criteria' : criteria,
-                                                    'selected_method_types' : selected_method_types,
-                                                    'hide_search' : True,
-                                                    'show_results' : True,
-                                                    'query_string' : query_string})
-            else:
-                # There is an error in validation so resbumit the search_from
-                return self.render_to_response({'search_form' : search_form,
-                                                'hide_search' : False,
-                                                'show_results' : False
-                                                })
-                
-        else:
-            # Show empty form
-            search_form = AnalyteSearchForm()
-            return self.render_to_response({'search_form' : search_form,
-                                            'hide_search' : False,
-                                            'show_results' : False})
+                                   'assumptions_comments')
+    
+    export_fields = ('method_id',
+                     'method_descriptive_name',
+                     'method_subcategory',
+                     'method_category',
+                     'method_source_id',
+                     'method_source',
+                     'source_method_identifier',
+                     'analyte_name',
+                     'analyte_code',
+                     'media_name',
+                     'instrumentation',
+                     'instrumentation_description',
+                     'sub_dl_value',
+                     'dl_units',
+                     'dl_type',
+                     'dl_type_description',
+                     'dl_units_description',
+                     'sub_accuracy',
+                     'accuracy_units',
+                     'accuracy_units_description',
+                     'sub_precision',
+                     'precision_units',
+                     'precision_units_description',
+                     'false_negative_value',
+                     'false_positive_value',
+                     'prec_acc_conc_used',
+                     'precision_descriptor_notes',
+                     'relative_cost',
+                     'relative_cost_symbol')
+    export_field_order_by = 'method_id'
+    
+    def generate_form_data_and_context(self):
+        self.context = {}
+        self.qs = MethodAnalyteAllVW.objects.all()
+        criteria = []
+
+        if self.search_form.cleaned_data['analyte_kind'] == 'code':
+            self.qs = self.qs.filter(analyte_code__iexact=self.search_form.cleaned_data['analyte_value'])
+            criteria.append(('Analyte code', self.search_form.cleaned_data['analyte_value']))
+        else: # assume analyte kind is name
+            self.qs = self.qs.filter(analyte_name__iexact=self.search_form.cleaned_data['analyte_value'])
+            criteria.append(('Analyte name', self.search_form.cleaned_data['analyte_value']))
             
-class AnalyteSelectView(View, TemplateResponseMixin):
+        if self.search_form.cleaned_data['media_name'] != 'all':
+            self.qs = self.qs.filter(media_name__exact=self.search_form.cleaned_data['media_name'])
+            criteria.append((self.search_form['media_name'].label, _choice_select(self.search_form['media_name'])))
+        
+        if self.search_form.cleaned_data['source'] != 'all':
+            self.qs = self.qs.filter(method_source__contains=self.search_form.cleaned_data['source'])
+            criteria.append((self.search_form['source'].label, _choice_select(self.search_form['source'])))
+            
+        if self.search_form.cleaned_data['instrumentation'] != 'all':
+            self.qs = self.qs.filter(instrumentation_id__exact=self.search_form.cleaned_data['instrumentation'])
+            criteria.append((self.search_form['instrumentation'].label, _choice_select(self.search_form['instrumentation'])))
+            
+        if self.search_form.cleaned_data['method_subcategory'] != 'all':
+            self.qs = self.qs.filter(method_subcategory_id__exact=self.search_form.cleaned_data['method_subcategory'])
+            criteria.append((self.search_form['method_subcategory'].label, _choice_select(self.search_form['method_subcategory'])))
+
+        self.qs = self.qs.filter(method_type_desc__in=self.search_form.cleaned_data['method_types'])
+        method_type_dict = dict(self.search_form['method_types'].field.choices)
+        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
+            selected_method_types = []
+        else:
+            selected_method_types = [method_type_dict.get(k) for k in self.search_form.cleaned_data['method_types']]
+            
+        self.context['criteria'] = criteria
+        self.context['selected_method_types'] = selected_method_types      
+
+            
+class AnalyteSelectView(SearchView, TemplateResponseMixin):
     template_name = 'find_analyte.html'
     
     def get(self, request, *args, **kwargs):

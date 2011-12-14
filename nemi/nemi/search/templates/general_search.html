@@ -6,12 +6,11 @@
 		$(document).ready(function(){
 			$("#data-table").tablesorter({
 				headers: {
-					0: { sortInitialOrder: "asc" },
 					8: { // disable sorting on greenness column since it seems ill-defined 
 						sorter: false
 					}
 				},
-				sortList: [[0,1]]
+				sortList: [[0, 0]]
 	        });
 			// Function implements search box show/hide feature 
 			$("#search-box-toggle").click(function(){
