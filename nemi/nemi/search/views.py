@@ -21,36 +21,41 @@ from forms import GeneralSearchForm, AnalyteSearchForm, AnalyteSelectForm
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW
 
 def _choice_select(field):
-    '''Return the visible choice from the form field variable. Function
-    assumes choice values are integer or string'''
+    '''Return the visible choice from the form field variable. The function
+    assumes choice values are integer or string
+    '''
     if type(field.field.choices[1][0]) is types.IntType:
         return dict(field.field.choices).get(int(field.data))
     return dict(field.field.choices).get(field.data)
 
 def _greenness_profile(d):
     '''Return a list of four gifs representing the greenness profile of the dictionary d.
-    The quer should contain the fields pbt, toxic, corrosive, and waste. If there is not
-    enough information for a complete greenness profile list, return an empty list.
+    If there is not enough information for a complete greenness profile list, return an empty list.
     '''
+    pbt = d.get('pbt', '')
+    toxic = d.get('toxic', '')
+    corrosive = d.get('toxic', '')
+    waste = d.get('waste', '')
+    
     g = []
-    if d['pbt'] == 'N':
+    if pbt == 'N':
         g.append('ULG2.gif')
-    elif d['pbt'] == 'Y':
+    elif pbt == 'Y':
         g.append('ULW2.gif')
         
-    if d['toxic'] == 'N':
+    if toxic == 'N':
         g.append('URG2.gif')
-    elif d['toxic'] == 'Y':
+    elif toxic == 'Y':
         g.append('URW2.gif')
         
-    if d['corrosive'] == 'N':
+    if corrosive == 'N':
         g.append('LLG2.gif')
-    elif d['corrosive'] == 'Y':
+    elif corrosive == 'Y':
         g.append('LLW2.gif')
         
-    if d['waste'] == 'N':
+    if waste == 'N':
         g.append('LRG2.gif')
-    elif d['waste']== 'Y':
+    elif waste == 'Y':
         g.append('LRW2.gif')
         
     if len(g) == 4:
@@ -77,7 +82,7 @@ def _tsv_response(headings, vl_qs):
     return response
 
 def _xls_response(headings, vl_qs):
-    '''Return an http response which contains an EXCEl file
+    '''Return an http response which contains an Excel file
     representing the values list query set, vl_qs, and using headings
     as the column headers.
     '''
@@ -99,36 +104,39 @@ def _xls_response(headings, vl_qs):
     return response
 
 class SearchView(View):
+
     ''' Extends the generic mixin to handle method search pages 
     Optional keyword arguments are:
     export -- kind is either tsv or xls and if specified the query results are used to 
               produce the indicated file.
               
-    If export is not specified, the queryset is passed back to the view with additional information
-    derived from the queryset. In addition the search criteria is returned as well as the
-    form query used to create the queryset.        
+    If export is not specified, the queryset is passed back to the view with the results of
+    the derived query. Additional context information can be generated in the same procedure,
+    get_query_and context_from_form, that generates the query set.
     '''
+    
     form = Form #Search form which generates the result query set
     
     result_fields = () # Fields to be displayed on the results page
-    result_field_order_by = '' #Field to order the query results
+    result_field_order_by = '' #Field to order the query results. If null, no order is specified
     
     export_fields = () # Fields to be exported to file
-    export_field_order_by = '' # Field name to order the export query results by.
+    export_field_order_by = '' # Field name to order the export query results by. If null, no order is specified
    
-    def generate_form_data_and_context(self):
+    def get_query_and_context_from_form(self):
         '''Generate the query set that is a derived from the form along with any additional context
         data that is required from the form.
-        This function assumes that the form has been validated
+        This function assumes that the form has been validated.
         '''
-        self.qs = Model.objects.all()
+        self.qs = None
         self.context = {}
         
     def get(self, request, *args, **kwargs):
+        ''' Processes the get request. This method should not need to be overridden.'''
         if request.GET:
             self.search_form = self.form(request.GET)
             if self.search_form.is_valid():
-                self.generate_form_data_and_context()
+                self.get_query_and_context_from_form()
                 
                 if 'export' in kwargs:
                     # Export data to the requested file kind
@@ -181,8 +189,7 @@ class SearchView(View):
             return self.render_to_response({'search_form' : self.search_form,
                                             'hide_search' : False,
                                             'show_results' : False})
-        
-    
+           
 class GeneralSearchView(SearchView, TemplateResponseMixin):
     
     '''Extends the SearchView to implement the General Search Page. '''
@@ -204,6 +211,7 @@ class GeneralSearchView(SearchView, TemplateResponseMixin):
                      'toxic',
                      'corrosive',
                      'waste')
+    
     export_fields = ('method_id', 
                      'source_method_identifier',
                      'method_descriptive_name', 
@@ -215,7 +223,12 @@ class GeneralSearchView(SearchView, TemplateResponseMixin):
                      'method_type_desc')
     export_field_order_by = 'source_method_identifier'
     
-    def generate_form_data_and_context(self):
+    def get_query_and_context_from_form(self):
+        '''Overrides the generic method. The query set is generated from the MethodVW model and is filtered
+        by the contents of the form. Also generate two context dictionary values, criteria and selected_method_types
+        from the search form.
+        '''
+        
         self.context = {}
         self.qs = MethodVW.objects.all()
         criteria = []
@@ -249,10 +262,7 @@ class GeneralSearchView(SearchView, TemplateResponseMixin):
         
         self.context['criteria'] = criteria
         self.context['selected_method_types'] = selected_method_types       
-         
-    
-
-        
+                 
 class GreennessView(DetailView):
 
     '''Extends the DetailView using model MethodVW with keyword argument pk'''
@@ -262,8 +272,9 @@ class GreennessView(DetailView):
     context_object_name = 'data'
 
 class MethodSummaryView(View, TemplateResponseMixin):
+    
     ''' Extends the standard view. This view only processes GET requests. The
-    keyword argument method_id is used to retrieve the MethodSummaryVW and MethodAnalyteVW ifnroatmion
+    keyword argument method_id is used to retrieve the MethodSummaryVW and MethodAnalyteVW information
     '''
 
     template_name="method_summary.html"
@@ -295,22 +306,28 @@ class MethodSummaryView(View, TemplateResponseMixin):
             raise Http404
  
 class MethodSourceView(DetailView):
+    
     ''' Extends the DetailView for the MethodSummaryVW and keyword argument pk'''
+    
     model = MethodSummaryVW
     template_name = 'method_source.html'
     context_object_name = 'data'
     
 class CitationInformationView(DetailView):
+    
     '''Extends the DetailView for the MethodSummaryVW model and keyword argument pk'''
+    
     model = MethodSummaryVW
     template_name = 'citation_information.html'
     context_object_name = 'data' 
     
 class HeaderDefinitionsView(DetailView):
+    
     ''' Extends the DetailView for the DefintionsDOM model.
     The view shows the object with the definition_abbrev contained
     in keyword argument 'abbrev'.
     '''
+    
     model = DefinitionsDOM
     template_name = 'header_definitions.html'
     context_object_name = 'data'
@@ -322,14 +339,17 @@ class HeaderDefinitionsView(DetailView):
             return None
 
 class SynonymView(ListView):
+    
     '''Extends the ListView using the queryset returned from the get_queryset function.
     Also adds the analyte name and code to the context data. These are retrieved from 
     keyword arguments.
     '''
+    
     template_name = 'synonyms.html'
     context_object_name = 'qs'
     
     def get_queryset(self):
+        ''' Return the queryset of analyte synonyms by using both the specific analyte's name and code to search.'''
         name = self.request.GET.get('name', None).lower()
         code = self.request.GET.get('code', None).lower()
         inner_qs = AnalyteCodeRel.objects.filter(Q(analyte_name__iexact=name)|Q(analyte_code__iexact=code)).values_list('analyte_code', flat=True).distinct()
@@ -337,42 +357,46 @@ class SynonymView(ListView):
         return qs
     
     def get_context_data(self, **kwargs):
+        ''' Add the analyte name and code to the context data'''
         context = super(SynonymView, self).get_context_data(**kwargs)
         context['name'] = self.request.GET.get('name', None)
         context['code'] = self.request.GET.get('code', None)
         return context
 
 class AnalyteSearchView(SearchView, TemplateResponseMixin):
+    
+    ''' Extends the SearchView to implement the Analyte Search page '''
+    
     template_name = 'analyte_search.html'
     
     form = AnalyteSearchForm
     
     result_fields = ('method_source_id',
-                                   'method_id',
-                                   'source_method_identifier',
-                                   'method_source',
-                                   'method_descriptive_name',
-                                   'dl_value',
-                                   'dl_units_description',
-                                   'dl_type_description',
-                                   'dl_type',
-                                   'accuracy',
-                                   'accuracy_units_description',
-                                   'accuracy_units',
-                                   'precision',
-                                   'precision_units_description',
-                                   'precision_units',
-                                   'prec_acc_conc_used',
-                                   'dl_units',
-                                   'instrumentation_description',
-                                   'instrumentation',
-                                   'relative_cost',
-                                   'relative_cost_symbol',
-                                   'pbt',
-                                   'toxic',
-                                   'corrosive',
-                                   'waste',
-                                   'assumptions_comments')
+                     'method_id',
+                     'source_method_identifier',
+                     'method_source',
+                     'method_descriptive_name',
+                     'dl_value',
+                     'dl_units_description',
+                     'dl_type_description',
+                     'dl_type',
+                     'accuracy',
+                     'accuracy_units_description',
+                     'accuracy_units',
+                     'precision',
+                     'precision_units_description',
+                     'precision_units',
+                     'prec_acc_conc_used',
+                     'dl_units',
+                     'instrumentation_description',
+                     'instrumentation',
+                     'relative_cost',
+                     'relative_cost_symbol',
+                     'pbt',
+                     'toxic',
+                     'corrosive',
+                     'waste',
+                     'assumptions_comments')
     
     export_fields = ('method_id',
                      'method_descriptive_name',
@@ -405,7 +429,11 @@ class AnalyteSearchView(SearchView, TemplateResponseMixin):
                      'relative_cost_symbol')
     export_field_order_by = 'method_id'
     
-    def generate_form_data_and_context(self):
+    def get_query_and_context_from_form(self):
+        '''Overrides the generic method. The query set is generated from the MethodAnalyteAllVW model and is filtered
+        by the contents of the form. Also generate two context dictionary values, criteria and selected_method_types
+        from the search form.
+        '''
         self.context = {}
         self.qs = MethodAnalyteAllVW.objects.all()
         criteria = []
@@ -444,7 +472,10 @@ class AnalyteSearchView(SearchView, TemplateResponseMixin):
         self.context['selected_method_types'] = selected_method_types      
 
             
-class AnalyteSelectView(SearchView, TemplateResponseMixin):
+class AnalyteSelectView(View, TemplateResponseMixin):
+    
+    ''' Extends the standard view to implement the analyte select pop up page. '''
+    
     template_name = 'find_analyte.html'
     
     def get(self, request, *args, **kwargs):
