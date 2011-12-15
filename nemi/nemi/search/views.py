@@ -103,6 +103,23 @@ def _xls_response(headings, vl_qs):
     
     return response
 
+def _analyte_value_qs(method_id):
+    analyte_data = MethodAnalyteVW.objects.filter(preferred__exact=-1, method_id__exact=method_id).order_by('analyte_name')
+    return analyte_data.values('analyte_name',
+                               'analyte_code',
+                               'dl_value',
+                               'dl_units_description',
+                               'dl_units',
+                               'accuracy',
+                               'accuracy_units_description',
+                               'accuracy_units',
+                               'precision',
+                               'precision_units_description',
+                               'precision_units',
+                               'false_positive_value',
+                               'false_negative_value',
+                               'prec_acc_conc_used').distinct()
+
 class SearchView(View):
 
     ''' Extends the generic mixin to handle method search pages 
@@ -281,22 +298,11 @@ class MethodSummaryView(View, TemplateResponseMixin):
     
     def get(self, request, *args, **kwargs):
         if 'method_id' in kwargs:
-            data = get_object_or_404(MethodSummaryVW, method_id=kwargs['method_id'])
-            analyte_data = MethodAnalyteVW.objects.filter(preferred__exact=-1, method_id__exact=kwargs['method_id']).order_by('analyte_name')
-            analyte_data = analyte_data.values('analyte_name',
-                                               'analyte_code',
-                                               'dl_value',
-                                               'dl_units_description',
-                                               'dl_units',
-                                               'accuracy',
-                                               'accuracy_units_description',
-                                               'accuracy_units',
-                                               'precision',
-                                               'precision_units_description',
-                                               'precision_units',
-                                               'false_positive_value',
-                                               'false_negative_value',
-                                               'prec_acc_conc_used').distinct()
+            try:
+                data = MethodSummaryVW.objects.get(method_id=kwargs['method_id'])
+            except MethodSummaryVW.DoesNotExist:
+                data = None
+            analyte_data = _analyte_value_qs(kwargs['method_id'])
             notes = MethodAnalyteVW.objects.filter(method_id__exact=kwargs['method_id']).values('precision_descriptor_notes', 'dl_note').distinct()
             
             return self.render_to_response({'data': data,
@@ -362,7 +368,72 @@ class SynonymView(ListView):
         context['name'] = self.request.GET.get('name', None)
         context['code'] = self.request.GET.get('code', None)
         return context
+    
+class ExportMethodAnalyte(View, TemplateResponseMixin):
+    
+    ''' Extends the standard view. This view creates a
+    tab-separated file of the analyte data. Required keyword argument,
+    method_id is used to retrieve the analyte information. This uses
+    the same query that is used in the MethodSummaryView to retrieve
+    the analyte data.
+    '''
 
+    def get(self, request, *args, **kwargs):
+        if 'method_id' in kwargs:
+            HEADINGS = ('Analyte',
+                        'Detection Level',
+                        'Bias',
+                        'Precision',
+                        'Pct False Positive',
+                        'Pct False Negative',
+                        'Spiking Level')
+            qs = _analyte_value_qs(kwargs['method_id'])
+        
+            response = HttpResponse(mimetype='text/tab-separated-values')
+            response['Content-Disposition'] = 'attachment; filename=%s_analytes.tsv' % kwargs['method_id']
+            
+            response.write('\t'.join(HEADINGS))
+            response.write('\n')
+            
+            for row in qs:
+                response.write('%s\t' % row['analyte_name'])
+                
+                if row['dl_value'] == 999:
+                    response.write('N/A\t')
+                else:
+                    response.write('%.2f %s\t' %(row['dl_value'], row['dl_units']))
+                    
+                if row['accuracy'] == -999:
+                    response.write('N/A\t')
+                else:
+                    response.write('%d %s\t' %(row['accuracy'], row['accuracy_units']))
+                    
+                if row['precision'] == 999:
+                    response.write('N/A\t')
+                else:
+                    response.write('%.2f %s\t' %(row['precision'], row['precision_units']))
+                    
+                if row['false_positive_value'] == None:
+                    response.write('\t')
+                    
+                else:
+                    response.write('%s\t' % row['false_positive_value'])
+                    
+                if row['false_negative_value'] == None:
+                    response.write('\t')
+                else:
+                    response.write('%s\t' % row['false_negative_value'])
+                    
+                    
+                if row['prec_acc_conc_used']:
+                    response.write('%.2f %s\t' %(row['prec_acc_conc_used'], row['dl_units']))
+                else:
+                    response.write('\t')
+
+                response.write('\n')
+            
+            return response
+                
 class AnalyteSearchView(SearchView, TemplateResponseMixin):
     
     ''' Extends the SearchView to implement the Analyte Search page '''
