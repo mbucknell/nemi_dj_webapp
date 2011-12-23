@@ -138,4 +138,5 @@ class AnalyteSelectForm(Form):
                 
                 self.fields['values_list'].choices=[(choice, choice) for choice in qs]    
 
-        
+class KeywordSearchForm(Form):
+    keywords = CharField()     

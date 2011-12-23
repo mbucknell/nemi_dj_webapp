@@ -6,10 +6,11 @@ search pages.
 import types
 
 # django packages
-from django.db.models import Model, Q
+from django.db import connection
+from django.db.models import Q
 from django.forms import Form
 from django.http import HttpResponse, Http404
-from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import View, DetailView, ListView
 from django.views.generic.edit import TemplateResponseMixin
 
@@ -17,7 +18,7 @@ from django.views.generic.edit import TemplateResponseMixin
 from xlwt import Workbook
 
 # project specific packages
-from forms import GeneralSearchForm, AnalyteSearchForm, AnalyteSelectForm
+from forms import GeneralSearchForm, AnalyteSearchForm, AnalyteSelectForm, KeywordSearchForm
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW
 
 def _choice_select(field):
@@ -28,6 +29,13 @@ def _choice_select(field):
         return dict(field.field.choices).get(int(field.data))
     return dict(field.field.choices).get(field.data)
 
+def _dictfetchall(cursor):
+    '''Return all rows from the cursor query as a dictionary with the key value equal to column name in uppercase'''
+    desc = cursor.description
+    return [
+            dict(zip([col[0] for col in desc], row))
+            for row in cursor.fetchall()
+            ]
 def _greenness_profile(d):
     '''Return a list of four gifs representing the greenness profile of the dictionary d.
     If there is not enough information for a complete greenness profile list, return an empty list.
@@ -181,9 +189,8 @@ class SearchView(View):
                     for m in self.qs:
                         results.append({'m': m, 'greenness' : _greenness_profile(m)})
     
-                    # Get the query string and pass to view to form the export urls.        
-                    fpath = request.get_full_path()
-                    query_string = '?' + fpath.split('&',1)[1] 
+                    # Get the query string and pass to view to form the export urls.
+                    query_string = '?' + request.get_full_path().split('&', 1)[1]        
                     
                     self.context['results'] = results
                     self.context['search_form'] = self.search_form
@@ -559,4 +566,61 @@ class AnalyteSelectView(View, TemplateResponseMixin):
             kind = 'name'
             
         return self.render_to_response({'select_form' : select_form,
-                                        'kind' : kind})            
+                                        'kind' : kind})
+        
+class KeywordSearchView(View, TemplateResponseMixin):    
+    template_name = "keyword_search.html"
+    
+    def get(self, request, *args, **kwargs):
+        if request.GET:
+            # Form has been submitted.
+            form = KeywordSearchForm(request.GET)
+            if form.is_valid():
+                # Execute as raw query since  it uses a CONTAINS clause and context grammer.
+                cursor = connection.cursor() #@UndefinedVariable
+                cursor.execute('SELECT DISTINCT score(1) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
+mf.link_to_full_method, mf.mimetype, mf.revision_id, mf.method_official_name, mf.method_descriptive_name, mf.method_source \
+FROM nemi_data.method_fact mf, nemi_data.revision_join rj \
+WHERE mf.revision_id = rj.revision_id AND \
+(CONTAINS(mf.source_method_identifier, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + form.cleaned_data['keywords'] + '.<progression> \
+<seq><rewrite>transform((TOKENS, "{", "}", " "))</rewrite></seq>\
+<seq><rewrite>transform((TOKENS, "{", "}", " ; "))</rewrite></seq>\
+<seq><rewrite>transform((TOKENS, "{", "}", "AND"))</rewrite></seq>\
+<seq><rewrite>transform((TOKENS, "{", "}", "ACCUM"))</rewrite></seq>\
+</progression></textquery><score datatype="INTEGER" algorithm="COUNT"/></query>\', 1) > 1 \
+OR CONTAINS(rj.method_pdf, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + form.cleaned_data['keywords'] + '.<progression> \
+<seq><rewrite>transform((TOKENS, "{", "}", " "))</rewrite></seq>\
+<seq><rewrite>transform((TOKENS, "{", "}", " ; "))</rewrite></seq>\
+<seq><rewrite>transform((TOKENS, "{", "}", "AND"))</rewrite></seq>\
+<seq><rewrite>transform((TOKENS, "{", "}", "ACCUM"))</rewrite></seq>\
+</progression></textquery><score datatype="INTEGER" algorithm="COUNT"/></query>\', 2) > 1) \
+ORDER BY score(1) desc;')
+                results_list = _dictfetchall(cursor)
+                paginator = Paginator(results_list, 20)
+                
+                try:
+                    page = int(request.GET.get('page', '1'))
+                except ValueError:
+                    page = 1
+
+                # If page request is out of range, deliver last page of results.
+                try:
+                    results = paginator.page(page)
+                except (EmptyPage, InvalidPage):
+                    results = paginator.page(paginator.num_pages)
+
+                path = request.get_full_path()
+                # Remove the &page parameter.
+                current_url = path.rsplit('&page=')[0]
+                return self.render_to_response({'form': form,
+                                                'current_url' : current_url,
+                                                'results' : results}) 
+                
+            else:
+                # There is an error in form validation so resubmit the form.
+                return self.render_to_response({'form' : form})
+
+        else:
+            #Render a blank form
+            form = KeywordSearchForm()
+            return self.render_to_response({'form' : form})

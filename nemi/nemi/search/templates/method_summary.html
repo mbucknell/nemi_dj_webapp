@@ -63,10 +63,12 @@
 	<hr/>
 	<h4>Method <i>{{data.source_method_identifier|safe }}</i> has {{ analyte_data|length }} analyte{{ analyte_data|pluralize }} associated with it.</h4>
 	{% if analyte_data %}
+		<p>
 		<a class="popup"
 			title="Download the results as a tab-separated values format, which can be opened by any spreadsheet application."
 			href = {% url search-method_analyte_export data.method_id %}>Export results as a tab separated text file (can be opened in any text editor or spreadsheet)
 		</a>
+		</p>
 		<table class="data-table">
 			<tr>
 				<th>Analyte</th>

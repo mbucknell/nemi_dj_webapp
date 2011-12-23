@@ -52,4 +52,7 @@ urlpatterns = patterns("",
         url(r'^analyte_select/$',
             views.AnalyteSelectView.as_view(),
             name='search-analyte_select'),
+        url(r'^keyword_search/$',
+            views.KeywordSearchView.as_view(),
+            name='search-keyword'),
         )
