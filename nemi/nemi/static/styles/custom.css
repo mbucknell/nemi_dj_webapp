@@ -10,7 +10,6 @@ th{
 	border-bottom: solid #aaaaaa 1px;
 }
 td{
-	color: black;
 	border-bottom: solid #aaaaaa 1px;
 }
 a:link{
@@ -129,4 +128,18 @@ column in the table */
 }
 .info-table td {
 	padding: 4px;
+}
+/* inside-table is used to format table data without colored headers or borders */
+.inside-table th{
+	background-color: inherit;
+	border: none;
+	vertical-align: top;
+	padding-top: 2px;
+	padding-bottom: 0px;
+}
+.inside-table td {
+	background-color: inherit;
+	border: none;
+	padding-top: 2px;
+	padding-bottom: 0px;
 }

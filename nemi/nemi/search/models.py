@@ -72,41 +72,7 @@ class MethodVW(models.Model):
         db_table = u'method_vw'
         managed = False
         
-    def pbt_greenness(self):
-        ''' Return a verbose string which represents the pbt field.'''
-        if self.pbt == 'N':
-            return 'Green'
-        elif self.pbt == 'Y':
-            return 'Not Green'
-        else:
-            return 'N.S.'
-        
-    def hazardous_greenness(self):
-        ''' Return a verbose string which represents the toxic field.'''        
-        if self.toxic == 'N':
-            return 'Green'
-        elif self.toxic == 'Y':
-            return 'Not Green'
-        else:
-            return 'N.S.'
-        
-    def corrosive_greenness(self):
-        ''' Return a verbose string which represents the corrosive field.'''
-        if self.corrosive == 'N':
-            return 'Green'
-        elif self.corrosive == 'Y':
-            return 'Not Green'
-        else:
-            return 'N.S.'
-        
-    def waste_amt_greenness(self):
-        ''' Return a verbose string which represent the wasted field.'''
-        if self.waste == 'N':
-            return 'Green'
-        elif self.waste == 'Y':
-            return 'Not Green'
-        else:
-            return 'N.S.'
+
         
 class MethodSummaryVW(models.Model):
     revision_id = models.IntegerField()

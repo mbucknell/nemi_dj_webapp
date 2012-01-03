@@ -29,15 +29,6 @@
 			})
 		});
 	</script>
-	<script type="text/javascript">
-		function winSummary(url) {
-			w = window.open(url, 'winSummary', 'toolbars=1, location=1, status=1, menubar=1,scrollbars=1, resizable=1, width=600, height=700');
-			if (w.opener == null) {
-				w.opener = self;
-			}
-			w.focus();
-		}
-	</script>
 {% endblock %}
 {% block page_style %}
    	<link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesort/style.css" media="screen" type="text/css">
@@ -176,7 +167,7 @@
 				<tbody>
 				{% for r in results %}
 					<tr>
-	    				<td><a class="popup" title="Method details (in a new window)" href="javascript:winSummary('{% url search-method_summary r.m.method_id %}')">{{ r.m.source_method_identifier|safe }}</a></td>
+	    				<td><a class="popup" title="Method details (in a new tab)" target="_blank" href="{% url search-method_summary r.m.method_id %}">{{ r.m.source_method_identifier|safe }}</a></td>
 						<td>{{ r.m.method_descriptive_name }}</td>
 						<td>{{ r.m.media_name|lower|capfirst }}</td>
 						<td>{{ r.m.method_source }}</td>
@@ -184,15 +175,7 @@
 						<td>{{ r.m.method_category|lower|capfirst }}</td>
 						<td>{{ r.m.method_subcategory }}</td>
 						<td>{{ r.m.method_type_desc }}</td>
-						<td>
-						{% if r.greenness|length == 4 %}
-							<div style="line-height: 0px;">
-							    <a href="javascript:winPopup('{% url search-greenness r.m.method_id %}')"><img src="{{ STATIC_URL }}images/{{ r.greenness.0 }}"><img src="{{ STATIC_URL }}images/{{ r.greenness.1 }}"><br/><img src="{{ STATIC_URL }}images/{{ r.greenness.2 }}"><img src="{{ STATIC_URL }}images/{{ r.greenness.3 }}"></a>
-							</div>
-						{% else %}
-							{{ r.m.assumptions_comments }}
-						{% endif %}
-						</td>
+						<td>{% include "greenness_profile.html" %}</td>
 					</tr>
 				{% endfor %}
 				</tbody>

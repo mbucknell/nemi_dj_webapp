@@ -13,6 +13,14 @@
 				}
 				w.focus();
 			}
+			function show_hide(divID){
+				if ($(divID).is(":hidden")) {
+					$(divID).show();
+				}
+				else {
+					$(divID).hide();
+				}
+			}
 		</script>
 		{% block page_script %}<!-- Put page specific script here -->{% endblock %}
 		

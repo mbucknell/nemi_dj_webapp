@@ -1,17 +1,18 @@
-{% extends "base.html" %}
-{% block title %}Greenness Profile Summary Developed by the Green Chemistry Institute{% endblock %}
-{% block content %}
-	<p> 
-		<img src="{{ STATIC_URL }}images/GCI_icon.jpg"><b>Greenness Profile information developed in cooperation with the Green Chemistry Institute</b>
-	</p>
-	<table id="green-table">
-		<tr><th>Method Number</th><td>{{ data.source_method_identifier|safe }}</td></tr>
-		<tr><th>PBT</th><td>{{ data.pbt_greenness }}</td></tr>
-		<tr><th>Corrosive</th><td>{{ data.corrosive_greenness }}</td></tr>
-		<tr><th>Hazardous</th><td>{{ data.hazardous_greenness }}</td></tr>
-		<tr><th>Waste Amt</th><td>{{ data.waste_amt_greenness }}</td></tr>
-		<tr><th>Assumptions/Comments</th><td>{{ data.assumptions_comments }}</td></tr>
-	</table>
-	<hr/>
-	<p>N.S. -- not specified<br/>N.A. -- not applicable</p>
-{% endblock %}	
+<!-- This html can be included in other files to show the greenness profile -->
+{% if r.greenness.profile|length == 4 %}
+	<div style="line-height: 0px;">
+	    <a title="Click to show/hide details" href="javascript:show_hide('#greenness-detail{{ forloop.counter }}')"><img src="{{ STATIC_URL }}images/{{ r.greenness.profile.0 }}"><img src="{{ STATIC_URL }}images/{{ r.greenness.profile.1 }}"><br/><img src="{{ STATIC_URL }}images/{{ r.greenness.profile.2 }}"><img src="{{ STATIC_URL }}images/{{ r.greenness.profile.3 }}"></a>
+	</div>
+	<div id="greenness-detail{{ forloop.counter }}" style="display: none;">
+		<table class="inside-table">
+			<tr><th>PBT</th><td>{{ r.greenness.pbt }}</td></tr>
+			<tr><th>Corrosive</th><td>{{ r.greenness.corrosive }}</td></tr>
+			<tr><th>Hazardous</th><td>{{ r.greenness.hazardous }}</td></tr>
+			<tr><th>Waster Amt</th><td>{{ r.greenness.waste_amt }}</td></tr>
+			<tr><th>Assumptions/Comments</th><td>{{ r.m.assumptions_comments }}</td></tr>
+		</table>
+	</div>
+{% else %}
+	{{ r.m.assumptions_comments }}
+{% endif %}
+

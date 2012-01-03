@@ -50,7 +50,7 @@
 			{% for r in results.object_list %}
 				<div class="main-link">
 					{{ r.METHOD_SUMMARY_SCORE }}%&nbsp;
-					<a class="popup" title="Method details (in a new window)" href="javascript:winSummary('{% url search-method_summary r.METHOD_ID %}')">
+					<a class="popup" title="Method details (in a new tab)" target="_blank" href="{% url search-method_summary r.METHOD_ID %}">
 					{{ r.METHOD_NUMBER|safe }}&nbsp;{{ r.METHOD_DESCRIPTIVE_NAME }}
 					</a>
 				</div>

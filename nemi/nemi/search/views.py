@@ -37,12 +37,23 @@ def _dictfetchall(cursor):
             for row in cursor.fetchall()
             ]
 def _greenness_profile(d):
-    '''Return a list of four gifs representing the greenness profile of the dictionary d.
-    If there is not enough information for a complete greenness profile list, return an empty list.
+    '''Return a dicitionary with five keywords. The first keyword is profile whose is 
+    a list of four gifs representing the greenness profile of the dictionary d or an empty list if there is not
+    enough information for a complete profile. The second through 5th keyword represent the verbose greenness value for
+    pbt, toxic, corrisive, and waste_amt
     '''
+    def _g_value(flag):
+        ''' Return a string representing the verbose "greenness" of flag.'''
+        if flag == 'N':
+            return 'Green'
+        elif flag == 'Y':
+            return 'Not Green'
+        else:
+            return 'N.S.'
+        
     pbt = d.get('pbt', '')
     toxic = d.get('toxic', '')
-    corrosive = d.get('toxic', '')
+    corrosive = d.get('corrosive', '')
     waste = d.get('waste', '')
     
     g = []
@@ -66,10 +77,14 @@ def _greenness_profile(d):
     elif waste == 'Y':
         g.append('LRW2.gif')
         
-    if len(g) == 4:
-        return g
-    else:
-        return []
+    if len(g) != 4:
+        g = []
+
+    return {'profile' : g, 
+            'pbt' : _g_value(pbt), 
+            'hazardous' : _g_value(toxic),
+            'corrosive' : _g_value(corrosive),
+            'waste_amt' : _g_value(waste)}
     
 def _tsv_response(headings, vl_qs):
     ''' Return an http response which contains a tab-separate-values file
@@ -286,14 +301,6 @@ class GeneralSearchView(SearchView, TemplateResponseMixin):
         
         self.context['criteria'] = criteria
         self.context['selected_method_types'] = selected_method_types       
-                 
-class GreennessView(DetailView):
-
-    '''Extends the DetailView using model MethodVW with keyword argument pk'''
-    
-    model = MethodVW
-    template_name = 'greenness_profile.html'
-    context_object_name = 'data'
 
 class MethodSummaryView(View, TemplateResponseMixin):
     
@@ -309,7 +316,22 @@ class MethodSummaryView(View, TemplateResponseMixin):
                 data = MethodSummaryVW.objects.get(method_id=kwargs['method_id'])
             except MethodSummaryVW.DoesNotExist:
                 data = None
-            analyte_data = _analyte_value_qs(kwargs['method_id'])
+                
+            # Get analyte information including synonyms for each analyte
+            analyte_data = []
+            
+            analyte_qs = _analyte_value_qs(kwargs['method_id'])
+            for r in analyte_qs:
+                name = r['analyte_name'].lower()
+                code = r['analyte_code'].lower()
+                inner_qs = AnalyteCodeRel.objects.filter(Q(analyte_name__iexact=name)|Q(analyte_code__iexact=code)).values_list('analyte_code', flat=True).distinct()
+                qs = AnalyteCodeRel.objects.all().filter(analyte_code__in=inner_qs).order_by('analyte_name').values('analyte_name')
+                syn = []
+                for a in qs:
+                    syn.append(a['analyte_name'])
+                    
+                analyte_data.append({'r' : r, 'syn' : syn})
+                
             notes = MethodAnalyteVW.objects.filter(method_id__exact=kwargs['method_id']).values('precision_descriptor_notes', 'dl_note').distinct()
             
             return self.render_to_response({'data': data,
@@ -318,21 +340,6 @@ class MethodSummaryView(View, TemplateResponseMixin):
         else:
             raise Http404
  
-class MethodSourceView(DetailView):
-    
-    ''' Extends the DetailView for the MethodSummaryVW and keyword argument pk'''
-    
-    model = MethodSummaryVW
-    template_name = 'method_source.html'
-    context_object_name = 'data'
-    
-class CitationInformationView(DetailView):
-    
-    '''Extends the DetailView for the MethodSummaryVW model and keyword argument pk'''
-    
-    model = MethodSummaryVW
-    template_name = 'citation_information.html'
-    context_object_name = 'data' 
     
 class HeaderDefinitionsView(DetailView):
     
@@ -350,31 +357,6 @@ class HeaderDefinitionsView(DetailView):
             return self.get_queryset().get(definition_abbrev=self.kwargs.get('abbrev', None))
         except(self.model.MultipleObjectsReturned, self.model.DoesNotExist):
             return None
-
-class SynonymView(ListView):
-    
-    '''Extends the ListView using the queryset returned from the get_queryset function.
-    Also adds the analyte name and code to the context data. These are retrieved from 
-    keyword arguments.
-    '''
-    
-    template_name = 'synonyms.html'
-    context_object_name = 'qs'
-    
-    def get_queryset(self):
-        ''' Return the queryset of analyte synonyms by using both the specific analyte's name and code to search.'''
-        name = self.request.GET.get('name', None).lower()
-        code = self.request.GET.get('code', None).lower()
-        inner_qs = AnalyteCodeRel.objects.filter(Q(analyte_name__iexact=name)|Q(analyte_code__iexact=code)).values_list('analyte_code', flat=True).distinct()
-        qs = AnalyteCodeRel.objects.all().filter(analyte_code__in=inner_qs).order_by('analyte_name').values('analyte_name')
-        return qs
-    
-    def get_context_data(self, **kwargs):
-        ''' Add the analyte name and code to the context data'''
-        context = super(SynonymView, self).get_context_data(**kwargs)
-        context['name'] = self.request.GET.get('name', None)
-        context['code'] = self.request.GET.get('code', None)
-        return context
     
 class ExportMethodAnalyte(View, TemplateResponseMixin):
     

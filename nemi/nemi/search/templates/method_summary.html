@@ -5,6 +5,7 @@
 {% block page_style %}
 	<link rel="stylesheet" href="{{ STATIC_URL }}/styles/tablesort/style.css" media="screen" type="text/css">
 {% endblock %}
+
 {% block content %}
 	<h2>Method Summary</h2>
 	{% if data %}
@@ -26,8 +27,27 @@
 				</td>
 			</tr>
 			<tr><th>Subcategory</th><td>{{ data.method_subcategory }}</td></tr>
-			<tr><th>Method Source</th><td><a class="popup" title="Method source details (in a new window)" href="javascript:winPopup('{% url search-method_source data.method_id %}')">{{ data.method_source_name }}</a></td></tr>
-			<tr><th>Citation</th><td><a class="popup" title="Citation Information details (in a new window)" href="javascript:winPopup('{% url search-citation_information data.method_id %}')">{{ data.source_citation_name }}</a></td></tr>
+			<tr><th>Method Source</th>
+				<td><a title="Click to show/hide details" href="javascript:show_hide('#method-source-detail')">{{ data.method_source_name }}</a>
+					<div id="method-source-detail" style="display: none;">
+						<table class="inside-table">
+							<tr><th>Contact Information:</th><td>{{ data.method_source_contact|safe }}</td></tr>
+							<tr><th>URL:</th><td>{{ data.method_source_url }}</td></tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+			<tr><th>Citation</th>
+				<td><a title="Click to show/hide details" href="javascript:show_hide('#citation-detail')">{{ data.source_citation_name }}</a>
+					<div id="citation-detail" style="display: none;">
+						<table class="inside-table">
+							<tr><th>Method Number:</th><td>{{ data.source_method_identifier|safe }}</td></tr>
+							<tr><th>Method Official Name:</th><td>{{ data.method_official_name }}</td></tr>
+							<tr><th>Citation Information:</th><td>{{ data.source_citation_information }}</td></tr>
+						</table>
+					</div>
+				</td>
+			</tr>
 			<tr><th>Brief Method Summary</th><td>{{ data.brief_method_summary|safe }}</td></tr>
 			<tr><th>Scope and Application</th><td>{{ data.scope_and_application|safe }}</td></tr>
 			<tr><th>Applicable Conc Range</th><td>{{ data.applicable_conc_range }}</td></tr>
@@ -82,11 +102,20 @@
 			{% for a in analyte_data %}
 				<tr>
 					<td>
-						<a class="popup" 
-							title="Analyte synonym listing in a new window" 
-							href="javascript:winPopup('{% url search-synonyms %}?name={{ a.analyte_name|escapejs }}&code={{ a.analyte_code|escapejs }}')">
-							{{ a.analyte_name|force_escape }}<br/>({{ a.analyte_code }})
-						</a>
+						<a title="Click to show/hide synonyms" 
+							href="javascript:show_hide('#analyte-synonyms{{ forloop.counter }}')">
+							{{ a.r.analyte_name|force_escape }}<br/>({{ a.r.analyte_code }})</a>
+						<div id="analyte-synonyms{{ forloop.counter }}" style="display: none;">
+							<table class="inside-table">
+								<tr>
+									<th>Synonyms:</th>
+									<td>
+									{% for name in a.syn %}
+										{{ name }}<br />
+									{% endfor %}
+									</td>
+							</table>
+						</div>
 					</td>
 					<td>
 						{% if a.dl_value == 999 %}
