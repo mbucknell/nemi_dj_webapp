@@ -568,10 +568,18 @@ class AnalyteSelectView(View, TemplateResponseMixin):
         return self.render_to_response({'select_form' : select_form,
                                         'kind' : kind})
         
-class KeywordSearchView(View, TemplateResponseMixin):    
+class KeywordSearchView(View, TemplateResponseMixin):
+    
+    ''' This class extends the standard View to implement the keyword search view. This form only
+    processes get requests.
+    '''  
     template_name = "keyword_search.html"
     
     def get(self, request, *args, **kwargs):
+        '''Returns the http response for the keyword search form. If the form is bound
+        validate the form and the execute a raw SQL query to return matching methods. The resulting 
+        query set will be shown using pagination and in score order.
+        '''
         if request.GET:
             # Form has been submitted.
             form = KeywordSearchForm(request.GET)

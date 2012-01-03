@@ -82,6 +82,10 @@ class GeneralSearchForm(Form):
         self.fields['method_types'].initial = [d['method_type_id'] for d in mt_qs] 
         
 class AnalyteSearchForm(Form):
+    '''This class extends the standard Form to implement the analyte search form. 
+    The choice field selections are determined when the form is instantiated by querying the database
+    for valid selections.
+    '''
     analyte_kind = ChoiceField(choices=[('name', 'Name'), ('code', 'Code')],
                        initial='name',
                        widget=RadioSelect(attrs={'id' : 'analyte-search-kind'}))
@@ -119,6 +123,13 @@ class AnalyteSearchForm(Form):
 
                   
 class AnalyteSelectForm(Form):
+    
+    ''' This class extends the standard Form to implement the analyte select form. This form
+    allows the user to enter a partial string to and then see which analytes match that string.
+    The analyte kind (by name or code) is set when the form is instantiated by setting the kind field. If
+    the kind is not code, it is assumed to be name. If the selection field is not empty, the values_list is filled
+    in by querying the database for analyte name/code that contain the string in the selection field.
+    '''
     kind = CharField(widget=HiddenInput())
     selection = CharField()
     values_list = ChoiceField(widget=SelectMultiple(attrs={'id': 'values-list',
@@ -139,4 +150,7 @@ class AnalyteSelectForm(Form):
                 self.fields['values_list'].choices=[(choice, choice) for choice in qs]    
 
 class KeywordSearchForm(Form):
+    
+    ''' This class extends the standard Form to implement the keyword search form. 
+    '''
     keywords = CharField()     

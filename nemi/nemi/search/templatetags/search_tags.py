@@ -7,6 +7,10 @@ register = template.Library()
 
 @register.filter
 def decimal_format(num):
+    ''' Returns a normalized decimal number with no trailing zeros and
+    if the decimal number has no fraction part returns only the integer part
+    with no decimal point.
+    '''
     if isinstance(num, Decimal):
         nv = str(num).rstrip('0')
         decimal_index = nv.rfind('.')
@@ -19,4 +23,5 @@ def decimal_format(num):
     else:
         return num
 
+## Set flag to indicate that the function does not introduce any HTML unsafe characters.
 decimal_format.is_safe = True

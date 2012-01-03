@@ -406,10 +406,3 @@ class MethodSubcategoryRef(models.Model):
         db_table = 'method_subcategory_ref'
         managed = False
         
-class MethodVwSyn(models.Model):
-    
-    
-    
-    class Meta:
-        db_table = 'method_vw_syn'
-        managed = False
