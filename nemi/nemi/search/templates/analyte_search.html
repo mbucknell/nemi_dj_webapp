@@ -4,6 +4,7 @@
 {% block local_page_script %}
 	<script type="text/javascript">
 		function showAnalyteFind(url){
+			//Determines which analyte kind has been selected. This defaults to "name" 
 			var searchForm = document.getElementById('search-form');
 			
 			var analyteKindR = searchForm.elements["analyte_kind"]; 
@@ -15,11 +16,13 @@
 				}
 			}
 			
+			// Retrieve the value in the analyte_value text field  and create selection parameter for find analyte form. 
 			var selection = searchForm.elements["analyte_value"].value;
 			var selectionParam = "";
 			if (selection != ""){
 				selectionParam = "&selection=" + selection;
 			}
+			// Disable the search-form while the pop up dialog is up and then pop up it up. 
 			$('#search-form input').attr("disabled", true);
 			winPopup(url + "?kind=" + kind + selectionParam);
 		}
@@ -39,6 +42,7 @@
 		}
 	</style>
 {% endblock %}
+
 {% block search_box_body %}
 	<form id="search-form" action={% url search-analyte_search %} method="get">{% csrf_token %}
 		<table id="search-table">
@@ -70,8 +74,9 @@
 		</a>
 	{% endif %}
 {% endblock %}
+
 {% block results_table_data %}
-	{% load search_tags %}
+	{% load search_tags %} <!-- Imports decimal_format tag -->
 	{% for r in results %}
 		<tr>
 			<td><a class="popup" title="Method details (in a new tab)" target="_blank" href="{% url search-method_summary r.m.method_id %}">{{ r.m.source_method_identifier|safe }}</a></td>

@@ -2,8 +2,10 @@
 {% extends "base.html" %}
 {% block title %}NEMI Search{% endblock %}
 {% block page_script %}
+	<!-- Imports the tablesorter and ui plugins -->
 	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.min.js"></script>
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.8.16.custom.min.js"></script>
+	
 	<script type="text/javascript">
 		$(document).ready(function(){
 			// Column headers with class nosort should be disabled. The code below collects them in 
@@ -13,11 +15,12 @@
 				var i = $(this).index();
 				noSort[i] = { sorter: false }
 			});
+			// Sets up the tablesorter plugin 
 			$("#sort-table").tablesorter({
 				headers: noSort,
 				sortList: [[0,0]]
 			});
-			// Function implements search box show/hide feature 
+			// Implements search box show/hide feature 
 			$("#search-box-toggle").click(function(){
 				if ($("#search-box-body").is(":hidden")) {
 					$("#search-box-body").show()
@@ -35,7 +38,8 @@
 						 height: 200,
 						 width: 300
 						 });
-			// Function implements header information button 
+			// Forces a click on the header information button to call it's link rather than perform
+			// the sort. 
 			$("#sort-table th a").click(function(){
 				window.location=$(this).attr("href");
 				return false;
@@ -44,7 +48,7 @@
 		// Show header information dialogs 
 		function showInfo(header, info) {
 			$('#header-info').html(info);
-			// This preprends {{ STATIC_URL}} to any img tag in info
+			// This preprends {{ STATIC_URL}} to any img tag in info 
 			$('#header-info img').each(function(){
 				var src = $(this).attr("src");
 				$(this).attr("src", "{{ STATIC_URL }}" + src);
@@ -58,18 +62,16 @@
 		};
 	</script>
 	
-	{% block local_page_script %}{% endblock %}
+	{% block local_page_script %}<!-- put page specific script here -->{% endblock %}
 	
 {% endblock %}
-
-
 
 {% block page_style %}
 	<!--  Style sheets for tablesorter and ui-dialog plugins -->
 	<link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesort/style.css" media="screen" type="text/css" />
 	<link type="text/css" href="{{ STATIC_URL }}styles/jquery-ui/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" media="screen"/>
 
-	{% block local_page_style %}{% endblock %}
+	{% block local_page_style %}<!-- Put page specific style here -->{% endblock %}
 
 {% endblock %}
 
@@ -77,14 +79,14 @@
 	<div id="search-box">
 		<div id="search-box-header">
 			{% block search_box_header %}
+			<!-- Search box header. If additional header information is needed use search_box_header.super -->
 				<h2>Select Search Criteria</h2>
 				<div id="search-box-toggle">-</div>
 			{% endblock %}
 		</div>
 	
 		<div id="search-box-body">
-			{% block search_box_body %}
-			{% endblock %}
+			{% block search_box_body %}<!-- Place search box form here -->{% endblock %}
 		</div>
 	</div>
 	<!-- Selectively show/hides search box based on template boolean variable hide_search -->
@@ -104,20 +106,24 @@
 		</script>
 	{% endif %}
 	<br/>
-	{% block export_results %} {% endblock %}
 	
+	{% block export_results %}<!-- Put links to export results to different formats here --> {% endblock %}
+	<br />
 	{% if show_results %}
 		{% block totals %}
-			<h4>Total records found: {{ results|length }}</h4>
+			<!--  Shows total number of results found -->
+			<p><b>Total records found: {{ results|length }}</b></p>
 		{% endblock %}
 		{% block criteria %}
-			<h4>Criteria summary:</h4>
+			<!-- Shows criteria summary using the criteria and selected_method_types template variables -->
+			<p><b>Criteria summary:</b></p>
 			<ul>
 				{% if criteria %}
 					{% for c in criteria %}
 						<li>{{ c.0 }} equals {{ c.1 }}</li>
 					{% endfor %}
 				{% endif %}
+				
 				{% if selected_method_types %}
 					<li>Method types:
 					{% for mt in selected_method_types %}
@@ -134,11 +140,17 @@
 		<br />
 		{% if results %}
 			{% block header_information_dialog %}
+			<!--  Place holder for the header information dialog  -->
 				<div id="header-info">
 					<p>Place holder</p>
 				</div>	
 			{% endblock %}
 			{% block results_table %}
+				<!-- Results table block, normally would not need to override. Creates
+				the table headers from the header_defs template variable. The headers are sortable
+				except for Greenness Profile and each header also has a help link which pops up
+				an information dialog.
+				 -->
 				<table class="tablesorter data-table" id="sort-table" style="width: 100%">
 					<thead>
 					<tr>
@@ -158,7 +170,7 @@
 					</tr>
 					</thead>
 					<tbody>
-						{% block results_table_data %}{% endblock %}
+						{% block results_table_data %}<!-- This is where the table data goes -->{% endblock %}
 					</tbody>
 				</table>
 			{% endblock %}
@@ -167,6 +179,6 @@
 		{% endif %}	
 	{% endif %}
 	
-	{% block page_content %}{% endblock %}
+	{% block page_content %}<!-- Any additional page content would go here -->{% endblock %}
 	
 {% endblock %}
