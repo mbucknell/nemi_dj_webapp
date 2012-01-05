@@ -1,76 +1,18 @@
-{% extends "base.html" %}
+{% extends "base_search.html" %}
 {% block title %}NEMI General Search w/ Greenness Profile{% endblock %}
-{% block page_script %}
-	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.min.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$("#sort-table").tablesorter({
-				headers: {
-					8: { // disable sorting on greenness column since it seems ill-defined 
-						sorter: false
-					}
-				},
-				sortList: [[0, 0]]
-	        });
-			// Function implements search box show/hide feature 
-			$("#search-box-toggle").click(function(){
-				if ($("#search-box-body").is(":hidden")) {
-					$("#search-box-body").show()
-					$("#search-box-toggle").text("-")
-				} else {
-					$("#search-box-body").hide()
-					$("#search-box-toggle").text("+")
-				}
-			})
-			// Function implements header information button 
-			$("#sort-table th a").click(function(){
-				window.location=$(this).attr("href");
-				return false;
-			})
-		});
-	</script>
+{% block search_box_body %}
+	<p>Select one or more criteria from the right and press 'Search NEMI' to perform a search.</p>
+	<p><i>If you are looking for a method for a specific analyte, please use the Analyte Search.</i></p>
+	<form action={% url search-general %} method="get"> {% csrf_token %}
+		<h4> {{search_form.non_field_errors }} </h4>
+		<table id="search-table">
+		{{ search_form }}
+		<tr><td></td><td><input id="search-button" type="submit" value="Search NEMI"/></td></tr>
+		</table>			
+	</form>
 {% endblock %}
-{% block page_style %}
-   	<link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesort/style.css" media="screen" type="text/css">
-{% endblock %}
-{% block content %}
-	<div id="search-box">
-		<div id="search-box-header">
-			<h2>Select Search Criteria</h2>
-			<div id="search-box-toggle">-</div>
-		</div>
-		<div id="search-box-body">
-			<p>Select one or more criteria from the right and press 'Search NEMI' to perform a search.</p>
-			<p><i>If you are looking for a method for a specific analyte, please use the Analyte Search.</i></p>
-			<p>If nothing happens when you click the Search button, and you have IE8 installed, 
-				<a href="https://www.nemi.gov/apex/f?p=237:59:994077173633214">this page</a>
-				will help you fix the problem.
-			</p>
-			<h4> {{search_.non_field_errors }} </h4>
-			<form action={% url search-general %} method="get"> {% csrf_token %}
-				<table id="search-table">
-				{{ search_form }}
-				<tr><td></td><td><input id="search-button" type="submit" value="Search NEMI"/></td></tr>
-				</table>			
-			</form>
-		</div>
-	</div>
-	{% if hide_search %}
-		<script>
-			if (!($("#search-box-body").is(":hidden"))){
-				$("#search-box-body").hide();
-			}
-			$("#search-box-toggle").text("+");
-		</script>
-	{% else %}
-		<script>
-			if ($("#search-box-body").is(":hidden")) {
-				$("#search-box-body").show();				
-			}
-			$("#search-box-toggle").text("-");
-		</script>
-	{% endif %}
-	<br/>
+
+{% block export_results %}
 	{% if results %}
 		<a class="popup"
 			title="Download the results in Microsoft's proprietary Excel format."
@@ -82,106 +24,20 @@
 			href={% url search-general_export_tsv %}{{ query_string }}>Export results as a tab separated text file (can be opened in any text editor or spreadsheet)
 		</a>
 	{% endif %}
-	{% if show_results %}
-		<h4>Total records found: {{ results|length }}</h4>
-		<h4>Criteria summary:</h4>
-		<ul>
-			{% if criteria %}
-				{% for c in criteria %}
-					<li>{{ c.0 }} equals {{ c.1 }}</li>
-				{% endfor %}
-			{% endif %}
-			{% if selected_method_types %}
-				<li>Method types:
-				{% for mt in selected_method_types %}
-					{% if forloop.last %}
-						{{ mt }}.
-					{% else %}
-						{{ mt }},
-					{% endif %}
-				{% endfor %}
-				</li>
-			{% endif %}
-		</ul>
-		{% if results %}
-			<table class="tablesorter data-table" id="sort-table" style="width: 100%">
-				<thead>
-				<tr>
-					<th>Method Number<br/>
-						<a title="Click to display definition in a new window." 
-							href="javascript:winPopup('{% url search-header_definitions abbrev="SOURCE_METHOD_IDENTIFIER" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Descriptive Method Name<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_DESCRIPTIVE_NAME" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Media
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="MEDIA_NAME" %}')">
-							<br/>
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Source<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_SOURCE" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Instrumentation<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="INSTRUMENTATION" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Method Category<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_CATEGORY" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Method Subcategory<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_SUBCATEGORY" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Method Type<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_TYPE" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Greenness Rating<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="GREENNESS" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-				</tr>
-				</thead>
-				<tbody>
-				{% for r in results %}
-					<tr>
-	    				<td><a class="popup" title="Method details (in a new tab)" target="_blank" href="{% url search-method_summary r.m.method_id %}">{{ r.m.source_method_identifier|safe }}</a></td>
-						<td>{{ r.m.method_descriptive_name }}</td>
-						<td>{{ r.m.media_name|lower|capfirst }}</td>
-						<td>{{ r.m.method_source }}</td>
-						<td>{{ r.m.instrumentation_description }}</td>
-						<td>{{ r.m.method_category|lower|capfirst }}</td>
-						<td>{{ r.m.method_subcategory }}</td>
-						<td>{{ r.m.method_type_desc }}</td>
-						<td>{% include "greenness_profile.html" %}</td>
-					</tr>
-				{% endfor %}
-				</tbody>
-			</table>
-		{% else %}
-			<h4> No methods were found that match your criteria.</h4>
-		{% endif %}
-	{% endif %}
+{% endblock %}
+
+{% block results_table_data %}
+	{% for r in results %}
+		<tr>
+  			<td><a class="popup" title="Method details (in a new tab)" target="_blank" href="{% url search-method_summary r.m.method_id %}">{{ r.m.source_method_identifier|safe }}</a></td>
+			<td>{{ r.m.method_descriptive_name }}</td>
+			<td>{{ r.m.media_name|lower|capfirst }}</td>
+			<td>{{ r.m.method_source }}</td>
+			<td>{{ r.m.instrumentation_description }}</td>
+			<td>{{ r.m.method_category|lower|capfirst }}</td>
+			<td>{{ r.m.method_subcategory }}</td>
+			<td>{{ r.m.method_type_desc }}</td>
+			<td>{% include "greenness_profile.html" %}</td>
+		</tr>
+	{% endfor %}
 {% endblock %}

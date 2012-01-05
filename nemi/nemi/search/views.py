@@ -160,6 +160,9 @@ class SearchView(View):
     result_fields = () # Fields to be displayed on the results page
     result_field_order_by = '' #Field to order the query results. If null, no order is specified
     
+    header_abbrev_set = () # The header definitions to retrieve from the DOM. These should be in the order (from left to right)
+    # that they will appear on the screen.
+    
     export_fields = () # Fields to be exported to file
     export_field_order_by = '' # Field name to order the export query results by. If null, no order is specified
    
@@ -173,6 +176,17 @@ class SearchView(View):
         
     def get(self, request, *args, **kwargs):
         ''' Processes the get request. This method should not need to be overridden.'''
+        
+        # Retrieve the header definitions. Since these need to be in the order, put objects in order in a list.
+        def_qs = DefinitionsDOM.objects.filter(definition_abbrev__in=self.header_abbrev_set)
+        header_defs = []
+        for abbrev in self.header_abbrev_set:
+            try:
+                header_defs.append(DefinitionsDOM.objects.get(definition_abbrev=abbrev))
+            except(DefinitionsDOM.MultipleObjectsReturned, DefinitionsDOM.DoesNotExist):
+                header_defs.append(DefinitionsDOM(definition_name=abbrev.replace('_', ' ').title(),
+                                                  definition_description='No definition available.'))
+                
         if request.GET:
             self.search_form = self.form(request.GET)
             if self.search_form.is_valid():
@@ -199,7 +213,8 @@ class SearchView(View):
                     self.qs = self.qs.values(*self.result_fields).distinct()
                     if self.result_field_order_by:
                         self.qs = self.qs.order_by(self.result_field_order_by)
-                    #Determine Greenness rating if any
+                        
+                   #Determine Greenness rating if any
                     results = []
                     for m in self.qs:
                         results.append({'m': m, 'greenness' : _greenness_profile(m)})
@@ -212,12 +227,14 @@ class SearchView(View):
                     self.context['hide_search'] = True
                     self.context['show_results'] = True
                     self.context['query_string'] = query_string
+                    self.context['header_defs'] = header_defs
                     
                     return self.render_to_response(self.context) 
                 
             else:
                 # There is an error in validation so resubmit the search form
                 return self.render_to_response({'search_form' : self.search_form,
+                                                'header_defs' : header_defs,
                                                 'hide_search' : False,
                                                 'show_results' : False
                                                 })
@@ -226,6 +243,7 @@ class SearchView(View):
             #Show an empty form
             self.search_form = self.form()
             return self.render_to_response({'search_form' : self.search_form,
+                                            'header_defs' : header_defs,
                                             'hide_search' : False,
                                             'show_results' : False})
            
@@ -250,6 +268,16 @@ class GeneralSearchView(SearchView, TemplateResponseMixin):
                      'toxic',
                      'corrosive',
                      'waste')
+    
+    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
+                         'METHOD_DESCRIPTIVE_NAME',
+                         'MEDIA_NAME',
+                         'METHOD_SOURCE',
+                         'INSTRUMENTATION',
+                         'METHOD_CATEGORY',
+                         'METHOD_SUBCATEGORY',
+                         'METHOD_TYPE',
+                         'GREENNESS')
     
     export_fields = ('method_id', 
                      'source_method_identifier',
@@ -457,6 +485,18 @@ class AnalyteSearchView(SearchView, TemplateResponseMixin):
                      'corrosive',
                      'waste',
                      'assumptions_comments')
+    
+    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
+                      'METHOD_SOURCE',
+                      'METHOD_DESCRIPTIVE_NAME',
+                      'DL_VALUE',
+                      'DL_TYPE',
+                      'ACCURACY',
+                      'PRECISION',
+                      'PREC_ACC_CONC_USED',
+                      'INSTRUMENTATION',
+                      'RELATIVE_COST',
+                      'GREENNESS')
     
     export_fields = ('method_id',
                      'method_descriptive_name',

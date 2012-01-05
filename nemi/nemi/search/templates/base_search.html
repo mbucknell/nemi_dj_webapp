@@ -1,0 +1,172 @@
+<!-- Extend this template to implement method search pages that contain a search box and then a data table -->
+{% extends "base.html" %}
+{% block title %}NEMI Search{% endblock %}
+{% block page_script %}
+	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.min.js"></script>
+	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.8.16.custom.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			// Column headers with class nosort should be disabled. The code below collects them in 
+			// an array which will be used when registering the table. 
+			var noSort = [];
+			$("#sort-table").find("th.nosort").each(function(){
+				var i = $(this).index();
+				noSort[i] = { sorter: false }
+			});
+			$("#sort-table").tablesorter({
+				headers: noSort,
+				sortList: [[0,0]]
+			});
+			// Function implements search box show/hide feature 
+			$("#search-box-toggle").click(function(){
+				if ($("#search-box-body").is(":hidden")) {
+					$("#search-box-body").show()
+					$("#search-box-toggle").text("-")
+				} else {
+					$("#search-box-body").hide()
+					$("#search-box-toggle").text("+")
+				}
+			});
+			// Initialize header information dialogs 
+			$('#header-info')
+				.dialog({
+						 autoOpen: false,
+						 title: 'Basic Dialog',
+						 height: 200,
+						 width: 300
+						 });
+			// Function implements header information button 
+			$("#sort-table th a").click(function(){
+				window.location=$(this).attr("href");
+				return false;
+			});
+		});
+		// Show header information dialogs 
+		function showInfo(header, info) {
+			$('#header-info').html(info);
+			// This preprends {{ STATIC_URL}} to any img tag in info
+			$('#header-info img').each(function(){
+				var src = $(this).attr("src");
+				$(this).attr("src", "{{ STATIC_URL }}" + src);
+			});
+			$('#header-info').dialog('option', 'title', header);
+			if (!$('#header-info').dialog('isOpen')){
+				$('#header-info').dialog('option', 'height', 200);
+				$('#header-info').dialog('option', 'width', 300);
+				$('#header-info').dialog('open');	
+			}			
+		};
+	</script>
+	
+	{% block local_page_script %}{% endblock %}
+	
+{% endblock %}
+
+
+
+{% block page_style %}
+	<!--  Style sheets for tablesorter and ui-dialog plugins -->
+	<link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesort/style.css" media="screen" type="text/css" />
+	<link type="text/css" href="{{ STATIC_URL }}styles/jquery-ui/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" media="screen"/>
+
+	{% block local_page_style %}{% endblock %}
+
+{% endblock %}
+
+{% block content %}
+	<div id="search-box">
+		<div id="search-box-header">
+			{% block search_box_header %}
+				<h2>Select Search Criteria</h2>
+				<div id="search-box-toggle">-</div>
+			{% endblock %}
+		</div>
+	
+		<div id="search-box-body">
+			{% block search_box_body %}
+			{% endblock %}
+		</div>
+	</div>
+	<!-- Selectively show/hides search box based on template boolean variable hide_search -->
+	{% if hide_search %}
+		<script>
+			if (!($("#search-box-body").is(":hidden"))){
+				$("#search-box-body").hide();
+			}
+			$("#search-box-toggle").text("+");
+		</script>
+	{% else %}
+		<script>
+			if ($("#search-box-body").is(":hidden")) {
+				$("#search-box-body").show();				
+			}
+			$("#search-box-toggle").text("-");
+		</script>
+	{% endif %}
+	<br/>
+	{% block export_results %} {% endblock %}
+	
+	{% if show_results %}
+		{% block totals %}
+			<h4>Total records found: {{ results|length }}</h4>
+		{% endblock %}
+		{% block criteria %}
+			<h4>Criteria summary:</h4>
+			<ul>
+				{% if criteria %}
+					{% for c in criteria %}
+						<li>{{ c.0 }} equals {{ c.1 }}</li>
+					{% endfor %}
+				{% endif %}
+				{% if selected_method_types %}
+					<li>Method types:
+					{% for mt in selected_method_types %}
+						{% if forloop.last %}
+							{{ mt }}.
+						{% else %}
+							{{ mt }},
+						{% endif %}
+					{% endfor %}
+					</li>
+				{% endif %}
+			</ul>
+		{% endblock %}
+		<br />
+		{% if results %}
+			{% block header_information_dialog %}
+				<div id="header-info">
+					<p>Place holder</p>
+				</div>	
+			{% endblock %}
+			{% block results_table %}
+				<table class="tablesorter data-table" id="sort-table" style="width: 100%">
+					<thead>
+					<tr>
+						{% for header in header_defs %}
+							{% if header.definition_name == "Greenness Profile" %}
+								<th class="nosort">
+							{% else %}
+								<th>
+							{% endif %}
+							{{ header.definition_name }}<br />
+								<a title="Click to display definition"
+									href="javascript:showInfo('{{ header.definition_name }}', '{{ header.definition_description|escapejs }}')">
+									<img src="{{ STATIC_URL }}images/q_mark.gif">
+								</a>
+							</th>
+						{% endfor %}
+					</tr>
+					</thead>
+					<tbody>
+						{% block results_table_data %}{% endblock %}
+					</tbody>
+				</table>
+			{% endblock %}
+		{% else %}
+			<h4> No methods were found that match your criteria.</h4>
+		{% endif %}	
+	{% endif %}
+	
+	{% block page_content %}{% endblock %}
+	
+{% endblock %}

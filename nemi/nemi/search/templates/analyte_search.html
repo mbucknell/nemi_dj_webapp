@@ -1,34 +1,7 @@
-{% extends "base.html" %}
+{% extends "base_search.html" %}
 {% block title %}NEMI Analyte Search with Greenness Profile{% endblock %}
-{% block page_script %}
-	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.min.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$("#sort-table").tablesorter({
-				headers: {
-					10: { // disable sorting on greenness column since it seems ill-defined 
-						sorter: false
-					}
-				},
-				sortList: [[0,0]]
-	        });
-			// Function implements search box show/hide feature 
-			$("#search-box-toggle").click(function(){
-				if ($("#search-box-body").is(":hidden")) {
-					$("#search-box-body").show()
-					$("#search-box-toggle").text("-")
-				} else {
-					$("#search-box-body").hide()
-					$("#search-box-toggle").text("+")
-				}
-			})
-			// Function implements header information button
-			$("#sort-table th a").click(function(){
-				window.location=$(this).attr("href");
-				return false;
-			})
-		});
-	</script>
+
+{% block local_page_script %}
 	<script type="text/javascript">
 		function showAnalyteFind(url){
 			var searchForm = document.getElementById('search-form');
@@ -52,61 +25,39 @@
 		}
 	</script>
 {% endblock %}
-{% block page_style %}
-<link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesort/style.css" media="screen" type="text/css">
-<style>
-	#find-analytes {
-		cursor: pointer;
-	}
-	#kind-element {
-		display: inline;
-	}
-	#kind-element p, #kind-element ul, #kind-element li{
-		display: inline;
-	}
-</style>
+
+{% block local_page_style %}
+	<style>
+		#find-analytes {
+			cursor: pointer;
+		}
+		#kind-element {
+			display: inline;
+		}
+		#kind-element p, #kind-element ul, #kind-element li{
+			display: inline;
+		}
+	</style>
 {% endblock %}
-{% block content %}
-{% load search_tags %}
-	<div id="search-box">
-		<div id="search-box-header">
-			<h2>Select Search Criteria</h2>
-			<div id="search-box-toggle">-</div>
-		</div>
-		<div id="search-box-body">
-			<form id="search-form" action={% url search-analyte_search %} method="get">{% csrf_token %}
-				<table id="search-table">
-					<tr>
-							<th>Analyte (required):</th>
-							<td id='kind-element'>{{ search_form.analyte_kind }}{{ search_form.analyte_value }}{{ search_form.analyte_value.errors }}
-							<input id="find-analytes" onclick="showAnalyteFind('{% url search-analyte_select %}')" type="button" value="Find...">
-							</td>
-					<tr><th>{{ search_form.media_name.label }}:</th><td>{{ search_form.media_name }}</td></tr>
-					<tr><th>{{ search_form.source.label }}:</th><td>{{ search_form.source }}</td></tr>
-					<tr><th>{{ search_form.instrumentation.label }}:</td><td>{{ search_form.instrumentation }}</td></tr>
-					<tr><th>{{ search_form.method_subcategory.label }}:</th><td>{{ search_form.method_subcategory }}</td></tr>
-					<tr><th>{{ search_form.method_types.label }}:</th><td>{{ search_form.method_types.errors }}{{ search_form.method_types }}</td></tr>
-					<tr><td></td><td><input id="search-button" type="submit" value="Search NEMI"/></td></tr>				
-				</table>
-			</form>
-		</div>
-	</div>
-	{% if hide_search %}
-		<script>
-			if (!($("#search-box-body").is(":hidden"))){
-				$("#search-box-body").hide();
-			}
-			$("#search-box-toggle").text("+");
-		</script>
-	{% else %}
-		<script>
-			if ($("#search-box-body").is(":hidden")) {
-				$("#search-box-body").show();				
-			}
-			$("#search-box-toggle").text("-");
-		</script>
-	{% endif %}
-	<br/>
+{% block search_box_body %}
+	<form id="search-form" action={% url search-analyte_search %} method="get">{% csrf_token %}
+		<table id="search-table">
+			<tr>
+					<th>Analyte (required):</th>
+					<td id='kind-element'>{{ search_form.analyte_kind }}{{ search_form.analyte_value }}{{ search_form.analyte_value.errors }}
+					<input id="find-analytes" onclick="showAnalyteFind('{% url search-analyte_select %}')" type="button" value="Find...">
+					</td>
+			<tr><th>{{ search_form.media_name.label }}:</th><td>{{ search_form.media_name }}</td></tr>
+			<tr><th>{{ search_form.source.label }}:</th><td>{{ search_form.source }}</td></tr>
+			<tr><th>{{ search_form.instrumentation.label }}:</td><td>{{ search_form.instrumentation }}</td></tr>
+			<tr><th>{{ search_form.method_subcategory.label }}:</th><td>{{ search_form.method_subcategory }}</td></tr>
+			<tr><th>{{ search_form.method_types.label }}:</th><td>{{ search_form.method_types.errors }}{{ search_form.method_types }}</td></tr>
+			<tr><td></td><td><input id="search-button" type="submit" value="Search NEMI"/></td></tr>				
+		</table>
+	</form>
+{% endblock %}
+
+{% block export_results %}
 	{% if results %}
 		<a class="popup"
 			title="Download the results in Microsoft's proprietary Excel format."
@@ -118,142 +69,46 @@
 			href={% url search-analyte_export_tsv %}{{ query_string }}>Export results as a tab separated text file (can be opened in any text editor or spreadsheet)
 		</a>
 	{% endif %}
-	{% if show_results %}
-		<h4>Total records found: {{ results|length }}</h4>
-		<h4>Criteria summary:</h4>
-		<ul>
-			{% if criteria %}
-				{% for c in criteria %}
-					<li>{{ c.0 }} equals {{ c.1 }}</li>
-				{% endfor %}
-			{% endif %}
-			{% if selected_method_types %}
-				<li>Method types:
-				{% for mt in selected_method_types %}
-					{% if forloop.last %}
-						{{ mt }}.
-					{% else %}
-						{{ mt }},
-					{% endif %}
-				{% endfor %}
-				</li>
-			{% endif %}
-		</ul>
-		{% if results %}
-			<table class="data-table tablesorter" id="sort-table" style="width: 100%">
-				<thead>
-				<tr>
-					<th>Method Number<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="SOURCE_METHOD_IDENTIFIER" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Source<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_SOURCE" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Descriptive Method Name<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="METHOD_DESCRIPTIVE_NAME" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Detection Level<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="DL_VALUE" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Detection Level Type<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="DL_TYPE" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Bias<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="ACCURACY" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Precision<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="PRECISION" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Spiking Level<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="PREC_ACC_CONC_USED" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Instrumentation<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="INSTRUMENTATION" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Relative Cost<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="RELATIVE_COST" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-					<th>Greenness Rating<br/>
-						<a title="Click to display definition in a new window."
-							href="javascript:winPopup('{% url search-header_definitions abbrev="GREENNESS" %}')">
-							<img src="{{ STATIC_URL }}images/q_mark.gif">
-						</a>
-					</th>
-				</tr>
-				</thead>
-				<tbody>
-				{% for r in results %}
-					<tr>
-						<td><a class="popup" title="Method details (in a new tab)" target="_blank" href="{% url search-method_summary r.m.method_id %}">{{ r.m.source_method_identifier|safe }}</a></td>
-						<td>{{ r.m.method_source }}</td>
-						<td>{{ r.m.method_descriptive_name }}</td>						
-						<td>
-							{% if r.m.dl_value.normalize == 999 %}
-								N/A
-							{% else %}
-								 {{ r.m.dl_value|decimal_format }} <span class="abbrev" title="{{ r.m.dl_units_description }}">{{ r.m.dl_units }}</span>
-							{% endif %}
-						</td>
-						<td><span class="abbrev" title="{{ r.m.dl_type_description }}">{{ r.m.dl_type }}</span></td>
-						<td>
-							{% if r.m.accuracy.normalize == -999 %}
-								N/A
-							{% else %}
-								{{ r.m.accuracy|decimal_format }} <span class="abbrev" title="{{ r.m.accuracy_units_description }}">{{ r.m.accuracy_units }}</span>
-							{% endif %}
-						</td>
-						<td>
-							{% if r.m.precision.normalize == 999 %}
-								N/A
-							{% else %}
-								{{ r.m.precision|decimal_format }} <span class="abbrev" title="{{ r.m.precision_units_description }}">{{ r.m.precision_units }}</span>
-							{% endif %}
-						</td>
-						<td>
-							{% if r.m.prec_acc_conc_used %}
-								{{ r.m.prec_acc_conc_used|decimal_format }} <span class="abbrev" title="{{ r.m.dl_units_description }}">{{ r.m.dl_units }}</span>
-							{% endif %}
-						</td>
-						<td><span class="abbrev" title="{{ r.m.instrumentation_description }}">{{ r.m.instrumentation }}</span></td>
-						<td><span class="abbrev" title="{{ r.m.relative_cost }}">{{ r.m.relative_cost_symbol }}</span></td>
-						<td>{% include "greenness_profile.html" %}</td>
-					</tr>
-				{% endfor %}
-				</tbody>
-			</table>
-		{% else %}
-			<h4>No methods were found that match your criteria</h4>
-		{% endif %}
-	{% endif %}
 {% endblock %}
+{% block results_table_data %}
+	{% load search_tags %}
+	{% for r in results %}
+		<tr>
+			<td><a class="popup" title="Method details (in a new tab)" target="_blank" href="{% url search-method_summary r.m.method_id %}">{{ r.m.source_method_identifier|safe }}</a></td>
+			<td>{{ r.m.method_source }}</td>
+			<td>{{ r.m.method_descriptive_name }}</td>						
+			<td>
+				{% if r.m.dl_value.normalize == 999 %}
+					N/A
+				{% else %}
+					 {{ r.m.dl_value|decimal_format }} <span class="abbrev" title="{{ r.m.dl_units_description }}">{{ r.m.dl_units }}</span>
+				{% endif %}
+			</td>
+			<td><span class="abbrev" title="{{ r.m.dl_type_description }}">{{ r.m.dl_type }}</span></td>
+			<td>
+				{% if r.m.accuracy.normalize == -999 %}
+					N/A
+				{% else %}
+					{{ r.m.accuracy|decimal_format }} <span class="abbrev" title="{{ r.m.accuracy_units_description }}">{{ r.m.accuracy_units }}</span>
+				{% endif %}
+			</td>
+			<td>
+				{% if r.m.precision.normalize == 999 %}
+					N/A
+				{% else %}
+					{{ r.m.precision|decimal_format }} <span class="abbrev" title="{{ r.m.precision_units_description }}">{{ r.m.precision_units }}</span>
+				{% endif %}
+			</td>
+			<td>
+				{% if r.m.prec_acc_conc_used %}
+					{{ r.m.prec_acc_conc_used|decimal_format }} <span class="abbrev" title="{{ r.m.dl_units_description }}">{{ r.m.dl_units }}</span>
+				{% endif %}
+			</td>
+			<td><span class="abbrev" title="{{ r.m.instrumentation_description }}">{{ r.m.instrumentation }}</span></td>
+			<td><span class="abbrev" title="{{ r.m.relative_cost }}">{{ r.m.relative_cost_symbol }}</span></td>
+			<td>{% include "greenness_profile.html" %}</td>
+		</tr>
+	{% endfor %}
+{% endblock %}
+
 	
