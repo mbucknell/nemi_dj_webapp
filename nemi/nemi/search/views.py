@@ -11,7 +11,7 @@ from django.db.models import Q
 from django.forms import Form
 from django.http import HttpResponse, Http404
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.views.generic import View, DetailView, ListView
+from django.views.generic import View
 from django.views.generic.edit import TemplateResponseMixin
 
 # Provides conversion to Excel format
@@ -36,6 +36,25 @@ def _dictfetchall(cursor):
             dict(zip([col[0] for col in desc], row))
             for row in cursor.fetchall()
             ]
+    
+def _get_header_defs(abbrev_set):
+    '''Return a list of DefinitionsDOM objects matching the definition_abbrev using abbrev_set. 
+    The objects will only have the definition_name and definition_description field set.
+    The objects will be in the same order as abbrev_set and if an object is mssing or there are multiple
+    in the DefinitionsDOM table, then the name in abbrev_set is used with spaces replacing underscores and words
+    capitialized with a standard description.
+    '''
+    def_qs = DefinitionsDOM.objects.filter(definition_abbrev__in=abbrev_set)
+    header_defs = []
+    for abbrev in abbrev_set:
+        try:
+            header_defs.append(def_qs.get(definition_abbrev=abbrev))
+        except(DefinitionsDOM.MultipleObjectsReturned, DefinitionsDOM.DoesNotExist):
+            header_defs.append(DefinitionsDOM(definition_name=abbrev.replace('_', ' ').title(),
+                                              definition_description='No definition available.')) 
+            
+    return header_defs
+               
 def _greenness_profile(d):
     '''Return a dicitionary with five keywords. The first keyword is profile whose is 
     a list of four gifs representing the greenness profile of the dictionary d or an empty list if there is not
@@ -177,18 +196,9 @@ class SearchView(View):
     def get(self, request, *args, **kwargs):
         ''' Processes the get request. This method should not need to be overridden.'''
         
-        # Retrieve the header definitions. Since these need to be in the order, put objects in order in a list.
-        def_qs = DefinitionsDOM.objects.filter(definition_abbrev__in=self.header_abbrev_set)
-        header_defs = []
-        for abbrev in self.header_abbrev_set:
-            try:
-                header_defs.append(DefinitionsDOM.objects.get(definition_abbrev=abbrev))
-            except(DefinitionsDOM.MultipleObjectsReturned, DefinitionsDOM.DoesNotExist):
-                header_defs.append(DefinitionsDOM(definition_name=abbrev.replace('_', ' ').title(),
-                                                  definition_description='No definition available.'))
-                
         if request.GET:
-            self.search_form = self.form(request.GET)
+            # Determine if form is valid.
+            self.search_form = self.form(request.GET)           
             if self.search_form.is_valid():
                 self.get_query_and_context_from_form()
                 
@@ -214,7 +224,7 @@ class SearchView(View):
                     if self.result_field_order_by:
                         self.qs = self.qs.order_by(self.result_field_order_by)
                         
-                   #Determine Greenness rating if any
+                    #Determine Greenness rating if any
                     results = []
                     for m in self.qs:
                         results.append({'m': m, 'greenness' : _greenness_profile(m)})
@@ -227,14 +237,13 @@ class SearchView(View):
                     self.context['hide_search'] = True
                     self.context['show_results'] = True
                     self.context['query_string'] = query_string
-                    self.context['header_defs'] = header_defs
+                    self.context['header_defs'] = _get_header_defs(self.header_abbrev_set)
                     
                     return self.render_to_response(self.context) 
                 
             else:
                 # There is an error in validation so resubmit the search form
                 return self.render_to_response({'search_form' : self.search_form,
-                                                'header_defs' : header_defs,
                                                 'hide_search' : False,
                                                 'show_results' : False
                                                 })
@@ -243,7 +252,6 @@ class SearchView(View):
             #Show an empty form
             self.search_form = self.form()
             return self.render_to_response({'search_form' : self.search_form,
-                                            'header_defs' : header_defs,
                                             'hide_search' : False,
                                             'show_results' : False})
            
@@ -368,23 +376,6 @@ class MethodSummaryView(View, TemplateResponseMixin):
         else:
             raise Http404
  
-    
-class HeaderDefinitionsView(DetailView):
-    
-    ''' Extends the DetailView for the DefintionsDOM model.
-    The view shows the object with the definition_abbrev contained
-    in keyword argument 'abbrev'.
-    '''
-    
-    model = DefinitionsDOM
-    template_name = 'header_definitions.html'
-    context_object_name = 'data'
-    
-    def get_object(self):
-        try:
-            return self.get_queryset().get(definition_abbrev=self.kwargs.get('abbrev', None))
-        except(self.model.MultipleObjectsReturned, self.model.DoesNotExist):
-            return None
     
 class ExportMethodAnalyte(View, TemplateResponseMixin):
     
