@@ -18,7 +18,7 @@ from django.views.generic.edit import TemplateResponseMixin
 from xlwt import Workbook
 
 # project specific packages
-from forms import GeneralSearchForm, AnalyteSearchForm, AnalyteSelectForm, KeywordSearchForm
+from forms import GeneralSearchForm, AnalyteSearchForm, AnalyteSelectForm, KeywordSearchForm, MicrobiologicalSearchForm
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW
 
 def _choice_select(field):
@@ -162,142 +162,104 @@ def _analyte_value_qs(method_id):
                                'false_negative_value',
                                'prec_acc_conc_used').distinct()
 
-class SearchView(View):
+class BaseSearchView(View):
 
-    ''' Extends the generic mixin to handle method search pages 
-    Optional keyword arguments are:
-    export -- kind is either tsv or xls and if specified the query results are used to 
-              produce the indicated file.
-              
-    If export is not specified, the queryset is passed back to the view with the results of
-    the derived query. Additional context information can be generated in the same procedure,
-    get_query_and context_from_form, that generates the query set.
-    '''
+    form = Form #Search form which generates the result query set, qs, and context
+   
+    def get_query_and_context_from_form(self):
+        '''Generate the query set that is a derived from the form along with any additional context
+        data that is required from the form and put in self.qs.
+        This function assumes that the form has been validated.
+        Any additional information that is derived from the search form should be
+        put in self.context.
+        '''
+        self.qs = None
+        self.context = {}
+        
+    def get_valid_form_response(self, request, *args, **kwargs):
+        return HttpResponse("Default response")
     
-    form = Form #Search form which generates the result query set
+    def get_invalid_form_response(self, request, *args, **kwargs):
+        return HttpResponse("Invalid form")
+    
+    def get_empty_form_response(self, request, *args, **kwargs):
+        return HttpResponse("Empty form")
+    
+    def get(self, request, *args, **kwargs):
+        if request.GET:
+            self.search_form = self.form(request.GET)
+            if self.search_form.is_valid():
+                self.get_query_and_context_from_form()
+                return self.get_valid_form_response(request, *args, **kwargs)
+             
+            else:
+                return self.get_invalid_form_response(request, *args, **kwargs)   
+            
+        else:
+            return self.get_empty_form_response(request, *args, **kwargs)
+        
+class SearchResultMixin(object):
+    ''' Class is used to generate the context to be used to generate a results page'''
     
     result_fields = () # Fields to be displayed on the results page
     result_field_order_by = '' #Field to order the query results. If null, no order is specified
     
     header_abbrev_set = () # The header definitions to retrieve from the DOM. These should be in the order (from left to right)
-    # that they will appear on the screen.
+    # that they will appear on the screen
     
-    export_fields = () # Fields to be exported to file
-    export_field_order_by = '' # Field name to order the export query results by. If null, no order is specified
-   
-    def get_query_and_context_from_form(self):
-        '''Generate the query set that is a derived from the form along with any additional context
-        data that is required from the form.
-        This function assumes that the form has been validated.
+    def get_values_qs(self, qs):
+        ''' Return the qs as a values query set with result_fields in the set and ordered by result_field_order_by.
         '''
-        self.qs = None
-        self.context = {}
-        
-    def get(self, request, *args, **kwargs):
-        ''' Processes the get request. This method should not need to be overridden.'''
-        
-        if request.GET:
-            # Determine if form is valid.
-            self.search_form = self.form(request.GET)           
-            if self.search_form.is_valid():
-                self.get_query_and_context_from_form()
-                
-                if 'export' in kwargs:
-                    # Export data to the requested file kind
-                    HEADINGS = [name.replace('_', ' ').title() for name in self.export_fields]
-                    self.qs = self.qs.values_list(*self.export_fields).distinct()
-                    if self.export_field_order_by:
-                        self.qs = self.qs.order_by(self.export_field_order_by)
-                    
-                    if kwargs['export'] == 'tsv':
-                        return _tsv_response(HEADINGS, self.qs)
-                    
-                    if kwargs['export'] == 'xls':
-                        return _xls_response(HEADINGS, self.qs)
-                    
-                    else:
-                        return Http404
-                    
-                else:
-                    # Get data to display on page.
-                    self.qs = self.qs.values(*self.result_fields).distinct()
-                    if self.result_field_order_by:
-                        self.qs = self.qs.order_by(self.result_field_order_by)
-                        
-                    #Determine Greenness rating if any
-                    results = []
-                    for m in self.qs:
-                        results.append({'m': m, 'greenness' : _greenness_profile(m)})
+        v_qs = qs.values(*self.result_fields).distinct()
+        if self.result_field_order_by:
+            v_qs = v_qs.order_by(self.result_field_order_by)
+            
+        return v_qs
     
-                    # Get the query string and pass to view to form the export urls.
-                    query_string = '?' + request.get_full_path().split('&', 1)[1]        
-                    
-                    self.context['results'] = results
-                    self.context['search_form'] = self.search_form
-                    self.context['hide_search'] = True
-                    self.context['show_results'] = True
-                    self.context['query_string'] = query_string
-                    self.context['header_defs'] = _get_header_defs(self.header_abbrev_set)
-                    
-                    return self.render_to_response(self.context) 
-                
-            else:
-                # There is an error in validation so resubmit the search form
-                return self.render_to_response({'search_form' : self.search_form,
-                                                'hide_search' : False,
-                                                'show_results' : False
-                                                })
-                
+    def get_results_context(self, qs):
+        return self.get_values_qs(qs)
+
+    def get_valid_context(self, request, form, qs):
+        return  {'search_form' : form,
+                'results' : self.get_results_context(qs),
+                'query_string' : '?' + request.get_full_path().split('&', 1)[1],
+                'hide_search' : True,
+                'show_results' : True,
+                'header_defs' : _get_header_defs(self.header_abbrev_set)}
+        
+    def get_invalid_context(self, request, form):
+        return {'search_form' : form,
+                'hide_search' : False,
+                'show_results' : False}
+        
+class ExportSearchMixin(object):
+
+    export_fields = () # Fields in the query set to be exported to file
+    export_field_order_by = '' # Field name to order the export query results by. If null, no order is specified
+    
+    def get_base_queryset(self):
+        return self.qs
+    
+    def http_response(self, export_type):
+        HEADINGS = [name.replace('_', '').title() for name in self.export_fields]
+        
+        export_qs = self.get_base_queryset().values_list(*self.export_fields).distinct()
+        if self.export_field_order_by:
+            export_qs = export_qs.order_by(self.export_field_order_by)
+            
+        if export_type == 'tsv':
+            return _tsv_response(HEADINGS, export_qs)
+        
+        elif export_type == 'xls':
+            return _xls_response(HEADINGS, export_qs)
+         
         else:
-            #Show an empty form
-            self.search_form = self.form()
-            return self.render_to_response({'search_form' : self.search_form,
-                                            'hide_search' : False,
-                                            'show_results' : False})
-           
-class GeneralSearchView(SearchView, TemplateResponseMixin):
-    
-    '''Extends the SearchView to implement the General Search Page. '''
-    
-    template_name = 'general_search.html'
+            return Http404
+        
+class BaseGeneralSearchView(BaseSearchView):
+
     form = GeneralSearchForm
-    
-    result_fields = ('source_method_identifier',
-                     'method_source',
-                     'instrumentation_description',
-                     'method_descriptive_name',
-                     'media_name',
-                     'method_category',
-                     'method_subcategory',
-                     'method_type_desc',
-                     'method_id',
-                     'assumptions_comments',
-                     'pbt',
-                     'toxic',
-                     'corrosive',
-                     'waste')
-    
-    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
-                         'METHOD_DESCRIPTIVE_NAME',
-                         'MEDIA_NAME',
-                         'METHOD_SOURCE',
-                         'INSTRUMENTATION',
-                         'METHOD_CATEGORY',
-                         'METHOD_SUBCATEGORY',
-                         'METHOD_TYPE',
-                         'GREENNESS')
-    
-    export_fields = ('method_id', 
-                     'source_method_identifier',
-                     'method_descriptive_name', 
-                     'media_name', 
-                     'method_source',
-                     'instrumentation_description',
-                     'method_subcategory',
-                     'method_category',
-                     'method_type_desc')
-    export_field_order_by = 'source_method_identifier'
-    
+
     def get_query_and_context_from_form(self):
         '''Overrides the generic method. The query set is generated from the MethodVW model and is filtered
         by the contents of the form. Also generate two context dictionary values, criteria and selected_method_types
@@ -307,6 +269,7 @@ class GeneralSearchView(SearchView, TemplateResponseMixin):
         self.context = {}
         self.qs = MethodVW.objects.all()
         criteria = []
+        
         if self.search_form.cleaned_data['media_name'] != 'all':
             self.qs = self.qs.filter(media_name__exact=self.search_form.cleaned_data['media_name'])
             criteria.append((self.search_form['media_name'].label, _choice_select(self.search_form['media_name'])))
@@ -336,7 +299,68 @@ class GeneralSearchView(SearchView, TemplateResponseMixin):
         self.qs = self.qs.filter(method_type_id__in=self.search_form.cleaned_data['method_types']) 
         
         self.context['criteria'] = criteria
-        self.context['selected_method_types'] = selected_method_types       
+        self.context['selected_method_types'] = selected_method_types
+        
+class ExportGeneralSearchView(BaseGeneralSearchView, ExportSearchMixin):
+    export_fields = ('method_id', 
+                     'source_method_identifier',
+                     'method_descriptive_name', 
+                     'media_name', 
+                     'method_source',
+                     'instrumentation_description',
+                     'method_subcategory',
+                     'method_category',
+                     'method_type_desc')
+    export_field_order_by = 'source_method_identifier'
+           
+    def get_valid_form_response(self, request, *args, **kwargs):
+        return self.http_response(kwargs.get('export', '')) 
+
+    def get_invalid_form_response(self, request, *args, **kwargs):
+        return Http404
+    
+class GeneralSearchView(BaseGeneralSearchView, SearchResultMixin, TemplateResponseMixin):
+    result_fields = ('source_method_identifier',
+                     'method_source',
+                     'instrumentation_description',
+                     'method_descriptive_name',
+                     'media_name',
+                     'method_category',
+                     'method_subcategory',
+                     'method_type_desc',
+                     'method_id',
+                     'assumptions_comments',
+                     'pbt',
+                     'toxic',
+                     'corrosive',
+                     'waste')
+    
+    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
+                         'METHOD_DESCRIPTIVE_NAME',
+                         'MEDIA_NAME',
+                         'METHOD_SOURCE',
+                         'INSTRUMENTATION',
+                         'METHOD_CATEGORY',
+                         'METHOD_SUBCATEGORY',
+                         'METHOD_TYPE',
+                         'GREENNESS')
+    
+    template_name = 'general_search.html'
+    
+    def get_results_context(self, qs):
+        r_qs = super(GeneralSearchView, self).get_results_context(qs)
+        return [{'m' : r, 'greenness': _greenness_profile(r)} for r in r_qs] 
+    
+    def get_valid_form_response(self, request, *args, **kwargs):
+        self.context.update(self.get_valid_context(request, self.search_form, self.qs))
+        return self.render_to_response(self.context)
+    
+    def get_invalid_form_response(self, request, *args, **kwargs):
+        return self.render_to_response(self.get_invalid_context(request, self.search_form))
+    
+    def get_empty_form_response(self, request, *args, **kwargs):
+        return self.render_to_response(self.get_invalid_context(request, self.form()))
+    
 
 class MethodSummaryView(View, TemplateResponseMixin):
     
@@ -442,83 +466,8 @@ class ExportMethodAnalyte(View, TemplateResponseMixin):
             
             return response
                 
-class AnalyteSearchView(SearchView, TemplateResponseMixin):
-    
-    ''' Extends the SearchView to implement the Analyte Search page '''
-    
-    template_name = 'analyte_search.html'
-    
+class BaseAnalyteSearchView(BaseSearchView):
     form = AnalyteSearchForm
-    
-    result_fields = ('method_source_id',
-                     'method_id',
-                     'source_method_identifier',
-                     'method_source',
-                     'method_descriptive_name',
-                     'dl_value',
-                     'dl_units_description',
-                     'dl_type_description',
-                     'dl_type',
-                     'accuracy',
-                     'accuracy_units_description',
-                     'accuracy_units',
-                     'precision',
-                     'precision_units_description',
-                     'precision_units',
-                     'prec_acc_conc_used',
-                     'dl_units',
-                     'instrumentation_description',
-                     'instrumentation',
-                     'relative_cost',
-                     'relative_cost_symbol',
-                     'pbt',
-                     'toxic',
-                     'corrosive',
-                     'waste',
-                     'assumptions_comments')
-    
-    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
-                      'METHOD_SOURCE',
-                      'METHOD_DESCRIPTIVE_NAME',
-                      'DL_VALUE',
-                      'DL_TYPE',
-                      'ACCURACY',
-                      'PRECISION',
-                      'PREC_ACC_CONC_USED',
-                      'INSTRUMENTATION',
-                      'RELATIVE_COST',
-                      'GREENNESS')
-    
-    export_fields = ('method_id',
-                     'method_descriptive_name',
-                     'method_subcategory',
-                     'method_category',
-                     'method_source_id',
-                     'method_source',
-                     'source_method_identifier',
-                     'analyte_name',
-                     'analyte_code',
-                     'media_name',
-                     'instrumentation',
-                     'instrumentation_description',
-                     'sub_dl_value',
-                     'dl_units',
-                     'dl_type',
-                     'dl_type_description',
-                     'dl_units_description',
-                     'sub_accuracy',
-                     'accuracy_units',
-                     'accuracy_units_description',
-                     'sub_precision',
-                     'precision_units',
-                     'precision_units_description',
-                     'false_negative_value',
-                     'false_positive_value',
-                     'prec_acc_conc_used',
-                     'precision_descriptor_notes',
-                     'relative_cost',
-                     'relative_cost_symbol')
-    export_field_order_by = 'method_id'
     
     def get_query_and_context_from_form(self):
         '''Overrides the generic method. The query set is generated from the MethodAnalyteAllVW model and is filtered
@@ -562,7 +511,102 @@ class AnalyteSearchView(SearchView, TemplateResponseMixin):
         self.context['criteria'] = criteria
         self.context['selected_method_types'] = selected_method_types      
 
-            
+class ExportAnalyteSearchView(ExportSearchMixin, BaseAnalyteSearchView):
+    export_fields = ('method_id',
+                     'method_descriptive_name',
+                     'method_subcategory',
+                     'method_category',
+                     'method_source_id',
+                     'method_source',
+                     'source_method_identifier',
+                     'analyte_name',
+                     'analyte_code',
+                     'media_name',
+                     'instrumentation',
+                     'instrumentation_description',
+                     'sub_dl_value',
+                     'dl_units',
+                     'dl_type',
+                     'dl_type_description',
+                     'dl_units_description',
+                     'sub_accuracy',
+                     'accuracy_units',
+                     'accuracy_units_description',
+                     'sub_precision',
+                     'precision_units',
+                     'precision_units_description',
+                     'false_negative_value',
+                     'false_positive_value',
+                     'prec_acc_conc_used',
+                     'precision_descriptor_notes',
+                     'relative_cost',
+                     'relative_cost_symbol')
+    export_field_order_by = 'method_id'
+    
+    def get_valid_form_response(self, request, *args, **kwargs):
+        return self.http_response(kwargs.get('export', '')) 
+
+    def get_invalid_form_response(self, request, *args, **kwargs):
+        return Http404
+    
+class AnalyteSearchView(BaseAnalyteSearchView, SearchResultMixin, TemplateResponseMixin):
+    template_name = 'analyte_search.html'
+    
+    result_fields = ('method_source_id',
+                     'method_id',
+                     'source_method_identifier',
+                     'method_source',
+                     'method_descriptive_name',
+                     'dl_value',
+                     'dl_units_description',
+                     'dl_type_description',
+                     'dl_type',
+                     'accuracy',
+                     'accuracy_units_description',
+                     'accuracy_units',
+                     'precision',
+                     'precision_units_description',
+                     'precision_units',
+                     'prec_acc_conc_used',
+                     'dl_units',
+                     'instrumentation_description',
+                     'instrumentation',
+                     'relative_cost',
+                     'relative_cost_symbol',
+                     'pbt',
+                     'toxic',
+                     'corrosive',
+                     'waste',
+                     'assumptions_comments')
+    
+    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
+                      'METHOD_SOURCE',
+                      'METHOD_DESCRIPTIVE_NAME',
+                      'DL_VALUE',
+                      'DL_TYPE',
+                      'ACCURACY',
+                      'PRECISION',
+                      'PREC_ACC_CONC_USED',
+                      'INSTRUMENTATION',
+                      'RELATIVE_COST',
+                      'GREENNESS')
+    
+    def get_results_context(self, qs):
+        r_qs = super(AnalyteSearchView, self).get_results_context(qs)
+        return [{'m' : r, 'greenness' : _greenness_profile(r)} for r in r_qs] 
+    
+    def get_valid_form_response(self, request, *args, **kwargs):
+        self.context.update(self.get_valid_context(request, self.search_form, self.qs))
+        return self.render_to_response(self.context)
+    
+    def get_invalid_form_response(self, request, *args, **kwargs):
+        return self.render_to_response(self.get_invalid_context(request, self.search_form))
+    
+    def get_empty_form_response(self, request, *args, **kwargs):
+        return self.render_to_response(self.get_invalid_context(request, self.form()))
+    
+    
+
 class AnalyteSelectView(View, TemplateResponseMixin):
     
     ''' Extends the standard view to implement the analyte select pop up page. '''
@@ -645,3 +689,26 @@ ORDER BY score(1) desc;')
             #Render a blank form
             form = KeywordSearchForm()
             return self.render_to_response({'form' : form})
+'''        
+class MicrobiologicalSearchView(SearchView, TemplateResponseMixin):
+    
+    template_name = "microbiological_search.html"
+    form = MicrobiologicalSearchForm
+    
+    result_fields = ('method_id',
+                     'source_method_identifier',
+                     'method_descriptive_name',
+                     'method_source',
+                     'media_name',
+                     'instrumentation_description',
+                     'relative_cost_symbol',
+                     'cost_effor_key')
+    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
+                         'METHOD_DESCRIPTIVE_NAME',
+                         'METHOD_SOURCE',
+                         'MEDIA_NAME',
+                         'GEAR_TYPE',
+                         'RELATIVE_COST')
+    
+    
+'''    
