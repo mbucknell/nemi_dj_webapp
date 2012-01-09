@@ -76,108 +76,123 @@
 {% endblock %}
 
 {% block content %}
-	<div id="search-box">
-		<div id="search-box-header">
-			{% block search_box_header %}
-			<!-- Search box header. If additional header information is needed use search_box_header.super -->
-				<h2>Select Search Criteria</h2>
-				<div id="search-box-toggle">-</div>
-			{% endblock %}
+	<div id="nav_and_search">
+		{% block sidebar_nav %}
+			<div id="sidebar">
+				<ul>
+					<li><a href={% url search-general %}>General</a></li>
+					<li><a href={% url search-analyte %}>Analyte</a></li>
+					<li><a href={% url search-keyword %}>Keyword</a></li>
+				</ul>
+			</div>
+		{% endblock %}
+		{% block search_box %}
+			<div id="search-box">
+				<div id="search-box-header">
+					{% block search_box_header %}
+					<!-- Search box header. If additional header information is needed use search_box_header.super -->
+						<h2>Select Search Criteria</h2>
+						<div id="search-box-toggle">-</div>
+					{% endblock %}
+				</div>
+			
+				<div id="search-box-body">
+					{% block search_box_body %}<!-- Place search box form here -->{% endblock %}
+				</div>
+			</div>
+
+			<!-- Selectively show/hides search box based on template boolean variable hide_search -->
+			{% if hide_search %}
+				<script>
+					if (!($("#search-box-body").is(":hidden"))){
+						$("#search-box-body").hide();
+					}
+					$("#search-box-toggle").text("+");
+				</script>
+			{% else %}
+				<script>
+					if ($("#search-box-body").is(":hidden")) {
+						$("#search-box-body").show();				
+					}
+					$("#search-box-toggle").text("-");
+				</script>
+			{% endif %}
 		</div>
-	
-		<div id="search-box-body">
-			{% block search_box_body %}<!-- Place search box form here -->{% endblock %}
-		</div>
-	</div>
-	<!-- Selectively show/hides search box based on template boolean variable hide_search -->
-	{% if hide_search %}
-		<script>
-			if (!($("#search-box-body").is(":hidden"))){
-				$("#search-box-body").hide();
-			}
-			$("#search-box-toggle").text("+");
-		</script>
-	{% else %}
-		<script>
-			if ($("#search-box-body").is(":hidden")) {
-				$("#search-box-body").show();				
-			}
-			$("#search-box-toggle").text("-");
-		</script>
-	{% endif %}
+	{% endblock search_box %}
 	<br/>
-	
-	{% block export_results %}<!-- Put links to export results to different formats here --> {% endblock %}
-	<br />
-	{% if show_results %}
-		{% block totals %}
-			<!--  Shows total number of results found -->
-			<p><b>Total records found: {{ results|length }}</b></p>
-		{% endblock %}
-		{% block criteria %}
-			<!-- Shows criteria summary using the criteria and selected_method_types template variables -->
-			<p><b>Criteria summary:</b></p>
-			<ul>
-				{% if criteria %}
-					{% for c in criteria %}
-						<li>{{ c.0 }} equals {{ c.1 }}</li>
-					{% endfor %}
-				{% endif %}
-				
-				{% if selected_method_types %}
-					<li>Method types:
-					{% for mt in selected_method_types %}
-						{% if forloop.last %}
-							{{ mt }}.
-						{% else %}
-							{{ mt }},
-						{% endif %}
-					{% endfor %}
-					</li>
-				{% endif %}
-			</ul>
-		{% endblock %}
+	{% block results_box %}
+		{% block export_results %}<!-- Put links to export results to different formats here --> {% endblock %}
 		<br />
-		{% if results %}
-			{% block header_information_dialog %}
-			<!--  Place holder for the header information dialog  -->
-				<div id="header-info">
-					<p>Place holder</p>
-				</div>	
+		{% if show_results %}
+			{% block totals %}
+				<!--  Shows total number of results found -->
+				<p><b>Total records found: {{ results|length }}</b></p>
 			{% endblock %}
-			{% block results_table %}
-				<!-- Results table block, normally would not need to override. Creates
-				the table headers from the header_defs template variable. The headers are sortable
-				except for Greenness Profile and each header also has a help link which pops up
-				an information dialog.
-				 -->
-				<table class="tablesorter data-table" id="sort-table" style="width: 100%">
-					<thead>
-					<tr>
-						{% for header in header_defs %}
-							{% if header.definition_name == "Greenness Profile" %}
-								<th class="nosort">
-							{% else %}
-								<th>
-							{% endif %}
-							{{ header.definition_name }}<br />
-								<a title="Click to display definition"
-									href="javascript:showInfo('{{ header.definition_name }}', '{{ header.definition_description|escapejs }}')">
-									<img src="{{ STATIC_URL }}images/q_mark.gif">
-								</a>
-							</th>
+			{% block criteria %}
+				<!-- Shows criteria summary using the criteria and selected_method_types template variables -->
+				<p><b>Criteria summary:</b></p>
+				<ul>
+					{% if criteria %}
+						{% for c in criteria %}
+							<li>{{ c.0 }} equals {{ c.1 }}</li>
 						{% endfor %}
-					</tr>
-					</thead>
-					<tbody>
-						{% block results_table_data %}<!-- This is where the table data goes -->{% endblock %}
-					</tbody>
-				</table>
+					{% endif %}
+					
+					{% if selected_method_types %}
+						<li>Method types:
+						{% for mt in selected_method_types %}
+							{% if forloop.last %}
+								{{ mt }}.
+							{% else %}
+								{{ mt }},
+							{% endif %}
+						{% endfor %}
+						</li>
+					{% endif %}
+				</ul>
 			{% endblock %}
-		{% else %}
-			<h4> No methods were found that match your criteria.</h4>
-		{% endif %}	
-	{% endif %}
+			<br />
+			{% if results %}
+				{% block header_information_dialog %}
+				<!--  Place holder for the header information dialog  -->
+					<div id="header-info">
+						<p>Place holder</p>
+					</div>	
+				{% endblock %}
+				{% block results_table %}
+					<!-- Results table block, normally would not need to override. Creates
+					the table headers from the header_defs template variable. The headers are sortable
+					except for Greenness Profile and each header also has a help link which pops up
+					an information dialog.
+					 -->
+					<table class="tablesorter data-table" id="sort-table" style="width: 100%">
+						<thead>
+						<tr>
+							{% for header in header_defs %}
+								{% if header.definition_name == "Greenness Profile" %}
+									<th class="nosort">
+								{% else %}
+									<th>
+								{% endif %}
+								{{ header.definition_name }}<br />
+									<a title="Click to display definition"
+										href="javascript:showInfo('{{ header.definition_name }}', '{{ header.definition_description|escapejs }}')">
+										<img src="{{ STATIC_URL }}images/q_mark.gif">
+									</a>
+								</th>
+							{% endfor %}
+						</tr>
+						</thead>
+						<tbody>
+							{% block results_table_data %}<!-- This is where the table data goes -->{% endblock %}
+						</tbody>
+					</table>
+				{% endblock %}
+			{% else %}
+				<h4> No methods were found that match your criteria.</h4>
+			{% endif %}	
+		{% endif %}
+	{% endblock results_box %}
 	
 	{% block page_content %}<!-- Any additional page content would go here -->{% endblock %}
 	

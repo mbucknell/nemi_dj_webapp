@@ -1,15 +1,6 @@
-{% extends "base.html" %}
+{% extends "base_search.html" %}
 {% block title %}NEMI Keyword Search {% endblock %}
 {% block page_script %}
-	<script type="text/javascript">
-		function winSummary(url) {
-			w = window.open(url, 'winSummary', 'toolbars=1, location=1, status=1, menubar=1,scrollbars=1, resizable=1, width=600, height=700');
-			if (w.opener == null) {
-				w.opener = self;
-			}
-			w.focus();
-		}
-	</script>
 {% endblock %}
 {% block page_style %}
 	<style>
@@ -34,7 +25,8 @@
 		}
 	</style>
 {% endblock %}
-{% block content %}
+
+{% block search_box %}
 	<h3>Keyword Search</h3>
 	<form action="{% url search-keyword %}" method="get"> {% csrf_token %}
 	<p>Keyword(s): {{ form.keywords }}&nbsp;<input id="search-button" type="submit" value="Search NEMI"/></p>
@@ -43,7 +35,8 @@
 	search of the database, including full-method PDF file when available.</b></p>
 	<p>If you have any questions or comments, or if you do not get the results you expect, send us feedback, including the search terms
 	you used and what method or methods you expected to see but didn't.</p>
-	
+{% endblock %}
+{% block results_box %}
 	{% if results.object_list %}
 		<div id="results">
 			{% include "results_nav.html" %}
