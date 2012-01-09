@@ -42,6 +42,28 @@ a[class='popup']{
 .errorlist{
 	color: red;
 }
+#sidebar{
+	float: left;
+	maxWidth: 300px;
+	display: inline-block;
+	background-color: #AAAAAA;
+	padding : 4px;
+	margin: 10px;
+	border: solid 2px darkred;
+}
+#sidebar a {
+	text-decoration: none;
+	color: darkred;
+}
+#sidebar ul{
+	font-weight: bold;
+	font-size: 14px;
+	list-style: none;
+	padding: 4px;
+}
+#search-box {
+	display: inline-block;
+}
 #search-button {
 	border: solid 1px grey;
 	background-color: DarkSeaGreen;
