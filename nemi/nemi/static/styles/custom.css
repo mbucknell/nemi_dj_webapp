@@ -165,3 +165,8 @@ column in the table */
 	padding-top: 2px;
 	padding-bottom: 0px;
 }
+.inside-list {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}

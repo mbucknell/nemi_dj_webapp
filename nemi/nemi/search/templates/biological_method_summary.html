@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}NEMI Biological Method Summary{% endblock %}
+{% block content %}
+	<h2>Summary of Method Fish Monitoring Guide</h2>
+	{% if data %}
+		<table class="info-table">
+			<tr>
+				<th>Method Information</th>
+				<td><b>Descriptive Name: </b>{{ data.method_descriptive_name }}<br/>
+					<b>Official Name: </b>{{ data.method_official_name }}<br/>
+					<b>Method Number: </b>{{ data.source_method_identifier|safe }}<br/>
+					<b>Revision: </b>{{ data.revision_information }}
+				</td>
+			</tr>
+			<tr><th>Media</th><td>{{ data.media_name }}</td></tr>
+			<tr><th>Subcategory</th><td>{{ data.method_subcategory }}</td></tr>
+			<tr><th>Method Type</th><td>{{ data.method_type_desc }}</td></tr>
+			<tr>
+				<th>Target Organisms</th>
+				<td>
+					<ul class="inside-list">
+						{% for d in analyte_data %}
+							<li><a title="Click to show/hide synonyms" href="javascript: show_hide('#analyte-details{{ forloop.counter }}')">
+							{{ d.r.analyte_name }}</a>
+								<div id="analyte-details{{ forloop.counter }}" style="display: none;">
+									<ul>
+										{% for syn in d.syn %}
+											<li>{{ syn }}</li>
+										{% endfor %}
+									</ul>
+								</div>
+							</li>
+						{% endfor %}
+					</ul>			
+				</td>
+			</tr>			
+			<tr><th>Brief Method Summary</th><td>{{ data.brief_method_summary|safe }}</td></tr>
+			<tr><th>Scope and Application</th><td>{{ data.scope_and_application|safe }}</td></tr>
+			<tr><th>Relative Cost/Effort</th><td>{{ data.relative_cost }}</td></tr>
+			<tr><th>Interferences</th><td>{{ data.interferences|safe }}</td></tr>
+			<tr><th>QC Requirements</th><td>{{ data.qc_requirements|safe }}</td></tr>
+			<tr><th>Sample Handling</th><td>{{ data.sample_handling|safe }}</td></tr>
+			<tr><th>Max Holding Time</th><td>{{ data.max_holding_time }}</td></tr>
+			<tr><th>Method Download</th>
+				<td>
+					{% if data.link_to_full_method %}
+						This is a proprietary method. <br/>
+						<a class="popup" href="{{ data.link_to_full_method }}" title="Link to method owner's method documention(in a new window)">
+						Please visit the method owner's site for method documentation
+						</a>
+					{% else %}
+						{% if data.mimetype %}
+							<a href="https://www.nemi.gov/pls/nemi_pdf/nemi_data.download_pdf?p_file={{ data.revision_id }}" 
+								title="Click to download Adobe Acrobat PDF version of this method's documentation">
+								<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat(pdf) icon">Download full method now (PDF file)
+							</a>
+						{% else %}
+							Method .pdf has not yet been loaded into NEMI.
+						{% endif %}
+					{% endif %}
+				</td>
+			</tr>
+			<tr><th>Source</th><td>{{ data.method_source_contact|safe }}</td></tr>
+			<tr><th>Citation</th><td>{{ data.source_citation_name }}</td></tr>
+		</table>
+	{% endif %}
+{% endblock %}

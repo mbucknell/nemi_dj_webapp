@@ -123,13 +123,13 @@ class AnalyteSearchForm(Form):
 
                   
 class AnalyteSelectForm(Form):
-    
     ''' This class extends the standard Form to implement the analyte select form. This form
     allows the user to enter a partial string to and then see which analytes match that string.
     The analyte kind (by name or code) is set when the form is instantiated by setting the kind field. If
     the kind is not code, it is assumed to be name. If the selection field is not empty, the values_list is filled
     in by querying the database for analyte name/code that contain the string in the selection field.
     '''
+    
     kind = CharField(widget=HiddenInput())
     selection = CharField()
     values_list = ChoiceField(widget=SelectMultiple(attrs={'id': 'values-list',
@@ -165,9 +165,40 @@ class MicrobiologicalSearchForm(Form):
         
         #Find analytes
         qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id__exact='5').values_list('analyte_name', 'analyte_code', 'analyte_id').distinct().order_by('analyte_name', 'analyte_code')
-        self.fields['analyte'].choices=[(u'all', u'Any')] + [ (a_id, '%s (%s)' %(name, code)) for (name, code, a_id) in qs]
+        self.fields['analyte'].choices = [(u'all', u'Any')] + [ (a_id, '%s (%s)' %(name, code)) for (name, code, a_id) in qs]
         
         qs = MethodVW.objects.filter(method_subcategory_id__exact='5').values_list('method_type_desc', flat=True).distinct().order_by('method_type_desc')
-        self.fields['method_types'].choices=[(m, m) for m in qs]
-        self.fields['method_types'].initial=[m for m in qs]
+        self.fields['method_types'].choices = [(m, m) for m in qs]
+        self.fields['method_types'].initial = [m for m in qs]
+        
+class BiologicalSearchForm(Form):
+    analyte_type = ChoiceField(choices=[(u'all', u'Any'), 
+                                        (u'Algae', u'Algae'), 
+                                        (u'Fish', u'Fish'), 
+                                        (u'Macroinvertebrate', u'Macroinvertebrate')]
+                               )
+    waterbody_type = ChoiceField(choices=[(u'all', u'Any'),
+                                          (u'Estuary', u'Estuary'),
+                                          (u'Lake', u'Lake'),
+                                          (u'Ocean', u'Ocean'),
+                                          (u'River', u'River'),
+                                          (u'Non-wadeable stream', u'Non-wadeable stream'),
+                                          (u'Wadeable stream', u'Wadeable stream'),
+                                          (u'Wetland', u'Wetland')]
+                                 )
+    gear_type = ChoiceField()
+    method_types = MultipleChoiceField(widget=CheckboxSelectMultiple(),
+                                       error_messages={'required' : 'Please select at least one method type'})
+
+    def __init__(self, *args, **kwargs):
+        super(BiologicalSearchForm, self).__init__(*args, **kwargs)
+        
+        #Get gear types
+        qs = InstrumentationRef.objects.filter(instrumentation_id__range=(112, 121)).order_by('instrumentation_description').values_list('instrumentation_id', 'instrumentation_description')
+        self.fields['gear_type'].choices = [(u'all', u'Any')] + [(i_id, desc) for (i_id, desc) in qs]
+        
+        # Get method types
+        qs = MethodVW.objects.filter(method_subcategory_id__exact='7').values_list('method_type_desc', flat=True).distinct().order_by('method_type_desc')
+        self.fields['method_types'].choices = [(m, m) for m in qs]
+        self.fields['method_types'].initial = [m for m in qs]
         
