@@ -285,6 +285,7 @@ class MethodAnalyteAllVW(models.Model):
     method_source = models.CharField(max_length=20)
     method_source_name = models.CharField(max_length=150)
     method_source_url = models.CharField(max_length=200, blank=True)
+    method_source_contact = models.CharField(max_length=450, blank=True)
     precision_descriptor_notes = models.CharField(max_length=3000, blank=True)
     method_subcategory_id = models.IntegerField()
     method_category = models.CharField(max_length=50)
