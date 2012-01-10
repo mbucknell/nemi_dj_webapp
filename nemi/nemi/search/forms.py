@@ -2,7 +2,7 @@
 
 from django.forms import Form, ChoiceField, MultipleChoiceField, CheckboxSelectMultiple, RadioSelect, CharField, SelectMultiple, TextInput, HiddenInput
 from django.utils.safestring import mark_safe
-from models import MethodVW, AnalyteCodeVW, AnalyteCodeRel, MediaNameDOM, InstrumentationRef, MethodSubcategoryRef, MethodSourceRef
+from models import MethodVW, AnalyteCodeVW, AnalyteCodeRel, MediaNameDOM, InstrumentationRef, MethodSubcategoryRef, MethodSourceRef, MethodAnalyteAllVW
     
 def _choice_cmp(a,b):
     ''' Comparison function meant to be used on choice tuples
@@ -153,4 +153,21 @@ class KeywordSearchForm(Form):
     
     ''' This class extends the standard Form to implement the keyword search form. 
     '''
-    keywords = CharField()     
+    keywords = CharField()
+    
+class MicrobiologicalSearchForm(Form):
+    analyte = ChoiceField(label="Analyte name (code)")
+    method_types = MultipleChoiceField(widget=CheckboxSelectMultiple(),
+                                       error_messages={'required' : 'Please select at least one method type'})
+    
+    def __init__(self, *args, **kwargs):
+        super(MicrobiologicalSearchForm, self).__init__(*args, **kwargs)
+        
+        #Find analytes
+        qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id__exact='5').values_list('analyte_name', 'analyte_code', 'analyte_id').distinct().order_by('analyte_name', 'analyte_code')
+        self.fields['analyte'].choices=[(u'all', u'Any')] + [ (a_id, '%s (%s)' %(name, code)) for (name, code, a_id) in qs]
+        
+        qs = MethodVW.objects.filter(method_subcategory_id__exact='5').values_list('method_type_desc', flat=True).distinct().order_by('method_type_desc')
+        self.fields['method_types'].choices=[(m, m) for m in qs]
+        self.fields['method_types'].initial=[m for m in qs]
+        
