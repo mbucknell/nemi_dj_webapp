@@ -3,6 +3,7 @@
 from django.forms import Form, ChoiceField, MultipleChoiceField, CheckboxSelectMultiple, RadioSelect, CharField, SelectMultiple, TextInput, HiddenInput
 from django.utils.safestring import mark_safe
 from models import MethodVW, AnalyteCodeVW, AnalyteCodeRel, MediaNameDOM, InstrumentationRef, MethodSubcategoryRef, MethodSourceRef, MethodAnalyteAllVW
+from models import statisticalDesignObjective,statisticalItemType,relativeCostRef,statisticalSourceType, MediaNameDOM, statisticalTopics, statisticalAnalysisType
     
 def _choice_cmp(a,b):
     ''' Returns -1, 1, or 0 by comparing the 2nd element in a with b.
@@ -80,7 +81,9 @@ class GeneralSearchForm(Form):
         #Method type choice fields. We initialize this to all values being set.
         mt_qs = qs.values('method_type_desc', 'method_type_id').distinct().order_by('method_type_desc')
         self.fields['method_types'].choices = [(d['method_type_id'], d['method_type_desc']) for d in mt_qs]  
-        self.fields['method_types'].initial = [d['method_type_id'] for d in mt_qs] 
+        self.fields['method_types'].initial = [d['method_type_id'] for d in mt_qs]
+        
+
         
 class AnalyteSearchForm(Form):
     '''Extends the standard Form to implement the analyte search form. 
@@ -244,4 +247,70 @@ class ToxicitySearchForm(Form):
         qs = MethodVW.objects.filter(method_category__exact='TOXICITY ASSAY').values_list('method_type_desc', flat=True).distinct().order_by('method_type_desc')
         self.fields['method_types'].choices = [(m, m) for m in qs]
         self.fields['method_types'].initial = [m for m in qs]
+        
+class StatisticSearchForm(Form):
+    ''' This class extends the django Form class. The form is used to represent the general search form
+    and contains choice fields used to filter the search of the MethodVW data. The choice field values 
+    are determined from the MethodVW table.
+    '''
+
+    item_type = ChoiceField()
+    complexity = ChoiceField()
+    analysis_type = ChoiceField()
+    sponsor_type = MultipleChoiceField(widget=CheckboxSelectMultiple(),
+                error_messages={'required' : 'Please select at least one method type'})
+#    design_or_data_analysis_objective = MultipleChoiceField(widget=CheckboxSelectMultiple(),
+#                error_messages={'required' : 'Please select at least one method type'})
+    media_emaphsized = MultipleChoiceField(widget=CheckboxSelectMultiple(),
+                error_messages={'required' : 'Please select at least one method type'})
+    special_topics = MultipleChoiceField(widget=CheckboxSelectMultiple(),
+                error_messages={'required' : 'Please select at least one method type'})
+        
+    def __init__(self, *args, **kwargs):
+        '''Extends the parent instantiation method to extract the choice values
+        from the current contents of the MethodVW table.
+        '''
+     
+        super(StatisticSearchForm, self).__init__(*args, **kwargs)
+        
+        # Find media name choice set.
+        design = statisticalDesignObjective.objects.all()
+        item = statisticalItemType.objects.all()
+        complex = relativeCostRef.objects.all()
+        source = statisticalSourceType.objects.all()
+        media = MediaNameDOM.objects.all()
+        topics = statisticalTopics.objects.all()
+        analysis = statisticalAnalysisType.objects.all()
+        
+#        #Statistical item type
+        item_qs = item.values_list('stat_item_index', 'item').distinct().order_by('item')
+        self.fields['item_type'].choices = [(u'all', u'Any')] + [(item_id, item_name) for (item_id, item_name) in item_qs]
+              
+#        #Complexity
+        complex_qs = complex.values_list('relative_cost_id', 'relative_cost').distinct().order_by('relative_cost')
+        self.fields['complexity'].choices = [(u'all', u'Any')] + [(com_id, com) for (com_id, com) in complex_qs]  # Should change this so it's only relative_cost_ids 13-15
+
+        #Analysis
+        analysis_qs = analysis.values_list('stat_analysis_index', 'analysis_type').distinct().order_by('stat_analysis_index')
+        self.fields['analysis_type'].choices = [(u'all', u'Any')] + [(a_id, a) for (a_id, a) in analysis_qs]
+        
+        #Source type choice fields. We initialize this to all values being set.
+        source_qs = source.values('stat_source_index', 'source').distinct().order_by('source')
+        self.fields['sponsor_type'].choices = [(s['stat_source_index'], s['source']) for s in source_qs]  
+        self.fields['sponsor_type'].initial = [s['stat_source_index'] for s in source_qs]         
+        
+##      #Statistical design objective - not sure why this won't work....
+#        design_qs = design.values_list('stat_design_index', 'objective').distinct().order_by('objective')
+#        self.fields['design_or_data_analysis_objective'].choices = [(d['stat_design_index'], d['objective']) for d in design_qs]
+#        self.fields['design_or_data_analysis_objective'].initial = [d['stat_design_index'] for d in design_qs] 
+
+        #Source type choice fields. We initialize this to all values being set.
+        media_qs = media.values('media_id', 'media_name').distinct().order_by('media_name')
+        self.fields['media_emaphsized'].choices = [(s['media_id'], s['media_name']) for s in media_qs]  
+        self.fields['media_emaphsized'].initial = [s['media_id'] for s in media_qs] 
+        
+        #Source type choice fields. We initialize this to all values being set.
+        topics_qs = topics.values('stat_topic_index', 'stat_special_topic').distinct().order_by('stat_special_topic')
+        self.fields['special_topics'].choices = [(s['stat_topic_index'], s['stat_special_topic']) for s in topics_qs]  
+        self.fields['special_topics'].initial = [s['stat_topic_index'] for s in topics_qs] 
         
