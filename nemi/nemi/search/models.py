@@ -71,9 +71,7 @@ class MethodVW(models.Model):
     class Meta:
         db_table = u'method_vw'
         managed = False
-        
-
-        
+                
 class MethodSummaryVW(models.Model):
     revision_id = models.IntegerField()
     revision_information = models.CharField(max_length=100)
@@ -274,7 +272,7 @@ class MethodAnalyteAllVW(models.Model):
     conc_range_units = models.CharField(max_length=20, blank=True)
     interferences = models.CharField(max_length=3000, blank=True)
     cbr_only = models.CharField(max_length=1, blank=True)
-    qc_requirments = models.CharField(max_length=2000, blank=True)
+    qc_requirements = models.CharField(max_length=2000, blank=True)
     instrumentation_id = models.IntegerField(null=True)
     link_to_full_method = models.CharField(max_length=240, blank=True)
     sample_handling = models.CharField(max_length=3000, blank=True)
@@ -300,7 +298,7 @@ class MethodAnalyteAllVW(models.Model):
     cost_effort_key = models.CharField(max_length=10, blank=True)
     matrix = models.CharField(max_length=12, blank=True)
     collected_sample_amt_ml = models.CharField(max_length=10, blank=True)
-    collected_sample_amg_g = models.CharField(max_length=10, blank=True)
+    collected_sample_amt_g = models.CharField(max_length=10, blank=True)
     liquid_sample_flag = models.CharField(max_length=1, blank=True)
     analysis_amt_ml = models.CharField(max_length=10, blank=True)
     dl_units = models.CharField(max_length=20)
