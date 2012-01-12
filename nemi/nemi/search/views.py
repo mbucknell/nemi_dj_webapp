@@ -163,7 +163,7 @@ class SearchFormMixin(object):
         self.context = {}
         
 class SearchResultView(View, TemplateResponseMixin):
-    ''' This class extends the standard view and template response mixin. The class shoul be extended along with
+    ''' This class extends the standard view and template response mixin. The class should be extended along with
     the SearchFormMixin to implement the search pages.
     '''
     
@@ -572,7 +572,7 @@ class MicrobiologicalSearchView(SearchResultView, SearchFormMixin):
     
     def get_query_and_context_from_form(self):
         '''Overrides the generic method. The query set is generated from the MethodAnalyteAllVW model and is filtered
-        by the contents of the form. Also generate two context dictionary values, criteria and selected_method_types
+        by the contents of the form. Also generates two context dictionary values, criteria and selected_method_types
         from the search form.
         '''
         self.context = {}
@@ -655,7 +655,65 @@ class BiologicalSearchView(SearchResultView, SearchFormMixin):
         
         self.context['criteria'] = criteria
         self.context['selected_method_types'] = selected_method_types
-
+        
+class ToxicitySearchView(SearchResultView, SearchFormMixin):
+    '''Extends the SearchResultsView and SearchFormMixin to implements the toxicity search page.'''
+    
+    template_name = 'toxicity_search.html'
+    form = ToxicitySearchForm
+    
+    result_fields = ('method_id', 
+                    'source_method_identifier',
+                    'method_descriptive_name',
+                    'method_subcategory',
+                    'method_source',
+                    'method_source_contact',
+                    'method_source_url',
+                    'media_name',
+                    'matrix',
+                    'relative_cost_symbol',
+                    'cost_effort_key')
+    
+    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
+                         'METHOD_DESCRIPTIVE_NAME',
+                         'METHOD_SUBCATEGORY',
+                         'METHOD_SOURCE',
+                         'MEDIA_NAME',
+                         'MATRIX',
+                         'RELATIVE_COST')
+    
+    def get_query_and_context_from_form(self):
+        '''Overrides the generic method. The query set is generated from the MethodAnalyteAllVW model and is 
+        filter by the contents of the form. Also generates two context dictionary values, criteria and selected_method_types
+        form the search_form.
+        '''
+        self.context = {}
+        criteria = []
+        self.qs = MethodAnalyteAllVW.objects.filter(method_category__exact='TOXICITY ASSAY').exclude(source_method_identifier__exact='ORNL-UDLP-01')
+        
+        if self.search_form.cleaned_data['subcategory'] != 'all':
+            self.qs = self.qs.filter(method_subcategory__exact=self.search_form.cleaned_data['subcategory'])
+            criteria.append((self.search_form['subcategory'].label, _choice_select(self.search_form['subcategory'])))
+            
+        if self.search_form.cleaned_data['media'] != 'all':
+            self.qs = self.qs.filter(media_name__exact=self.search_form.cleaned_data['media'])
+            criteria.append((self.search_form['media'].label, _choice_select(self.search_form['media'])))
+            
+        if self.search_form.cleaned_data['matrix'] != 'all':
+            self.qs = self.qs.filter(matrix__exact=self.search_form.cleaned_data['matrix'])
+            criteria.append((self.search_form['matrix'].label, _choice_select(self.search_form['matrix'])))
+            
+        method_type_dict = dict(self.search_form['method_types'].field.choices)
+        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
+            selected_method_types = []
+        else:
+            selected_method_types = [method_type_dict.get(k) for k in self.search_form.cleaned_data['method_types']]
+        
+        self.qs = self.qs.filter(method_type_desc__in=self.search_form.cleaned_data['method_types']) 
+        
+        self.context['criteria'] = criteria
+        self.context['selected_method_types'] = selected_method_types
+                    
 class KeywordSearchView(View, TemplateResponseMixin):
     '''Extends the standard View to implement the keyword search view. This form only
     processes get requests.
@@ -758,7 +816,7 @@ class BaseMethodSummaryView(View, TemplateResponseMixin):
                     
                 analyte_data.append({'r' : r, 'syn' : syn})
                 
-            context = self.get_context(request, args, kwargs)
+            context = self.get_context(request, *args, **kwargs)
             context['data'] = data
             context['analyte_data'] = analyte_data
             return self.render_to_response(context)
@@ -783,6 +841,11 @@ class BiologicalMethodSummaryView(BaseMethodSummaryView):
     '''Extends the BaseMethodSummaryView to implement the biological method summary page.'''
     
     template_name = 'biological_method_summary.html'
+    
+class ToxicityMethodSummaryView(BaseMethodSummaryView):
+    '''Extends the BaseMethodSummaryView to implement the toxicity method summary page.'''
+    
+    template_name = 'toxicity_method_summary.html'
     
 class ExportMethodAnalyte(View, TemplateResponseMixin):
     ''' Extends the standard view. This view creates a
