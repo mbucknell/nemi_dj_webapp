@@ -20,6 +20,7 @@ from xlwt import Workbook
 # project specific packages
 from forms import *
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW
+from models import statisticalDesignObjective, sourceCitationRef
 
 def _choice_select(field):
     '''Returns the visible choice from the form field variable. The function
@@ -913,3 +914,82 @@ class ExportMethodAnalyte(View, TemplateResponseMixin):
                 response.write('\n')
             
             return response
+        
+class StatisticSearchView(SearchResultView, TemplateResponseMixin):
+    
+    '''Extends the SearchView to implement the Statistical Method Search Page. '''
+    
+    template_name = 'statistic_search.html'
+    form = StatisticSearchForm
+    
+    result_fields = ('source_method_identifier',
+                     'method_source',
+                     'instrumentation_description',
+                     'method_descriptive_name',
+                     'media_name',
+                     'method_category',
+                     'method_subcategory',
+                     'method_type_desc',
+                     'method_id',
+                     'assumptions_comments',
+                     'pbt',
+                     'toxic',
+                     'corrosive',
+                     'waste')
+    
+    export_fields = ('source_citation_id', 
+                     'title',
+                     'source_organization', 
+                     'country', 
+                     'author',
+                     'abstract_summary',
+                     'table_of_contents',
+                     'source_citation',
+                     'link',
+                     'notes')
+    export_field_order_by = 'title'
+    
+    def get_query_and_context_from_form(self):
+        '''Overrides the generic method. The query set is generated from the MethodVW model and is filtered
+        by the contents of the form. Also generate two context dictionary values, criteria and selected_method_types
+        from the search form.
+        '''
+        
+        self.context = {}
+        self.qs = sourceCitationRef.objects.all()
+#        self.qs = MethodVW.objects.all()
+        criteria = []
+        if self.search_form.cleaned_data['item_type'] != 'all':
+            self.qs = self.qs.filter(media_name__exact=self.search_form.cleaned_data['item_type'])
+            criteria.append((self.search_form['item_type'].label, _choice_select(self.search_form['item_type'])))
+        
+        if self.search_form.cleaned_data['complexity'] != 'all':
+            self.qs = self.qs.filter(method_source__contains=self.search_form.cleaned_data['complexity'])
+            criteria.append((self.search_form['complexity'].label, _choice_select(self.search_form['complexity'])))
+                            
+        if self.search_form.cleaned_data['analysis_type'] != 'all':
+            self.qs = self.qs.filter(method_id__exact=int(self.search_form.cleaned_data['analysis_type']))
+            criteria.append((self.search_form['analysis_type'].label, _choice_select(self.search_form['analysis_type'])))
+            
+        if self.search_form.cleaned_data['sponsor_type'] != 'all':
+            self.qs = self.qs.filter(instrumentation_id__exact=int(self.search_form.cleaned_data['sponsor_type']))  
+            criteria.append((self.search_form['sponsor_type'].label, _choice_select(self.search_form['sponsor_type'])))
+        
+        if self.search_form.cleaned_data['media_emaphsized'] != 'all':
+            self.qs = self.qs.filter(method_subcategory_id__exact=int(self.search_form.cleaned_data['media_emaphsized']))
+            criteria.append((self.search_form['media_emaphsized'].label, _choice_select(self.search_form['media_emaphsized'])))
+
+        if self.search_form.cleaned_data['special_topics'] != 'all':
+            self.qs = self.qs.filter(method_subcategory_id__exact=int(self.search_form.cleaned_data['special_topics']))
+            criteria.append((self.search_form['special_topics'].label, _choice_select(self.search_form['special_topics'])))
+            
+        method_type_dict = dict(self.search_form['method_types'].field.choices)
+        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
+            selected_method_types = []
+        else:
+            selected_method_types = [method_type_dict.get(int(k)) for k in self.search_form.cleaned_data['method_types']]
+        
+        self.qs = self.qs.filter(method_type_id__in=self.search_form.cleaned_data['method_types']) 
+        
+        self.context['criteria'] = criteria
+        self.context['selected_method_types'] = selected_method_types
