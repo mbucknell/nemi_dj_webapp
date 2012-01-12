@@ -5,7 +5,8 @@ from django.utils.safestring import mark_safe
 from models import MethodVW, AnalyteCodeVW, AnalyteCodeRel, MediaNameDOM, InstrumentationRef, MethodSubcategoryRef, MethodSourceRef, MethodAnalyteAllVW
     
 def _choice_cmp(a,b):
-    ''' Comparison function meant to be used on choice tuples
+    ''' Returns -1, 1, or 0 by comparing the 2nd element in a with b.
+    This function is meant to be used on choice tuples
     and is used to sort choice sets.
     '''
     if a[1] < b[1]:
@@ -33,9 +34,9 @@ def _method_source_choice_set(qs):
     return source_choices
     
 class GeneralSearchForm(Form):
-    ''' This class extends the django Form class. The form is used to represent the general search form
+    ''' Extends the Form class to implement the general search form
     and contains choice fields used to filter the search of the MethodVW data. The choice field values 
-    are determined from the MethodVW table.
+    are extracted from the MethodVW table.
     '''
     
     media_name = ChoiceField()
@@ -82,7 +83,7 @@ class GeneralSearchForm(Form):
         self.fields['method_types'].initial = [d['method_type_id'] for d in mt_qs] 
         
 class AnalyteSearchForm(Form):
-    '''This class extends the standard Form to implement the analyte search form. 
+    '''Extends the standard Form to implement the analyte search form. 
     The choice field selections are determined when the form is instantiated by querying the database
     for valid selections.
     '''
@@ -98,6 +99,7 @@ class AnalyteSearchForm(Form):
                                        error_messages={'required' : 'Please select at least one method type'})
     
     def __init__(self, *args, **kwargs):
+        ''' Extends the parent method to extract the choice values from the database.'''
         super(AnalyteSearchForm, self).__init__(*args, **kwargs)
         
         # Find media name choice set
@@ -151,16 +153,22 @@ class AnalyteSelectForm(Form):
 
 class KeywordSearchForm(Form):
     
-    ''' This class extends the standard Form to implement the keyword search form. 
+    ''' Extends the standard Form to implement the keyword search form. 
     '''
     keywords = CharField()
     
 class MicrobiologicalSearchForm(Form):
+    ''' Extends the Form class to implement the microbiological search form.
+    Contains choice fields used to to filter the search of MethodAnalyteAllVw data.
+    The choice field values are extracted from the MethodAnalytedAllVw view and the MethodVW view.
+    '''
+    
     analyte = ChoiceField(label="Analyte name (code)")
     method_types = MultipleChoiceField(widget=CheckboxSelectMultiple(),
                                        error_messages={'required' : 'Please select at least one method type'})
     
     def __init__(self, *args, **kwargs):
+        ''' Extends the parent instantiation method to extract the choice values from the database.'''
         super(MicrobiologicalSearchForm, self).__init__(*args, **kwargs)
         
         #Find analytes
@@ -172,6 +180,11 @@ class MicrobiologicalSearchForm(Form):
         self.fields['method_types'].initial = [m for m in qs]
         
 class BiologicalSearchForm(Form):
+    ''' Extends the Form class to implement the biological search form.
+    Contains choice fields used to to filter the search of MethodAnalyteAllVw data.
+    Some choice fields are static and the rest are extracted from the database.
+    '''
+
     analyte_type = ChoiceField(choices=[(u'all', u'Any'), 
                                         (u'Algae', u'Algae'), 
                                         (u'Fish', u'Fish'), 
@@ -199,6 +212,36 @@ class BiologicalSearchForm(Form):
         
         # Get method types
         qs = MethodVW.objects.filter(method_subcategory_id__exact='7').values_list('method_type_desc', flat=True).distinct().order_by('method_type_desc')
+        self.fields['method_types'].choices = [(m, m) for m in qs]
+        self.fields['method_types'].initial = [m for m in qs]
+        
+class ToxicitySearchForm(Form):
+    '''Extends the Form class to implement the Toxicity Search form.
+    Contains choice fields used to filter the search of the MethodAnalyteAllVW view.
+    The choice fields that are not static are extracted at instantiation from the database.'''
+    subcategory = ChoiceField()
+    media = ChoiceField()
+    matrix = ChoiceField(choices=[(u'all', 'Any'),
+                                  (u'Freshwater', u'Freshwater'),
+                                  (u'Saltwater', u'Saltwater'),
+                                  (u'Both', u'Both')])
+    method_types = MultipleChoiceField(widget=CheckboxSelectMultiple())
+
+    def __init__(self, *args, **kwargs):
+        super(ToxicitySearchForm, self).__init__(*args, **kwargs)
+        
+        qs = MethodAnalyteAllVW.objects.filter(method_category__exact='TOXICITY ASSAY')
+
+        # Get subcategory choices
+        sub_qs = qs.values_list('method_subcategory', flat=True).distinct().order_by('method_subcategory')
+        self.fields['subcategory'].choices = [(u'all', u'Any')] + [(s, s) for s in sub_qs]
+        
+        #Get media choices
+        m_qs = qs.values_list('media_name', flat=True).distinct().order_by('media_name')
+        self.fields['media'].choices = [(u'all', u'Any')] + [(m, m) for m in m_qs]
+        
+        #Get method types
+        qs = MethodVW.objects.filter(method_category__exact='TOXICITY ASSAY').values_list('method_type_desc', flat=True).distinct().order_by('method_type_desc')
         self.fields['method_types'].choices = [(m, m) for m in qs]
         self.fields['method_types'].initial = [m for m in qs]
         
