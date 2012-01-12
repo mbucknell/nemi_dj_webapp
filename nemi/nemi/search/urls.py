@@ -49,4 +49,10 @@ urlpatterns = patterns("",
         url(r'^biological_method_summary/(?P<method_id>\d+)/$',
             views.BiologicalMethodSummaryView.as_view(),
             name='search-biological_method_summary'),
+        url(r'^toxicity/$',
+            views.ToxicitySearchView.as_view(),
+            name='search-toxicity'),
+        url(r'^toxicity_method_summary/(?P<method_id>\d+)/$',
+            views.ToxicityMethodSummaryView.as_view(),
+            name='search-toxicity_method_summary')
         )
