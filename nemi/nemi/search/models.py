@@ -333,6 +333,7 @@ class AnalyteCodeVW(models.Model):
 class MediaNameDOM(models.Model):
     
     media_name = models.CharField(max_length=30, primary_key=True)
+    media_id = models.IntegerField()
     
     class Meta:
         db_table = 'media_name_dom'
@@ -370,4 +371,137 @@ class MethodSubcategoryRef(models.Model):
     class Meta:
         db_table = 'method_subcategory_ref'
         managed = False
+        
+class statisticalDesignObjective(models.Model):
+    
+    stat_design_index = models.IntegerField(primary_key=True)
+    objective = models.CharField(max_length=200)
+    
+    class Meta:
+        db_table = 'statistical_design_objective'
+        managed = False
+
+class relativeCostRef(models.Model):
+    
+    relative_cost_id = models.IntegerField(primary_key=True) 
+    relative_cost_symbol = models.CharField(max_length=7)
+    relative_cost = models.CharField(max_length=40)
+    cost_effort_key = models.CharField(max_length=10)
+    
+    class Meta:
+        db_table = 'relative_cost_ref'
+        managed = False
+
+class sourceCitationRef(models.Model):
+    
+    source_citation_id = models.IntegerField(primary_key=True, max_length=11) 
+    source_citation = models.CharField(max_length=30)
+    source_citation_name = models.CharField(max_length=450)
+    source_citation_information = models.CharField(max_length=1500)
+    insert_person_name = models.CharField(max_length=25)
+    insert_date = models.DateField()
+    title = models.CharField(max_length=450)
+    author = models.CharField(max_length=450)
+    abstract_summary = models.CharField(max_length=2000)
+    table_of_contents = models.CharField(max_length=1000)
+    link = models.CharField(max_length=450)
+    notes = models.CharField(max_length=450)
+    item_type = models.IntegerField(max_length=11)
+    analysis_type = models.IntegerField(max_length=11)
+    complexity = models.IntegerField(max_length=11)
+    publication_year = models.IntegerField(max_length=4)
+    citation_type = models.IntegerField()
+    source_organization = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+    
+    class Meta:
+        db_table = 'source_citation_ref'
+        managed = False
+
+class statisticalAnalysisType(models.Model):
+    
+    stat_analysis_index = models.IntegerField(primary_key=True)
+    analysis_type = models.CharField(max_length=100)
+    
+    class Meta:
+        db_table = 'statistical_analysis_type'
+        managed = False
+
+class statTopicsRel(models.Model):
+    
+    topics_pk = models.IntegerField(primary_key=True)
+    source_citation_id = models.IntegerField()
+    stat_topic_index = models.IntegerField()    
+    
+    class Meta:
+        db_table = 'stat_topics_rel'
+        managed = False
+
+class statSourceRel(models.Model):
+    
+    source_pk = models.IntegerField(primary_key=True)
+    source_citation_id = models.IntegerField()
+    stat_source_index = models.IntegerField()    
+    
+    class Meta:
+        db_table = 'stat_source_rel'
+        managed = False    
+
+class statMediaRel(models.Model):
+    
+    media_pk = models.IntegerField(primary_key=True)
+    source_citation_id = models.IntegerField()
+    stat_media_index = models.IntegerField()    
+    
+    class Meta:
+        db_table = 'stat_media_rel'
+        managed = False
+
+class statisticalTopics(models.Model):
+    
+    stat_topic_index = models.IntegerField(primary_key=True)
+    stat_special_topic = models.CharField(max_length=200)
+    
+    class Meta:
+        db_table = 'statistical_topics'
+        managed = False
+
+class statisticalSourceType(models.Model):
+    
+    stat_source_index = models.IntegerField(primary_key=True)
+    source = models.CharField(max_length=100)
+    
+    class Meta:
+        db_table = 'statistical_source_type'
+        managed = False
+
+class statisticalItemType(models.Model):
+    
+    stat_item_index = models.IntegerField(primary_key=True)
+    item = models.CharField(max_length=100)
+    
+    class Meta:
+        db_table = 'statistical_item_type'
+        managed = False
+
+class statisticalDesignObjective(models.Model):
+    
+    stat_design_index = models.IntegerField(primary_key=True)
+    objective = models.CharField(max_length=200)
+    
+    class Meta:
+        db_table = 'statistical_design_objective'
+        managed = False
+
+class statDesignRel(models.Model):
+    
+    design_pk = models.IntegerField(primary_key=True)
+    source_citation_id = models.IntegerField()
+    stat_design_index = models.IntegerField()    
+    
+    class Meta:
+        db_table = 'stat_design_rel'
+        managed = False
+        
+
         
