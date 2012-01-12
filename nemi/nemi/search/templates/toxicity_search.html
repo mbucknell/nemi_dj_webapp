@@ -1,0 +1,31 @@
+{% extends "base_search.html" %}
+{% block title %}NEMI Toxicity Search{% endblock %}
+{% block search_box_body %}
+	<form action="{% url search-toxicity %}" method="get"> {% csrf_token %}
+		<h4> {{search_form.non_field_errors }} </h4>
+		<table id="search-table">
+		{{ search_form }}
+		<tr><td></td><td><input id="search-button" type="submit" value="Search NEMI"/></td></tr>
+		</table>			
+	</form>
+{% endblock %}
+{% block results_table_data %}
+	{% for r in results %}
+		<tr>
+			<td><a class="popup" title="Method details (in a new tab)" target="_blank" href="{% url search-toxicity_method_summary r.method_id %}">{{ r.source_method_identifier|safe }}</a></td>
+			<td>{{ r.method_descriptive_name }}</td>
+			<td>{{ r.method_subcategory }}</td>
+			<td><a title="Click to show/hide details" href="javascript: show_hide('#method-source-details{{ forloop.counter }}')">{{ r.method_source }}</a>
+				<div id="method-source-details{{ forloop.counter }}" style="display: none;">
+					<table class="inside-table">
+						<tr><th>Contact Information:</th><td>{{ r.method_source_contact|safe }}</td></tr>
+						<tr><th>URL:</th><td>{{ r.method_source_url }}</td></tr>
+					</table>
+				</div>
+			</td>
+			<td>{{ r.media_name }}</td>
+			<td>{{ r.matrix }}</td>
+			<td>{{ r.relative_cost_symbol }}</td>
+		</tr>
+	{% endfor %}
+{% endblock %}	

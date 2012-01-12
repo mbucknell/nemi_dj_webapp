@@ -1,0 +1,16 @@
+{% if data.link_to_full_method %}
+	This is a proprietary method. <br/>
+	<a class="popup" href="{{ data.link_to_full_method }}" title="Link to method owner's method documention(in a new window)">
+	Please visit the method owner's site for method documentation
+	</a>
+{% else %}
+	{% if data.mimetype %}
+		<a href="https://www.nemi.gov/pls/nemi_pdf/nemi_data.download_pdf?p_file={{ data.revision_id }}" 
+			title="Click to download Adobe Acrobat PDF version of this method's documentation">
+			<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat(pdf) icon">Download full method now (PDF file)
+		</a>
+	{% else %}
+		Method .pdf has not yet been loaded into NEMI.
+	{% endif %}
+{% endif %}
+

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block title %}NEMI Biological Method Summary{% endblock %}
+{% block title %}NEMI Toxicity Method Summary {% endblock %}
 {% block content %}
-	<h2>Summary of Method Fish Monitoring Guide</h2>
+	<h2>Summary of Method Test {{ data.source_method_identifier|safe }}</h2>
 	{% if data %}
 		<table class="info-table">
 			<tr>
@@ -9,14 +9,13 @@
 				<td><b>Descriptive Name: </b>{{ data.method_descriptive_name }}<br/>
 					<b>Official Name: </b>{{ data.method_official_name }}<br/>
 					<b>Method Number: </b>{{ data.source_method_identifier|safe }}<br/>
-					<b>Revision: </b>{{ data.revision_information }}
+					<b>Revision: </b>{{ data.revision_information }}<br/>
+					<b>Media: </b>{{ data.media_name }}<br/>
+					<b>Subcategory: </b>{{ data.method_subcategory }}
 				</td>
 			</tr>
-			<tr><th>Media</th><td>{{ data.media_name }}</td></tr>
-			<tr><th>Subcategory</th><td>{{ data.method_subcategory }}</td></tr>
-			<tr><th>Method Type</th><td>{{ data.method_type_desc }}</td></tr>
 			<tr>
-				<th>Target Organisms</th>
+				<th>Endpoints</th>
 				<td>
 					<ul class="inside-list">
 						{% for d in analyte_data %}
@@ -24,10 +23,11 @@
 						{% endfor %}
 					</ul>			
 				</td>
-			</tr>			
+			</tr>
 			<tr><th>Brief Method Summary</th><td>{{ data.brief_method_summary|safe }}</td></tr>
 			<tr><th>Scope and Application</th><td>{{ data.scope_and_application|safe }}</td></tr>
 			<tr><th>Relative Cost/Effort</th><td>{{ data.relative_cost }}</td></tr>
+			<tr><th>Applicable Conc Range</th><td>{{ data.applicable_conc_range }}</td></tr>
 			<tr><th>Interferences</th><td>{{ data.interferences|safe }}</td></tr>
 			<tr><th>QC Requirements</th><td>{{ data.qc_requirements|safe }}</td></tr>
 			<tr><th>Sample Handling</th><td>{{ data.sample_handling|safe }}</td></tr>
