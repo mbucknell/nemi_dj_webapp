@@ -3,7 +3,7 @@
 from django.forms import Form, ChoiceField, MultipleChoiceField, CheckboxSelectMultiple, RadioSelect, CharField, SelectMultiple, TextInput, HiddenInput
 from django.utils.safestring import mark_safe
 from models import MethodVW, AnalyteCodeVW, AnalyteCodeRel, MediaNameDOM, InstrumentationRef, MethodSubcategoryRef, MethodSourceRef, MethodAnalyteAllVW
-from models import statisticalDesignObjective,statisticalItemType,relativeCostRef,statisticalSourceType, MediaNameDOM, statisticalTopics, statisticalAnalysisType
+from models import sourceCitationRef,statisticalDesignObjective,statisticalItemType,relativeCostRef,statisticalSourceType, MediaNameDOM, statisticalTopics, statisticalAnalysisType
     
 def _choice_cmp(a,b):
     ''' Returns -1, 1, or 0 by comparing the 2nd element in a with b.
@@ -257,14 +257,11 @@ class StatisticSearchForm(Form):
     item_type = ChoiceField()
     complexity = ChoiceField()
     analysis_type = ChoiceField()
-    sponsor_type = MultipleChoiceField(widget=CheckboxSelectMultiple(),
-                error_messages={'required' : 'Please select at least one method type'})
-#    design_or_data_analysis_objective = MultipleChoiceField(widget=CheckboxSelectMultiple(),
+    sponsor_type = MultipleChoiceField(widget=CheckboxSelectMultiple(), required=False)
+#    design_objective = MultipleChoiceField(widget=CheckboxSelectMultiple(),
 #                error_messages={'required' : 'Please select at least one method type'})
-    media_emaphsized = MultipleChoiceField(widget=CheckboxSelectMultiple(),
-                error_messages={'required' : 'Please select at least one method type'})
-    special_topics = MultipleChoiceField(widget=CheckboxSelectMultiple(),
-                error_messages={'required' : 'Please select at least one method type'})
+    media_emaphsized = MultipleChoiceField(widget=CheckboxSelectMultiple(), required=False)
+    special_topics = MultipleChoiceField(widget=CheckboxSelectMultiple(), required=False)
         
     def __init__(self, *args, **kwargs):
         '''Extends the parent instantiation method to extract the choice values
@@ -281,6 +278,7 @@ class StatisticSearchForm(Form):
         media = MediaNameDOM.objects.all()
         topics = statisticalTopics.objects.all()
         analysis = statisticalAnalysisType.objects.all()
+        source_list = sourceCitationRef.objects.all()
         
 #        #Statistical item type
         item_qs = item.values_list('stat_item_index', 'item').distinct().order_by('item')
@@ -299,10 +297,11 @@ class StatisticSearchForm(Form):
         self.fields['sponsor_type'].choices = [(s['stat_source_index'], s['source']) for s in source_qs]  
         self.fields['sponsor_type'].initial = [s['stat_source_index'] for s in source_qs]         
         
-##      #Statistical design objective - not sure why this won't work....
+###      #Statistical design objective
+            # Doesn't work....and I'm not sure why
 #        design_qs = design.values_list('stat_design_index', 'objective').distinct().order_by('objective')
-#        self.fields['design_or_data_analysis_objective'].choices = [(d['stat_design_index'], d['objective']) for d in design_qs]
-#        self.fields['design_or_data_analysis_objective'].initial = [d['stat_design_index'] for d in design_qs] 
+#        self.fields['design_objective'].choices = [(s['stat_design_index'], s['objective']) for s in design_qs]
+#        self.fields['design_objective'].initial = [s['stat_design_index'] for s in design_qs] 
 
         #Source type choice fields. We initialize this to all values being set.
         media_qs = media.values('media_id', 'media_name').distinct().order_by('media_name')
@@ -314,3 +313,94 @@ class StatisticSearchForm(Form):
         self.fields['special_topics'].choices = [(s['stat_topic_index'], s['stat_special_topic']) for s in topics_qs]  
         self.fields['special_topics'].initial = [s['stat_topic_index'] for s in topics_qs] 
         
+class StatisticSearchFormSecondTry(Form):
+    item_type = ChoiceField(choices= [
+        (u'all', u'Any'),
+        (u'1', u'Report / Guidance Document'),
+        (u'2', u'Journal Article'),
+        (u'3', u'Book'),
+        (u'4', u'Book Chapter / Section'),
+        (u'5', u'Downloadable Software'),
+        (u'6', u'Online Calculator'),
+        (u'7', u'Other')]
+    )
+    complexity = ChoiceField(choices= [
+        (u'all', u'Any'),
+        (13, u'Low'),
+        (14, u'Medium'),
+        (15, u'High')]
+    )
+    analysis_type = ChoiceField(choices= [
+        (u'all', u'Any'),
+        (u'1', u'Monitoring program design'),
+        (u'2', u'Analysis of exsisting data'),
+        (u'3', u'Both')  ]                          
+                                
+    )
+    sponsor_type = MultipleChoiceField(
+        choices= [
+            (u'1', u'Journal'),
+            (u'2', u'Non-governmental Organization'),
+            (u'3', u'Government Agency (Federal, USA)'),
+            (u'4', u'Government Agency (State, USA)'),
+            (u'5', u'Government Agency (Tribal, NA)'),
+            (u'6', u'Academic Institution'),
+            (u'7', u'Regional Organization'),
+            (u'8', u'Other'),
+            (u'9', u'International Government Agency'),
+            (u'10', u'Industry')],
+        widget=CheckboxSelectMultiple(), 
+        required=False
+    )
+    design_objective = MultipleChoiceField(
+        choices= [
+            (u'1', u'Summarize data in terms of means, medians, distributions, percentiles'),
+            (u'2', u'Evaluate compliance with a threshold value'),
+            (u'3', u'Characterize temporal trends (long-term, annual, seasonal)'),
+            (u'4', u'Characterize  spatial trends'),
+            (u'5', u'Design or evaluate data from a probability survey'),
+            (u'6', u'Evaluate relationships among variables'),
+            (u'7', u'Estimate river flow statistics'),
+            (u'8', u'Estimate downstream loadings of chemicals or suspended materials'),
+            (u'9', u'Develop source identification/apportionment information'),
+            (u'10', u'Determine flow-adjusted chemical concentrations'),
+            (u'11', u'Derive water quality threshold values'),
+            (u'12', u'Estimate volumes of contaminated soil, sediment, or other material'),
+            (u'13', u'Compare a location to a reference site'),
+            (u'14', u'Compare control and experimental treatments'),
+            (u'15', u'Evaluate "continuous" data (e.g., measurements collected hourly or more often)'),
+            (u'16', u'Evaluate biological data (e.g., benthic macroinvertebrates, fish, diatoms)'),
+            (u'17', u'Evaluate bioassay/bioaccumulation/toxicity data'),
+            (u'18', u'Estimate concentrations at unsampled locations') ],                 
+        widget=CheckboxSelectMultiple(), 
+        required=False
+    )
+    media_emaphsized = MultipleChoiceField(
+        choices= [
+            (u'1', u'Water'),
+            (u'2', u'Agricultural Products'),
+            (u'3', u'Air'),
+            (u'4', u'Animal Tissue'),
+            (u'5', u'Soil / Sediment'),
+            (u'6', u'Various'),
+            (u'7', u'Other'),
+            (u'8', u'Surface Water'),
+            (u'9', u'Ground Water'),
+            (u'10', u'Sediment'),
+            (u'11', u'Dredged Material'),
+            (u'12', u'Biological')],
+        widget=CheckboxSelectMultiple(), 
+        required=False
+    )
+    special_topics = MultipleChoiceField(
+        choices= [
+            (u'1', u'Handling non-detects'),
+            (u'2', u'Identifying outliers'),
+            (u'3', u'Evaluating whether data follows a certain (e.g. normal) distribution'),
+            (u'4', u'Assessing and managing autocorrlation'),
+            (u'5', u'Measurements taken using a water quality sensor'),
+            (u'6', u'Characterizing the uncertainty of an estimate')],                                              
+        widget=CheckboxSelectMultiple(), 
+        required=False
+    )
+    

@@ -20,7 +20,7 @@ from xlwt import Workbook
 # project specific packages
 from forms import *
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW
-from models import statisticalDesignObjective, sourceCitationRef
+from models import sourceCitationRef,statisticalDesignObjective,statisticalItemType,relativeCostRef,statisticalSourceType, MediaNameDOM, statisticalTopics, statisticalAnalysisType
 
 def _choice_select(field):
     '''Returns the visible choice from the form field variable. The function
@@ -917,84 +917,141 @@ class ExportMethodAnalyte(View, TemplateResponseMixin):
         
 class StatisticSearchView(SearchResultView, TemplateResponseMixin):
     
-    '''Extends the SearchView to implement the Statistical Method Search Page. '''
-    
     template_name = 'statistic_search.html'
+    
+#    '''Extends the SearchView to implement the Statistical Method Search Page. '''
+    
+    header_abbrev_set = ('TITLE',
+                         'SOURCE_ORGANIZATION',
+                         'COUNTRY',
+                         'AUTHOR',
+                         'ABSTRACT_SUMMARY',
+                         'TABLE_OF_CONTENTS',
+                         'SOURCE_CITATION',
+                         'LINK',
+                         'NOTES')   
+    
     form = StatisticSearchForm
-
-
-#    '''Extends the standard View to implement the keyword search view. This form only
-#    processes get requests.
-#    '''
-#    
-#    result_fields = ('source_method_identifier',
-#                     'method_source',
-#                     'instrumentation_description',
-#                     'method_descriptive_name',
-#                     'media_name',
-#                     'method_category',
-#                     'method_subcategory',
-#                     'method_type_desc',
-#                     'method_id',
-#                     'assumptions_comments',
-#                     'pbt',
-#                     'toxic',
-#                     'corrosive',
-#                     'waste')
-#    
-#    export_fields = ('source_citation_id', 
-#                     'title',
-#                     'source_organization', 
-#                     'country', 
-#                     'author',
-#                     'abstract_summary',
-#                     'table_of_contents',
-#                     'source_citation',
-#                     'link',
-#                     'notes')
-#    export_field_order_by = 'title'
-#    
-#    def get_query_and_context_from_form(self):
-#        '''Overrides the generic method. The query set is generated from the MethodVW model and is filtered
-#        by the contents of the form. Also generate two context dictionary values, criteria and selected_method_types
-#        from the search form.
-#        '''
-#        
-#        self.context = {}
-#        self.qs = sourceCitationRef.objects.all()
-##        self.qs = MethodVW.objects.all()
-#        criteria = []
-#        if self.search_form.cleaned_data['item_type'] != 'all':
-#            self.qs = self.qs.filter(media_name__exact=self.search_form.cleaned_data['item_type'])
-#            criteria.append((self.search_form['item_type'].label, _choice_select(self.search_form['item_type'])))
-#        
-#        if self.search_form.cleaned_data['complexity'] != 'all':
-#            self.qs = self.qs.filter(method_source__contains=self.search_form.cleaned_data['complexity'])
-#            criteria.append((self.search_form['complexity'].label, _choice_select(self.search_form['complexity'])))
-#                            
-#        if self.search_form.cleaned_data['analysis_type'] != 'all':
-#            self.qs = self.qs.filter(method_id__exact=int(self.search_form.cleaned_data['analysis_type']))
-#            criteria.append((self.search_form['analysis_type'].label, _choice_select(self.search_form['analysis_type'])))
-#            
-#        if self.search_form.cleaned_data['sponsor_type'] != 'all':
-#            self.qs = self.qs.filter(instrumentation_id__exact=int(self.search_form.cleaned_data['sponsor_type']))  
-#            criteria.append((self.search_form['sponsor_type'].label, _choice_select(self.search_form['sponsor_type'])))
-#        
-#        if self.search_form.cleaned_data['media_emaphsized'] != 'all':
-#            self.qs = self.qs.filter(method_subcategory_id__exact=int(self.search_form.cleaned_data['media_emaphsized']))
-#            criteria.append((self.search_form['media_emaphsized'].label, _choice_select(self.search_form['media_emaphsized'])))
+    
+    def get_query_and_context_from_form(self):
+        '''Returns the http response for the keyword search form. If the form is bound
+        validate the form and the execute a raw SQL query to return matching methods. The resulting 
+        query set will be shown using pagination and in score order.
+        '''
+        self.context = {}
+        self.qs = sourceCitationRef.objects.all()
+        criteria = []
 #
-#        if self.search_form.cleaned_data['special_topics'] != 'all':
-#            self.qs = self.qs.filter(method_subcategory_id__exact=int(self.search_form.cleaned_data['special_topics']))
-#            criteria.append((self.search_form['special_topics'].label, _choice_select(self.search_form['special_topics'])))
-#            
-#        method_type_dict = dict(self.search_form['method_types'].field.choices)
-#        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
-#            selected_method_types = []
-#        else:
-#            selected_method_types = [method_type_dict.get(int(k)) for k in self.search_form.cleaned_data['method_types']]
-#        
-#        self.qs = self.qs.filter(method_type_id__in=self.search_form.cleaned_data['method_types']) 
-#        
-#        self.context['criteria'] = criteria
-#        self.context['selected_method_types'] = selected_method_types
+############################################################################################################
+## Nothing here is being used....
+#        # Execute as raw query since. 
+#        cursor = connection.cursor() #@UndefinedVariable
+#        cursor.execute("SELECT DISTINCT \
+#a.title, \
+#a.source_organization, \
+#a.country, \
+#a.author, \
+#a.abstract_summary, \
+#a.table_of_contents, \
+#a.source_citation, \
+#a.link, \
+#a.notes \
+#FROM \
+#source_citation_ref a, \
+#stat_design_rel b, \
+#stat_media_rel c, \
+#stat_source_rel d, \
+#stat_topics_rel e, \
+#statistical_analysis_type f, \
+#statistical_design_objective g, \
+#statistical_item_type h, \
+#statistical_topics i, \
+#statistical_source_type j \
+#WHERE \
+#a.source_citation_id = b.source_citation_id \
+#AND a.source_citation_id = c.source_citation_id \
+#AND a.source_citation_id = d.source_citation_id \
+#AND a.source_citation_id = e.source_citation_id \
+#AND a.analysis_type = f.stat_analysis_index \
+#AND b.stat_design_index = g.stat_design_index \
+#AND a.item_type = h.stat_item_index \
+#AND e.stat_topics_index = i.stat_topic_index;")
+#        results = _dictfetchall(cursor)
+#        self
+#################################################################################################################
+            
+            
+class StatisticSearchViewSecondTry(View,TemplateResponseMixin):
+            
+    template_name = 'statistic_search_2ndTry.html'
+            
+    def get(self, request, *args, **kwargs):
+        '''Returns the http response for the keyword search form. If the form is bound
+        validate the form and the execute a raw SQL query to return matching methods. The resulting 
+        query set will be shown using pagination and in score order.
+        '''
+        if request.GET:
+            # Form has been submitted.
+            form = StatisticSearchFormSecondTry(request.GET)
+            if form.is_valid():
+                cursor = connection.cursor() #@UndefinedVariable
+                cursor.execute("SELECT DISTINCT \
+a.title, \
+a.source_organization, \
+a.country, \
+a.author, \
+a.abstract_summary, \
+a.table_of_contents, \
+a.source_citation, \
+a.link, \
+a.notes \
+FROM \
+source_citation_ref a, \
+stat_design_rel b, \
+stat_media_rel c, \
+stat_source_rel d, \
+stat_topics_rel e, \
+statistical_analysis_type f, \
+statistical_design_objective g, \
+statistical_item_type h, \
+statistical_topics i, \
+statistical_source_type j \
+WHERE \
+a.source_citation_id = b.source_citation_id \
+AND a.source_citation_id = c.source_citation_id \
+AND a.source_citation_id = d.source_citation_id \
+AND a.source_citation_id = e.source_citation_id \
+AND a.analysis_type = f.stat_analysis_index \
+AND b.stat_design_index = g.stat_design_index \
+AND a.item_type = h.stat_item_index \
+AND e.stat_topics_index = i.stat_topic_index;")
+                results_list = _dictfetchall(cursor)   
+                paginator = Paginator(results_list, 20)
+                
+                try:
+                    page = int(request.GET.get('page', '1'))
+                except ValueError:
+                    page = 1
+
+                # If page request is out of range, deliver last page of results.
+                try:
+                    results = paginator.page(page)
+                except (EmptyPage, InvalidPage):
+                    results = paginator.page(paginator.num_pages)
+
+                path = request.get_full_path()
+                # Remove the &page parameter.
+                current_url = path.rsplit('&page=')[0]
+                return self.render_to_response({'form': form,
+                                                'current_url' : current_url,
+                                                'results' : results}) 
+                
+            else:
+                # There is an error in form validation so resubmit the form.
+                return self.render_to_response({'form' : form})
+
+        else:
+            #Render a blank form
+            form = StatisticSearchFormSecondTry()
+            return self.render_to_response({'form' : form})
+

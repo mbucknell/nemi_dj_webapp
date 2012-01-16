@@ -66,4 +66,7 @@ urlpatterns = patterns("",
             views.StatisticSearchView.as_view(),
             {'export' : 'xls'},
             name='search-statistics_export_xls'),
+        url(r'^statistic_search2ndTry/$',
+            views.StatisticSearchViewSecondTry.as_view(),
+            name='search-statistics2ndTry'),
         )
