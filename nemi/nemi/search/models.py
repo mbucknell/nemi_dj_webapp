@@ -333,7 +333,7 @@ class AnalyteCodeVW(models.Model):
 class MediaNameDOM(models.Model):
     
     media_name = models.CharField(max_length=30, primary_key=True)
-    media_id = models.IntegerField()
+    media_id = models.IntegerField(null=True)
     
     class Meta:
         db_table = 'media_name_dom'
@@ -370,6 +370,119 @@ class MethodSubcategoryRef(models.Model):
     
     class Meta:
         db_table = 'method_subcategory_ref'
+        managed = False
+        
+class MethodAnalyteJnStgVW(models.Model):
+    matrix = models.CharField(max_length=12, blank=True)
+    method_source = models.CharField(max_length=20)
+    method_source_name = models.CharField(max_length=150)
+    method_source_contact = models.CharField(max_length=450, blank=True)
+    waterbody_type = models.CharField(max_length=20, blank=True)
+    method_source_url = models.CharField(max_length=200, blank=True)
+    technique = models.CharField(max_length=50, blank=True)
+    method_subcategory_id = models.IntegerField()
+    method_category = models.CharField(max_length=50)
+    dl_type = models.CharField(max_length=11, blank=True)
+    dl_type_description = models.CharField(max_length=50, blank=True)
+    source_citation_name = models.CharField(max_length=450, blank=True)
+    source_citation = models.CharField(max_length=30)
+    source_citation_information = models.CharField(max_length=1500, blank=True)
+    relative_cost_symbol = models.CharField(max_length=7, blank=True)
+    relative_cost = models.CharField(max_length=40, blank=True)
+    cost_effort_key = models.CharField(max_length=10, blank=True)
+    dl_units = models.CharField(max_length=20, blank=True)
+    dl_value = models.DecimalField(max_digits=21, decimal_places=6, blank=True)
+    analyte_method_id = models.IntegerField(null=True)
+    precision = models.DecimalField(max_digits=21, decimal_places=6, null=True)
+    analyte_id = models.IntegerField(null=True)
+    accuracy = models.DecimalField(max_digits=21, decimal_places=6, null=True)
+    accuracy_units = models.CharField(max_length=40, blank=True)
+    approved = models.CharField(max_length=1)
+    precision_units = models.CharField(max_length=30, blank=True)
+    prec_acc_conc_used = models.DecimalField(max_digits=21, decimal_places=6, null=True)
+    false_positive_value = models.IntegerField(null=True)
+    false_negative_value = models.IntegerField(null=True)
+    analyte_code = models.CharField(max_length=20, blank=True)
+    analyte_name = models.CharField(max_length=240, blank=True)
+    preferred = models.IntegerField(null=True)
+    analyte_type = models.CharField(max_length=50, blank=True)
+    dl_units_description = models.CharField(max_length=60, blank=True)
+    precision_units_description = models.CharField(max_length=100, blank=True)
+    accuracy_units_description = models.CharField(max_length=50, blank=True)
+    method_id = models.IntegerField(primary_key=True)
+    source_method_identifier = models.CharField(max_length=30)
+    method_descriptive_name = models.CharField(max_length=250)
+    method_official_name = models.CharField(max_length=250)
+    method_source_id = models.IntegerField()
+    source_citation_id = models.IntegerField()
+    brief_method_summary = models.CharField(max_length=4000)
+    scope_and_application = models.CharField(max_length=2000, blank=True)
+    media_name = models.CharField(max_length=30)
+    dl_type_id = models.IntegerField(null=True)
+    dl_note = models.CharField(max_length=2000, blank=True)
+    applicable_conc_range = models.CharField(max_length=300, blank=True)
+    conc_range_units = models.CharField(max_length=20, blank=True)
+    interferences = models.CharField(max_length=3000, blank=True)
+    rapidity = models.CharField(max_length=30, blank=True)
+    qc_requirements = models.CharField(max_length=2000, blank=True)
+    instrumentation_id = models.IntegerField()
+    instrumentation = models.CharField(max_length=20)
+    instrumentation_description = models.CharField(max_length=200)
+    precision_descriptor_notes = models.CharField(max_length=3000, blank=True)
+    link_to_full_method = models.CharField(max_length=240, blank=True)
+    sample_handling = models.CharField(max_length=3000, blank=True)
+    max_holding_time = models.CharField(max_length=300, blank=True)
+    sample_prep_methods = models.CharField(max_length=100, blank=True)
+    relative_cost_id = models.IntegerField(null=True)
+    
+    class Meta:
+        db_table = 'method_analyte_jn_stg_vw'
+        managed = False
+        
+class MethodStgSummaryVw(models.Model):
+    
+    revision_id = models.IntegerField()
+    revision_information = models.CharField(max_length=100)
+    revision_flag = models.IntegerField(null=True)
+    method_id = models.IntegerField(primary_key=True)
+    source_method_identifier = models.CharField(max_length=30)
+    method_descriptive_name = models.CharField(max_length=250)
+    method_official_name = models.CharField(max_length=250)
+    method_source_id = models.IntegerField()
+    source_citation_id = models.IntegerField()
+    brief_method_summary = models.CharField(max_length=4000)
+    scope_and_application = models.CharField(max_length=2000, blank=True)
+    media_name = models.CharField(max_length=30)
+    dl_type_id = models.IntegerField(null=True)
+    dl_note = models.CharField(max_length=2000, blank=True)
+    applicable_conc_range = models.CharField(max_length=300, blank=True)
+    conc_range_units = models.CharField(max_length=20, blank=True)
+    interferences = models.CharField(max_length=3000, blank=True)
+    method_source_contact = models.CharField(max_length=450, blank=True)
+    qc_requirements = models.CharField(max_length=2000, blank=True)
+    link_to_full_method = models.CharField(max_length=240, blank=True)
+    sample_handling = models.CharField(max_length=3000, blank=True)
+    max_holding_time = models.CharField(max_length=300, blank=True)
+    sample_prep_methods = models.CharField(max_length=100, blank=True)
+    relative_cost_id = models.IntegerField(null=True)
+    method_source = models.CharField(max_length=20)
+    method_source_name = models.CharField(max_length=150)
+    method_source_url = models.CharField(max_length=200, blank=True)
+    precision_descriptor_notes = models.CharField(max_length=3000, blank=True)
+    method_subcategory_id = models.IntegerField()
+    method_category = models.CharField(max_length=50)
+    method_subcategory = models.CharField(max_length=40)
+    dl_type = models.CharField(max_length=11, blank=True)
+    dl_type_description = models.CharField(max_length=50, blank=True)
+    source_citation_name = models.CharField(max_length=450, blank=True)
+    source_citation = models.CharField(max_length=30)
+    source_citation_information = models.CharField(max_length=1500, blank=True)
+    relative_cost_symbol = models.CharField(max_length=7, blank=True)
+    relative_cost = models.CharField(max_length=40, blank=True)
+    method_type_desc = models.CharField(max_length=100, blank=True)
+    
+    class Meta:
+        db_table = 'method_stg_summary_vw'
         managed = False
         
 class relativeCostRef(models.Model):
@@ -583,14 +696,7 @@ class statisticalItemType(models.Model):
         db_table = 'statistical_item_type'
         managed = False
 
-class statisticalDesignObjective(models.Model):
-    
-    stat_design_index = models.IntegerField(primary_key=True)
-    objective = models.CharField(max_length=200)
-    
-    class Meta:
-        db_table = 'statistical_design_objective'
-        managed = False
+
 
 
         

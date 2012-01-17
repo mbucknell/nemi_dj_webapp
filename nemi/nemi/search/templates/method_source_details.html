@@ -1,0 +1,7 @@
+<a title="Click to show/hide details" href="javascript: show_hide('#method-source-details{{ forloop.counter }}')">{{ r.method_source }}</a>
+	<div id="method-source-details{{ forloop.counter }}" style="display: none;">
+		<table class="inside-table">
+			<tr><th>Contact Information:</th><td>{{ r.method_source_contact|safe }}</td></tr>
+			<tr><th>URL:</th><td>{{ r.method_source_url }}</td></tr>
+		</table>
+	</div>

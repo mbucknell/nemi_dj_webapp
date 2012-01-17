@@ -11,7 +11,7 @@ from django.db.models import Q
 from django.forms import Form
 from django.http import HttpResponse, Http404
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.views.generic import View
+from django.views.generic import View, DetailView
 from django.views.generic.edit import TemplateResponseMixin
 
 # Provides conversion to Excel format
@@ -19,7 +19,7 @@ from xlwt import Workbook
 
 # project specific packages
 from forms import *
-from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW
+from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw
 from models import sourceCitationRef,statisticalDesignObjective,statisticalItemType,relativeCostRef,statisticalSourceType, MediaNameDOM, statisticalTopics, statisticalAnalysisType
 
 def _choice_select(field):
@@ -714,7 +714,75 @@ class ToxicitySearchView(SearchResultView, SearchFormMixin):
         
         self.context['criteria'] = criteria
         self.context['selected_method_types'] = selected_method_types
-                    
+        
+class PhysicalSearchView(SearchResultView, SearchFormMixin):
+    
+    template_name = 'physical_search.html'
+    form = PhysicalSearchForm
+    
+    result_fields = ('method_id',
+                     'source_method_identifier',
+                     'method_descriptive_name',
+                     'method_source',
+                     'method_source_contact',
+                     'method_source_url',
+                     'media_name',
+                     'instrumentation_description')
+    
+    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
+                         'METHOD_DESCRIPTIVE_NAME',
+                         'METHOD_SOURCE',
+                         'MEDIA_NAME',
+                         'GEAR_TYPE')
+    
+    def get_query_and_context_from_form(self):
+        self.context = {}
+        criteria = []
+        
+        self.qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id__exact=9)
+        
+        if self.search_form.cleaned_data['analyte'] != 'all':
+            self.qs = self.qs.filter(analyte_id__exact=self.search_form.cleaned_data['analyte'])
+            criteria.append((self.search_form['analyte'].label, _choice_select(self.search_form['analyte'])))
+
+        method_type_dict = dict(self.search_form['method_types'].field.choices)
+        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
+            selected_method_types = []
+        else:
+            selected_method_types = [method_type_dict.get(k) for k in self.search_form.cleaned_data['method_types']]
+        self.qs = self.qs.filter(method_type_desc__in=self.search_form.cleaned_data['method_types']) 
+        
+        self.context['criteria'] = criteria
+        self.context['selected_method_types'] = selected_method_types
+    
+class StreamPhysicalSearchView(SearchResultView, TemplateResponseMixin):
+    
+    template_name="stream_physical_search.html"
+    
+    result_fields = ('method_id',
+                     'source_method_identifier',
+                     'method_descriptive_name',
+                     'method_source',
+                     'method_source_contact',
+                     'method_source_url',
+                     'media_name',
+                     'relative_cost_symbol',
+                     'cost_effort_key')
+    
+    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
+                       'METHOD_DESCRIPTIVE_NAME',
+                       'METHOD_SOURCE',
+                       'MEDIA_NAME',
+                       'RELATIVE_COST'
+                       )
+    
+    qs = MethodAnalyteJnStgVW.objects.filter(source_method_identifier__startswith='WRIR')
+
+    def get(self, request, *args, **kwargs):
+        return self.render_to_response({'header_defs' : self.get_header_defs(),
+                                'results' : self.get_results_context(),
+                                'show_results' : True})                
+
 class KeywordSearchView(View, TemplateResponseMixin):
     '''Extends the standard View to implement the keyword search view. This form only
     processes get requests.
@@ -847,6 +915,12 @@ class ToxicityMethodSummaryView(BaseMethodSummaryView):
     '''Extends the BaseMethodSummaryView to implement the toxicity method summary page.'''
     
     template_name = 'toxicity_method_summary.html'
+    
+class StreamPhysicalMethodSummaryView(DetailView):
+
+    template_name = 'stream_physical_method_summary.html'
+    context_object_name = 'data'
+    model = MethodStgSummaryVw
     
 class ExportMethodAnalyte(View, TemplateResponseMixin):
     ''' Extends the standard view. This view creates a

@@ -15,14 +15,7 @@
 			<td>{{ r.analyte_type }}</td>
 			<td><a class="popup" title="Metod details (in a new tab)" target="_blank" href="{% url search-biological_method_summary r.method_id %}">{{ r.source_method_identifier|safe }}</a></td>
 			<td>{{ r.method_descriptive_name }}</td>
-			<td><a title="Click to show/hide details" href="javascript: show_hide('#method-source-details{{ forloop.counter }}')">{{ r.method_source }}</a>
-				<div id="method-source-details{{ forloop.counter }}" style="display: none;">
-					<table class="inside-table">
-						<tr><th>Contact Information:</th><td>{{ r.method_source_contact|safe }}</td></tr>
-						<tr><th>URL:</th><td>{{ r.method_source_url }}</td></tr>
-					</table>
-				</div>
-			</td>
+			<td>{% include "method_source_details.html" %}</td>
 			<td>{{ r.method_type_desc }}</td>
 			<td>{{ r.media_name }}</td>
 			<td>{{ r.waterbody_type }}</td>

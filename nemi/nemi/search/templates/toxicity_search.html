@@ -15,14 +15,7 @@
 			<td><a class="popup" title="Method details (in a new tab)" target="_blank" href="{% url search-toxicity_method_summary r.method_id %}">{{ r.source_method_identifier|safe }}</a></td>
 			<td>{{ r.method_descriptive_name }}</td>
 			<td>{{ r.method_subcategory }}</td>
-			<td><a title="Click to show/hide details" href="javascript: show_hide('#method-source-details{{ forloop.counter }}')">{{ r.method_source }}</a>
-				<div id="method-source-details{{ forloop.counter }}" style="display: none;">
-					<table class="inside-table">
-						<tr><th>Contact Information:</th><td>{{ r.method_source_contact|safe }}</td></tr>
-						<tr><th>URL:</th><td>{{ r.method_source_url }}</td></tr>
-					</table>
-				</div>
-			</td>
+			<td>{% include "method_source_details.html" %}</td>
 			<td>{{ r.media_name }}</td>
 			<td>{{ r.matrix }}</td>
 			<td>{{ r.relative_cost_symbol }}</td>

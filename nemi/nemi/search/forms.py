@@ -3,8 +3,8 @@
 from django.forms import Form, ChoiceField, MultipleChoiceField, CheckboxSelectMultiple, RadioSelect, CharField, SelectMultiple, TextInput, HiddenInput
 from django.utils.safestring import mark_safe
 from models import MethodVW, AnalyteCodeVW, AnalyteCodeRel, MediaNameDOM, InstrumentationRef, MethodSubcategoryRef, MethodSourceRef, MethodAnalyteAllVW
-from models import sourceCitationRef,statisticalDesignObjective,statisticalItemType,relativeCostRef,statisticalSourceType, MediaNameDOM, statisticalTopics, statisticalAnalysisType
-    
+from models import statisticalAnalysisType, statisticalDesignObjective, statisticalItemType, relativeCostRef, statisticalSourceType, statisticalTopics, sourceCitationRef
+
 def _choice_cmp(a,b):
     ''' Returns -1, 1, or 0 by comparing the 2nd element in a with b.
     This function is meant to be used on choice tuples
@@ -33,6 +33,10 @@ def _method_source_choice_set(qs):
     source_choices.sort(cmp=_choice_cmp)
     
     return source_choices
+
+class CheckBoxMultipleChoiceField(MultipleChoiceField):
+    widget = CheckboxSelectMultiple()
+    error_messages = {'required' : 'Please select at least one method type'}
     
 class GeneralSearchForm(Form):
     ''' Extends the Form class to implement the general search form
@@ -45,8 +49,7 @@ class GeneralSearchForm(Form):
     method_number = ChoiceField()
     instrumentation = ChoiceField()
     method_subcategory = ChoiceField()
-    method_types = MultipleChoiceField(widget=CheckboxSelectMultiple(),
-                                       error_messages={'required' : 'Please select at least one method type'})
+    method_types = CheckBoxMultipleChoiceField()
         
     def __init__(self, *args, **kwargs):
         '''Extends the parent instantiation method to extract the choice values
@@ -81,9 +84,7 @@ class GeneralSearchForm(Form):
         #Method type choice fields. We initialize this to all values being set.
         mt_qs = qs.values('method_type_desc', 'method_type_id').distinct().order_by('method_type_desc')
         self.fields['method_types'].choices = [(d['method_type_id'], d['method_type_desc']) for d in mt_qs]  
-        self.fields['method_types'].initial = [d['method_type_id'] for d in mt_qs]
-        
-
+        self.fields['method_types'].initial = [d['method_type_id'] for d in mt_qs] 
         
 class AnalyteSearchForm(Form):
     '''Extends the standard Form to implement the analyte search form. 
@@ -98,9 +99,7 @@ class AnalyteSearchForm(Form):
     source = ChoiceField()
     instrumentation = ChoiceField()
     method_subcategory = ChoiceField()
-    method_types = MultipleChoiceField(widget=CheckboxSelectMultiple(),
-                                       error_messages={'required' : 'Please select at least one method type'})
-    
+    method_types = CheckBoxMultipleChoiceField()    
     def __init__(self, *args, **kwargs):
         ''' Extends the parent method to extract the choice values from the database.'''
         super(AnalyteSearchForm, self).__init__(*args, **kwargs)
@@ -167,8 +166,7 @@ class MicrobiologicalSearchForm(Form):
     '''
     
     analyte = ChoiceField(label="Analyte name (code)")
-    method_types = MultipleChoiceField(widget=CheckboxSelectMultiple(),
-                                       error_messages={'required' : 'Please select at least one method type'})
+    method_types = CheckBoxMultipleChoiceField()
     
     def __init__(self, *args, **kwargs):
         ''' Extends the parent instantiation method to extract the choice values from the database.'''
@@ -203,8 +201,7 @@ class BiologicalSearchForm(Form):
                                           (u'Wetland', u'Wetland')]
                                  )
     gear_type = ChoiceField()
-    method_types = MultipleChoiceField(widget=CheckboxSelectMultiple(),
-                                       error_messages={'required' : 'Please select at least one method type'})
+    method_types = CheckBoxMultipleChoiceField()
 
     def __init__(self, *args, **kwargs):
         super(BiologicalSearchForm, self).__init__(*args, **kwargs)
@@ -247,6 +244,23 @@ class ToxicitySearchForm(Form):
         qs = MethodVW.objects.filter(method_category__exact='TOXICITY ASSAY').values_list('method_type_desc', flat=True).distinct().order_by('method_type_desc')
         self.fields['method_types'].choices = [(m, m) for m in qs]
         self.fields['method_types'].initial = [m for m in qs]
+        
+class PhysicalSearchForm(Form):
+    
+    analyte = ChoiceField()
+    method_types = CheckBoxMultipleChoiceField()
+    def __init__(self, *args, **kwargs):
+        super(PhysicalSearchForm, self).__init__(*args, **kwargs)
+        
+        #Get analytes
+        qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id__exact='9').values_list('analyte_name', 'analyte_code', 'analyte_id').distinct().order_by('analyte_name', 'analyte_code')
+        self.fields['analyte'].choices = [(u'all', u'Any')] + [(a_id, '%s (%s)' %(name, code)) for (name, code, a_id) in qs]
+        
+        #Get method types
+        qs = MethodVW.objects.filter(method_subcategory_id__exact='9').values_list('method_type_desc', flat=True).distinct().order_by('method_type_desc')
+        self.fields['method_types'].choices = [(m, m) for m in qs]
+        self.fields['method_types'].initial = [m for m in qs]
+        
         
 class StatisticSearchForm(Form):
     ''' This class extends the django Form class. The form is used to represent the general search form
