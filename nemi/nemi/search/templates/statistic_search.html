@@ -1,68 +1,32 @@
 {% extends "base_search.html" %}
 
 {% block title %}NEMI Statistical Method Search{% endblock %}
-
 {% block search_box_body %}
 	<p>Select one or more criteria from the right and press 'Search NEMI' to perform a search.</p>
 	<form action="{% url search-statistics %}" method="get"> {% csrf_token %}
-	
-<!-- This works with StatisticSearchForm-->
  		<h4> {{search_form.non_field_errors }} </h4>
 		<table id="search-table">
 			{{ search_form }}
 			<tr><td></td><td><input id="search-button" type="submit" value="Search NEMI"/></td></tr>
 		</table>
-
-<!-- This works with StatisticSearchFormSecondTry 
-		<table>
-			<tr>
-				<td><b>Item Type: </b><br/>{{ form.item_type }}</td>
-				<td><b>Complexity: </b><br />{{ form.complexity }}</td>
-				<td><b>Analysis Type: </b><br />{{ form.analysis_type }}</td>
-			</tr>
-			<tr>
-				<td colspan=3><b>Sponsor Type:</b><br />{{ form.sponsor_type }}</td>
-			</tr>
-			<tr>
-				<td colspan=3><b>Design Objective:</b><br />{{ form.design_objective}}</td>
-			</tr>
-			<tr>
-				<td><b>Media Emphasized:</b><br />{{ form.media_emaphsized}}</td>
-				<td colspan=2><b>Special Topics:</b><br />{{ form.special_topics}}</td>
-			</tr>
-		</table>
-
-
-		<tr><td></td><td><input id="search-button" type="submit" value="Search NEMI"/></td></tr>
-		</table>
 	</form>
--->
 {% endblock %}
-
-{% block export_results %}
-	{% if results %}
-		<a class="popup"
-			title="Download the results in Microsoft's proprietary Excel format."
-			href={% url search-statistics_export_xls %}{{ query_string }}>Export results for Microsoft Excel
-		</a>
-		<br/>
-		<a class="popup"
-			title="Download the results as a tab-separated values format, which can be opened by any spreadsheet application." 
-			href={% url search-statistics_export_tsv %}{{ query_string }}>Export results as a tab separated text file (can be opened in any text editor or spreadsheet)
-		</a>
-	{% endif %}
+{% block results_table_header %} 
+	<th>Title</th>
+	<th>Source Organization</th>
+	<th>Country</th>
+	<th>Author</th>
+	<th>Source Citation</th>
+	<th>Link</th>
+	<th>Notes</th>
 {% endblock %}
-
-
 {% block results_table_data %}
 	{% for r in results %}
 		<tr>
-  			<td>{{ r.title }}</td>
+  			<td><a title="Source details" href={%url search-statistical_source_detail r.source_citation_id %}>{{ r.title }}</a></td>
 			<td>{{ r.source_organization }}</td>
 			<td>{{ r.country }}</td>
 			<td>{{ r.author }}</td>
-			<td>{{ r.abstract_summary }}</td>
-			<td>{{ r.table_of_contents }}</td>
 			<td>{{ r.source_citation }}</td>
 			<td><a href={{ r.link }}>{{ r.link }}</a></td>
 			<td>{{ r.notes }}</td>

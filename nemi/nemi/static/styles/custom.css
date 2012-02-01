@@ -170,3 +170,17 @@ column in the table */
 	padding: 0px;
 	list-style: none;
 }
+#data-entry-table th {
+	background-color: white;
+	text-align: left;
+	vertical-align: top;
+	padding: 4px;
+	width: 1px;
+	border: none;
+}
+#data-entry-table td {
+	border: none;
+}
+#data-entry-table ul {
+	list-style-type: none;
+}

@@ -6,13 +6,14 @@ search pages.
 import types
 
 # django packages
+from django.core.urlresolvers import reverse
 from django.db import connection
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.forms import Form
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import View, DetailView
-from django.views.generic.edit import TemplateResponseMixin
+from django.views.generic.edit import TemplateResponseMixin, FormMixin, CreateView
 
 # Provides conversion to Excel format
 from xlwt import Workbook
@@ -20,7 +21,7 @@ from xlwt import Workbook
 # project specific packages
 from forms import *
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw
-from models import sourceCitationRef,statisticalDesignObjective,statisticalItemType,relativeCostRef,statisticalSourceType, MediaNameDOM, statisticalTopics, statisticalAnalysisType
+from models import SourceCitationRef
 
 def _choice_select(field):
     '''Returns the visible choice from the form field variable. The function
@@ -989,143 +990,81 @@ class ExportMethodAnalyte(View, TemplateResponseMixin):
             
             return response
         
-class StatisticSearchView(SearchResultView, TemplateResponseMixin):
+class AddStatisticalSourceView(View, TemplateResponseMixin):
+    template_name = 'create_statistic_source.html'
+    
+    def get(self, request, *args, **kwargs):
+        form = AddStatisticalSourceForm()
+        return self.render_to_response({'form' : form})
+    
+    def post(self, request, *args, **kwargs):
+        form = AddStatisticalSourceForm(self.request.POST)
+        if form.is_valid():
+            data = form.save(commit=False)
+            
+            r = SourceCitationRef.objects.aggregate(Max('source_citation_id'))
+            data.source_citation_id = r['source_citation_id__max'] + 1
+            data.approve_flag = 'F'
+            data.citation_type = CitationTypeRef.objects.get(citation_type='Statistic')
+            
+            data.save()
+            form.save_m2m()
+            
+            return HttpResponseRedirect(reverse('search-statistics'))
+        
+        else:
+            return self.render_to_response({'form' : form})
+            
+
+class StatisticSearchView(SearchResultView, SearchFormMixin):
     
     template_name = 'statistic_search.html'
-    
-#    '''Extends the SearchView to implement the Statistical Method Search Page. '''
-    
-    header_abbrev_set = ('TITLE',
-                         'SOURCE_ORGANIZATION',
-                         'COUNTRY',
-                         'AUTHOR',
-                         'ABSTRACT_SUMMARY',
-                         'TABLE_OF_CONTENTS',
-                         'SOURCE_CITATION',
-                         'LINK',
-                         'NOTES')   
-    
-    form = StatisticSearchForm
+    form = StatisticalSearchForm
     
     def get_query_and_context_from_form(self):
-        '''Returns the http response for the keyword search form. If the form is bound
-        validate the form and the execute a raw SQL query to return matching methods. The resulting 
-        query set will be shown using pagination and in score order.
-        '''
         self.context = {}
-        self.qs = sourceCitationRef.objects.all()
         criteria = []
-#
-############################################################################################################
-## Nothing here is being used....
-#        # Execute as raw query since. 
-#        cursor = connection.cursor() #@UndefinedVariable
-#        cursor.execute("SELECT DISTINCT \
-#a.title, \
-#a.source_organization, \
-#a.country, \
-#a.author, \
-#a.abstract_summary, \
-#a.table_of_contents, \
-#a.source_citation, \
-#a.link, \
-#a.notes \
-#FROM \
-#source_citation_ref a, \
-#stat_design_rel b, \
-#stat_media_rel c, \
-#stat_source_rel d, \
-#stat_topics_rel e, \
-#statistical_analysis_type f, \
-#statistical_design_objective g, \
-#statistical_item_type h, \
-#statistical_topics i, \
-#statistical_source_type j \
-#WHERE \
-#a.source_citation_id = b.source_citation_id \
-#AND a.source_citation_id = c.source_citation_id \
-#AND a.source_citation_id = d.source_citation_id \
-#AND a.source_citation_id = e.source_citation_id \
-#AND a.analysis_type = f.stat_analysis_index \
-#AND b.stat_design_index = g.stat_design_index \
-#AND a.item_type = h.stat_item_index \
-#AND e.stat_topics_index = i.stat_topic_index;")
-#        results = _dictfetchall(cursor)
-#        self
-#################################################################################################################
+        self.qs = SourceCitationRef.objects.filter(citation_type__citation_type_id__exact=2)
+        
+        if self.search_form.cleaned_data['item_type']:
+            self.qs = self.qs.filter(item_type__exact=self.search_form.cleaned_data['item_type'])
+            criteria.append((self.search_form['item_type'].label, self.search_form.cleaned_data['item_type']))
             
+        if self.search_form.cleaned_data['complexity'] != 'all':
+            self.qs = self.qs.filter(complexity__exact=self.search_form.cleaned_data['complexitiy'])
+            criteria.append((self.search_form['complexity'].label, _choice_select(self.search_form['complexity'])))
             
-class StatisticSearchViewSecondTry(View,TemplateResponseMixin):
+        if self.search_form.cleaned_data['analysis_types']:
+            self.qs = self.qs.filter(analysis_types__exact=self.search_form.cleaned_data['analysis_types'])
+            criteria.append((self.search_form['analysis_types'].label, self.search_form.cleaned_data['analysis_types']))
             
-    template_name = 'statistic_search_2ndTry.html'
+        if self.search_form.cleaned_data['sponser_types']:
+            self.qs = self.qs.filter(sponser_types__exact=self.search_form.cleaned_data['sponser_types'])
+            criteria.append((self.search_form['sponser_types'].label, self.search_form.cleaned_data['sponser_types']))
             
-    def get(self, request, *args, **kwargs):
-        '''Returns the http response for the keyword search form. If the form is bound
-        validate the form and the execute a raw SQL query to return matching methods. The resulting 
-        query set will be shown using pagination and in score order.
-        '''
-        if request.GET:
-            # Form has been submitted.
-            form = StatisticSearchFormSecondTry(request.GET)
-            if form.is_valid():
-                cursor = connection.cursor() #@UndefinedVariable
-                cursor.execute("SELECT DISTINCT \
-a.title, \
-a.source_organization, \
-a.country, \
-a.author, \
-a.abstract_summary, \
-a.table_of_contents, \
-a.source_citation, \
-a.link, \
-a.notes \
-FROM \
-source_citation_ref a, \
-stat_design_rel b, \
-stat_media_rel c, \
-stat_source_rel d, \
-stat_topics_rel e, \
-statistical_analysis_type f, \
-statistical_design_objective g, \
-statistical_item_type h, \
-statistical_topics i, \
-statistical_source_type j \
-WHERE \
-a.source_citation_id = b.source_citation_id \
-AND a.source_citation_id = c.source_citation_id \
-AND a.source_citation_id = d.source_citation_id \
-AND a.source_citation_id = e.source_citation_id \
-AND a.analysis_type = f.stat_analysis_index \
-AND b.stat_design_index = g.stat_design_index \
-AND a.item_type = h.stat_item_index \
-AND e.stat_topics_index = i.stat_topic_index;")
-                results_list = _dictfetchall(cursor)   
-                paginator = Paginator(results_list, 20)
-                
-                try:
-                    page = int(request.GET.get('page', '1'))
-                except ValueError:
-                    page = 1
-
-                # If page request is out of range, deliver last page of results.
-                try:
-                    results = paginator.page(page)
-                except (EmptyPage, InvalidPage):
-                    results = paginator.page(paginator.num_pages)
-
-                path = request.get_full_path()
-                # Remove the &page parameter.
-                current_url = path.rsplit('&page=')[0]
-                return self.render_to_response({'form': form,
-                                                'current_url' : current_url,
-                                                'results' : results}) 
-                
-            else:
-                # There is an error in form validation so resubmit the form.
-                return self.render_to_response({'form' : form})
-
-        else:
-            #Render a blank form
-            form = StatisticSearchFormSecondTry()
-            return self.render_to_response({'form' : form})
-
+        if self.search_form.cleaned_data['design_objectives']:
+            self.qs = self.qs.filter(design_objectives__exact=self.search_form.cleaned_data['design_objectives'])
+            criteria.append((self.search_form['design_objectives'].label, self.search_form.cleaned_data['design_objectives']))
+            
+        if self.search_form.cleaned_data['media_emphasized']:
+            self.qs = self.qs.filter(media_emphasized__exact=self.search_form.cleaned_data['media_emphasized'])
+            criteria.append((self.search_form['media_emphasized'].label, self.search_form.cleaned_data['media_emphasized']))
+            
+        if self.search_form.cleaned_data['special_topics']:
+            self.qs = self.qs.filter(special_topics__exact=self.search_form.cleaned_data['special_topics'])
+            criteria.append((self.search_form['special_topics'].label, self.search_form.cleaned_data['special_topics']))
+            
+        self.context['criteria'] = criteria
+        
+    def get_header_defs(self):
+        return None
+        
+    def get_results_context(self):
+        return self.qs
+            
+class StatisticalSourceDetailView(DetailView):
+    template_name = 'statistical_source_detail.html'
+    
+    model = SourceCitationRef
+    
+    context_object_name = 'data'

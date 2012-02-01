@@ -1,9 +1,10 @@
 ''' This module contains the forms needed to implement the NEMI search pages '''
 
-from django.forms import Form, ChoiceField, MultipleChoiceField, CheckboxSelectMultiple, RadioSelect, CharField, SelectMultiple, TextInput, HiddenInput
+from django.forms import Form, ModelForm, ChoiceField, MultipleChoiceField, CheckboxSelectMultiple, RadioSelect, CharField, SelectMultiple, TextInput, HiddenInput
+from django.forms import IntegerField, Textarea
 from django.utils.safestring import mark_safe
-from models import MethodVW, AnalyteCodeVW, AnalyteCodeRel, MediaNameDOM, InstrumentationRef, MethodSubcategoryRef, MethodSourceRef, MethodAnalyteAllVW
-from models import statisticalAnalysisType, statisticalDesignObjective, statisticalItemType, relativeCostRef, statisticalSourceType, statisticalTopics, sourceCitationRef
+from models import *
+from django.forms.models import ModelChoiceField, ModelMultipleChoiceField
 
 def _choice_cmp(a,b):
     ''' Returns -1, 1, or 0 by comparing the 2nd element in a with b.
@@ -262,70 +263,64 @@ class PhysicalSearchForm(Form):
         self.fields['method_types'].initial = [m for m in qs]
         
         
-class StatisticSearchForm(Form):
-    ''' This class extends the django Form class. The form is used to represent the general search form
-    and contains choice fields used to filter the search of the MethodVW data. The choice field values 
-    are determined from the MethodVW table.
-    '''
-
-    item_type = ChoiceField()
-    complexity = ChoiceField()
-    analysis_type = ChoiceField()
-    sponsor_type = MultipleChoiceField(widget=CheckboxSelectMultiple(), required=False)
-#    design_objective = MultipleChoiceField(widget=CheckboxSelectMultiple(),
-#                error_messages={'required' : 'Please select at least one method type'})
-    media_emaphsized = MultipleChoiceField(widget=CheckboxSelectMultiple(), required=False)
-    special_topics = MultipleChoiceField(widget=CheckboxSelectMultiple(), required=False)
+class StatisticalSearchForm(Form):
+    
+    item_type = ModelChoiceField(queryset=StatisticalItemType.objects.all(), empty_label='Any', required=False)
+    complexity = ChoiceField(choices=[(u'all', u'Any')] + COMPLEXITY_CHOICES, required=False)
+    analysis_types = ModelChoiceField(queryset=StatisticalAnalysisType.objects.all(), empty_label='Any', required=False)
+    sponser_types = ModelChoiceField(queryset=StatisticalSourceType.objects.all(), empty_label='Any', required=False)
+    design_objectives = ModelChoiceField(queryset=StatisticalDesignObjective.objects.all(), empty_label='Any', required=False)
+    media_emphasized = ModelChoiceField(queryset=MediaNameDOM.objects.all(), empty_label='Any', required=False)
+    special_topics = ModelChoiceField(queryset=StatisticalTopics.objects.all(), empty_label='Any', required=False)
+    
+class AddStatisticalSourceForm(ModelForm):
         
-    def __init__(self, *args, **kwargs):
-        '''Extends the parent instantiation method to extract the choice values
-        from the current contents of the MethodVW table.
-        '''
-     
-        super(StatisticSearchForm, self).__init__(*args, **kwargs)
+    class Meta:
+        model = SourceCitationRef
+        fields = ('insert_person_name', 
+                  'source_citation', 
+                  'title', 
+                  'source_organization', 
+                  'country', 
+                  'author',
+                  'publication_year', 
+                  'abstract_summary', 
+                  'source_citation_name',
+                  'link',
+                  'notes',
+                  'item_type', 
+                  'item_type_note',
+                  'sponser_types',
+                  'sponser_type_note',
+                  'analysis_types',
+                  'design_objectives',
+                  'complexity',
+                  'level_of_training',
+                  'media_emphasized',
+                  'media_emphasized_note',
+                  'subcategory',
+                  'special_topics')
         
-        # Find media name choice set.
-        design = statisticalDesignObjective.objects.all()
-        item = statisticalItemType.objects.all()
-        complex = relativeCostRef.objects.all()
-        source = statisticalSourceType.objects.all()
-        media = MediaNameDOM.objects.all()
-        topics = statisticalTopics.objects.all()
-        analysis = statisticalAnalysisType.objects.all()
-        source_list = sourceCitationRef.objects.all()
-        
-#        #Statistical item type
-        item_qs = item.values_list('stat_item_index', 'item').distinct().order_by('item')
-        self.fields['item_type'].choices = [(u'all', u'Any')] + [(item_id, item_name) for (item_id, item_name) in item_qs]
-              
-#        #Complexity
-        complex_qs = complex.values_list('relative_cost_id', 'relative_cost').distinct().order_by('relative_cost')
-        self.fields['complexity'].choices = [(u'all', u'Any')] + [(com_id, com) for (com_id, com) in complex_qs]  # Should change this so it's only relative_cost_ids 13-15
-
-        #Analysis
-        analysis_qs = analysis.values_list('stat_analysis_index', 'analysis_type').distinct().order_by('stat_analysis_index')
-        self.fields['analysis_type'].choices = [(u'all', u'Any')] + [(a_id, a) for (a_id, a) in analysis_qs]
-        
-        #Source type choice fields. We initialize this to all values being set.
-        source_qs = source.values('stat_source_index', 'source').distinct().order_by('source')
-        self.fields['sponsor_type'].choices = [(s['stat_source_index'], s['source']) for s in source_qs]  
-        self.fields['sponsor_type'].initial = [s['stat_source_index'] for s in source_qs]         
-        
-###      #Statistical design objective
-            # Doesn't work....and I'm not sure why
-#        design_qs = design.values_list('stat_design_index', 'objective').distinct().order_by('objective')
-#        self.fields['design_objective'].choices = [(s['stat_design_index'], s['objective']) for s in design_qs]
-#        self.fields['design_objective'].initial = [s['stat_design_index'] for s in design_qs] 
-
-        #Source type choice fields. We initialize this to all values being set.
-        media_qs = media.values('media_id', 'media_name').distinct().order_by('media_name')
-        self.fields['media_emaphsized'].choices = [(s['media_id'], s['media_name']) for s in media_qs]  
-        self.fields['media_emaphsized'].initial = [s['media_id'] for s in media_qs] 
-        
-        #Source type choice fields. We initialize this to all values being set.
-        topics_qs = topics.values('stat_topic_index', 'stat_special_topic').distinct().order_by('stat_special_topic')
-        self.fields['special_topics'].choices = [(s['stat_topic_index'], s['stat_special_topic']) for s in topics_qs]  
-        self.fields['special_topics'].initial = [s['stat_topic_index'] for s in topics_qs] 
+        widgets = {'source_citation' : TextInput(attrs={'size' : 30}),
+                   'source_citation_name' : Textarea(attrs={'rows' : 9, 'cols' : 50}),
+                   'insert_person_name' : TextInput(attrs={'size' : 25}),
+                   'title' : Textarea(attrs={'rows' : 3, 'cols' : 50}),
+                   'author' : Textarea(attrs={'rows' : 3, 'cols' : 50}),
+                   'abstract_summary' : Textarea(attrs={'rows' : 10, 'cols' : 50}),
+                   'table_of_contents' : Textarea(attrs={'rows' : 10, 'cols': 50}),
+                   'link' : TextInput(attrs={'size' : 50}),
+                   'notes' : Textarea(attrs={'rows' : 9, 'cols' : 50}),
+                   'publication_year' : TextInput(attrs={'size' : 4}),
+                   'country' : TextInput(attrs={'size' : 50}),
+                   'item_type_note' : TextInput(attrs={'size' : 50}),
+                   'sponser_type_note' : TextInput(attrs={'size' : 50}),
+                   'media_emphasized_note' : TextInput(attrs={'size' : 50}),
+                   'subcategory' : TextInput(attrs={'size' : 50}),
+                   'analysis_types' : CheckboxSelectMultiple(),
+                   'sponser_types' : CheckboxSelectMultiple(),
+                   'media_emphasized' : CheckboxSelectMultiple(),
+                   'design_objectives' : CheckboxSelectMultiple(),
+                   'special_topics' : CheckboxSelectMultiple()}
         
 class StatisticSearchFormSecondTry(Form):
     item_type = ChoiceField(choices= [

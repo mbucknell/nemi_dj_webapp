@@ -332,12 +332,16 @@ class AnalyteCodeVW(models.Model):
         
 class MediaNameDOM(models.Model):
     
-    media_name = models.CharField(max_length=30, primary_key=True)
-    media_id = models.IntegerField(null=True)
+    media_name = models.CharField(primary_key=True, max_length=30)
+    media_id = models.IntegerField()
     
     class Meta:
         db_table = 'media_name_dom'
-        managed = False
+        ordering = ['media_name']
+        managed = True
+        
+    def __unicode__(self):
+        return self.media_name.lower().title()
         
 class MethodSourceRef(models.Model):
     
@@ -345,12 +349,16 @@ class MethodSourceRef(models.Model):
     method_source = models.CharField(max_length=20)
     method_source_url = models.CharField(max_length=200, blank=True)
     method_source_name = models.CharField(max_length=150)
-    mehtod_source_contact = models.CharField(max_length=450, blank=True)
+    method_source_contact = models.CharField(max_length=450, blank=True)
     method_source_email = models.CharField(max_length=100, blank=True)
     
     class Meta:
         db_table = 'method_source_ref'
         managed = False
+        ordering= ['method_source']
+        
+    def __unicode__(self):
+        return self.method_source
         
 class InstrumentationRef(models.Model):
     
@@ -485,7 +493,7 @@ class MethodStgSummaryVw(models.Model):
         db_table = 'method_stg_summary_vw'
         managed = False
         
-class relativeCostRef(models.Model):
+class RelativeCostRef(models.Model):
     
     relative_cost_id = models.IntegerField(primary_key=True) 
     relative_cost_symbol = models.CharField(max_length=7)
@@ -496,207 +504,126 @@ class relativeCostRef(models.Model):
         db_table = 'relative_cost_ref'
         managed = False
 
-class sourceCitationRef(models.Model):
-    
-    ANALYSIS_CHOICES = (
-        (u'1', u'Monitoring program design'),
-        (u'2', u'Analysis of exsisting data'),
-        (u'3', u'Both')
-    )
-    
-    ITEM_TYPE = (
-        (u'1', u'Report / Guidance Document'),
-        (u'2', u'Journal Article'),
-        (u'3', u'Book'),
-        (u'4', u'Book Chapter / Section'),
-        (u'5', u'Downloadable Software'),
-        (u'6', u'Online Calculator'),
-        (u'7', u'Other')
-    )
-    
-    COMPLEXITY_CHOICES = (
-        (13, u'Low'),
-        (14, u'Medium'),
-        (15, u'High')
-    )
-     
-    source_citation_id = models.IntegerField(primary_key=True, max_length=11) 
-    source_citation = models.CharField(max_length=30)
-    source_citation_name = models.CharField(max_length=450)
-    source_citation_information = models.CharField(max_length=1500)
-    insert_person_name = models.CharField(max_length=25)
-    insert_date = models.DateField()
-    title = models.CharField(max_length=450)
-    author = models.CharField(max_length=450)
-    abstract_summary = models.CharField(max_length=2000)
-    table_of_contents = models.CharField(max_length=1000)
-    link = models.CharField(max_length=450)
-    notes = models.CharField(max_length=450)
-    item_type = models.IntegerField(max_length=11, choices=ITEM_TYPE)
-    analysis_type = models.IntegerField(max_length=11, choices=ANALYSIS_CHOICES)
-    complexity = models.IntegerField(max_length=11, choices=COMPLEXITY_CHOICES)
-    publication_year = models.IntegerField(max_length=4)
-    citation_type = models.IntegerField()
-    source_organization = models.CharField(max_length=100)
-    country = models.CharField(max_length=100)
-    
-    class Meta:
-        db_table = 'source_citation_ref'
-        managed = False
-
-#    def __unicode__(self):
-#         return '%s' % (self.get_complexity_display())
-
-class statTopicsRel(models.Model):
-    
-    TOPICS_CHOICES = (
-         (u'1', u'Handling non-detects'),
-         (u'2', u'Identifying outliers'),
-         (u'3', u'Evaluating whether data follows a certain (e.g. normal) distribution'),
-         (u'4', u'Assessing and managing autocorrlation'),
-         (u'5', u'Measurements taken using a water quality sensor'),
-         (u'6', u'Characterizing the uncertainty of an estimate')
-     )
-    
-    topics_pk = models.IntegerField(primary_key=True)
-#    source_citation_id = models.IntegerField()
-    source_citation_id = models.ForeignKey(sourceCitationRef)
-    stat_topic_index = models.IntegerField(choices=TOPICS_CHOICES)
-    
-    class Meta:
-        db_table = 'stat_topics_rel'
-        managed = False
-
-class statSourceRel(models.Model):
-   
-    SOURCE_CHOICES = (
-         (u'1', u'Journal'),
-         (u'2', u'Non-governmental Organization'),
-         (u'3', u'Government Agency (Federal, USA)'),
-         (u'4', u'Government Agency (State, USA)'),
-         (u'5', u'Government Agency (Tribal, NA)'),
-         (u'6', u'Academic Institution'),
-         (u'7', u'Regional Organization'),
-         (u'8', u'Other'),
-         (u'9', u'International Government Agency'),
-         (u'10', u'Industry')
-                    
-     )
-   
-    source_pk = models.IntegerField(primary_key=True)
-#    source_citation_id = models.IntegerField()
-    source_citation_id = models.ForeignKey(sourceCitationRef)
-    stat_source_index = models.IntegerField(choices=SOURCE_CHOICES)    
-    
-    class Meta:
-        db_table = 'stat_source_rel'
-        managed = False    
-
-class statMediaRel(models.Model):
-    
-    MEDIA_CHOICES = (
-        (u'1', u'Water'),
-        (u'2', u'Agricultural Products'),
-        (u'3', u'Air'),
-        (u'4', u'Animal Tissue'),
-        (u'5', u'Soil / Sediment'),
-        (u'6', u'Various'),
-        (u'7', u'Other'),
-        (u'8', u'Surface Water'),
-        (u'9', u'Ground Water'),
-        (u'10', u'Sediment'),
-        (u'11', u'Dredged Material'),
-        (u'12', u'Biological')                    
-     )    
-    
-    media_pk = models.IntegerField(primary_key=True)
-#    source_citation_id = models.IntegerField()
-    source_citation_id = models.ForeignKey(sourceCitationRef)
-    stat_media_index = models.IntegerField(choices=MEDIA_CHOICES)    
-    
-    class Meta:
-        db_table = 'stat_media_rel'
-        managed = False
-
-class statDesignRel(models.Model):
-    
-    DESIGN_CHOICES = (
-         (u'1', u'Summarize data in terms of means, medians, distributions, percentiles'),
-         (u'2', u'Evaluate compliance with a threshold value'),
-         (u'3', u'Characterize temporal trends (long-term, annual, seasonal)'),
-         (u'4', u'Characterize  spatial trends'),
-         (u'5', u'Design or evaluate data from a probability survey'),
-         (u'6', u'Evaluate relationships among variables'),
-         (u'7', u'Estimate river flow statistics'),
-         (u'8', u'Estimate downstream loadings of chemicals or suspended materials'),
-         (u'9', u'Develop source identification/apportionment information'),
-         (u'10', u'Determine flow-adjusted chemical concentrations'),
-         (u'11', u'Derive water quality threshold values'),
-         (u'12', u'Estimate volumes of contaminated soil, sediment, or other material'),
-         (u'13', u'Compare a location to a reference site'),
-         (u'14', u'Compare control and experimental treatments'),
-         (u'15', u'Evaluate "continuous" data (e.g., measurements collected hourly or more often)'),
-         (u'16', u'Evaluate biological data (e.g., benthic macroinvertebrates, fish, diatoms)'),
-         (u'17', u'Evaluate bioassay/bioaccumulation/toxicity data'),
-         (u'18', u'Estimate concentrations at unsampled locations')
-     ) 
-    
-    design_pk = models.IntegerField(primary_key=True)
-#    source_citation_id = models.IntegerField()
-    stat_design_index = models.IntegerField(choices=DESIGN_CHOICES)
-    source_citation_id = models.ForeignKey(sourceCitationRef)
-    
-    class Meta:
-        db_table = 'stat_design_rel'
-        managed = False
-#########################################################################################################
-#  Maybe don't need these:
-class statisticalDesignObjective(models.Model):
-    
-    stat_design_index = models.IntegerField(primary_key=True)
-    objective = models.CharField(max_length=200)
-    
-    class Meta:
-        db_table = 'statistical_design_objective'
-        managed = False
-        
-class statisticalAnalysisType(models.Model):
-    
-    stat_analysis_index = models.IntegerField(primary_key=True)
-    analysis_type = models.CharField(max_length=100)
-    
-    class Meta:
-        db_table = 'statistical_analysis_type'
-        managed = False
-        
-class statisticalTopics(models.Model):
-      
-    stat_topic_index = models.IntegerField(primary_key=True)
-    stat_special_topic = models.CharField(max_length=200)
-    
-    class Meta:
-        db_table = 'statistical_topics'
-        managed = False
-
-class statisticalSourceType(models.Model):
-    
-    stat_source_index = models.IntegerField(primary_key=True)
-    source = models.CharField(max_length=100)
-    
-    class Meta:
-        db_table = 'statistical_source_type'
-        managed = False
-
-class statisticalItemType(models.Model):
+class StatisticalItemType(models.Model):
     
     stat_item_index = models.IntegerField(primary_key=True)
     item = models.CharField(max_length=100)
     
     class Meta:
         db_table = 'statistical_item_type'
+        ordering = ['item']
+
+    def __unicode__(self):
+        return self.item
+    
+class StatisticalAnalysisType(models.Model):
+    
+    stat_analysis_index = models.IntegerField(primary_key=True)
+    analysis_type = models.CharField(max_length=100)
+    
+    class Meta:
+        db_table = 'statistical_analysis_type'
+        ordering = ['analysis_type']
+
+    def __unicode__(self):
+        return self.analysis_type
+        
+class StatisticalSourceType(models.Model):
+   
+    stat_source_index = models.IntegerField(primary_key=True) 
+    source = models.CharField(max_length=100)
+    
+    class Meta:
+        db_table = 'statistical_source_type'
+        ordering = ['source']
+
+    def __unicode__(self):
+        return self.source
+
+class StatisticalDesignObjective(models.Model):
+    
+    stat_design_index = models.IntegerField(primary_key=True)
+    objective = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = 'statistical_design_objective'
+        ordering = ['objective']
+        
+    def __unicode__(self):
+        return self.objective
+
+class StatisticalTopics(models.Model):
+    
+    stat_topic_index = models.IntegerField(primary_key=True)
+    stat_special_topic = models.CharField(max_length=200)
+    
+    class Meta:
+        db_table = 'statistical_topics'
+        ordering = ['stat_special_topic']
+        
+    def __unicode__(self):
+        return self.stat_special_topic
+        
+class CitationTypeRef(models.Model):
+    citation_type_id = models.IntegerField(primary_key=True)
+    citation_type = models.CharField(max_length=20)
+    
+    class Meta:
+        db_table = 'citation_type_ref'
+        ordering = ['citation_type']
+        
+    def __unicode__(self):
+        return self.citation_type        
+
+COMPLEXITY_CHOICES = [
+    (u'Low', u'Low'),
+    (u'Medimum', u'Medium'),
+    (u'High', u'High')]
+
+LEVEL_OF_TRAINING_CHOICES = [
+    (u'Basic', u'Basic'),
+    (u'Intermediate', u'Intermediate'),
+    (u'Advanced', u'Advanced')]
+
+class SourceCitationRef(models.Model):
+    
+    source_citation_id = models.IntegerField(primary_key=True) 
+    source_citation = models.CharField(max_length=30, blank=False)
+    source_citation_name = models.CharField(max_length=450, verbose_name="citation")
+    source_citation_information = models.CharField(max_length=1500)
+    insert_person_name = models.CharField(max_length=25)
+    insert_date = models.DateField(auto_now_add=True)
+    update_date = models.DateField(auto_now=True)
+    approve_flag = models.CharField(max_length=1, choices=[('N', 'No'), ('Y', 'Yes')], default='N')
+    title = models.CharField(max_length=450)
+    author = models.CharField(max_length=450)
+    abstract_summary = models.CharField(max_length=2000, blank=True, verbose_name='abstract/summary statement')
+    table_of_contents = models.CharField(max_length=1000, blank=True)
+    link = models.CharField(max_length=450, blank=True)
+    notes = models.CharField(max_length=450, blank=True, verbose_name='special notes or comments')
+    publication_year = models.IntegerField(max_length=4, null=True)
+    citation_type = models.ForeignKey(CitationTypeRef)
+    source_organization = models.ForeignKey(MethodSourceRef, null=True, blank=True)
+    country = models.CharField(max_length=100, blank=True)
+    complexity = models.CharField(max_length=10, choices=COMPLEXITY_CHOICES)
+    level_of_training = models.CharField(max_length=20, choices=LEVEL_OF_TRAINING_CHOICES)
+    item_type = models.ForeignKey(StatisticalItemType, null=True)
+    item_type_note = models.CharField(max_length=50, blank=True)
+    analysis_types = models.ManyToManyField(StatisticalAnalysisType, null=True, blank=True)
+    sponser_types = models.ManyToManyField(StatisticalSourceType, null=True, blank=True, verbose_name='Sponser/Publishing Type')
+    sponser_type_note = models.CharField(max_length=50, blank=True)
+    media_emphasized = models.ManyToManyField(MediaNameDOM, null=True, blank=True)
+    media_emphasized_note = models.CharField(max_length=50, blank=True)
+    subcategory = models.CharField(max_length=150, blank=True)
+    design_objectives = models.ManyToManyField(StatisticalDesignObjective, null=True, blank=True)
+    special_topics = models.ManyToManyField(StatisticalTopics, null=True, blank=True)
+    
+    class Meta:
+        db_table = 'source_citation_ref'
         managed = False
 
-
+    def __unicode__(self):
+        return self.source_citation
 
 
         

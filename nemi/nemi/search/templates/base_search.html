@@ -173,19 +173,23 @@
 					<table class="tablesorter data-table" id="sort-table" style="width: 100%">
 						<thead>
 						<tr>
-							{% for header in header_defs %}
-								{% if header.definition_name == "Greenness Profile" %}
-									<th class="nosort">
-								{% else %}
-									<th>
-								{% endif %}
-								{{ header.definition_name }}<br />
-									<a title="Click to display definition"
-										href="javascript:showInfo('{{ header.definition_name }}', '{{ header.definition_description|escapejs }}')">
-										<img src="{{ STATIC_URL }}images/q_mark.gif">
-									</a>
-								</th>
-							{% endfor %}
+							{% block results_table_header %}
+								{% for header in header_defs %}
+									{% if header.definition_name == "Greenness Profile" %}
+										<th class="nosort">
+									{% else %}
+										<th>
+									{% endif %}
+									{{ header.definition_name }}<br />
+										{% block info_header %}
+										<a title="Click to display definition"
+											href="javascript:showInfo('{{ header.definition_name }}', '{{ header.definition_description|escapejs }}')">
+											<img src="{{ STATIC_URL }}images/q_mark.gif">
+										</a>
+										{% endblock %}
+									</th>
+								{% endfor %}
+							{% endblock %}
 						</tr>
 						</thead>
 						<tbody>
