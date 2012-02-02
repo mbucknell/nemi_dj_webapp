@@ -995,9 +995,9 @@ class ExportMethodAnalyte(View, TemplateResponseMixin):
 class AddStatisticalSourceView(View, TemplateResponseMixin):
     template_name = 'create_statistic_source.html'
     
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(AddStatisticalSourceView, self).dispatch(*args, **kwargs)
+#    @method_decorator(login_required)
+#    def dispatch(self, *args, **kwargs):
+#        return super(AddStatisticalSourceView, self).dispatch(*args, **kwargs)
     
     def get(self, request, *args, **kwargs):
         form = StatisticalSourceEditForm()
@@ -1027,9 +1027,9 @@ class UpdateStatisticalSourceView(UpdateView):
     form_class = StatisticalSourceEditForm
     model = SourceCitationRef
     
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UpdateStatisticalSourceView, self).dispatch(*args, **kwargs)
+#    @method_decorator(login_required)
+#    def dispatch(self, *args, **kwargs):
+#        return super(UpdateStatisticalSourceView, self).dispatch(*args, **kwargs)
 
     def get_success_url(self):
         return reverse('search-statistical_source_detail', kwargs={'pk' : self.object.source_citation_id})            
