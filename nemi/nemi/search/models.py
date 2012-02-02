@@ -3,6 +3,7 @@ that are used to implement the NEMI search pages. All tables and views are read
 only and therefore have managed set to Fasle in each model's Meta data.
 '''
 
+from django.contrib.auth.models import User
 from django.db import models
 
 class MethodVW(models.Model):
@@ -591,7 +592,7 @@ class SourceCitationRef(models.Model):
     source_citation = models.CharField(max_length=30, blank=False)
     source_citation_name = models.CharField(max_length=450, verbose_name="citation")
     source_citation_information = models.CharField(max_length=1500)
-    insert_person_name = models.CharField(max_length=25)
+    insert_person = models.ForeignKey(User, null=True)
     insert_date = models.DateField(auto_now_add=True)
     update_date = models.DateField(auto_now=True)
     approve_flag = models.CharField(max_length=1, choices=[('N', 'No'), ('Y', 'Yes')], default='N')

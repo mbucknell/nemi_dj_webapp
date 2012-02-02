@@ -41,7 +41,6 @@
 				</td>
 			</tr>	
 			<tr><th>Complexity</th><td>{{ data.complexity }}</td></tr>
-			<tr><th>Level of Training</th><td>{{ data.level_of_training }}</td></tr>
 			<tr>
 				<th>Media Emphasized</th>
 				<td>
@@ -62,9 +61,7 @@
 					{% endfor %}
 				</td>
 			</tr>
-			<tr><th>Insert user</th><td{{ user.username }}({{ user.get_full_name }})</td></tr>
 		</table>
-		<input type="button" value="Edit Citation" onclick="location.href='{% url search-update_statistical_source data.source_citation_id %}';"> 
 	{% else %}
 		<p>Source citation data not found.</p>
 	{% endif %}

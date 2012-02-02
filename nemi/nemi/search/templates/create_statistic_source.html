@@ -2,6 +2,7 @@
 {% block title %}Create New Statistical Source{% endblock %}
 {% block content %}
 	<h3><i>Enter information to create a statistical method</i></h3>
+	<p>Username: {{ user.get_full_name }} - {{ user.username }}</p>
 	<form action="{% url search-create_statistical_source %}" method="post">{% csrf_token %}
 		<p> {{ form.non_field_errors }} </p>
 		<table id="data-entry-table">

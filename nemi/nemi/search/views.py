@@ -6,14 +6,16 @@ search pages.
 import types
 
 # django packages
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.db import connection
 from django.db.models import Q, Max
 from django.forms import Form
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.utils.decorators import method_decorator
 from django.views.generic import View, DetailView
-from django.views.generic.edit import TemplateResponseMixin, FormMixin, CreateView
+from django.views.generic.edit import TemplateResponseMixin, FormMixin, CreateView, UpdateView
 
 # Provides conversion to Excel format
 from xlwt import Workbook
@@ -993,12 +995,16 @@ class ExportMethodAnalyte(View, TemplateResponseMixin):
 class AddStatisticalSourceView(View, TemplateResponseMixin):
     template_name = 'create_statistic_source.html'
     
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AddStatisticalSourceView, self).dispatch(*args, **kwargs)
+    
     def get(self, request, *args, **kwargs):
-        form = AddStatisticalSourceForm()
+        form = StatisticalSourceEditForm()
         return self.render_to_response({'form' : form})
     
     def post(self, request, *args, **kwargs):
-        form = AddStatisticalSourceForm(self.request.POST)
+        form = StatisticalSourceEditForm(self.request.POST)
         if form.is_valid():
             data = form.save(commit=False)
             
@@ -1006,15 +1012,27 @@ class AddStatisticalSourceView(View, TemplateResponseMixin):
             data.source_citation_id = r['source_citation_id__max'] + 1
             data.approve_flag = 'F'
             data.citation_type = CitationTypeRef.objects.get(citation_type='Statistic')
+            data.insert_person = self.request.user
             
             data.save()
             form.save_m2m()
             
-            return HttpResponseRedirect(reverse('search-statistics'))
+            return HttpResponseRedirect(reverse('search-statistical_source_detail', kwargs={'pk' : data.source_citation_id} ))
         
         else:
             return self.render_to_response({'form' : form})
-            
+
+class UpdateStatisticalSourceView(UpdateView):
+    template_name='update_statistic_source.html'
+    form_class = StatisticalSourceEditForm
+    model = SourceCitationRef
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UpdateStatisticalSourceView, self).dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('search-statistical_source_detail', kwargs={'pk' : self.object.source_citation_id})            
 
 class StatisticSearchView(SearchResultView, SearchFormMixin):
     
@@ -1062,6 +1080,13 @@ class StatisticSearchView(SearchResultView, SearchFormMixin):
     def get_results_context(self):
         return self.qs
             
+class StatisticalSourceSummaryView(DetailView):
+    template_name = 'statistical_source_summary.html'
+    
+    model = SourceCitationRef
+    
+    context_object_name = 'data'
+    
 class StatisticalSourceDetailView(DetailView):
     template_name = 'statistical_source_detail.html'
     

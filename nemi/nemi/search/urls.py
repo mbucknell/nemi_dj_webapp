@@ -3,7 +3,7 @@
 '''
 
 from django.conf.urls.defaults import patterns, url
-import views;
+import views
 
 urlpatterns = patterns("", 
         url(r'^general/$',
@@ -67,10 +67,16 @@ urlpatterns = patterns("",
         url(r'^statistic_search/$',
             views.StatisticSearchView.as_view(),
             name='search-statistics'),
+        url(r'^statistical_search_summary/(?P<pk>\d+)/$',
+            views.StatisticalSourceSummaryView.as_view(),
+            name='search-statistical_source_summary'),
         url(r'^create_statistical_source/$',
             views.AddStatisticalSourceView.as_view(),
             name='search-create_statistical_source'),
         url(r'^statistical_search_detail/(?P<pk>\d+)/$',
             views.StatisticalSourceDetailView.as_view(),
-            name='search-statistical_source_detail')
+            name='search-statistical_source_detail'),
+        url(r'^update_statisticial_source/(?P<pk>\d+)/$',
+            views.UpdateStatisticalSourceView.as_view(),
+            name='search-update_statistical_source')
         )
