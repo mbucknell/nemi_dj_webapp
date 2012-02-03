@@ -992,35 +992,31 @@ class ExportMethodAnalyte(View, TemplateResponseMixin):
             
             return response
         
-class AddStatisticalSourceView(View, TemplateResponseMixin):
+class AddStatisticalSourceView(CreateView):
     template_name = 'create_statistic_source.html'
+    form_class = StatisticalSourceEditForm
+    model = SourceCitationRef
+    
+    def get_success_url(self):
+        return reverse('search-statistical_source_detail', kwargs={'pk' : self.object.source_citation_id})        
+    
+    def form_valid(self, form):
+        data = form.save(commit=False)
+        
+        r = SourceCitationRef.objects.aggregate(Max('source_citation_id'))
+        data.source_citation_id = r['source_citation_id__max'] + 1
+        data.approve_flag = 'F'
+        data.citation_type = CitationTypeRef.objects.get(citation_type='Statistic')
+        data.insert_person = self.request.user
+        
+        data.save()
+        form.save_m2m()
+        
+        return HttpResponseRedirect(self.get_success_url())
     
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(AddStatisticalSourceView, self).dispatch(*args, **kwargs)
-    
-    def get(self, request, *args, **kwargs):
-        form = StatisticalSourceEditForm()
-        return self.render_to_response({'form' : form})
-    
-    def post(self, request, *args, **kwargs):
-        form = StatisticalSourceEditForm(self.request.POST)
-        if form.is_valid():
-            data = form.save(commit=False)
-            
-            r = SourceCitationRef.objects.aggregate(Max('source_citation_id'))
-            data.source_citation_id = r['source_citation_id__max'] + 1
-            data.approve_flag = 'F'
-            data.citation_type = CitationTypeRef.objects.get(citation_type='Statistic')
-            data.insert_person = self.request.user
-            
-            data.save()
-            form.save_m2m()
-            
-            return HttpResponseRedirect(reverse('search-statistical_source_detail', kwargs={'pk' : data.source_citation_id} ))
-        
-        else:
-            return self.render_to_response({'form' : form})
 
 class UpdateStatisticalSourceView(UpdateView):
     template_name='update_statistic_source.html'

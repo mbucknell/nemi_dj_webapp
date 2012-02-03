@@ -76,7 +76,7 @@ urlpatterns = patterns("",
         url(r'^statistical_search_detail/(?P<pk>\d+)/$',
             views.StatisticalSourceDetailView.as_view(),
             name='search-statistical_source_detail'),
-        url(r'^update_statisticial_source/(?P<pk>\d+)/$',
+        url(r'^update_statistical_source/(?P<pk>\d+)/$',
             views.UpdateStatisticalSourceView.as_view(),
             name='search-update_statistical_source')
         )

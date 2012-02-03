@@ -321,3 +321,21 @@ class StatisticalSourceEditForm(ModelForm):
                    'design_objectives' : CheckboxSelectMultiple(),
                    'special_topics' : CheckboxSelectMultiple()}
         
+        
+        
+    def __init__(self, *args, **kwargs):
+        super(StatisticalSourceEditForm, self).__init__(*args, **kwargs)
+
+        # There is a bug/feature in the MultipleChoiceField where it sets the help text for these fields to
+        # a message about how to select multiple choices in a SelectMultiple widgets. Even if you change the widget
+        # to CheckboxSelectMultiple, the message remains and any help_text from the model is ignored.
+        # The code below sets the help for all fields that use the CheckboxSelectMultiple widget to the help_text
+        # defined in the model form. See Django bug report https://code.djangoproject.com/ticket/9321 . This may
+        # be fixed in 1.4 but won't be done in 1.3.x versions.
+        # For now, I'll have to duplicate the help text here.
+        
+        self.fields['analysis_types'].help_text = ''
+        self.fields['sponser_types'].help_text = ''
+        self.fields['media_emphasized'].help_text = 'Media emphasized by not limited to'
+        self.fields['design_objectives'].help_text = ''
+        self.fields['special_topics'].help_text = ''

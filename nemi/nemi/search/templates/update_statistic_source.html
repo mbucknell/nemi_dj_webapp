@@ -2,18 +2,9 @@
 {% block title %}Update Statistical Source{% endblock %}
 {% block content %}
 	<h3><i>Edit information to update this statistical method</i></h3>
-	<p>Username: {{ user.get_full_name }}
+	<p><b>User who created the source:&nbsp;</b>{{ object.insert_person.get_full_name }}
 	<form action="{% url search-update_statistical_source  object.source_citation_id %}" method="post">{% csrf_token %}
-		<p> {{ form.non_field_errors }} </p>
-		<table id="data-entry-table">
-			{% for field in form  %}
-				<tr>
-					<th>{{ field.label_tag }}:<th>
-					<td>{{ field }}</td>
-					<td>{{ field.errors }}</td>
-				</tr>
-			{% endfor %}
-		</table>	
+		{% include "stats_entry_table.html" %}
 		<input type="submit" value="Update Citation"/>
 	</form>
 

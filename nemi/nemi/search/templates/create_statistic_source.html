@@ -2,18 +2,11 @@
 {% block title %}Create New Statistical Source{% endblock %}
 {% block content %}
 	<h3><i>Enter information to create a statistical method</i></h3>
-	<p>Username: {{ user.get_full_name }} - {{ user.username }}</p>
+	<p>A '*' by a field's label indicates the field is required.</p>
+	<br/>
+	<p><b>Username:&nbsp;</b>{{ user.get_full_name }} - {{ user.username }}</p>
 	<form action="{% url search-create_statistical_source %}" method="post">{% csrf_token %}
-		<p> {{ form.non_field_errors }} </p>
-		<table id="data-entry-table">
-			{% for field in form  %}
-				<tr>
-					<th>{{ field.label_tag }}:<th>
-					<td>{{ field }}</td>
-					<td>{{ field.errors }}</td>
-				</tr>
-			{% endfor %}
-		</table>	
+		{% include "stats_entry_table.html" %}
 		<input type="submit" value="Create Citation"/>
 	</form>
 
