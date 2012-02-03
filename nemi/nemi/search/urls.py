@@ -3,7 +3,6 @@
 '''
 
 from django.conf.urls.defaults import patterns, url
-from django.contrib.auth.decorators import login_required
 import views
 
 urlpatterns = patterns("", 
@@ -72,12 +71,12 @@ urlpatterns = patterns("",
             views.StatisticalSourceSummaryView.as_view(),
             name='search-statistical_source_summary'),
         url(r'^create_statistical_source/$',
-            login_required(views.AddStatisticalSourceView.as_view()),
+            views.AddStatisticalSourceView.as_view(),
             name='search-create_statistical_source'),
         url(r'^statistical_search_detail/(?P<pk>\d+)/$',
             views.StatisticalSourceDetailView.as_view(),
             name='search-statistical_source_detail'),
         url(r'^update_statisticial_source/(?P<pk>\d+)/$',
-            login_required(views.UpdateStatisticalSourceView.as_view()),
+            views.UpdateStatisticalSourceView.as_view(),
             name='search-update_statistical_source')
         )
