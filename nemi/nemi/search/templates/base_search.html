@@ -139,7 +139,9 @@
 				<ul>
 					{% if criteria %}
 						{% for c in criteria %}
-							<li>{{ c.0 }} equals {{ c.1 }}</li>
+							{% if c %}
+								<li>{{ c.0 }} equals {{ c.1 }}</li>
+							{% endif %}
 						{% endfor %}
 					{% endif %}
 					
