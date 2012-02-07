@@ -10,12 +10,11 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.db import connection
 from django.db.models import Q, Max
-from django.forms import Form
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.utils.decorators import method_decorator
 from django.views.generic import View, DetailView
-from django.views.generic.edit import TemplateResponseMixin, FormMixin, CreateView, UpdateView
+from django.views.generic.edit import TemplateResponseMixin, CreateView, UpdateView
 
 # Provides conversion to Excel format
 from xlwt import Workbook
@@ -25,13 +24,43 @@ from forms import *
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw
 from models import SourceCitationRef
 
-def _choice_select(field):
+def _get_choice_select(field):
     '''Returns the visible choice from the form field variable. The function
     assumes choice values are integer or string
     '''
     if type(field.field.choices[1][0]) is types.IntType:
         return dict(field.field.choices).get(int(field.data))
     return dict(field.field.choices).get(field.data)
+
+def _get_criteria(field):
+    ''' Assumes that the field is a ChoiceField.
+    Returns a tuple if the field value is not 'all', where the first element is the label
+    of field and the second element is the visible choice for field.
+    '''
+    if field.data == 'all':
+        return None
+    else:
+        return (field.label, _get_choice_select(field))
+    
+def _get_criteria_with_name(form, field_name):
+    '''Returns a tuple representing field_name's label and choice from form.
+    '''
+    if form.cleaned_data[field_name] == None:
+        return None
+    
+    else:
+        return (form[field_name].label, form.cleaned_data[field_name])
+    
+def _get_multi_choice_criteria(form, name):
+    choice_dict = dict(form[name].field.choices)
+    if len(form.cleaned_data[name]) == len(choice_dict):
+        return []
+    else:
+        if type(choice_dict.keys()[0]) is types.IntType:
+            return [choice_dict.get(int(k)) for k in form.cleaned_data[name]]
+        else:
+            return [choice_dict.get(k) for k in form.cleaned_data[name]]
+    
 
 def _dictfetchall(cursor):
     '''Returns all rows from the cursor query as a dictionary with the key value equal to column name in uppercase'''
@@ -149,22 +178,18 @@ def _analyte_value_qs(method_id):
                                'false_positive_value',
                                'false_negative_value',
                                'prec_acc_conc_used').distinct()
+ 
+class FilterFormMixin(View):
+    
+    form_class = Form
 
-class SearchFormMixin(object):
-    '''This mixin implements the form processing part of a search view page.
-    The form parameter is set to the form class used to implement the search form.
-    The method get_query_and_context_from_form extracts the query set represented by the valid form. Any
-    additional context information is generated from the form is created as part of this method.
-    '''
-
-    form = Form #Search form which generates the result query set, qs, and context
-   
-    def get_query_and_context_from_form(self):
-        '''Generate the query set that is a derived from the form along with any additional context
-        data that is required from the form.
-        '''
-        self.qs = None
-        self.context = {}
+    def get_qs(self, form):
+        return None
+    
+    def get_context_data(self, form):
+        return {'form' : form}
+    
+                                
         
 class SearchResultView(View, TemplateResponseMixin):
     ''' This class extends the standard view and template response mixin. The class should be extended along with
@@ -196,55 +221,44 @@ class SearchResultView(View, TemplateResponseMixin):
             
         return header_defs
 
-    def get_values_qs(self):
+    def get_values_qs(self, qs):
         ''' Returns the qs as a values query set with result_fields in the set and ordered by result_field_order_by.'''
-        v_qs = self.qs.values(*self.result_fields).distinct()
+        v_qs = qs.values(*self.result_fields).distinct()
         if self.result_field_order_by:
             v_qs = v_qs.order_by(self.result_field_order_by)
             
         return v_qs
     
-    def get_results_context(self):
+    def get_results_context(self, qs):
         '''Returns the results context variable. By default this returns self.get_values_qs().
         If you need to process the values query set further, override this method.
         '''
-        return self.get_values_qs()
-
-    def get_valid_form_response(self, request, *args, **kwargs):
-        '''Returns the http response when the form generated from request is valid.'''
-        self.context.update({'search_form' : self.search_form,
-                             'header_defs' : self.get_header_defs(),
-                             'results' : self.get_results_context(),
-                             'query_string' : '?' + request.get_full_path().split('&', 1)[1],
-                             'hide_search' : True,
-                             'show_results' : True})
-        return self.render_to_response(self.context)
-     
-    def get_invalid_form_response(self, request, *args, **kwargs):
-        '''Returns the http response when the form generated from request is invalid.'''
-        return self.render_to_response({'search_form' : self.search_form,
-                                        'hide_search' : False,
-                                        'show_results' : False}) 
-          
-    def get_empty_form_response(self, request, *args, **kwargs):
-        '''Return the http response when the request does not contain any get data.'''
-        return self.render_to_response({'search_form' : self.form(),
-                                        'hide_search' : False,
-                                        'show_results' : False})
+        return self.get_values_qs(qs)
 
     def get(self, request, *args, **kwargs):
         '''Process the GET request.'''
         if request.GET:
-            self.search_form = self.form(request.GET)
-            if self.search_form.is_valid():
-                self.get_query_and_context_from_form()
-                return self.get_valid_form_response(request, *args, **kwargs)
+            form = self.form_class(request.GET)
+            if form.is_valid():
+                context = {'search_form' : form,
+                           'results' : self.get_results_context(self.get_qs(form)),
+                           'query_string' : '?' + request.get_full_path().split('&', 1)[1],
+                           'header_defs' : self.get_header_defs(),
+                           'hide_search' : True,
+                           'show_results' : True}
+                context.update(self.get_context_data(form))
+                
+                return self.render_to_response(context)          
              
             else:
-                return self.get_invalid_form_response(request, *args, **kwargs)   
+                return self.render_to_response({'search_form' : form,
+                                        'hide_search' : False,
+                                        'show_results' : False}) 
             
         else:
-            return self.get_empty_form_response(request, *args, **kwargs)
+            return self.render_to_response({'search_form' : self.form_class(),
+                                            'hide_search' : False,
+                                            'show_results' : False})
                 
 class ExportSearchView(View):
     ''' This class extends the standard View to implement the view which exports the search results
@@ -254,99 +268,87 @@ class ExportSearchView(View):
     export_fields = () # Fields in the query set to be exported to file
     export_field_order_by = '' # Field name to order the export query results by. If null, no order is specified
     
-    def get_export_qs(self):
+    def get_export_qs(self, qs):
         ''' Return a values list query set from the objects query set using export_fields to select fields
         and export_field_order_by to order the query set.
         '''
-        export_qs = self.qs.values_list(*self.export_fields).distinct()
+        export_qs = qs.values_list(*self.export_fields).distinct()
         if self.export_field_order_by:
             export_qs = export_qs.order_by(self.export_field_order_by)
             
         return export_qs
     
-    def get_valid_form_response(self, request, *args, **kwargs):
-        ''' Returns the http response when request contains a valid form. The kind of
-         file to export is specified in the keyword argument 'export'. This method
-         handles 'tsv' (tab separated files) and 'xls' (Excel files) keywords.
-         '''
-        HEADINGS = [name.replace('_', ' ').title() for name in self.export_fields]
-        export_type = kwargs.get('export', '')
-        
-        if export_type == 'tsv':
-            return _tsv_response(HEADINGS, self.get_export_qs())
-        
-        elif export_type == 'xls':
-            return _xls_response(HEADINGS, self.get_export_qs())
-        
-        else:
-            return Http404
 
-    def get_invalid_form_response(self, request, *args, **kwargs):
-        '''Returns the http response when request contains an invalid form.'''
-        return Http404
-    
-    def get_empty_form_response(self, request, *args, **kwargs):
-        '''Returns the http response when request does not contain get data.'''
-        return Http404
-    
     def get(self, request, *args, **kwargs):
         '''Processes the get request.'''
         if request.GET:
-            self.search_form = self.form(request.GET)
-            if self.search_form.is_valid():
-                self.get_query_and_context_from_form()
-                return self.get_valid_form_response(request, *args, **kwargs)
+            form = self.form_class(request.GET)
+            if form.is_valid():
+                HEADINGS = [name.replace('_', ' ').title() for name in self.export_fields]
+                export_type = kwargs.get('export', '')
+                
+                if export_type == 'tsv':
+                    return _tsv_response(HEADINGS, self.get_export_qs(self.get_qs(form)))
+                
+                elif export_type == 'xls':
+                    return _xls_response(HEADINGS, self.get_export_qs(self.get_qs(form)))
+                
+                else:
+                    return Http404
             
             else:
-                return self.get_invalid_form_response(request, *args, **kwargs)
+                return Http404
             
         else:
-            return self.get_empty_form_response(request, *args, **kwargs)
+            return Http404
                 
-class GeneralSearchFormMixin(SearchFormMixin):
+class GeneralSearchFormMixin(FilterFormMixin):
     '''Extends the SearchFormMixin to implement the search form used on the General Search page.'''
 
-    form = GeneralSearchForm
+    form_class = GeneralSearchForm
+    
+    def get_qs(self, form):
+        qs = MethodVW.objects.all()
 
-    def get_query_and_context_from_form(self):
-        '''Overrides the parent method. The query set is generated from the MethodVW model and is filtered
-        by the contents of the form. Also generate two context dictionary values, criteria and selected_method_types
-        from the search form.
-        '''       
-        self.context = {}
-        self.qs = MethodVW.objects.all()
+        if form.cleaned_data['media_name'] != 'all':
+            qs = qs.filter(media_name__exact=form.cleaned_data['media_name'])
+
+        if form.cleaned_data['source'] != 'all':
+            qs = qs.filter(method_source__contains=form.cleaned_data['source'])
+
+        if form.cleaned_data['method_number'] != 'all':
+            qs = qs.filter(method_id__exact=int(form.cleaned_data['method_number']))
+            
+        if form.cleaned_data['instrumentation'] != 'all':
+            qs = qs.filter(instrumentation_id__exact=int(form.cleaned_data['instrumentation']))  
+        
+        if form.cleaned_data['method_subcategory'] != 'all':
+            qs = qs.filter(method_subcategory_id__exact=int(form.cleaned_data['method_subcategory']))
+        
+        qs = qs.filter(method_type_id__in=form.cleaned_data['method_types'])
+        
+        return qs
+        
+    def get_context_data(self, form):
         criteria = []
+        criteria.append(_get_criteria(form['media_name']))
+        criteria.append(_get_criteria(form['source']))
+        criteria.append(_get_criteria(form['method_number']))
+        criteria.append(_get_criteria(form['instrumentation']))
+        criteria.append(_get_criteria(form['method_subcategory']))
         
-        if self.search_form.cleaned_data['media_name'] != 'all':
-            self.qs = self.qs.filter(media_name__exact=self.search_form.cleaned_data['media_name'])
-            criteria.append((self.search_form['media_name'].label, _choice_select(self.search_form['media_name'])))
+        return {'criteria' : criteria,
+                'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
+    
+
+#        method_type_dict = dict(self.search_form['method_types'].field.choices)
+#        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
+#            selected_method_types = []
+#        else:
+#            selected_method_types = [method_type_dict.get(int(k)) for k in self.search_form.cleaned_data['method_types']]
         
-        if self.search_form.cleaned_data['source'] != 'all':
-            self.qs = self.qs.filter(method_source__contains=self.search_form.cleaned_data['source'])
-            criteria.append((self.search_form['source'].label, _choice_select(self.search_form['source'])))
-                            
-        if self.search_form.cleaned_data['method_number'] != 'all':
-            self.qs = self.qs.filter(method_id__exact=int(self.search_form.cleaned_data['method_number']))
-            criteria.append((self.search_form['method_number'].label, _choice_select(self.search_form['method_number'])))
-            
-        if self.search_form.cleaned_data['instrumentation'] != 'all':
-            self.qs = self.qs.filter(instrumentation_id__exact=int(self.search_form.cleaned_data['instrumentation']))  
-            criteria.append((self.search_form['instrumentation'].label, _choice_select(self.search_form['instrumentation'])))
+#        self.qs = self.qs.filter(method_type_id__in=self.search_form.cleaned_data['method_types']) 
         
-        if self.search_form.cleaned_data['method_subcategory'] != 'all':
-            self.qs = self.qs.filter(method_subcategory_id__exact=int(self.search_form.cleaned_data['method_subcategory']))
-            criteria.append((self.search_form['method_subcategory'].label, _choice_select(self.search_form['method_subcategory'])))
-            
-        method_type_dict = dict(self.search_form['method_types'].field.choices)
-        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
-            selected_method_types = []
-        else:
-            selected_method_types = [method_type_dict.get(int(k)) for k in self.search_form.cleaned_data['method_types']]
-        
-        self.qs = self.qs.filter(method_type_id__in=self.search_form.cleaned_data['method_types']) 
-        
-        self.context['criteria'] = criteria
-        self.context['selected_method_types'] = selected_method_types
         
 class ExportGeneralSearchView(ExportSearchView, GeneralSearchFormMixin):
     '''Extends the ExportSearchView and GeneralSearchFormMixin to implement the
@@ -394,59 +396,54 @@ class GeneralSearchView(GeneralSearchFormMixin, SearchResultView):
     
     template_name = 'general_search.html'
     
-    def get_results_context(self):
+    def get_results_context(self, qs):
         '''Returns a list of dictionaries where each element in the list contains two keywords.
         The keyword m contains a model object in self.get_values_qs. The keyword, greenness,
         contains the greenness profile information for that object.
         '''
-        return [{'m' : r, 'greenness': _greenness_profile(r)} for r in self.get_values_qs()] 
+        return [{'m' : r, 'greenness': _greenness_profile(r)} for r in self.get_values_qs(qs)] 
                     
-class AnalyteSearchFormMixin(SearchFormMixin):
+class AnalyteSearchFormMixin(FilterFormMixin):
     '''Extends the SearchFormMixin to implement the Analyte search form used on the analyte search pages.'''
     
-    form = AnalyteSearchForm
+    form_class = AnalyteSearchForm
     
-    def get_query_and_context_from_form(self):
-        '''Overrides the generic method. The query set is generated from the MethodAnalyteAllVW model and is filtered
-        by the contents of the form. Also generate two context dictionary values, criteria and selected_method_types
-        from the search form.
-        '''
-        self.context = {}
-        self.qs = MethodAnalyteAllVW.objects.all()
-        criteria = []
-
-        if self.search_form.cleaned_data['analyte_kind'] == 'code':
-            self.qs = self.qs.filter(analyte_code__iexact=self.search_form.cleaned_data['analyte_value'])
-            criteria.append(('Analyte code', self.search_form.cleaned_data['analyte_value']))
+    def get_qs(self, form):
+        qs = MethodAnalyteAllVW.objects.all()
+    
+        if form.cleaned_data['analyte_kind'] == 'code':
+            qs = qs.filter(analyte_code__iexact=form.cleaned_data['analyte_value'])
         else: # assume analyte kind is name
-            self.qs = self.qs.filter(analyte_name__iexact=self.search_form.cleaned_data['analyte_value'])
-            criteria.append(('Analyte name', self.search_form.cleaned_data['analyte_value']))
+            qs = qs.filter(analyte_name__iexact=form.cleaned_data['analyte_value'])
             
-        if self.search_form.cleaned_data['media_name'] != 'all':
-            self.qs = self.qs.filter(media_name__exact=self.search_form.cleaned_data['media_name'])
-            criteria.append((self.search_form['media_name'].label, _choice_select(self.search_form['media_name'])))
+        if form.cleaned_data['media_name'] != 'all':
+            qs = qs.filter(media_name__exact=form.cleaned_data['media_name'])
         
-        if self.search_form.cleaned_data['source'] != 'all':
-            self.qs = self.qs.filter(method_source__contains=self.search_form.cleaned_data['source'])
-            criteria.append((self.search_form['source'].label, _choice_select(self.search_form['source'])))
+        if form.cleaned_data['source'] != 'all':
+            qs = qs.filter(method_source__contains=form.cleaned_data['source'])
             
-        if self.search_form.cleaned_data['instrumentation'] != 'all':
-            self.qs = self.qs.filter(instrumentation_id__exact=self.search_form.cleaned_data['instrumentation'])
-            criteria.append((self.search_form['instrumentation'].label, _choice_select(self.search_form['instrumentation'])))
+        if form.cleaned_data['instrumentation'] != 'all':
+            qs = qs.filter(instrumentation_id__exact=form.cleaned_data['instrumentation'])
             
-        if self.search_form.cleaned_data['method_subcategory'] != 'all':
-            self.qs = self.qs.filter(method_subcategory_id__exact=self.search_form.cleaned_data['method_subcategory'])
-            criteria.append((self.search_form['method_subcategory'].label, _choice_select(self.search_form['method_subcategory'])))
+        if form.cleaned_data['method_subcategory'] != 'all':
+            qs = qs.filter(method_subcategory_id__exact=form.cleaned_data['method_subcategory'])
 
-        self.qs = self.qs.filter(method_type_desc__in=self.search_form.cleaned_data['method_types'])
-        method_type_dict = dict(self.search_form['method_types'].field.choices)
-        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
-            selected_method_types = []
+        qs = qs.filter(method_type_desc__in=form.cleaned_data['method_types'])
+        return qs
+        
+    def get_context_data(self, form):
+        criteria = []
+        if form.cleaned_data['analyte_kind'] == 'code':
+            criteria.append(('Analyte code', form.cleaned_data['analyte_value']))
         else:
-            selected_method_types = [method_type_dict.get(k) for k in self.search_form.cleaned_data['method_types']]
-            
-        self.context['criteria'] = criteria
-        self.context['selected_method_types'] = selected_method_types      
+            criteria.append(('Analyte name', form.cleaned_data['analyte_value']))
+        criteria.append(_get_criteria(form['media_name']))
+        criteria.append(_get_criteria(form['source']))
+        criteria.append(_get_criteria(form['instrumentation']))
+        criteria.append(_get_criteria(form['method_subcategory']))
+
+        return {'criteria' : criteria,
+                'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
 
 class ExportAnalyteSearchView(ExportSearchView, AnalyteSearchFormMixin):
     '''Extends the ExportSearchView and AnalyteSearchFormMixin to implement the export analyte search feature.'''
@@ -526,12 +523,12 @@ class AnalyteSearchView(SearchResultView, AnalyteSearchFormMixin):
                       'RELATIVE_COST',
                       'GREENNESS')
     
-    def get_results_context(self):
+    def get_results_context(self, qs):
         '''Returns a list of dictionaries where each element in the list contains two keywords.
         The keyword m contains a model object in self.get_values_qs. The keyword, greenness,
         contains the greenness profile information for that object.
         '''
-        return [{'m' : r, 'greenness' : _greenness_profile(r)} for r in self.get_values_qs()] 
+        return [{'m' : r, 'greenness' : _greenness_profile(r)} for r in self.get_values_qs(qs)] 
 
 class AnalyteSelectView(View, TemplateResponseMixin):
     ''' Extends the standard view to implement the analyte select pop up page. '''
@@ -551,11 +548,11 @@ class AnalyteSelectView(View, TemplateResponseMixin):
                                         'kind' : kind})
         
 
-class MicrobiologicalSearchView(SearchResultView, SearchFormMixin):
+class MicrobiologicalSearchView(SearchResultView, FilterFormMixin):
     '''Extends the SearchResultView and SearchFormMixin to implement the microbiological search page.'''
     
     template_name = "microbiological_search.html"
-    form = MicrobiologicalSearchForm
+    form_class = MicrobiologicalSearchForm
     
     result_fields = ('method_id',
                      'source_method_identifier',
@@ -574,35 +571,27 @@ class MicrobiologicalSearchView(SearchResultView, SearchFormMixin):
                          'GEAR_TYPE',
                          'RELATIVE_COST')
     
-    def get_query_and_context_from_form(self):
-        '''Overrides the generic method. The query set is generated from the MethodAnalyteAllVW model and is filtered
-        by the contents of the form. Also generates two context dictionary values, criteria and selected_method_types
-        from the search form.
-        '''
-        self.context = {}
-        criteria = []
-        self.qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id__exact=5)
+    def get_qs(self, form):
+        qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id__exact=5)
         
-        if self.search_form.cleaned_data['analyte'] != 'all':
-            self.qs = self.qs.filter(analyte_id__exact=self.search_form.cleaned_data['analyte'])
-            criteria.append((self.search_form['analyte'].label, _choice_select(self.search_form['analyte'])))
+        if form.cleaned_data['analyte'] != 'all':
+            qs = qs.filter(analyte_id__exact=form.cleaned_data['analyte'])
             
-        method_type_dict = dict(self.search_form['method_types'].field.choices)
-        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
-            selected_method_types = []
-        else:
-            selected_method_types = [method_type_dict.get(k) for k in self.search_form.cleaned_data['method_types']]
+        qs = qs.filter(method_type_desc__in=form.cleaned_data['method_types'])
+        return qs
+    
+    def get_context_data(self, form):
+        criteria = []
+        criteria.append(_get_criteria(form['analyte']))
+    
+        return {'criteria' : criteria,
+                'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
         
-        self.qs = self.qs.filter(method_type_desc__in=self.search_form.cleaned_data['method_types']) 
-        
-        self.context['criteria'] = criteria
-        self.context['selected_method_types'] = selected_method_types
-        
-class BiologicalSearchView(SearchResultView, SearchFormMixin):
+class BiologicalSearchView(SearchResultView, FilterFormMixin):
     '''Extends the SearchResultView and SearchFormMixin to implement the biological search page.'''
     
     template_name = 'biological_search.html'
-    form = BiologicalSearchForm
+    form_class = BiologicalSearchForm
     
     result_fields = ('method_id',
                      'source_method_identifier',
@@ -627,44 +616,38 @@ class BiologicalSearchView(SearchResultView, SearchFormMixin):
                          'WATERBODY_TYPE',
                          'GEAR_TYPE',
                          'RELATIVE_COST')
+    def get_qs(self, form):
+        qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id=7)
+        
+        if form.cleaned_data['analyte_type'] != 'all':
+            qs = qs.filter(analyte_type__exact=form.cleaned_data['analyte_type'])
+            
+        if form.cleaned_data['waterbody_type'] != 'all':
+            qs = qs.filter(waterbody_type__exact=form.cleaned_data['waterbody_type'])
+            
+        if form.cleaned_data['gear_type'] != 'all':
+            qs = qs.filter(instrumentation_id__exact=form.cleaned_data['gear_type'])
+        
+        qs = qs.filter(method_type_desc__in=form.cleaned_data['method_types']) 
+        
+        return qs
     
-    def get_query_and_context_from_form(self):
-        '''Overrides the generic method. The query set is generated from the MethodAnalyteAllVW model and is filtered
-        by the contents of the form. Also generate two context dictionary values, criteria and selected_method_types
-        from the search form.
-        '''
-        self.context = {}
+    def get_context_data(self, form):
         criteria = []
+        criteria.append(_get_criteria(form['analyte_type']))
+        criteria.append(_get_criteria(form['waterbody_type']))
+        criteria.append(_get_criteria(form['gear_type']))
         
-        self.qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id=7)
-        if self.search_form.cleaned_data['analyte_type'] != 'all':
-            self.qs = self.qs.filter(analyte_type__exact=self.search_form.cleaned_data['analyte_type'])
-            criteria.append((self.search_form['analyte_type'].label, _choice_select(self.search_form['analyte_type'])))
-            
-        if self.search_form.cleaned_data['waterbody_type'] != 'all':
-            self.qs = self.qs.filter(waterbody_type__exact=self.search_form.cleaned_data['waterbody_type'])
-            criteria.append((self.search_form['waterbody_type'].label, _choice_select(self.search_form['waterbody_type'])))
-            
-        if self.search_form.cleaned_data['gear_type'] != 'all':
-            self.qs = self.qs.filter(instrumentation_id__exact=self.search_form.cleaned_data['gear_type'])
-            criteria.append((self.search_form['gear_type'].label, _choice_select(self.search_form['gear_type'])))
+        return {'criteria' : criteria,
+                'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
+           
 
-        method_type_dict = dict(self.search_form['method_types'].field.choices)
-        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
-            selected_method_types = []
-        else:
-            selected_method_types = [method_type_dict.get(k) for k in self.search_form.cleaned_data['method_types']]
         
-        self.qs = self.qs.filter(method_type_desc__in=self.search_form.cleaned_data['method_types']) 
-        
-        self.context['criteria'] = criteria
-        self.context['selected_method_types'] = selected_method_types
-        
-class ToxicitySearchView(SearchResultView, SearchFormMixin):
+class ToxicitySearchView(SearchResultView, FilterFormMixin):
     '''Extends the SearchResultsView and SearchFormMixin to implements the toxicity search page.'''
     
     template_name = 'toxicity_search.html'
-    form = ToxicitySearchForm
+    form_class = ToxicitySearchForm
     
     result_fields = ('method_id', 
                     'source_method_identifier',
@@ -686,42 +669,35 @@ class ToxicitySearchView(SearchResultView, SearchFormMixin):
                          'MATRIX',
                          'RELATIVE_COST')
     
-    def get_query_and_context_from_form(self):
-        '''Overrides the generic method. The query set is generated from the MethodAnalyteAllVW model and is 
-        filter by the contents of the form. Also generates two context dictionary values, criteria and selected_method_types
-        form the search_form.
-        '''
-        self.context = {}
+    def get_qs(self, form):
+        qs = MethodAnalyteAllVW.objects.filter(method_category__exact='TOXICITY ASSAY').exclude(source_method_identifier__exact='ORNL-UDLP-01')
+        
+        if form.cleaned_data['subcategory'] != 'all':
+            qs = qs.filter(method_subcategory__exact=form.cleaned_data['subcategory'])
+            
+        if form.cleaned_data['media'] != 'all':
+            qs = qs.filter(media_name__exact=form.cleaned_data['media'])
+            
+        if form.cleaned_data['matrix'] != 'all':
+            qs = qs.filter(matrix__exact=form.cleaned_data['matrix'])
+            
+        qs = qs.filter(method_type_desc__in=form.cleaned_data['method_types'])
+        
+        return qs
+        
+    def get_context_data(self, form):
         criteria = []
-        self.qs = MethodAnalyteAllVW.objects.filter(method_category__exact='TOXICITY ASSAY').exclude(source_method_identifier__exact='ORNL-UDLP-01')
+        criteria.append(_get_criteria(form['subcategory']))
+        criteria.append(_get_criteria(form['media']))
+        criteria.append(_get_criteria(form['matrix']))
         
-        if self.search_form.cleaned_data['subcategory'] != 'all':
-            self.qs = self.qs.filter(method_subcategory__exact=self.search_form.cleaned_data['subcategory'])
-            criteria.append((self.search_form['subcategory'].label, _choice_select(self.search_form['subcategory'])))
-            
-        if self.search_form.cleaned_data['media'] != 'all':
-            self.qs = self.qs.filter(media_name__exact=self.search_form.cleaned_data['media'])
-            criteria.append((self.search_form['media'].label, _choice_select(self.search_form['media'])))
-            
-        if self.search_form.cleaned_data['matrix'] != 'all':
-            self.qs = self.qs.filter(matrix__exact=self.search_form.cleaned_data['matrix'])
-            criteria.append((self.search_form['matrix'].label, _choice_select(self.search_form['matrix'])))
-            
-        method_type_dict = dict(self.search_form['method_types'].field.choices)
-        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
-            selected_method_types = []
-        else:
-            selected_method_types = [method_type_dict.get(k) for k in self.search_form.cleaned_data['method_types']]
+        return {'criteria' : criteria,
+                'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
         
-        self.qs = self.qs.filter(method_type_desc__in=self.search_form.cleaned_data['method_types']) 
-        
-        self.context['criteria'] = criteria
-        self.context['selected_method_types'] = selected_method_types
-        
-class PhysicalSearchView(SearchResultView, SearchFormMixin):
+class PhysicalSearchView(SearchResultView, FilterFormMixin):
     
     template_name = 'physical_search.html'
-    form = PhysicalSearchForm
+    form_class = PhysicalSearchForm
     
     result_fields = ('method_id',
                      'source_method_identifier',
@@ -737,26 +713,22 @@ class PhysicalSearchView(SearchResultView, SearchFormMixin):
                          'METHOD_SOURCE',
                          'MEDIA_NAME',
                          'GEAR_TYPE')
-    
-    def get_query_and_context_from_form(self):
-        self.context = {}
-        criteria = []
-        
-        self.qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id__exact=9)
-        
-        if self.search_form.cleaned_data['analyte'] != 'all':
-            self.qs = self.qs.filter(analyte_id__exact=self.search_form.cleaned_data['analyte'])
-            criteria.append((self.search_form['analyte'].label, _choice_select(self.search_form['analyte'])))
+    def get_qs(self, form):
+        qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id__exact=9)        
+        if form.cleaned_data['analyte'] != 'all':
+            qs = qs.filter(analyte_id__exact=form.cleaned_data['analyte'])
 
-        method_type_dict = dict(self.search_form['method_types'].field.choices)
-        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
-            selected_method_types = []
-        else:
-            selected_method_types = [method_type_dict.get(k) for k in self.search_form.cleaned_data['method_types']]
-        self.qs = self.qs.filter(method_type_desc__in=self.search_form.cleaned_data['method_types']) 
+        qs = qs.filter(method_type_desc__in=form.cleaned_data['method_types']) 
         
-        self.context['criteria'] = criteria
-        self.context['selected_method_types'] = selected_method_types
+        return qs
+    
+    def get_context_data(self, form):
+        criteria = []
+        criteria.append(_get_criteria(form['analyte']))
+        
+        return {'criteria' : criteria,
+                'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
+            
     
 class StreamPhysicalSearchView(SearchResultView, TemplateResponseMixin):
     
@@ -783,7 +755,7 @@ class StreamPhysicalSearchView(SearchResultView, TemplateResponseMixin):
 
     def get(self, request, *args, **kwargs):
         return self.render_to_response({'header_defs' : self.get_header_defs(),
-                                'results' : self.get_results_context(),
+                                'results' : self.get_results_context(self.qs),
                                 'show_results' : True})                
 
 class KeywordSearchView(View, TemplateResponseMixin):
@@ -1030,51 +1002,54 @@ class UpdateStatisticalSourceView(UpdateView):
     def get_success_url(self):
         return reverse('search-statistical_source_detail', kwargs={'pk' : self.object.source_citation_id})            
 
-class StatisticSearchView(SearchResultView, SearchFormMixin):
+class StatisticSearchView(SearchResultView, FilterFormMixin):
     
     template_name = 'statistic_search.html'
-    form = StatisticalSearchForm
+    form_class = StatisticalSearchForm
     
-    def get_query_and_context_from_form(self):
-        self.context = {}
-        criteria = []
-        self.qs = SourceCitationRef.objects.filter(citation_type__citation_type_id__exact=2)
+    def get_qs(self, form):
+        qs = SourceCitationRef.objects.filter(citation_type__citation_type__exact='Statistic')
         
-        if self.search_form.cleaned_data['item_type']:
-            self.qs = self.qs.filter(item_type__exact=self.search_form.cleaned_data['item_type'])
-            criteria.append((self.search_form['item_type'].label, self.search_form.cleaned_data['item_type']))
+        if form.cleaned_data['item_type']:
+            qs = qs.filter(item_type__exact=form.cleaned_data['item_type'])
             
-        if self.search_form.cleaned_data['complexity'] != 'all':
-            self.qs = self.qs.filter(complexity__exact=self.search_form.cleaned_data['complexitiy'])
-            criteria.append((self.search_form['complexity'].label, _choice_select(self.search_form['complexity'])))
+        if form.cleaned_data['complexity'] != 'all':
+            qs = qs.filter(complexity__exact=form.cleaned_data['complexity'])
             
-        if self.search_form.cleaned_data['analysis_types']:
-            self.qs = self.qs.filter(analysis_types__exact=self.search_form.cleaned_data['analysis_types'])
-            criteria.append((self.search_form['analysis_types'].label, self.search_form.cleaned_data['analysis_types']))
+        if form.cleaned_data['analysis_types']:
+            qs = qs.filter(analysis_types__exact=form.cleaned_data['analysis_types'])
             
-        if self.search_form.cleaned_data['sponser_types']:
-            self.qs = self.qs.filter(sponser_types__exact=self.search_form.cleaned_data['sponser_types'])
-            criteria.append((self.search_form['sponser_types'].label, self.search_form.cleaned_data['sponser_types']))
+        if form.cleaned_data['sponser_types']:
+            qs = qs.filter(sponser_types__exact=form.cleaned_data['sponser_types'])
             
-        if self.search_form.cleaned_data['design_objectives']:
-            self.qs = self.qs.filter(design_objectives__exact=self.search_form.cleaned_data['design_objectives'])
-            criteria.append((self.search_form['design_objectives'].label, self.search_form.cleaned_data['design_objectives']))
+        if form.cleaned_data['design_objectives']:
+            qs = qs.filter(design_objectives__exact=form.cleaned_data['design_objectives'])
             
-        if self.search_form.cleaned_data['media_emphasized']:
-            self.qs = self.qs.filter(media_emphasized__exact=self.search_form.cleaned_data['media_emphasized'])
-            criteria.append((self.search_form['media_emphasized'].label, self.search_form.cleaned_data['media_emphasized']))
+        if form.cleaned_data['media_emphasized']:
+            qs = qs.filter(media_emphasized__exact=form.cleaned_data['media_emphasized'])
             
-        if self.search_form.cleaned_data['special_topics']:
-            self.qs = self.qs.filter(special_topics__exact=self.search_form.cleaned_data['special_topics'])
-            criteria.append((self.search_form['special_topics'].label, self.search_form.cleaned_data['special_topics']))
+        if form.cleaned_data['special_topics']:
+            qs = qs.filter(special_topics__exact=form.cleaned_data['special_topics'])
             
-        self.context['criteria'] = criteria
+        return qs
+            
+    def get_context_data(self, form):
+        criteria = []
+        criteria.append(_get_criteria_with_name(form, 'item_type'))
+        criteria.append(_get_criteria(form['complexity']))
+        criteria.append(_get_criteria_with_name(form, 'analysis_types'))
+        criteria.append(_get_criteria_with_name(form, 'sponser_types'))
+        criteria.append(_get_criteria_with_name(form, 'design_objectives'))
+        criteria.append(_get_criteria_with_name(form, 'media_emphasized'))
+        criteria.append(_get_criteria_with_name(form, 'special_topics'))
+        
+        return {'criteria' : criteria}
         
     def get_header_defs(self):
         return None
         
-    def get_results_context(self):
-        return self.qs
+    def get_results_context(self, qs):
+        return qs
             
 class StatisticalSourceSummaryView(DetailView):
     template_name = 'statistical_source_summary.html'
