@@ -334,8 +334,8 @@ class StatisticalSourceEditForm(ModelForm):
         # be fixed in 1.4 but won't be done in 1.3.x versions.
         # For now, I'll have to duplicate the help text here.
         
-        self.fields['analysis_types'].help_text = ''
-        self.fields['sponser_types'].help_text = ''
+        self.fields['analysis_types'].help_text = 'Select citation purpose'
+        self.fields['sponser_types'].help_text = 'Select one or more sponser/publishing types'
         self.fields['media_emphasized'].help_text = 'Media emphasized by not limited to'
-        self.fields['design_objectives'].help_text = ''
-        self.fields['special_topics'].help_text = ''
+        self.fields['design_objectives'].help_text = 'Select all design or data analysis objectives that apply'
+        self.fields['special_topics'].help_text = 'Select all special topics that apply'

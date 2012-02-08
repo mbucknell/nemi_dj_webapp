@@ -12,6 +12,9 @@ th{
 td{
 	border-bottom: solid #aaaaaa 1px;
 }
+a {
+	outline: none;			
+}
 a:link{
 	color: black;
 }

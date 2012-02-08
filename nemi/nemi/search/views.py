@@ -179,7 +179,12 @@ def _analyte_value_qs(method_id):
                                'false_negative_value',
                                'prec_acc_conc_used').distinct()
  
-class FilterFormMixin(View):
+class FilterFormMixin(object):
+    '''This mixin class is designed to be process a form where query filter conditions are set.
+    The method get_qs, should check the form's cleaned data and filter the query as appropriate and
+    return the query set.
+    The method get_context_data, generates any context data generated from the form.
+    '''
     
     form_class = Form
 
@@ -187,13 +192,11 @@ class FilterFormMixin(View):
         return None
     
     def get_context_data(self, form):
-        return {'form' : form}
-    
-                                
-        
+        return {}
+                                     
 class SearchResultView(View, TemplateResponseMixin):
-    ''' This class extends the standard view and template response mixin. The class should be extended along with
-    the SearchFormMixin to implement the search pages.
+    ''' This class extends the standard view and template response mixin. This class
+    should be mixed with a class that provides a get_qs(form) method, get_context_data(form) method, and a form_class parameter.
     '''
     
     result_fields = () # Fields to be displayed on the results page
@@ -262,7 +265,7 @@ class SearchResultView(View, TemplateResponseMixin):
                 
 class ExportSearchView(View):
     ''' This class extends the standard View to implement the view which exports the search results
-    table. This should be extended along with the SearchFormMixin.
+    table. This should be extended along with the FilterFormMixin.
     '''
 
     export_fields = () # Fields in the query set to be exported to file
@@ -303,7 +306,7 @@ class ExportSearchView(View):
             return Http404
                 
 class GeneralSearchFormMixin(FilterFormMixin):
-    '''Extends the SearchFormMixin to implement the search form used on the General Search page.'''
+    '''Extends the FilterFormMixin to implement the search form used on the General Search page.'''
 
     form_class = GeneralSearchForm
     
@@ -339,15 +342,6 @@ class GeneralSearchFormMixin(FilterFormMixin):
         
         return {'criteria' : criteria,
                 'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
-    
-
-#        method_type_dict = dict(self.search_form['method_types'].field.choices)
-#        if len(self.search_form.cleaned_data['method_types']) == len(method_type_dict):
-#            selected_method_types = []
-#        else:
-#            selected_method_types = [method_type_dict.get(int(k)) for k in self.search_form.cleaned_data['method_types']]
-        
-#        self.qs = self.qs.filter(method_type_id__in=self.search_form.cleaned_data['method_types']) 
         
         
 class ExportGeneralSearchView(ExportSearchView, GeneralSearchFormMixin):
@@ -404,7 +398,7 @@ class GeneralSearchView(GeneralSearchFormMixin, SearchResultView):
         return [{'m' : r, 'greenness': _greenness_profile(r)} for r in self.get_values_qs(qs)] 
                     
 class AnalyteSearchFormMixin(FilterFormMixin):
-    '''Extends the SearchFormMixin to implement the Analyte search form used on the analyte search pages.'''
+    '''Extends the FilterFormMixin to implement the Analyte search form used on the analyte search pages.'''
     
     form_class = AnalyteSearchForm
     
@@ -549,7 +543,7 @@ class AnalyteSelectView(View, TemplateResponseMixin):
         
 
 class MicrobiologicalSearchView(SearchResultView, FilterFormMixin):
-    '''Extends the SearchResultView and SearchFormMixin to implement the microbiological search page.'''
+    '''Extends the SearchResultView and FilterFormMixin to implement the microbiological search page.'''
     
     template_name = "microbiological_search.html"
     form_class = MicrobiologicalSearchForm
@@ -588,7 +582,7 @@ class MicrobiologicalSearchView(SearchResultView, FilterFormMixin):
                 'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
         
 class BiologicalSearchView(SearchResultView, FilterFormMixin):
-    '''Extends the SearchResultView and SearchFormMixin to implement the biological search page.'''
+    '''Extends the SearchResultView and FilterFormMixin to implement the biological search page.'''
     
     template_name = 'biological_search.html'
     form_class = BiologicalSearchForm
@@ -644,7 +638,7 @@ class BiologicalSearchView(SearchResultView, FilterFormMixin):
 
         
 class ToxicitySearchView(SearchResultView, FilterFormMixin):
-    '''Extends the SearchResultsView and SearchFormMixin to implements the toxicity search page.'''
+    '''Extends the SearchResultsView and FilterFormMixin to implements the toxicity search page.'''
     
     template_name = 'toxicity_search.html'
     form_class = ToxicitySearchForm
@@ -1003,6 +997,9 @@ class UpdateStatisticalSourceView(UpdateView):
         return reverse('search-statistical_source_detail', kwargs={'pk' : self.object.source_citation_id})            
 
 class StatisticSearchView(SearchResultView, FilterFormMixin):
+    '''
+    Extends the SearchResultView and FilterFormMixin to implement the view to display statistical methods.
+    '''
     
     template_name = 'statistic_search.html'
     form_class = StatisticalSearchForm

@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 class MethodVW(models.Model):
+    
     method_id = models.IntegerField(primary_key=True)
     source_method_identifier = models.CharField(max_length=30)
     method_descriptive_name = models.CharField(max_length=250)
@@ -74,6 +75,7 @@ class MethodVW(models.Model):
         managed = False
                 
 class MethodSummaryVW(models.Model):
+    
     revision_id = models.IntegerField()
     revision_information = models.CharField(max_length=100)
     revision_flag = models.IntegerField(null=True)
@@ -234,6 +236,7 @@ class AnalyteCodeRel(models.Model):
         managed = False
 
 class MethodAnalyteAllVW(models.Model):
+    
     analysis_amt_g = models.CharField(max_length=10, blank=True)
     ph_of_analytical_sample = models.CharField(max_length=10, blank=True)
     calc_waste_amt = models.DecimalField(max_digits=9, decimal_places=2, null=True)
@@ -320,6 +323,7 @@ class MethodAnalyteAllVW(models.Model):
         managed = False
         
 class AnalyteCodeVW(models.Model):
+    
     analyte_analyte_id = models.IntegerField(primary_key=True)
     analyte_analyte_code = models.CharField(max_length=20)
     ac_analyte_code = models.CharField(max_length=20, blank=True)
@@ -382,6 +386,7 @@ class MethodSubcategoryRef(models.Model):
         managed = False
         
 class MethodAnalyteJnStgVW(models.Model):
+    
     matrix = models.CharField(max_length=12, blank=True)
     method_source = models.CharField(max_length=20)
     method_source_name = models.CharField(max_length=150)
@@ -589,34 +594,34 @@ LEVEL_OF_TRAINING_CHOICES = [
 class SourceCitationRef(models.Model):
     
     source_citation_id = models.IntegerField(primary_key=True) 
-    source_citation = models.CharField(max_length=30, blank=False)
+    source_citation = models.CharField(max_length=30, blank=False, help_text='Source citation')
     source_citation_name = models.CharField(max_length=450, verbose_name="citation", help_text="Description of source citation")
     source_citation_information = models.CharField(max_length=1500)
     insert_person = models.ForeignKey(User, null=True)
     insert_date = models.DateField(auto_now_add=True)
     update_date = models.DateField(auto_now=True)
     approve_flag = models.CharField(max_length=1, choices=[('N', 'No'), ('Y', 'Yes')], default='N')
-    title = models.CharField(max_length=450)
-    author = models.CharField(max_length=450)
-    abstract_summary = models.CharField(max_length=2000, blank=True, verbose_name='abstract/summary statement')
+    title = models.CharField(max_length=450, help_text='Citation\'s full title')
+    author = models.CharField(max_length=450, help_text='Citation author(s)')
+    abstract_summary = models.CharField(max_length=2000, blank=True, verbose_name='abstract/summary statement', help_text='Abstract/summary statement')
     table_of_contents = models.CharField(max_length=1000, blank=True, help_text="Major headings")
     link = models.CharField(max_length=450, blank=True, help_text="Link to source citation")
-    notes = models.CharField(max_length=450, blank=True, verbose_name='special notes or comments')
-    publication_year = models.IntegerField(max_length=4, null=True)
+    notes = models.CharField(max_length=450, blank=True, verbose_name='special notes or comments', help_text='Special notes or comments about this citation')
+    publication_year = models.IntegerField(max_length=4, null=True, help_text='Publication year')
     citation_type = models.ForeignKey(CitationTypeRef)
-    source_organization = models.ForeignKey(MethodSourceRef, null=True, blank=True)
-    country = models.CharField(max_length=100, blank=True)
-    complexity = models.CharField(max_length=10, choices=COMPLEXITY_CHOICES)
+    source_organization = models.ForeignKey(MethodSourceRef, null=True, blank=True, help_text="Source organization")
+    country = models.CharField(max_length=100, blank=True, help_text='Country where published')
+    complexity = models.CharField(max_length=10, choices=COMPLEXITY_CHOICES, help_text='Method complexity')
     level_of_training = models.CharField(max_length=20, choices=LEVEL_OF_TRAINING_CHOICES, help_text='Your level of statistical training')
-    item_type = models.ForeignKey(StatisticalItemType, null=True)
+    item_type = models.ForeignKey(StatisticalItemType, null=True, help_text='Select one item type')
     item_type_note = models.CharField(max_length=50, blank=True, help_text='Add a note if item type is other')
-    analysis_types = models.ManyToManyField(StatisticalAnalysisType, null=True)
-    sponser_types = models.ManyToManyField(StatisticalSourceType, null=True, verbose_name='Sponser/Publishing Type')
-    sponser_type_note = models.CharField(max_length=50, blank=True, help_text='Add a note if sponser type is other')
+    analysis_types = models.ManyToManyField(StatisticalAnalysisType, null=True, help_text='Select citation purpose')
+    sponser_types = models.ManyToManyField(StatisticalSourceType, null=True, verbose_name='Sponser/Publishing Type', help_text='Select one or more sponser/publishing types')
+    sponser_type_note = models.CharField(max_length=50, blank=True, help_text='Add a note if sponser/publishing type is other')
     media_emphasized = models.ManyToManyField(MediaNameDOM, null=True, help_text="Media emphasized by not limited to")
     media_emphasized_note = models.CharField(max_length=50, blank=True, help_text="Add a note if media emphasized is other")
-    subcategory = models.CharField(max_length=150, blank=True)
-    design_objectives = models.ManyToManyField(StatisticalDesignObjective, null=True)
+    subcategory = models.CharField(max_length=150, blank=True, help_text='Enter a subcategory if appropriate')
+    design_objectives = models.ManyToManyField(StatisticalDesignObjective, null=True, help_text = 'Select all design or data analysis objectives that apply')
     special_topics = models.ManyToManyField(StatisticalTopics, null=True)
     
     class Meta:
