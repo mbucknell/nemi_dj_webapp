@@ -967,15 +967,15 @@ class AddStatisticalSourceView(CreateView):
         return reverse('search-statistical_source_detail', kwargs={'pk' : self.object.source_citation_id})        
     
     def form_valid(self, form):
-        data = form.save(commit=False)
+        self.object = form.save(commit=False)
         
         r = SourceCitationRef.objects.aggregate(Max('source_citation_id'))
-        data.source_citation_id = r['source_citation_id__max'] + 1
-        data.approve_flag = 'F'
-        data.citation_type = CitationTypeRef.objects.get(citation_type='Statistic')
-        data.insert_person = self.request.user
+        self.object.source_citation_id = r['source_citation_id__max'] + 1
+        self.object.approve_flag = 'F'
+        self.object.citation_type = CitationTypeRef.objects.get(citation_type='Statistic')
+        self.object.insert_person = self.request.user
         
-        data.save()
+        self.object.save()
         form.save_m2m()
         
         return HttpResponseRedirect(self.get_success_url())
