@@ -622,7 +622,7 @@ class SourceCitationRef(models.Model):
     media_emphasized_note = models.CharField(max_length=50, blank=True, help_text="Add a note if media emphasized is other")
     subcategory = models.CharField(max_length=150, blank=True, help_text='Enter a subcategory if appropriate')
     design_objectives = models.ManyToManyField(StatisticalDesignObjective, null=True, help_text = 'Select all design or data analysis objectives that apply')
-    special_topics = models.ManyToManyField(StatisticalTopics, null=True)
+    special_topics = models.ManyToManyField(StatisticalTopics, null=True, blank=True)
     
     class Meta:
         db_table = 'source_citation_ref'
