@@ -583,7 +583,7 @@ class CitationTypeRef(models.Model):
 
 COMPLEXITY_CHOICES = [
     (u'Low', u'Low'),
-    (u'Medimum', u'Medium'),
+    (u'Medium', u'Medium'),
     (u'High', u'High')]
 
 LEVEL_OF_TRAINING_CHOICES = [
