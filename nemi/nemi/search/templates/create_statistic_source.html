@@ -1,13 +1,11 @@
-{% extends "base.html" %}
-{% block title %}Create New Statistical Source{% endblock %}
-{% block content %}
-	<h3><i>Enter information to create a statistical method</i></h3>
-	<p>A '*' by a field's label indicates the field is required.</p>
-	<br/>
-	<p><b>Username:&nbsp;</b>{{ user.get_full_name }} - {{ user.username }}</p>
-	<form action="{% url search-create_statistical_source %}" method="post">{% csrf_token %}
-		{% include "stats_entry_table.html" %}
-		<input type="submit" value="Create Citation"/>
-	</form>
+{% extends "base_edit_stats_method.html" %}
 
-{% endblock %}
+{% block title %}Create New Statistical Source{% endblock %}
+
+{% block section_header %}Enter information to create a statistical method {% endblock %}
+
+{% block form_header %}
+	<form action="{% url search-create_statistical_source %}" method="post">{% csrf_token %}
+{% endblock form_header %}
+
+{% block form_submit %} <input type="submit" value="Create Citation"/> {% endblock %}

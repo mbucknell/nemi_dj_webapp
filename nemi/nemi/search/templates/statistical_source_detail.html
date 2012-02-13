@@ -1,5 +1,12 @@
 {% extends "base.html" %}
+
 {% block title %}NEMI Statistical Source Citation{% endblock %}
+
+{% block header %}
+	{{ block.super }}
+	{% include "stat_page_header.html" %}
+{% endblock %}
+
 {% block content %}
 	<h2>Statistical Source Details</h2>
 	{% if data %}
@@ -64,7 +71,7 @@
 			</tr>
 			<tr><th>Insert user</th><td>{{ data.insert_person.get_full_name }} ({{ data.insert_person.username }})</td></tr>
 		</table>
-		<input type="button" value="Edit Citation" onclick="location.href='{% url search-update_statistical_source data.source_citation_id %}';"> 
+		<input style="margin: 4px;" type="button" value="Edit Citation" onclick="location.href='{% url search-update_statistical_source data.source_citation_id %}';"> 
 	{% else %}
 		<p>Source citation data not found.</p>
 	{% endif %}

@@ -2,6 +2,11 @@
 
 {% block title %}NEMI Statistical Method Search{% endblock %}
 
+{% block header %}
+	{{ block.super }}
+	{% include "stat_page_header.html" %}
+{% endblock %}
+
 {% block sidebar_nav %} {% endblock %}
 
 {% block search_box_body %}

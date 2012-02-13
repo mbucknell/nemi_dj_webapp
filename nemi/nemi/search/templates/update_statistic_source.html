@@ -1,11 +1,11 @@
-{% extends "base.html" %}
-{% block title %}Update Statistical Source{% endblock %}
-{% block content %}
-	<h3><i>Edit information to update this statistical method</i></h3>
-	<p><b>User who created the source:&nbsp;</b>{{ object.insert_person.get_full_name }}
-	<form action="{% url search-update_statistical_source  object.source_citation_id %}" method="post">{% csrf_token %}
-		{% include "stats_entry_table.html" %}
-		<input type="submit" value="Update Citation"/>
-	</form>
+{% extends "base_edit_stats_method.html" %}
 
+{% block title %}Update Statistical Source{% endblock %}
+
+{% block section_header %}Edit information to update this statistical method{% endblock %}
+
+{% block form_header %}
+	<form action="{% url search-update_statistical_source  object.source_citation_id %}" method="post">{% csrf_token %}
 {% endblock %}
+
+{% block form_submit %}<input type="submit" value="Update Citation"/> {% endblock %}

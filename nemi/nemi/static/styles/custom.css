@@ -41,6 +41,15 @@ a[class='popup']{
 	margin: 0px;
 	border-bottom: solid darkred 2px;
 }
+#page-top-nav li {
+	display: inline-block;
+}
+#page-top-nav a {
+	padding: 5px;
+	margin: 5px;
+	text-decoration: none;
+	background-color: lightgrey;
+}
 /* Used to style form error message */
 .errorlist{
 	color: red;

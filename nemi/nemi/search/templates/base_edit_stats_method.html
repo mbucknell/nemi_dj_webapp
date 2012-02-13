@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% load form_field_attr_filters %}
+
+{% block title %} {% endblock %}
+
+{% block page_script %}
+	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.8.16.custom.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			$('#edit-help')
+			.dialog({
+					 autoOpen: false,
+					 title: 'Basic Dialog',
+					 height: 200,
+					 width: 300
+					 });
+		});		
+		// Show information dialogs 
+		function showInfo(header, info) {
+			$('#edit-help').html(info);
+			// This preprends {{ STATIC_URL}} to any img tag in info 
+			$('#edit-help img').each(function(){
+				var src = $(this).attr("src");
+				$(this).attr("src", "{{ STATIC_URL }}" + src);
+			});
+			$('#edit-help').dialog('option', 'title', header);
+			if (!$('#edit-help').dialog('isOpen')){
+				$('#edit-help').dialog('option', 'height', 200);
+				$('#edit-help').dialog('option', 'width', 300);
+				$('#edit-help').dialog('open');	
+			}			
+		};
+	</script>
+{% endblock %}
+
+{% block page_style %}
+	<link type="text/css" href="{{ STATIC_URL }}styles/jquery-ui/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" media="screen"/>
+{% endblock %}
+
+{% block header %}
+	{{ block.super }}
+		{% block edit_help_dialog %}
+		<!--  Place holder for the header information dialog  -->
+			<div id="edit-help">
+				<p>Place holder</p>
+			</div>	
+		{% endblock %}
+		{% include "stat_page_header.html" %}
+
+{% endblock %}
+
+{% block content %}
+	<h3><i>{% block section_header %}SECTION HEADER GOES HERE{% endblock %}</i></h3>
+	<p>A '*' by a field's label indicates the field is required.</p>
+	<br/>
+	{% block edit_form %} 
+		{% block form_header %} {% endblock %}
+		{% block form_input_fields %}
+			{% if form.errors %}
+				<p class="errorlist"><b>Need to correct errors and resubmit</b></p>
+			{% endif %}
+			<p class="errorlist"> {{ form.non_field_errors }} </p>
+			<table id="data-entry-table">
+				<tr><th>Username:</th><td>{{ user.get_full_name }} - {{ user.username }}</td></tr>
+				{% for field in form  %}
+					<tr>
+						<th><label for="id_{{ field.html_name }}" title="{{ field.help_text }}">
+						{% if field.field.required %}
+							{{ field.label_tag }}*:
+						{% else %}
+							{{ field.label_tag }}:
+						{% endif %}
+						</label></th>
+						<td>{{ field }}
+							{% if field|verbose_help %}
+								<div style="display: inline-block; margin: 4px;" >
+								<img id="field-help" src="{{ STATIC_URL }}images/q_mark.gif"
+			 				onclick="javascript:showInfo('{{ field.label}}', '{{ field|verbose_help }}')">	
+								</div>
+							{% endif %}
+						</td>
+						<td>{{ field.errors }}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% endblock form_input_fields %}
+				
+		{% block form_submit %} {% endblock %}
+
+	{% endblock edit_form%}
+
+{% endblock content %}

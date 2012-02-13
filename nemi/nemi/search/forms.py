@@ -322,7 +322,6 @@ class StatisticalSourceEditForm(ModelForm):
                    'special_topics' : CheckboxSelectMultiple()}
         
         
-        
     def __init__(self, *args, **kwargs):
         super(StatisticalSourceEditForm, self).__init__(*args, **kwargs)
 
@@ -339,3 +338,6 @@ class StatisticalSourceEditForm(ModelForm):
         self.fields['media_emphasized'].help_text = 'Media emphasized by not limited to'
         self.fields['design_objectives'].help_text = 'Select all design or data analysis objectives that apply'
         self.fields['special_topics'].help_text = 'Select all special topics that apply'
+
+        # We may want to get both the verbose help from a database.
+        self.fields['source_citation'].verbose_help = 'The published literature citation of the method, or volume from which the method comes. Ordering information is also included (if available).'
