@@ -1,10 +1,12 @@
 ''' This module contains the forms needed to implement the NEMI search pages '''
 
 from django.forms import Form, ModelForm, ChoiceField, MultipleChoiceField, CheckboxSelectMultiple, RadioSelect, CharField, SelectMultiple, TextInput, HiddenInput
-from django.forms import IntegerField, Textarea
+from django.forms import Textarea
 from django.utils.safestring import mark_safe
-from models import *
-from django.forms.models import ModelChoiceField, ModelMultipleChoiceField
+from models import MethodVW, MediaNameDOM, InstrumentationRef, MethodSubcategoryRef, MethodSourceRef, AnalyteCodeVW, AnalyteCodeRel, MethodAnalyteAllVW
+from models import StatisticalItemType, COMPLEXITY_CHOICES, StatisticalAnalysisType, StatisticalSourceType, StatisticalDesignObjective 
+from models import StatisticalTopics, SourceCitationRef
+from django.forms.models import ModelChoiceField
 
 def _choice_cmp(a,b):
     ''' Returns -1, 1, or 0 by comparing the 2nd element in a with b.

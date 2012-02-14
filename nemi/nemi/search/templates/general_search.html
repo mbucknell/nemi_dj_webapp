@@ -5,11 +5,11 @@
 {% block search_box_body %}
 	<p>Select one or more criteria from the right and press 'Search NEMI' to perform a search.</p>
 	<p><i>If you are looking for a method for a specific analyte, please use the Analyte Search.</i></p>
-	<form action="{% url search-general %}" method="get"> {% csrf_token %}
-		<h4> {{search_form.non_field_errors }} </h4>
+	<form id="search-form" action="{% url search-general %}" method="get">{% csrf_token %}
+		<h4> {{ search_form.non_field_errors }} </h4>
 		<table id="search-table">
-		{{ search_form }}
-		<tr><td></td><td><input id="search-button" type="submit" value="Search NEMI"/></td></tr>
+			{{ search_form }}
+			<tr><td></td><td><input id="search-button" type="submit" value="Search NEMI"/></td></tr>
 		</table>			
 	</form>
 {% endblock %}

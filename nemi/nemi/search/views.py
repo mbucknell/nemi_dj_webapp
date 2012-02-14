@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.db import connection
 from django.db.models import Q, Max
+from django.forms import Form
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.utils.decorators import method_decorator
@@ -20,9 +21,10 @@ from django.views.generic.edit import TemplateResponseMixin, CreateView, UpdateV
 from xlwt import Workbook
 
 # project specific packages
-from forms import *
+from forms import GeneralSearchForm, AnalyteSearchForm, AnalyteSelectForm, KeywordSearchForm, MicrobiologicalSearchForm
+from forms import BiologicalSearchForm, ToxicitySearchForm, PhysicalSearchForm, StatisticalSearchForm, StatisticalSourceEditForm
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw
-from models import SourceCitationRef
+from models import SourceCitationRef, CitationTypeRef
 
 def _get_choice_select(field):
     '''Returns the visible choice from the form field variable. The function
