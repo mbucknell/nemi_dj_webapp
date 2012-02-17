@@ -21,10 +21,10 @@ from django.views.generic.edit import TemplateResponseMixin, CreateView, UpdateV
 from xlwt import Workbook
 
 # project specific packages
-from forms import GeneralSearchForm, AnalyteSearchForm, AnalyteSelectForm, KeywordSearchForm, MicrobiologicalSearchForm
-from forms import BiologicalSearchForm, ToxicitySearchForm, PhysicalSearchForm, StatisticalSearchForm, StatisticalSourceEditForm
+from forms import GeneralSearchForm, AnalyteSearchForm, AnalyteSelectForm, KeywordSearchForm, MicrobiologicalSearchForm, RegulatorySearchForm
+from forms import BiologicalSearchForm, ToxicitySearchForm, PhysicalSearchForm, StatisticalSearchForm, StatisticalSourceEditForm, TabularSearchForm
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw
-from models import SourceCitationRef, CitationTypeRef
+from models import RegQueryVW, SourceCitationRef, CitationTypeRef, RegulatoryMethodReport
 
 def _get_choice_select(field):
     '''Returns the visible choice from the form field variable. The function
@@ -54,6 +54,9 @@ def _get_criteria_with_name(form, field_name):
         return (form[field_name].label, form.cleaned_data[field_name])
     
 def _get_multi_choice_criteria(form, name):
+    ''' Returns the list of selected choices in a MultipleChoiceField. If all are selected an empty list is returned.
+    This function works for choice field values which are integer or string.
+    '''
     choice_dict = dict(form[name].field.choices)
     if len(form.cleaned_data[name]) == len(choice_dict):
         return []
@@ -122,13 +125,13 @@ def _greenness_profile(d):
             'corrosive' : _g_value(corrosive),
             'waste_amt' : _g_value(waste)}
     
-def _tsv_response(headings, vl_qs):
-    ''' Returns an http response which contains a tab-separate-values file
+def _tsv_response(headings, vl_qs, filename):
+    ''' Returns an http response which contains a tab-separate-values file 
     representing the values list query set, vl_qs, and using headings as the 
-    column headers.
+    column headers. filename will be the name of the file created with the suffix *.tsv
     '''
     response = HttpResponse(mimetype='text/tab-separated-values')
-    response['Content-Disposition'] = 'attachment; filename=general_search.tsv'
+    response['Content-Disposition'] = ('attachment; filename=%s.tsv' % filename)
 
     response.write('\t'.join(headings))
     response.write('\n')
@@ -140,13 +143,13 @@ def _tsv_response(headings, vl_qs):
 
     return response
 
-def _xls_response(headings, vl_qs):
+def _xls_response(headings, vl_qs, filename):
     '''Returns an http response which contains an Excel file
     representing the values list query set, vl_qs, and using headings
-    as the column headers.
+    as the column headers. filename will be the name of the file created with the suffix *.xls
     '''
     response = HttpResponse(mimetype='application/vnd.ms-excel')
-    response['Content-Disposition'] = 'attachment; filename=general_search.xls'
+    response['Content-Disposition'] = ('attachment; filename=%s.xls' % filename)
     
     wb = Workbook()
     ws = wb.add_sheet('sheet 1')
@@ -235,10 +238,10 @@ class SearchResultView(View, TemplateResponseMixin):
         return v_qs
     
     def get_results_context(self, qs):
-        '''Returns the results context variable. By default this returns self.get_values_qs().
-        If you need to process the values query set further, override this method.
+        '''Returns a dictionary containing the query set results. By default this returns self.get_values_qs() as the 'results' key.
+        If you need to process the values query set further or generate additional information from the query set, override this method.
         '''
-        return self.get_values_qs(qs)
+        return {'results': self.get_values_qs(qs)}
 
     def get(self, request, *args, **kwargs):
         '''Process the GET request.'''
@@ -246,12 +249,12 @@ class SearchResultView(View, TemplateResponseMixin):
             form = self.form_class(request.GET)
             if form.is_valid():
                 context = {'search_form' : form,
-                           'results' : self.get_results_context(self.get_qs(form)),
                            'query_string' : '?' + request.get_full_path().split('&', 1)[1],
                            'header_defs' : self.get_header_defs(),
                            'hide_search' : True,
                            'show_results' : True}
                 context.update(self.get_context_data(form))
+                context.update(self.get_results_context(self.get_qs(form)))
                 
                 return self.render_to_response(context)          
              
@@ -272,6 +275,7 @@ class ExportSearchView(View):
 
     export_fields = () # Fields in the query set to be exported to file
     export_field_order_by = '' # Field name to order the export query results by. If null, no order is specified
+    filename = '' #Provide the name of the file to create. The appropriate suffix will be added to the filename
     
     def get_export_qs(self, qs):
         ''' Return a values list query set from the objects query set using export_fields to select fields
@@ -293,10 +297,10 @@ class ExportSearchView(View):
                 export_type = kwargs.get('export', '')
                 
                 if export_type == 'tsv':
-                    return _tsv_response(HEADINGS, self.get_export_qs(self.get_qs(form)))
+                    return _tsv_response(HEADINGS, self.get_export_qs(self.get_qs(form)), self.filename)
                 
                 elif export_type == 'xls':
-                    return _xls_response(HEADINGS, self.get_export_qs(self.get_qs(form)))
+                    return _xls_response(HEADINGS, self.get_export_qs(self.get_qs(form)), self.filename)
                 
                 else:
                     return Http404
@@ -360,6 +364,7 @@ class ExportGeneralSearchView(ExportSearchView, GeneralSearchFormMixin):
                      'method_category',
                      'method_type_desc')
     export_field_order_by = 'source_method_identifier'
+    filename = 'general_search'
                
 class GeneralSearchView(GeneralSearchFormMixin, SearchResultView):
     '''Extends the SearchResultView and GeneralSearchFormMixin to implement the
@@ -397,7 +402,7 @@ class GeneralSearchView(GeneralSearchFormMixin, SearchResultView):
         The keyword m contains a model object in self.get_values_qs. The keyword, greenness,
         contains the greenness profile information for that object.
         '''
-        return [{'m' : r, 'greenness': _greenness_profile(r)} for r in self.get_values_qs(qs)] 
+        return {'results' : [{'m' : r, 'greenness': _greenness_profile(r)} for r in self.get_values_qs(qs)]} 
                     
 class AnalyteSearchFormMixin(FilterFormMixin):
     '''Extends the FilterFormMixin to implement the Analyte search form used on the analyte search pages.'''
@@ -474,6 +479,7 @@ class ExportAnalyteSearchView(ExportSearchView, AnalyteSearchFormMixin):
                      'relative_cost',
                      'relative_cost_symbol')
     export_field_order_by = 'method_id'
+    filename = 'analyte_search'
     
 class AnalyteSearchView(SearchResultView, AnalyteSearchFormMixin):
     '''Extends the SearchResultsView and AnalyteSearchFormMixin to implement the analyte search page.'''
@@ -524,7 +530,7 @@ class AnalyteSearchView(SearchResultView, AnalyteSearchFormMixin):
         The keyword m contains a model object in self.get_values_qs. The keyword, greenness,
         contains the greenness profile information for that object.
         '''
-        return [{'m' : r, 'greenness' : _greenness_profile(r)} for r in self.get_values_qs(qs)] 
+        return {'results' : [{'m' : r, 'greenness' : _greenness_profile(r)} for r in self.get_values_qs(qs)]}
 
 class AnalyteSelectView(View, TemplateResponseMixin):
     ''' Extends the standard view to implement the analyte select pop up page. '''
@@ -636,9 +642,7 @@ class BiologicalSearchView(SearchResultView, FilterFormMixin):
         
         return {'criteria' : criteria,
                 'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
-           
-
-        
+                  
 class ToxicitySearchView(SearchResultView, FilterFormMixin):
     '''Extends the SearchResultsView and FilterFormMixin to implements the toxicity search page.'''
     
@@ -726,7 +730,9 @@ class PhysicalSearchView(SearchResultView, FilterFormMixin):
                 'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
             
     
-class StreamPhysicalSearchView(SearchResultView, TemplateResponseMixin):
+class StreamPhysicalSearchView(SearchResultView):
+    ''' Extends the SearchResultsView to implement the stream physical search page which has no user controlled filtering.
+    '''
     
     template_name="stream_physical_search.html"
     
@@ -750,10 +756,190 @@ class StreamPhysicalSearchView(SearchResultView, TemplateResponseMixin):
     qs = MethodAnalyteJnStgVW.objects.filter(source_method_identifier__startswith='WRIR')
 
     def get(self, request, *args, **kwargs):
-        return self.render_to_response({'header_defs' : self.get_header_defs(),
-                                'results' : self.get_results_context(self.qs),
-                                'show_results' : True})                
-
+        context = self.get_results_context(self.qs)
+        context['header_defs'] = self.get_header_defs()
+        context['show_results'] = True
+        return self.render_to_response(context) 
+        
+class RegulatorySearchFormMixin(FilterFormMixin):
+    ''' Extends the FilterFormMixin to implement the query filtering part of the Regulatory Search page.
+    '''
+    
+    form_class = RegulatorySearchForm
+    
+    def get_qs(self, form):
+        qs = RegQueryVW.objects.exclude(method_subcategory__in=['SAMPLE/PREPARATION', 'GENERAL'])
+        
+        if form.cleaned_data['analyte_kind'] == 'code':
+            qs = qs.filter(analyte_code__iexact=form.cleaned_data['analyte_value'])
+        else:
+            qs = qs.filter(analyte_name__iexact=form.cleaned_data['analyte_value'])
+            
+        if form.cleaned_data['regulation'] != 'all':
+            qs = qs.filter(regulation__exact=form.cleaned_data['regulation'])
+            
+        return qs
+            
+    def get_context_data(self, form):
+        # Retrieve analyte synonyms for display
+        if form.cleaned_data ['analyte_kind'] == 'code':
+            analyte_code = form.cleaned_data['analyte_value']
+            analyte_qs = AnalyteCodeRel.objects.filter(analyte_code__iexact=analyte_code)
+            if len(analyte_qs) == 0:
+                analyte_name = None
+            else:
+                try:
+                    analyte_name = analyte_qs.filter(preferred__exact=-1)[0].analyte_name
+                except:
+                    analyte_name = analyte_qs[0].analyte_name
+        else:
+            analyte_name = form.cleaned_data['analyte_value']
+            try:
+                analyte_code = AnalyteCodeRel.objects.filter(analyte_name__iexact=analyte_name)[0].analyte_code
+                analyte_qs = AnalyteCodeRel.objects.filter(analyte_code__iexact=analyte_code)
+            except:
+                analyte_code = None
+                analyte_qs = None
+        if analyte_qs:    
+            syn = analyte_qs.values_list('analyte_name', flat=True)
+        else:
+            syn = []
+            
+        criteria = []
+        criteria.append(_get_criteria(form['regulation']))
+                                
+        return {'criteria' : criteria,
+                'analyte_name' : analyte_name,
+                'analyte_code' : analyte_code,
+                'syn' : syn}
+    
+class ExportRegulatorySearchView(ExportSearchView, RegulatorySearchFormMixin):
+    '''Extends the ExportSearchView and RegulatorySearchFormMixin to implement the
+    view which will export the table data.
+    '''
+    
+    export_fields = ('method_id',
+                     'method_source',
+                     'method_source_id',
+                     'revision_id',
+                     'analyte_revision_id',
+                     'source_method_identifier',
+                     'regulation',
+                     'regulation_name',
+                     'revision_information',
+                     'method_descriptive_name',
+                     'method_subcategory',
+                     'method_category',
+                     'media_name',
+                     'relative_cost_symbol',
+                     'instrumentation',
+                     'instrumentation_description',
+                     'analyte_name',
+                     'analyte_code',
+                     'sub_dl_value',
+                     'dl_units',
+                     'dl_type',
+                     'dl_type_description',
+                     'dl_units_description',
+                     'sub_accuracy',
+                     'accuracy_units',
+                     'sub_precision',
+                     'precision_units',
+                     'precision_units_description',
+                     'false_negative_value',
+                     'false_positive_value',
+                     'prec_acc_conc_used',
+                     'precision_descriptor_notes',
+                     'link_to_full_method')
+    export_field_order_by = 'method_id'
+    filename = 'regulatory_search'
+    
+class RegulatorySearchView(SearchResultView, RegulatorySearchFormMixin):
+    ''' Extends the SearchResultsView and RegulatorySearchFormMixin to implement
+    the regulatory search page.
+    '''
+    
+    template_name = 'regulatory_search.html'
+    
+    result_fields = ('method_source_id',
+                     'regulation_name',
+                     'regulation',
+                     'reg_location',
+                     'source_method_identifier',
+                     'revision_information',
+                     'revision_id',
+                     'analyte_revision_id',
+                     'method_source',
+                     'method_descriptive_name',
+                     'link_to_full_method',
+                     'mimetype',
+                     'method_id',
+                     'dl_value',
+                     'dl_units_description',
+                     'dl_units',
+                     'dl_type_description',
+                     'dl_type',
+                     'instrumentation_description',
+                     'instrumentation',
+                     'relative_cost',
+                     'relative_cost_symbol')
+    result_field_order_by = 'source_method_identifier'
+    
+    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
+                         'REGULATION',
+                         'REGULATION_LOCATION',
+                         'METHOD_SOURCE',
+                         'REVISION_INFO',
+                         'METHOD_DESCRIPTIVE_NAME',
+                         'METHOD_DOWNLOAD',
+                         'DL_VALUE',
+                         'DL_TYPE',
+                         'INSTRUMENTATION',
+                         'RELATIVE_COST',
+                         )
+    
+    def get_results_context(self, qs):
+        results = self.get_values_qs(qs)
+        
+        # Need to provide a count of unique methods in the results query.
+        method_count = 0
+        last_method = None
+        for r in results:
+            if last_method != r['source_method_identifier']:
+                method_count += 1
+                last_method = r['source_method_identifier']
+        
+        return {'results' : results,
+                'method_count' : method_count}
+        
+class TabularRegulatorySearchView(SearchResultView, FilterFormMixin):
+    ''' Extends the SearchResultsForm and FilterFormMixin to implement the Tabular
+    Regulatory Search page. 
+    We do not provide and header definitions so the template must create the table headers.
+    '''
+    
+    template_name = 'tabular_reg_search.html'
+    form_class = TabularSearchForm
+    
+    result_fields = ('analyte_name',
+                     'epa',
+                     'standard_methods',
+                     'astm',
+                     'usgs',
+                     'other',
+                     'epa_rev_id',
+                     'standard_methods_rev_id',
+                     'usgs_rev_id',
+                     'astm_rev_id',
+                     'other_rev_id')
+    
+    def get_qs(self, form):
+        qs = RegulatoryMethodReport.objects.all()
+        if form.cleaned_data['analyte'] != 'all':
+            qs = qs.filter(analyte_name__exact=form.cleaned_data['analyte'])
+            
+        return qs
+        
 class KeywordSearchView(View, TemplateResponseMixin):
     '''Extends the standard View to implement the keyword search view. This form only
     processes get requests.
@@ -823,11 +1009,23 @@ class BaseMethodSummaryView(View, TemplateResponseMixin):
     '''Extends the basic view to implement a method summary page. This class
     should be extended to implement specific pages by at least providing
     a template_name parameter.
-    '''
-    
+    '''    
     def get_context(self, request, *args, **kwargs):
         '''Returns additional context information to be sent to the template'''
         return {}
+    
+    def get_summary_data(self, **kwargs):
+        '''Returns the summary data object which must contain a method_id.
+        By default the MethodSummaryVW is used and the method_id is passed
+        as a kwargs argument.
+        '''
+        if 'method_id' in kwargs:
+            try:
+                return MethodSummaryVW.objects.get(method_id=kwargs['method_id'])
+            except MethodSummaryVW.DoesNotExist:
+                return None
+        else:
+            raise Http404
         
     def get(self, request, *args, **kwargs):
         '''Processes the get request and returns the appropriate http response.
@@ -835,34 +1033,32 @@ class BaseMethodSummaryView(View, TemplateResponseMixin):
         using the method_id passed as a keyword argument. The method's analytes are
         retrieved along with each analyte's synonymns.
         '''
-        if 'method_id' in kwargs:
-            try: 
-                data = MethodSummaryVW.objects.get(method_id=kwargs['method_id'])
-            except MethodSummaryVW.DoesNotExist:
-                data = None
+        self.data = self.get_summary_data(**kwargs)
+        if self.data == None:
+            return self.render_to_response ({'data' : None,
+                                             'analyte_data' : None}) 
+                                                       
+        #Get analytes for the method and each analyte's synonyms.
+        analyte_data = []
+        
+        analyte_qs = _analyte_value_qs(self.data.method_id)
+        for r in analyte_qs:
+            name = r['analyte_name'].lower()
+            code = r['analyte_code'].lower()
+            inner_qs = AnalyteCodeRel.objects.filter(Q(analyte_name__iexact=name)|Q(analyte_code__iexact=code)).values_list('analyte_code', flat=True).distinct()
+            qs = AnalyteCodeRel.objects.all().filter(analyte_code__in=inner_qs).order_by('analyte_name').values('analyte_name')
+            syn = []
+            for a in qs:
+                syn.append(a['analyte_name'])
                 
-            #Get analytes for the method and each analyte's synonyms.
-            analyte_data = []
+            analyte_data.append({'r' : r, 'syn' : syn})
             
-            analyte_qs = _analyte_value_qs(kwargs['method_id'])
-            for r in analyte_qs:
-                name = r['analyte_name'].lower()
-                code = r['analyte_code'].lower()
-                inner_qs = AnalyteCodeRel.objects.filter(Q(analyte_name__iexact=name)|Q(analyte_code__iexact=code)).values_list('analyte_code', flat=True).distinct()
-                qs = AnalyteCodeRel.objects.all().filter(analyte_code__in=inner_qs).order_by('analyte_name').values('analyte_name')
-                syn = []
-                for a in qs:
-                    syn.append(a['analyte_name'])
-                    
-                analyte_data.append({'r' : r, 'syn' : syn})
-                
-            context = self.get_context(request, *args, **kwargs)
-            context['data'] = data
-            context['analyte_data'] = analyte_data
-            return self.render_to_response(context)
+        context = self.get_context(request, *args, **kwargs)
+        context['data'] = self.data
+        context['analyte_data'] = analyte_data
+        
+        return self.render_to_response(context)
     
-        else:
-            raise Http404
 
 class MethodSummaryView(BaseMethodSummaryView):   
     ''' Extends the BaseMethodSummaryView to implement the standard Method Summary page.'''
@@ -873,10 +1069,24 @@ class MethodSummaryView(BaseMethodSummaryView):
         '''Returns a dictionary with one keyword, 'notes' which contains a value query set generated from MethodAnalyteVw which
         contains the two fields, precision_descriptor_notes and dl_note for the method_id.
         '''
-        notes = MethodAnalyteVW.objects.filter(method_id__exact=kwargs['method_id']).values('precision_descriptor_notes', 'dl_note').distinct()
+        notes = MethodAnalyteVW.objects.filter(method_id__exact=self.data.method_id).values('precision_descriptor_notes', 'dl_note').distinct()
         return {'notes' : notes}
 
-    
+class RegulatoryMethodSummaryView(MethodSummaryView):
+    '''Extends the MethodSummaryView but overrides get_summary_data to use revision_id and the RegQueryVw table.
+    '''
+
+    def get_summary_data(self, **kwargs):
+        if 'rev_id' in kwargs:
+            qs = RegQueryVW.objects.filter(revision_id__exact=kwargs['rev_id'])
+            if len(qs) == 0:
+                return None
+            else:
+                return qs[0]
+            
+        else:
+            raise Http404
+            
 class BiologicalMethodSummaryView(BaseMethodSummaryView):
     '''Extends the BaseMethodSummaryView to implement the biological method summary page.'''
     
@@ -888,6 +1098,7 @@ class ToxicityMethodSummaryView(BaseMethodSummaryView):
     template_name = 'toxicity_method_summary.html'
     
 class StreamPhysicalMethodSummaryView(DetailView):
+    ''' Extends the DetailView to implement the Stream Physical Method Summary view.'''
 
     template_name = 'stream_physical_method_summary.html'
     context_object_name = 'data'
@@ -961,6 +1172,10 @@ class ExportMethodAnalyte(View, TemplateResponseMixin):
             return response
         
 class AddStatisticalSourceView(CreateView):
+    ''' Extends CreateView to implement the create statistiscal source page.
+    '''
+    
+    
     template_name = 'create_statistic_source.html'
     form_class = StatisticalSourceEditForm
     model = SourceCitationRef
@@ -969,6 +1184,9 @@ class AddStatisticalSourceView(CreateView):
         return reverse('search-statistical_source_detail', kwargs={'pk' : self.object.source_citation_id})        
     
     def form_valid(self, form):
+        ''' Returns the success url after saving the new statistical source.
+        The source is created with approve_flag set to 'F' and the code determines the new id number to use.
+        '''
         self.object = form.save(commit=False)
         
         r = SourceCitationRef.objects.aggregate(Max('source_citation_id'))
@@ -987,6 +1205,8 @@ class AddStatisticalSourceView(CreateView):
         return super(AddStatisticalSourceView, self).dispatch(*args, **kwargs)
 
 class UpdateStatisticalSourceView(UpdateView):
+    ''' Extends the standard UpdateView to implement the Update Statistical source page.'''
+    
     template_name='update_statistic_source.html'
     form_class = StatisticalSourceEditForm
     model = SourceCitationRef
@@ -1001,6 +1221,7 @@ class UpdateStatisticalSourceView(UpdateView):
 class StatisticSearchView(SearchResultView, FilterFormMixin):
     '''
     Extends the SearchResultView and FilterFormMixin to implement the view to display statistical methods.
+    This view does not define any headers, therefore the template creates the table headers.
     '''
     
     template_name = 'statistic_search.html'
@@ -1051,6 +1272,8 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
         return qs
             
 class StatisticalSourceSummaryView(DetailView):
+    ''' Extends DetailView to implement the Statistical Source Summary view'''
+    
     template_name = 'statistical_source_summary.html'
     
     model = SourceCitationRef
@@ -1058,6 +1281,8 @@ class StatisticalSourceSummaryView(DetailView):
     context_object_name = 'data'
     
 class StatisticalSourceDetailView(DetailView):
+    ''' Extends DetailView to implement the Statistical Source Detail view.'''
+    
     template_name = 'statistical_source_detail.html'
     
     model = SourceCitationRef

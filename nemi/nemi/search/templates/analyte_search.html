@@ -1,59 +1,18 @@
 {% extends "base_search.html" %}
 {% block title %}NEMI Analyte Search with Greenness Profile{% endblock %}
 
-{% block local_page_script %}
-	<script type="text/javascript">
-		function showAnalyteFind(url){
-			//Determines which analyte kind has been selected. This defaults to "name" 
-			var searchForm = document.getElementById('search-form');
-			
-			var analyteKindR = searchForm.elements["analyte_kind"]; 
-			var kind = "name";
-			for(var i=0; i < analyteKindR.length; i++){
-				if (analyteKindR[i].checked){
-					kind = analyteKindR[i].value;
-					break;
-				}
-			}
-			
-			// Retrieve the value in the analyte_value text field  and create selection parameter for find analyte form. 
-			var selection = searchForm.elements["analyte_value"].value;
-			var selectionParam = "";
-			if (selection != ""){
-				selectionParam = "&selection=" + selection;
-			}
-			// Disable the search-form while the pop up dialog is up and then pop up it up. 
-			$('#search-form input').attr("disabled", true);
-			winPopup(url + "?kind=" + kind + selectionParam);
-		}
-	</script>
-{% endblock %}
-
-{% block local_page_style %}
-	<style>
-		#find-analytes {
-			cursor: pointer;
-		}
-		#kind-element {
-			display: inline;
-		}
-		#kind-element p, #kind-element ul, #kind-element li{
-			display: inline;
-		}
-	</style>
-{% endblock %}
-
 {% block search_box_body %}
 	<form id="search-form" action={% url search-analyte %} method="get">{% csrf_token %}
 		<table id="search-table">
 			<tr>
 					<th>Analyte (required):</th>
-					<td id='kind-element'>{{ search_form.analyte_kind }}{{ search_form.analyte_value }}{{ search_form.analyte_value.errors }}
+					<td style="white-space: nowrap;" id='kind-element'>{{ search_form.analyte_kind }}{{ search_form.analyte_value }}{{ search_form.analyte_value.errors }}
 					<input id="find-analytes" onclick="showAnalyteFind('{% url search-analyte_select %}')" type="button" value="Find...">
 					</td>
+			</tr>
 			<tr><th>{{ search_form.media_name.label }}:</th><td>{{ search_form.media_name }}</td></tr>
 			<tr><th>{{ search_form.source.label }}:</th><td>{{ search_form.source }}</td></tr>
-			<tr><th>{{ search_form.instrumentation.label }}:</td><td>{{ search_form.instrumentation }}</td></tr>
+			<tr><th>{{ search_form.instrumentation.label }}:</th><td>{{ search_form.instrumentation }}</td></tr>
 			<tr><th>{{ search_form.method_subcategory.label }}:</th><td>{{ search_form.method_subcategory }}</td></tr>
 			<tr><th>{{ search_form.method_types.label }}:</th><td>{{ search_form.method_types.errors }}{{ search_form.method_types }}</td></tr>
 			<tr><td></td><td><input id="search-button" type="submit" value="Search NEMI"/></td></tr>				

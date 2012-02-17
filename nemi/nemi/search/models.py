@@ -499,6 +499,116 @@ class MethodStgSummaryVw(models.Model):
         db_table = 'method_stg_summary_vw'
         managed = False
         
+class RegulationRef(models.Model):
+    regulation_id = models.IntegerField(primary_key=True)
+    regulation = models.CharField(max_length=10)
+    regulation_name = models.CharField(max_length=60)
+    reg_location = models.CharField(max_length=30)
+    reg_location_2 = models.CharField(max_length=30, blank=True)
+    
+    class Meta:
+        db_table = 'regulation_ref'
+        managed = False
+        
+class RegQueryVW(models.Model):
+    
+    conc_range_units = models.CharField(max_length=20, blank=True)
+    interferences = models.CharField(max_length=3000, blank=True)
+    analyte_method_id = models.IntegerField()
+    qc_requirements = models.CharField(max_length=2000, blank=True)
+    false_positive_value = models.IntegerField(null=True)
+    false_negative_value = models.IntegerField(null=True)
+    link_to_full_method = models.CharField(max_length=240, blank=True)
+    sample_handling = models.CharField(max_length=3000, blank=True)
+    max_holding_time = models.CharField(max_length=300, blank=True)
+    sample_prep_methods = models.CharField(max_length=100, blank=True)
+    relative_cost_id = models.IntegerField(null=True)
+    method_source = models.CharField(max_length=20)
+    method_source_name = models.CharField(max_length=150)
+    method_source_url = models.CharField(max_length=200, blank=True)
+    method_subcategory_id = models.IntegerField()
+    method_category = models.CharField(max_length=50)
+    method_subcategory = models.CharField(max_length=40)
+    dl_type = models.CharField(max_length=11, blank=True)
+    dl_type_description = models.CharField(max_length=50, blank=True)
+    source_citation_name = models.CharField(max_length=450, blank=True)
+    source_citation = models.CharField(max_length=30)
+    source_citation_information = models.CharField(max_length=1500, blank=True)
+    relative_cost_symbol = models.CharField(max_length=7, blank=True)
+    relative_cost = models.CharField(max_length=40, blank=True)
+    revision_id = models.IntegerField(primary_key=True)
+    revision_information = models.CharField(max_length=100)
+    revision_flag = models.IntegerField(blank=True)
+    mimetype = models.CharField(max_length=50, blank=True)
+    #mydoc
+    regulation_name = models.CharField(max_length=60)
+    regulation = models.CharField(max_length=10)
+    reg_location = models.CharField(max_length=30)
+    reg_location_2 = models.CharField(max_length=30, blank=True)
+    regulation_note = models.CharField(max_length=200, blank=True)
+    analyte_revision_id = models.IntegerField()
+    dl_units = models.CharField(max_length=20)
+    dl_value = models.DecimalField(max_digits=21, decimal_places=6, null=True)
+    sub_dl_value = models.CharField(max_length=40, blank=True)
+    instrumentation_id = models.IntegerField()
+    analyte_id = models.IntegerField()
+    accuracy = models.DecimalField(max_digits=21, decimal_places=6, null=True)
+    sub_accuracy = models.CharField(max_length=40, blank=True)
+    accuracy_order = models.IntegerField(null=True)
+    accuracy_units = models.CharField(max_length=40, blank=True)
+    precision = models.DecimalField(max_digits=21, decimal_places=6, null=True)
+    sub_precision = models.CharField(max_length=40, blank=True)
+    precision_units = models.CharField(max_length=30, blank=True)
+    precision_descriptor_notes = models.CharField(max_length=300, blank=True)
+    prec_acc_conc_used = models.DecimalField(max_digits=21, decimal_places=6, null=True)
+    instrumentation = models.CharField(max_length=20)
+    instrumentation_description = models.CharField(max_length=200)
+    analyte_code = models.CharField(max_length=20)
+    analyte_name = models.CharField(max_length=240)
+    preferred = models.IntegerField(null=True)
+    method_id = models.IntegerField()
+    source_method_identifier = models.CharField(max_length=30)
+    method_descriptive_name = models.CharField(max_length=250)
+    method_official_name = models.CharField(max_length=250)
+    method_source_id = models.IntegerField()
+    source_citation_id = models.IntegerField()
+    dl_units_description = models.CharField(max_length=60, blank=True)
+    precision_units_description = models.CharField(max_length=100, blank=True)
+    accuracy_units_description = models.CharField(max_length=50, blank=True)
+    brief_method_summary = models.CharField(max_length=4000)
+    scope_and_application = models.CharField(max_length=200, blank=True)
+    media_name = models.CharField(max_length=30)
+    dl_type_id = models.IntegerField(null=True)
+    dl_note = models.CharField(max_length=2000, blank=True)
+    applicable_conc_range = models.CharField(max_length=300, blank=True)
+    
+    class Meta:
+        db_table = 'reg_query_vw'
+        managed = False
+        
+class RegulatoryMethodReport(models.Model):
+    
+    analyte_name = models.CharField(max_length=240, primary_key=True)
+    epa_id = models.IntegerField(null=True)
+    epa_rev_id = models.IntegerField(null=True)
+    epa = models.CharField(max_length=143, blank=True)
+    standard_methods_id = models.IntegerField(null=True)
+    standard_methods_rev_id = models.IntegerField(null=True)
+    standard_methods = models.CharField(max_length=143, blank=True)
+    usgs_id = models.IntegerField(null=True)
+    usgs_rev_id = models.IntegerField(null=True)
+    usgs = models.CharField(max_length=143, blank=True)
+    astm_id = models.IntegerField(null=True)
+    astm_rev_id = models.IntegerField(null=True)
+    astm = models.CharField(max_length=143, blank=True)
+    other_id = models.IntegerField(null=True)
+    other_rev_id = models.IntegerField(null=True)
+    other = models.CharField(max_length=143, blank=True)
+    
+    class Meta:
+        db_table = 'regulatory_method_report'
+        managed = False
+        
 class RelativeCostRef(models.Model):
     
     relative_cost_id = models.IntegerField(primary_key=True) 

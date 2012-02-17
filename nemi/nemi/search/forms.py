@@ -4,8 +4,8 @@ from django.forms import Form, ModelForm, ChoiceField, MultipleChoiceField, Chec
 from django.forms import Textarea
 from django.utils.safestring import mark_safe
 from models import MethodVW, MediaNameDOM, InstrumentationRef, MethodSubcategoryRef, MethodSourceRef, AnalyteCodeVW, AnalyteCodeRel, MethodAnalyteAllVW
-from models import StatisticalItemType, COMPLEXITY_CHOICES, StatisticalAnalysisType, StatisticalSourceType, StatisticalDesignObjective 
-from models import StatisticalTopics, SourceCitationRef
+from models import StatisticalItemType, COMPLEXITY_CHOICES, StatisticalAnalysisType, StatisticalSourceType, StatisticalDesignObjective, RegulationRef
+from models import RegulatoryMethodReport, StatisticalTopics, SourceCitationRef
 from django.forms.models import ModelChoiceField
 
 def _choice_cmp(a,b):
@@ -102,7 +102,8 @@ class AnalyteSearchForm(Form):
     source = ChoiceField()
     instrumentation = ChoiceField()
     method_subcategory = ChoiceField()
-    method_types = CheckBoxMultipleChoiceField()    
+    method_types = CheckBoxMultipleChoiceField() 
+       
     def __init__(self, *args, **kwargs):
         ''' Extends the parent method to extract the choice values from the database.'''
         super(AnalyteSearchForm, self).__init__(*args, **kwargs)
@@ -249,7 +250,10 @@ class ToxicitySearchForm(Form):
         self.fields['method_types'].initial = [m for m in qs]
         
 class PhysicalSearchForm(Form):
-    
+    '''Extends the Form class to implement the Physical Search form.
+    Contains choice fields used to filter the search of the MethodAnalyteAllVW view.
+    The choice fields that are not static are extracted at instantiation from the database.'''
+        
     analyte = ChoiceField()
     method_types = CheckBoxMultipleChoiceField()
     def __init__(self, *args, **kwargs):
@@ -264,8 +268,39 @@ class PhysicalSearchForm(Form):
         self.fields['method_types'].choices = [(m, m) for m in qs]
         self.fields['method_types'].initial = [m for m in qs]
         
+class RegulatorySearchForm(Form):
+    '''Extends the Form class to implement the Regulatory Search form.
+    Contains choice fields used to filter the search of the RegulationRef table.
+    The choice fields that are not static are extracted at instantiation from the database.'''
+        
+    analyte_kind = ChoiceField(choices=[('name', 'Name'), ('code', 'Code')],
+                               initial='name',
+                               widget=RadioSelect(attrs={'id' : 'analyte-search-kind'}))
+    analyte_value = CharField(widget=TextInput(attrs={'id' : 'analyte-search-value'}))
+    regulation = ChoiceField()
+    
+    def __init__(self, *args, **kwargs):
+        super(RegulatorySearchForm, self).__init__(*args, **kwargs)
+        
+        #Find regulations
+        qs = RegulationRef.objects.values_list('regulation', 'regulation_name').order_by('regulation_name').distinct()
+        self.fields['regulation'].choices = [(u'all', u'Any')] + [(reg, name) for (reg, name) in qs]
+        
+class TabularSearchForm(Form):
+    '''Extends the Form class to implement the Tabular Regulatory Search form.
+    Contains choice fields used to filter the search of the RegulatoryMethodReport table.
+    The choice fields that are not static are extracted at instantiation from the database.'''
+        
+    analyte = ChoiceField()
+    
+    def __init__(self, *args, **kwargs):
+        super(TabularSearchForm, self).__init__(*args, **kwargs)
+        
+        qs = RegulatoryMethodReport.objects.values_list('analyte_name', flat=True).order_by('analyte_name')
+        self.fields['analyte'].choices = [(u'all', u'Any')] + [(name, name) for name in qs]
         
 class StatisticalSearchForm(Form):
+    '''Extends the standard form to implement the query filtering form for the Statistical Methods'''
     
     item_type = ModelChoiceField(queryset=StatisticalItemType.objects.all(), empty_label='Any', required=False)
     complexity = ChoiceField(choices=[(u'all', u'Any')] + COMPLEXITY_CHOICES, required=False)
@@ -276,6 +311,10 @@ class StatisticalSearchForm(Form):
     special_topics = ModelChoiceField(queryset=StatisticalTopics.objects.all(), empty_label='Any', required=False)
     
 class StatisticalSourceEditForm(ModelForm):
+    '''Extends the ModelForm to implement the statistical source edit form.
+    The verbose_help field can be retrieved in a template using the custom template filter
+    'verbose_help' found in form_field_attr_filters.py.
+    '''
         
     class Meta:
         model = SourceCitationRef
@@ -330,7 +369,7 @@ class StatisticalSourceEditForm(ModelForm):
         # There is a bug/feature in the MultipleChoiceField where it sets the help text for these fields to
         # a message about how to select multiple choices in a SelectMultiple widgets. Even if you change the widget
         # to CheckboxSelectMultiple, the message remains and any help_text from the model is ignored.
-        # The code below sets the help for all fields that use the CheckboxSelectMultiple widget to the help_text
+        # The code below sets the help for all fields that use the CheckboxSelectMultiple widget to the same help_text
         # defined in the model form. See Django bug report https://code.djangoproject.com/ticket/9321 . This may
         # be fixed in 1.4 but won't be done in 1.3.x versions.
         # For now, I'll have to duplicate the help text here.
@@ -341,5 +380,5 @@ class StatisticalSourceEditForm(ModelForm):
         self.fields['design_objectives'].help_text = 'Select all design or data analysis objectives that apply'
         self.fields['special_topics'].help_text = 'Select all special topics that apply'
 
-        # We may want to get both the verbose help from a database.
+        # We may want to get the verbose help from a database.
         self.fields['source_citation'].verbose_help = 'The published literature citation of the method, or volume from which the method comes. Ordering information is also included (if available).'

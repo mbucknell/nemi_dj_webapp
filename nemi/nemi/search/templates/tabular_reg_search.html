@@ -1,0 +1,68 @@
+{% extends "base_search.html" %}
+
+{% block title %}NEMI Tabular Regulatory Method Report{% endblock %}
+
+{% block search_box %}
+	<h3>Regulatory Methods by Analyte</h3>
+	<form action={% url search-tabular_reg %} method="get">{% csrf_token %}
+		<p>{{ search_form.analyte.label }}:&nbsp;{{ search_form.analyte }}&nbsp;<input id="search-button" type="submit" value="Search NEMI"/></p>
+	</form>
+{% endblock %}
+
+{% block results_box %} 
+	{% if show_results %}
+		{% if results %}
+			<table class="tablesorter data-table" id="sort-table" style="width: 100%">
+				<thead>
+					<tr>
+						<th>Analyte Name</th>
+						<th>EPA</th>
+						<th>USGS</th>
+						<th>Standard Methods</th>
+						<th>ASTM</th>
+						<th>Other</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for r in results %}
+						<tr>
+							<td>{{ r.analyte_name }}</td>
+							<td>
+								{% if r.epa_rev_id %}
+									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.epa_rev_id %}>
+									{{ r.epa|safe }}</a>
+								{% endif %}
+							</td>	
+							<td>
+								{% if r.usgs_rev_id %}
+									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.usgs_rev_id %}>
+										{{ r.usgs|safe }}</a>
+								{% endif %}
+							</td>
+							<td>
+								{% if r.standard_methods_rev_id %}
+									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.standard_methods_rev_id %}>
+									{{ r.standard_methods|safe }}</a>
+								{% endif %}
+							</td>
+							<td>
+								{% if r.astm_rev_id %}
+									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.astm_rev_id %}>
+									{{ r.astm|safe }}</a>
+								{% endif %}
+							</td>
+							<td>
+								{% if r.other_rev_id %}
+									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.other_rev_id %}>
+									{{ r.other|safe }}</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}	
+				</tbody>
+			</table>		
+		{% else %}
+			<p>No data found.</p>
+		{% endif %}
+	{% endif %}
+{% endblock %}
