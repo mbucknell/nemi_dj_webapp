@@ -269,7 +269,7 @@ class SearchResultView(View, TemplateResponseMixin):
                                             'show_results' : False})
                 
 class ExportSearchView(View):
-    ''' This class extends the standard View to implement the view which exports the search results
+    ''' Extends the standard View to implement the view which exports the search results
     table. This should be extended along with the FilterFormMixin.
     '''
 
