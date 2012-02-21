@@ -1269,7 +1269,7 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
         return None
         
     def get_results_context(self, qs):
-        return qs
+        return {'results' : qs}
             
 class StatisticalSourceSummaryView(DetailView):
     ''' Extends DetailView to implement the Statistical Source Summary view'''
