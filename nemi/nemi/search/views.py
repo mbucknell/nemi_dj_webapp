@@ -14,7 +14,7 @@ from django.forms import Form
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.utils.decorators import method_decorator
-from django.views.generic import View, DetailView
+from django.views.generic import View, DetailView, ListView
 from django.views.generic.edit import TemplateResponseMixin, CreateView, UpdateView
 
 # Provides conversion to Excel format
@@ -1174,8 +1174,7 @@ class ExportMethodAnalyte(View, TemplateResponseMixin):
 class AddStatisticalSourceView(CreateView):
     ''' Extends CreateView to implement the create statistiscal source page.
     '''
-    
-    
+       
     template_name = 'create_statistic_source.html'
     form_class = StatisticalSourceEditForm
     model = SourceCitationRef
@@ -1203,6 +1202,21 @@ class AddStatisticalSourceView(CreateView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(AddStatisticalSourceView, self).dispatch(*args, **kwargs)
+    
+class UpdateStatisticalSourceListView(ListView):
+    ''' Extends the standard ListView to implement the view which
+    will show a list of views that the logged in user can edit.
+    '''
+    
+    template_name = 'update_stat_source_list.html'
+    context_object_name = 'source_methods'
+    
+    def get_queryset(self):
+        return SourceCitationRef.stat_methods.filter(insert_person__exact=self.request.user).order_by('source_citation')
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UpdateStatisticalSourceListView, self).dispatch(*args, **kwargs)
 
 class UpdateStatisticalSourceView(UpdateView):
     ''' Extends the standard UpdateView to implement the Update Statistical source page.'''
@@ -1228,7 +1242,7 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
     form_class = StatisticalSearchForm
     
     def get_qs(self, form):
-        qs = SourceCitationRef.objects.filter(citation_type__citation_type__exact='Statistic')
+        qs = SourceCitationRef.stat_methods.all()
         
         if form.cleaned_data['item_type']:
             qs = qs.filter(item_type__exact=form.cleaned_data['item_type'])
