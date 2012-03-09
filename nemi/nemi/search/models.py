@@ -701,6 +701,14 @@ LEVEL_OF_TRAINING_CHOICES = [
     (u'Intermediate', u'Intermediate'),
     (u'Advanced', u'Advanced')]
 
+
+class StatisticalMethodManager(models.Manager):
+    '''Extends the Manager class to provide a query set that returns a data which has a citation type of Statistic.
+    '''
+    
+    def get_query_set(self):
+        return super(StatisticalMethodManager, self).get_query_set().filter(citation_type__citation_type__exact='Statistic')
+        
 class SourceCitationRef(models.Model):
     
     source_citation_id = models.IntegerField(primary_key=True) 
@@ -734,14 +742,13 @@ class SourceCitationRef(models.Model):
     design_objectives = models.ManyToManyField(StatisticalDesignObjective, null=True, help_text = 'Select all design or data analysis objectives that apply')
     special_topics = models.ManyToManyField(StatisticalTopics, null=True, blank=True)
     
+    objects = models.Manager()
+    stat_methods = StatisticalMethodManager()
+    
     class Meta:
         db_table = 'source_citation_ref'
         managed = False
 
     def __unicode__(self):
         return self.source_citation
-
-
-        
-
         
