@@ -44,6 +44,22 @@
 				window.location=$(this).attr("href");
 				return false;
 			});
+			// Code highlights the navigation selection for the current page. 
+			// The code checks for the href url in the documents URL.
+			// This is a little dangerous, but for these reports probably okay.
+			// In the future, may want to try to pass in a template variable to control
+			// which nav element to highlight.
+			var this_url = document.URL;
+			$("#sidebar a").each(function(){
+				var el_url = $(this).attr('href');
+				var url_index = this_url.lastIndexOf(el_url);
+				if (url_index !== -1) {
+					$(this).addClass('selected-page');
+				}
+				else {
+					$(this).removeClass('selected-page');
+				}
+			});
 		});
 		// Show header information dialogs 
 		function showInfo(header, info) {
