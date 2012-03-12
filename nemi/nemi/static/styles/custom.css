@@ -67,6 +67,9 @@ a[class='popup']{
 	text-decoration: none;
 	color: darkred;
 }
+#sidebar a.selected-page {
+	background-color: white;
+}
 #sidebar ul{
 	font-weight: bold;
 	font-size: 14px;
