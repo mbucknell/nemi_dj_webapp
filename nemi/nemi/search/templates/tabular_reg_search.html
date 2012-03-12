@@ -3,7 +3,6 @@
 {% block title %}NEMI Tabular Regulatory Method Report{% endblock %}
 
 {% block search_box %}
-	<h3>Regulatory Methods by Analyte</h3>
 	<form action={% url search-tabular_reg %} method="get">{% csrf_token %}
 		<p>{{ search_form.analyte.label }}:&nbsp;{{ search_form.analyte }}&nbsp;<input id="search-button" type="submit" value="Search NEMI"/></p>
 	</form>
@@ -26,35 +25,35 @@
 				<tbody>
 					{% for r in results %}
 						<tr>
-							<td>{{ r.analyte_name }}</td>
+							<td>{% include "analyte_synonyms.html" with analyte_name=r.r.analyte_name analyte_code=r.analyte_code syn=r.syn %}</td>
 							<td>
-								{% if r.epa_rev_id %}
-									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.epa_rev_id %}>
-									{{ r.epa|safe }}</a>
+								{% if r.r.epa_rev_id %}
+									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.r.epa_rev_id %}>
+									{{ r.r.epa|safe }}</a>
 								{% endif %}
 							</td>	
 							<td>
-								{% if r.usgs_rev_id %}
-									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.usgs_rev_id %}>
-										{{ r.usgs|safe }}</a>
+								{% if r.r.usgs_rev_id %}
+									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.r.usgs_rev_id %}>
+										{{ r.r.usgs|safe }}</a>
 								{% endif %}
 							</td>
 							<td>
-								{% if r.standard_methods_rev_id %}
-									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.standard_methods_rev_id %}>
-									{{ r.standard_methods|safe }}</a>
+								{% if r.r.standard_methods_rev_id %}
+									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.r.standard_methods_rev_id %}>
+									{{ r.r.standard_methods|safe }}</a>
 								{% endif %}
 							</td>
 							<td>
-								{% if r.astm_rev_id %}
-									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.astm_rev_id %}>
-									{{ r.astm|safe }}</a>
+								{% if r.r.astm_rev_id %}
+									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.r.astm_rev_id %}>
+									{{ r.r.astm|safe }}</a>
 								{% endif %}
 							</td>
 							<td>
-								{% if r.other_rev_id %}
-									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.other_rev_id %}>
-									{{ r.other|safe }}</a>
+								{% if r.r.other_rev_id %}
+									<a class="popup" title="Method details (in a new tab)" target="_blank" href={% url search-method_summary_reg r.r.other_rev_id %}>
+									{{ r.r.other|safe }}</a>
 								{% endif %}
 							</td>
 						</tr>

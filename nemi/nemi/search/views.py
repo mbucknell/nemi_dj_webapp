@@ -939,7 +939,30 @@ class TabularRegulatorySearchView(SearchResultView, FilterFormMixin):
             qs = qs.filter(analyte_name__exact=form.cleaned_data['analyte'])
             
         return qs
+    
+    def get_results_context(self, qs):
+        '''Add analyte synonyms to each result by retrieving analyte code from AnalyteCodeRel
+        and generating the list of synonyms that the analyte name/code pair.
+        '''
+        r_context = {'results': []}
         
+        v_qs = self.get_values_qs(qs)
+        for r in v_qs:
+            try:
+                a_qs = AnalyteCodeRel.objects.filter(analyte_name__iexact=r['analyte_name'])
+                analyte_code = a_qs[0].analyte_code
+            except:
+                analyte_code = None
+                
+            if analyte_code:
+                syn = AnalyteCodeRel.objects.filter(analyte_code__iexact=analyte_code).values_list('analyte_name', flat=True)
+            else:
+                syn = []
+            
+            r_context['results'].append({'r' : r, 'analyte_code' : analyte_code, 'syn' : syn})
+            
+        return r_context
+                   
 class KeywordSearchView(View, TemplateResponseMixin):
     '''Extends the standard View to implement the keyword search view. This form only
     processes get requests.
