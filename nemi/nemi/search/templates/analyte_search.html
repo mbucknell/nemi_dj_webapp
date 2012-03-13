@@ -35,7 +35,7 @@
 {% endblock %}
 
 {% block results_table_data %}
-	{% load search_tags %} <!-- Imports decimal_format tag -->
+	{% load data_format_filters %} <!-- Imports decimal_format tag -->
 	{% for r in results %}
 		<tr>
 			<td><a class="popup" title="Method details (in a new tab)" target="_blank" href="{% url search-method_summary r.m.method_id %}">{{ r.m.source_method_identifier|safe }}</a></td>
