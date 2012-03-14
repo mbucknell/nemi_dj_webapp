@@ -343,7 +343,7 @@ class MediaNameDOM(models.Model):
     class Meta:
         db_table = 'media_name_dom'
         ordering = ['media_name']
-        managed = True
+        managed = False
         
     def __unicode__(self):
         return self.media_name.lower().title()
@@ -732,13 +732,13 @@ class SourceCitationRef(models.Model):
     complexity = models.CharField(max_length=10, choices=COMPLEXITY_CHOICES, help_text='Method complexity')
     level_of_training = models.CharField(max_length=20, choices=LEVEL_OF_TRAINING_CHOICES, help_text='Your level of statistical training')
     item_type = models.ForeignKey(StatisticalItemType, null=True, help_text='Select one item type')
-    item_type_note = models.CharField(max_length=50, blank=True, help_text='Add a note if item type is other')
+    item_type_note = models.CharField(max_length=50, blank=True, verbose_name='if other type selected, please describe', help_text='Add a description if item type is other')
     analysis_types = models.ManyToManyField(StatisticalAnalysisType, null=True, help_text='Select citation purpose')
-    sponser_types = models.ManyToManyField(StatisticalSourceType, null=True, verbose_name='Sponser/Publishing Type', help_text='Select one or more sponser/publishing types')
-    sponser_type_note = models.CharField(max_length=50, blank=True, help_text='Add a note if sponser/publishing type is other')
-    media_emphasized = models.ManyToManyField(MediaNameDOM, null=True, help_text="Media emphasized by not limited to")
-    media_emphasized_note = models.CharField(max_length=50, blank=True, help_text="Add a note if media emphasized is other")
-    subcategory = models.CharField(max_length=150, blank=True, help_text='Enter a subcategory if appropriate')
+    sponser_types = models.ManyToManyField(StatisticalSourceType, null=True, verbose_name='publication source type', help_text='Select one or more publication source types')
+    sponser_type_note = models.CharField(max_length=50, blank=True, verbose_name='if other source selected, please describe', help_text='Add a description if publication source type is other')
+    media_emphasized = models.ManyToManyField(MediaNameDOM, null=True, help_text='Media emphasized by not limited to')
+    media_emphasized_note = models.CharField(max_length=50, blank=True, verbose_name='If other media selected, please describe', help_text="Add a description if media emphasized is other")
+    subcategory = models.CharField(max_length=150, blank=True, verbose_name='media subcategory', help_text='Enter a media subcategory if appropriate')
     design_objectives = models.ManyToManyField(StatisticalDesignObjective, null=True, help_text = 'Select all design or data analysis objectives that apply')
     special_topics = models.ManyToManyField(StatisticalTopics, null=True, blank=True)
     
