@@ -10,7 +10,7 @@
 {% block content %}
 	<h2>Statistical Source Details</h2>
 	{% if data %}
-		{% load data_format_filters %}
+		{% load data_format %}
 		<table class="info-table">
 			<tr><th>Source Citation</th><td>{{ data.source_citation }}</td>
 			<tr><th>Title</th><td>{{ data.title }}</td></tr>
