@@ -1185,8 +1185,8 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
         if form.cleaned_data['analysis_types']:
             qs = qs.filter(analysis_types__exact=form.cleaned_data['analysis_types'])
             
-        if form.cleaned_data['sponser_types']:
-            qs = qs.filter(sponser_types__exact=form.cleaned_data['sponser_types'])
+        if form.cleaned_data['publication_source_type']:
+            qs = qs.filter(sponser_types__exact=form.cleaned_data['publication_source_type'])
             
         if form.cleaned_data['design_objectives']:
             qs = qs.filter(design_objectives__exact=form.cleaned_data['design_objectives'])
@@ -1204,7 +1204,7 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
         criteria.append(get_criteria_from_field_data(form, 'item_type'))
         criteria.append(get_criteria(form['complexity']))
         criteria.append(get_criteria_from_field_data(form, 'analysis_types'))
-        criteria.append(get_criteria_from_field_data(form, 'sponser_types'))
+        criteria.append(get_criteria_from_field_data(form, 'publication_source_type'))
         criteria.append(get_criteria_from_field_data(form, 'design_objectives'))
         criteria.append(get_criteria_from_field_data(form, 'media_emphasized'))
         criteria.append(get_criteria_from_field_data(form, 'special_topics'))

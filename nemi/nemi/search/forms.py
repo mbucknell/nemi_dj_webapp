@@ -305,7 +305,7 @@ class StatisticalSearchForm(Form):
     item_type = ModelChoiceField(queryset=StatisticalItemType.objects.all(), empty_label='Any', required=False)
     complexity = ChoiceField(choices=[(u'all', u'Any')] + COMPLEXITY_CHOICES, required=False)
     analysis_types = ModelChoiceField(queryset=StatisticalAnalysisType.objects.all(), empty_label='Any', required=False)
-    sponser_types = ModelChoiceField(queryset=StatisticalSourceType.objects.all(), empty_label='Any', required=False)
+    publication_source_type = ModelChoiceField(queryset=StatisticalSourceType.objects.all(), empty_label='Any', required=False)
     design_objectives = ModelChoiceField(queryset=StatisticalDesignObjective.objects.all(), empty_label='Any', required=False)
     media_emphasized = ModelChoiceField(queryset=MediaNameDOM.objects.all(), empty_label='Any', required=False)
     special_topics = ModelChoiceField(queryset=StatisticalTopics.objects.all(), empty_label='Any', required=False)
