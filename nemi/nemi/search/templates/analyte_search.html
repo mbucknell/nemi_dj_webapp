@@ -1,13 +1,17 @@
 {% extends "base_search.html" %}
 {% block title %}NEMI Analyte Search with Greenness Profile{% endblock %}
 
+{% block local_page_script %}
+	<script src="{{ STATIC_URL }}script/analyte_select.js"></script>
+{% endblock %}
+
 {% block search_box_body %}
 	<form id="search-form" action={% url search-analyte %} method="get">{% csrf_token %}
 		<table id="search-table">
 			<tr>
 					<th>Analyte (required):</th>
 					<td style="white-space: nowrap;" id='kind-element'>{{ search_form.analyte_kind }}{{ search_form.analyte_value }}{{ search_form.analyte_value.errors }}
-					<input id="find-analytes" onclick="showAnalyteFind('{% url search-analyte_select %}')" type="button" value="Find...">
+					<input id="find-analytes" onclick="return showAnalyteFind('{% url search-analyte_select %}')" type="button" value="Find...">
 					</td>
 			</tr>
 			<tr><th>{{ search_form.media_name.label }}:</th><td>{{ search_form.media_name }}</td></tr>
