@@ -2,9 +2,6 @@
 search pages.
 '''
 
-# standard python packages
-import types
-
 # django packages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -17,64 +14,15 @@ from django.utils.decorators import method_decorator
 from django.views.generic import View, DetailView, ListView
 from django.views.generic.edit import TemplateResponseMixin, CreateView, UpdateView
 
-# Provides conversion to Excel format
-from xlwt import Workbook
-
 # project specific packages
 from forms import GeneralSearchForm, AnalyteSearchForm, AnalyteSelectForm, KeywordSearchForm, MicrobiologicalSearchForm, RegulatorySearchForm
 from forms import BiologicalSearchForm, ToxicitySearchForm, PhysicalSearchForm, StatisticalSearchForm, StatisticalSourceEditForm, TabularSearchForm
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw
 from models import RegQueryVW, SourceCitationRef, CitationTypeRef, RegulatoryMethodReport
+from utils.forms import get_criteria, get_criteria_from_field_data, get_multi_choice
+from utils.view_utils import dictfetchall, xls_response, tsv_response
 
-def _get_choice_select(field):
-    '''Returns the visible choice from the form field variable. The function
-    assumes choice values are integer or string
-    '''
-    if type(field.field.choices[1][0]) is types.IntType:
-        return dict(field.field.choices).get(int(field.data))
-    return dict(field.field.choices).get(field.data)
 
-def _get_criteria(field):
-    ''' Assumes that the field is a ChoiceField.
-    Returns a tuple if the field value is not 'all', where the first element is the label
-    of field and the second element is the visible choice for field.
-    '''
-    if field.data == 'all':
-        return None
-    else:
-        return (field.label, _get_choice_select(field))
-    
-def _get_criteria_with_name(form, field_name):
-    '''Returns a tuple representing field_name's label and choice from form.
-    '''
-    if form.cleaned_data[field_name] == None:
-        return None
-    
-    else:
-        return (form[field_name].label, form.cleaned_data[field_name])
-    
-def _get_multi_choice_criteria(form, name):
-    ''' Returns the list of selected choices in a MultipleChoiceField. If all are selected an empty list is returned.
-    This function works for choice field values which are integer or string.
-    '''
-    choice_dict = dict(form[name].field.choices)
-    if len(form.cleaned_data[name]) == len(choice_dict):
-        return []
-    else:
-        if type(choice_dict.keys()[0]) is types.IntType:
-            return [choice_dict.get(int(k)) for k in form.cleaned_data[name]]
-        else:
-            return [choice_dict.get(k) for k in form.cleaned_data[name]]
-    
-
-def _dictfetchall(cursor):
-    '''Returns all rows from the cursor query as a dictionary with the key value equal to column name in uppercase'''
-    desc = cursor.description
-    return [
-            dict(zip([col[0] for col in desc], row))
-            for row in cursor.fetchall()
-            ]
-               
 def _greenness_profile(d):
     '''Returns a dicitionary with five keywords. The first keyword is profile whose is 
     a list of four gifs representing the greenness profile of the dictionary d or an empty list if there is not
@@ -125,45 +73,6 @@ def _greenness_profile(d):
             'corrosive' : _g_value(corrosive),
             'waste_amt' : _g_value(waste)}
     
-def _tsv_response(headings, vl_qs, filename):
-    ''' Returns an http response which contains a tab-separate-values file 
-    representing the values list query set, vl_qs, and using headings as the 
-    column headers. filename will be the name of the file created with the suffix *.tsv
-    '''
-    response = HttpResponse(mimetype='text/tab-separated-values')
-    response['Content-Disposition'] = ('attachment; filename=%s.tsv' % filename)
-
-    response.write('\t'.join(headings))
-    response.write('\n')
-
-    for row in vl_qs:
-        for col in row:
-            response.write('%s\t' % str(col))
-        response.write('\n')
-
-    return response
-
-def _xls_response(headings, vl_qs, filename):
-    '''Returns an http response which contains an Excel file
-    representing the values list query set, vl_qs, and using headings
-    as the column headers. filename will be the name of the file created with the suffix *.xls
-    '''
-    response = HttpResponse(mimetype='application/vnd.ms-excel')
-    response['Content-Disposition'] = ('attachment; filename=%s.xls' % filename)
-    
-    wb = Workbook()
-    ws = wb.add_sheet('sheet 1')
-    
-    for col_i in range(len(headings)):
-        ws.write(0, col_i, headings[col_i])
-    
-    for row_i in range(len(vl_qs)):
-        for col_i in range(len(vl_qs[row_i])):
-            ws.write(row_i + 1, col_i, vl_qs[row_i][col_i])
-    
-    wb.save(response)
-    
-    return response
 
 def _analyte_value_qs(method_id):
     ''' Returns the analyte data values query set for the method_id.'''
@@ -297,10 +206,10 @@ class ExportSearchView(View):
                 export_type = kwargs.get('export', '')
                 
                 if export_type == 'tsv':
-                    return _tsv_response(HEADINGS, self.get_export_qs(self.get_qs(form)), self.filename)
+                    return tsv_response(HEADINGS, self.get_export_qs(self.get_qs(form)), self.filename)
                 
                 elif export_type == 'xls':
-                    return _xls_response(HEADINGS, self.get_export_qs(self.get_qs(form)), self.filename)
+                    return xls_response(HEADINGS, self.get_export_qs(self.get_qs(form)), self.filename)
                 
                 else:
                     return Http404
@@ -340,14 +249,14 @@ class GeneralSearchFormMixin(FilterFormMixin):
         
     def get_context_data(self, form):
         criteria = []
-        criteria.append(_get_criteria(form['media_name']))
-        criteria.append(_get_criteria(form['source']))
-        criteria.append(_get_criteria(form['method_number']))
-        criteria.append(_get_criteria(form['instrumentation']))
-        criteria.append(_get_criteria(form['method_subcategory']))
+        criteria.append(get_criteria(form['media_name']))
+        criteria.append(get_criteria(form['source']))
+        criteria.append(get_criteria(form['method_number']))
+        criteria.append(get_criteria(form['instrumentation']))
+        criteria.append(get_criteria(form['method_subcategory']))
         
         return {'criteria' : criteria,
-                'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
+                'selected_method_types' : get_multi_choice(form, 'method_types')}
         
         
 class ExportGeneralSearchView(ExportSearchView, GeneralSearchFormMixin):
@@ -438,13 +347,13 @@ class AnalyteSearchFormMixin(FilterFormMixin):
             criteria.append(('Analyte code', form.cleaned_data['analyte_value']))
         else:
             criteria.append(('Analyte name', form.cleaned_data['analyte_value']))
-        criteria.append(_get_criteria(form['media_name']))
-        criteria.append(_get_criteria(form['source']))
-        criteria.append(_get_criteria(form['instrumentation']))
-        criteria.append(_get_criteria(form['method_subcategory']))
+        criteria.append(get_criteria(form['media_name']))
+        criteria.append(get_criteria(form['source']))
+        criteria.append(get_criteria(form['instrumentation']))
+        criteria.append(get_criteria(form['method_subcategory']))
 
         return {'criteria' : criteria,
-                'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
+                'selected_method_types' : get_multi_choice(form, 'method_types')}
 
 class ExportAnalyteSearchView(ExportSearchView, AnalyteSearchFormMixin):
     '''Extends the ExportSearchView and AnalyteSearchFormMixin to implement the export analyte search feature.'''
@@ -584,10 +493,10 @@ class MicrobiologicalSearchView(SearchResultView, FilterFormMixin):
     
     def get_context_data(self, form):
         criteria = []
-        criteria.append(_get_criteria(form['analyte']))
+        criteria.append(get_criteria(form['analyte']))
     
         return {'criteria' : criteria,
-                'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
+                'selected_method_types' : get_multi_choice(form, 'method_types')}
         
 class BiologicalSearchView(SearchResultView, FilterFormMixin):
     '''Extends the SearchResultView and FilterFormMixin to implement the biological search page.'''
@@ -636,12 +545,12 @@ class BiologicalSearchView(SearchResultView, FilterFormMixin):
     
     def get_context_data(self, form):
         criteria = []
-        criteria.append(_get_criteria(form['analyte_type']))
-        criteria.append(_get_criteria(form['waterbody_type']))
-        criteria.append(_get_criteria(form['gear_type']))
+        criteria.append(get_criteria(form['analyte_type']))
+        criteria.append(get_criteria(form['waterbody_type']))
+        criteria.append(get_criteria(form['gear_type']))
         
         return {'criteria' : criteria,
-                'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
+                'selected_method_types' : get_multi_choice(form, 'method_types')}
                   
 class ToxicitySearchView(SearchResultView, FilterFormMixin):
     '''Extends the SearchResultsView and FilterFormMixin to implements the toxicity search page.'''
@@ -687,12 +596,12 @@ class ToxicitySearchView(SearchResultView, FilterFormMixin):
         
     def get_context_data(self, form):
         criteria = []
-        criteria.append(_get_criteria(form['subcategory']))
-        criteria.append(_get_criteria(form['media']))
-        criteria.append(_get_criteria(form['matrix']))
+        criteria.append(get_criteria(form['subcategory']))
+        criteria.append(get_criteria(form['media']))
+        criteria.append(get_criteria(form['matrix']))
         
         return {'criteria' : criteria,
-                'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
+                'selected_method_types' : get_multi_choice(form, 'method_types')}
         
 class PhysicalSearchView(SearchResultView, FilterFormMixin):
     
@@ -724,10 +633,10 @@ class PhysicalSearchView(SearchResultView, FilterFormMixin):
     
     def get_context_data(self, form):
         criteria = []
-        criteria.append(_get_criteria(form['analyte']))
+        criteria.append(get_criteria(form['analyte']))
         
         return {'criteria' : criteria,
-                'selected_method_types' : _get_multi_choice_criteria(form, 'method_types')}
+                'selected_method_types' : get_multi_choice(form, 'method_types')}
             
     
 class StreamPhysicalSearchView(SearchResultView):
@@ -806,7 +715,7 @@ class RegulatorySearchFormMixin(FilterFormMixin):
             syn = []
             
         criteria = []
-        criteria.append(_get_criteria(form['regulation']))
+        criteria.append(get_criteria(form['regulation']))
                                 
         return {'criteria' : criteria,
                 'analyte_name' : analyte_name,
@@ -998,7 +907,7 @@ OR CONTAINS(rj.method_pdf, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">
 <seq><rewrite>transform((TOKENS, "{", "}", "ACCUM"))</rewrite></seq>\
 </progression></textquery><score datatype="INTEGER" algorithm="COUNT"/></query>\', 2) > 1) \
 ORDER BY score(1) desc;')
-                results_list = _dictfetchall(cursor)
+                results_list = dictfetchall(cursor)
                 paginator = Paginator(results_list, 20)
                 
                 try:
@@ -1292,13 +1201,13 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
             
     def get_context_data(self, form):
         criteria = []
-        criteria.append(_get_criteria_with_name(form, 'item_type'))
-        criteria.append(_get_criteria(form['complexity']))
-        criteria.append(_get_criteria_with_name(form, 'analysis_types'))
-        criteria.append(_get_criteria_with_name(form, 'sponser_types'))
-        criteria.append(_get_criteria_with_name(form, 'design_objectives'))
-        criteria.append(_get_criteria_with_name(form, 'media_emphasized'))
-        criteria.append(_get_criteria_with_name(form, 'special_topics'))
+        criteria.append(get_criteria_from_field_data(form, 'item_type'))
+        criteria.append(get_criteria(form['complexity']))
+        criteria.append(get_criteria_from_field_data(form, 'analysis_types'))
+        criteria.append(get_criteria_from_field_data(form, 'sponser_types'))
+        criteria.append(get_criteria_from_field_data(form, 'design_objectives'))
+        criteria.append(get_criteria_from_field_data(form, 'media_emphasized'))
+        criteria.append(get_criteria_from_field_data(form, 'special_topics'))
         
         return {'criteria' : criteria}
         
