@@ -1,7 +1,7 @@
 ''' This module contains the forms needed to implement the NEMI search pages '''
 
 from django.forms import Form, ModelForm, ChoiceField, MultipleChoiceField, CheckboxSelectMultiple, RadioSelect, CharField, SelectMultiple, TextInput, HiddenInput
-from django.forms import Textarea
+from django.forms import Textarea, ModelMultipleChoiceField
 from django.utils.safestring import mark_safe
 from models import MethodVW, MediaNameDOM, InstrumentationRef, MethodSubcategoryRef, MethodSourceRef, AnalyteCodeVW, AnalyteCodeRel, MethodAnalyteAllVW
 from models import StatisticalItemType, COMPLEXITY_CHOICES, StatisticalAnalysisType, StatisticalSourceType, StatisticalDesignObjective, RegulationRef
@@ -307,7 +307,7 @@ class StatisticalSearchForm(Form):
     analysis_types = ModelChoiceField(queryset=StatisticalAnalysisType.objects.all(), empty_label='Any', required=False)
     publication_source_type = ModelChoiceField(queryset=StatisticalSourceType.objects.all(), empty_label='Any', required=False)
     design_objectives = ModelChoiceField(queryset=StatisticalDesignObjective.objects.all(), empty_label='Any', required=False)
-    media_emphasized = ModelChoiceField(queryset=MediaNameDOM.objects.all(), empty_label='Any', required=False)
+    media_emphasized = ModelChoiceField(queryset=MediaNameDOM.stat_media.all(), empty_label='Any', required=False)
     special_topics = ModelChoiceField(queryset=StatisticalTopics.objects.all(), empty_label='Any', required=False)
     
 class StatisticalSourceEditForm(ModelForm):
@@ -315,7 +315,11 @@ class StatisticalSourceEditForm(ModelForm):
     The verbose_help field can be retrieved in a template using the custom template filter
     'verbose_help' found in form_field_attr_filters.py.
     '''
-        
+    media_emphasized = ModelMultipleChoiceField(widget=CheckboxSelectMultiple(),
+                                                queryset=MediaNameDOM.stat_media.all(),
+                                                required=False,
+                                                help_text="Media emphasized but not limited to")
+   
     class Meta:
         model = SourceCitationRef
         fields = ('source_citation', 
@@ -358,7 +362,6 @@ class StatisticalSourceEditForm(ModelForm):
                    'subcategory' : TextInput(attrs={'size' : 50}),
                    'analysis_types' : CheckboxSelectMultiple(),
                    'sponser_types' : CheckboxSelectMultiple(),
-                   'media_emphasized' : CheckboxSelectMultiple(),
                    'design_objectives' : CheckboxSelectMultiple(),
                    'special_topics' : CheckboxSelectMultiple()}
         

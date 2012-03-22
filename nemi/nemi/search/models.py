@@ -335,10 +335,21 @@ class AnalyteCodeVW(models.Model):
         db_table = 'analyte_code_vw'
         managed = False
         
+class StatisticalMediaNameManager(models.Manager):
+    '''Extends the Manager class to provide a query set that returns valid media for statistical methods.
+    '''
+    
+    def get_query_set(self):
+        return super(StatisticalMediaNameManager, self).get_query_set().exclude(
+            media_name__iexact='Various').exclude(media_name__iexact='Water').exclude(media_name__iexact='Sediment')
+        
 class MediaNameDOM(models.Model):
     
     media_name = models.CharField(primary_key=True, max_length=30)
     media_id = models.IntegerField()
+    
+    objects = models.Manager()
+    stat_media = StatisticalMediaNameManager()
     
     class Meta:
         db_table = 'media_name_dom'
@@ -736,7 +747,7 @@ class SourceCitationRef(models.Model):
     analysis_types = models.ManyToManyField(StatisticalAnalysisType, null=True, help_text='Select citation purpose')
     sponser_types = models.ManyToManyField(StatisticalSourceType, null=True, verbose_name='publication source type', help_text='Select one or more publication source types')
     sponser_type_note = models.CharField(max_length=50, blank=True, verbose_name='if other source selected, please describe', help_text='Add a description if publication source type is other')
-    media_emphasized = models.ManyToManyField(MediaNameDOM, null=True, help_text='Media emphasized by not limited to')
+    media_emphasized = models.ManyToManyField(MediaNameDOM, null=True, help_text='Media emphasized but not limited to')
     media_emphasized_note = models.CharField(max_length=50, blank=True, verbose_name='If other media selected, please describe', help_text="Add a description if media emphasized is other")
     subcategory = models.CharField(max_length=150, blank=True, verbose_name='media subcategory', help_text='Enter a media subcategory if appropriate')
     design_objectives = models.ManyToManyField(StatisticalDesignObjective, null=True, help_text = 'Select all design or data analysis objectives that apply')
