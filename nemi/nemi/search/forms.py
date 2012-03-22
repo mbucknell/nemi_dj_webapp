@@ -317,7 +317,7 @@ class StatisticalSourceEditForm(ModelForm):
     '''
     media_emphasized = ModelMultipleChoiceField(widget=CheckboxSelectMultiple(),
                                                 queryset=MediaNameDOM.stat_media.all(),
-                                                required=False,
+                                                required=True,
                                                 help_text="Media emphasized but not limited to")
    
     class Meta:
