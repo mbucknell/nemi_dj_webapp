@@ -55,14 +55,19 @@
 	<p>A '*' by a field's label indicates the field is required.</p>
 	<br/>
 	{% block edit_form %} 
-		{% block form_header %} {% endblock %}
+		{% block form_header %}<!-- Put html form tag here with the action needed --> {% endblock %}
+		
 		{% block form_input_fields %}
 			{% if form.errors %}
 				<p class="errorlist"><b>Need to correct errors and resubmit</b></p>
 			{% endif %}
 			<p class="errorlist"> {{ form.non_field_errors }} </p>
 			<table id="data-entry-table">
-				<tr><th>Username:</th><td>{{ user.get_full_name }} - {{ user.username }}</td></tr>
+				{% if insert_user %}
+					<tr><th>User who created the method:</th><td>{{ insert_user.get_full_name }} - {{ insert_user.username }}</td></tr>
+				{% else %}
+					<tr><th>Username:</th><td>{{ user.get_full_name }} - {{ user.username }}</td></tr>
+				{% endif %}			
 				{% for field in form  %}
 					<tr>
 						<th><label for="id_{{ field.html_name }}" title="{{ field.help_text }}">

@@ -1144,7 +1144,13 @@ class UpdateStatisticalSourceListView(ListView):
     context_object_name = 'source_methods'
     
     def get_queryset(self):
-        return SourceCitationRef.stat_methods.filter(insert_person__exact=self.request.user).order_by('source_citation')
+        if self.request.user.groups.filter(name__exact='nemi_admin'):
+            qs = SourceCitationRef.stat_methods.all()
+        
+        else:
+            qs = SourceCitationRef.stat_methods.filter(insert_person__exact=self.request.user)
+            
+        return qs.order_by('source_citation')
     
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -1160,6 +1166,11 @@ class UpdateStatisticalSourceView(UpdateView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(UpdateStatisticalSourceView, self).dispatch(*args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super(UpdateStatisticalSourceView, self).get_context_data(**kwargs)
+        context['insert_user'] = self.object.insert_person
+        return context
 
     def get_success_url(self):
         return reverse('search-statistical_source_detail', kwargs={'pk' : self.object.source_citation_id})            
