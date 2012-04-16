@@ -15,6 +15,7 @@ def dictfetchall(cursor):
             dict(zip([col[0] for col in desc], row))
             for row in cursor.fetchall()
             ]
+    
 def tsv_response(headings, vl_qs, filename):
     ''' Returns an http response which contains a tab-separate-values file 
     representing the values list query set, vl_qs, and using headings as the 

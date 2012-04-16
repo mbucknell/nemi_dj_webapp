@@ -9,6 +9,7 @@ from django.utils import unittest
 
 from nemi.search.models import StatisticalItemType
 from nemi.search.utils.forms import get_criteria, get_criteria_from_field_data, get_multi_choice
+from nemi.search.utils.view_utils import tsv_response, xls_response
 
 
 class TestGetCriteria(unittest.TestCase):
@@ -123,5 +124,36 @@ class TestGetMultiChoice(unittest.TestCase):
         my_form.is_valid()
         self.assertRaises(KeyError, get_multi_choice, my_form, 'another_field')
             
+class TestTsvResponse(unittest.TestCase):
+    
+    def test_response(self):
+        headings = ['A', 'B', 'C']
+        list_of_lists = [['A1,', 'B1', 10], ['A2', 'B2', 20], ['A3', 'B3', 30]]
+        filename = 'test'
+        response = tsv_response(headings, list_of_lists, filename)
         
+        self.assertEqual(response['Content-Type'],'text/tab-separated-values')  
+        self.assertEqual(response['Content-Disposition'], 'attachment; filename=%s.tsv' % filename) 
         
+        expected_contents = '\t'.join(headings) + '\n'
+        for row in list_of_lists:
+            for col in row:
+                expected_contents += '%s\t' % str(col)
+            expected_contents += '\n'
+        self.assertEqual(response.content, expected_contents)
+        self.assertEqual(response.status_code, 200) 
+        
+class TestXlsResponse(unittest.TestCase):
+    
+    def test_response(self):
+        headings = ['A', 'B', 'C']
+        list_of_lists = [['A1,', 'B1', 10], ['A2', 'B2', 20], ['A3', 'B3', 30]]
+        filename = 'test'
+        response = xls_response(headings, list_of_lists, filename)
+        
+        self.assertEqual(response['Content-Type'],'application/vnd.ms-excel')  
+        self.assertEqual(response['Content-Disposition'], 'attachment; filename=%s.xls' % filename) 
+        
+        # Not sure how to test response contents.
+        
+       

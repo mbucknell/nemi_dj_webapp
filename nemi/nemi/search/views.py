@@ -94,10 +94,10 @@ def _analyte_value_qs(method_id):
                                'prec_acc_conc_used').distinct()
  
 class FilterFormMixin(object):
-    '''This mixin class is designed to be process a form where query filter conditions are set.
+    '''This mixin class is designed to process a form which sets query filter conditions.
     The method get_qs, should check the form's cleaned data and filter the query as appropriate and
     return the query set.
-    The method get_context_data, generates any context data generated from the form.
+    The method, get_context_data, returns context data generated from the form.
     '''
     
     form_class = Form
