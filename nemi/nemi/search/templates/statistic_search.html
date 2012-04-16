@@ -20,8 +20,11 @@
 	</form>
 {% endblock %}
 
+<!-- Statistical method report does not have header information dialogs -->
+{% block header_information_dialog %} {% endblock %}
+
 {% block results_table_header %}
-	<th></th> 
+	<th class="nosort"></th> 
 	<th>Title</th>
 	<th>Source Organization</th>
 	<th>Country</th>
