@@ -3,10 +3,10 @@ Created on Mar 14, 2012
 
 @author: mbucknel
 '''
-from django.test.simple import DjangoTestSuiteRunner
+from django_jenkins.runner import CITestSuiteRunner
 
 # I got this snippet from http://www.caktusgroup.com/blog/2010/09/24/simplifying-the-testing-of-unmanaged-database-models-in-django/
-class ManagedModelTestRunner(DjangoTestSuiteRunner):
+class ManagedModelTestRunner(CITestSuiteRunner):
     """
     Test runner that automatically makes all unmanaged models in your Django
     project managed for the duration of the test run, so that one doesn't need

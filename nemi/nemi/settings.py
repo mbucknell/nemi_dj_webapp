@@ -163,3 +163,18 @@ if ADDITIONAL_APPS:
     
 if ADDITIONAL_MW_CLASSES:
     MIDDLEWARE_CLASSES += ADDITIONAL_MW_CLASSES
+    
+if os.getenv('JENKINS_URL', False):
+    JENKINS_TASKS = (
+                     'django_jenkins.tasks.django_tests',
+                     )
+    JENKINS_TEST_RUNNER = 'nemi.test_jenkins_runner.ManagedModelTestRunner'
+    INSTALLED_APPS += ('django_jenkins',)
+    PROJECT_APPS = ('search',)
+    DATABASES['default'].update(dict(
+            ENGINE=os.getenv('DBA_SQL_DJANGO_ENGINE'),
+            USER=os.getenv('DBA_SQL_ADMIN'),
+            PASSWORD=os.getenv('DBA_SQL_ADMIN_PASSWORD'),
+            HOST=os.getenv('DBA_SQL_HOST'),
+            PORT=os.getenv('DBA_SQL_PORT')
+            ))

@@ -7,10 +7,11 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from nemi.search.utils.forms import get_criteria_from_field_data
+from nemi.search.models import MediaNameDOM
 
 class TestStatisticSearchViewNoMethods(TestCase):
-    fixtures = ['static_data.json']
-    
+    fixtures = ['static_data.json']  
+      
     def test_view_no_query(self):
         resp = self.client.get(reverse('search-statistics'))
         self.assertEqual(resp.status_code, 200)
@@ -42,20 +43,20 @@ class TestStatisticSearchViewNoMethods(TestCase):
         self.assertEqual(resp.context['criteria'], [None, None, None, None, None, None, None])
         self.assertQuerysetEqual(resp.context['results'], [])
         
-##class TestStatisticSearchView(TestCase):
+class TestStatisticSearchView(TestCase):
     
-##    fixtures = ['stats_methods.json']
+    fixtures = ['stats_methods.json', 'source_citation_ref.json']
 
-##    def test_filter_query(self):
-##        resp = self.client.get(reverse('search-statistics'), {'item_type' : 3, 
-##                                                              'complexity' : 'all', 
-##                                                              'analysis_types' : '',
-##                                                             'publication_source_type' : '',
-##                                                              'design_objectives' : '',
-##                                                              'media_emphasized' : '',
-##                                                              'special_topics' : ''})
+    def test_filter_query(self):
+        resp = self.client.get(reverse('search-statistics'), {'item_type' : 3, 
+                                                              'complexity' : 'all', 
+                                                              'analysis_types' : '',
+                                                              'publication_source_type' : '',
+                                                              'design_objectives' : '',
+                                                              'media_emphasized' : '',
+                                                              'special_topics' : ''})
         
-##        self.assertEqual(resp.status_code, 200)
-##        self.assertEqual(resp.context['criteria'], [get_criteria_from_field_data(resp.context['search_form'], 'item_type'), None, None, None, None, None, None])
-##        self.assertEqual(resp.context['results'].count(), 4);
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.context['criteria'], [get_criteria_from_field_data(resp.context['search_form'], 'item_type'), None, None, None, None, None, None])
+        self.assertEqual(resp.context['results'].count(), 4);
         
