@@ -9,16 +9,25 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			// Column headers with class nosort should be disabled. The code below collects them in 
-			// an array which will be used when registering the table. 
-			var noSort = [];
+			// an array which will be used when registering the table.
+			var noSort = {};
 			$("#sort-table").find("th.nosort").each(function(){
 				var i = $(this).index();
 				noSort[i] = { sorter: false }
 			});
+			// This sets the first sortable column to be the initial sortList.
+			var lastItem = $("#sort-table th").last().index();
+			var sortList = [];
+			for (var i=0; i <= lastItem; i++){
+				if (!noSort[i]) {
+					sortList = [[i, 0]]
+					break;
+				}
+			}
 			// Sets up the tablesorter plugin 
 			$("#sort-table").tablesorter({
 				headers: noSort,
-				sortList: [[0,0]]
+				sortList: sortList
 			});
 			// Implements search box show/hide feature 
 			$("#search-box-toggle").click(function(){
