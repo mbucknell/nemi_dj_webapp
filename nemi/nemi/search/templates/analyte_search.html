@@ -14,11 +14,11 @@
 					<input id="find-analytes" onclick="return showAnalyteFind('{% url search-analyte_select %}')" type="button" value="Find...">
 					</td>
 			</tr>
-			<tr><th>{{ search_form.media_name.label }}:</th><td>{{ search_form.media_name }}</td></tr>
-			<tr><th>{{ search_form.source.label }}:</th><td>{{ search_form.source }}</td></tr>
-			<tr><th>{{ search_form.instrumentation.label }}:</th><td>{{ search_form.instrumentation }}</td></tr>
-			<tr><th>{{ search_form.method_subcategory.label }}:</th><td>{{ search_form.method_subcategory }}</td></tr>
-			<tr><th>{{ search_form.method_types.label }}:</th><td>{{ search_form.method_types.errors }}{{ search_form.method_types }}</td></tr>
+			<tr><th>{{ search_form.media_name.label_tag }}:</th><td>{{ search_form.media_name }}</td></tr>
+			<tr><th>{{ search_form.source.label_tag }}:</th><td>{{ search_form.source }}</td></tr>
+			<tr><th>{{ search_form.instrumentation.label_tag }}:</th><td>{{ search_form.instrumentation }}</td></tr>
+			<tr><th>{{ search_form.method_subcategory.label_tag }}:</th><td>{{ search_form.method_subcategory }}</td></tr>
+			<tr><th>{{ search_form.method_types.label_tag }}:</th><td>{{ search_form.method_types.errors }}{{ search_form.method_types }}</td></tr>
 			<tr><td></td><td><input id="search-button" type="submit" value="Search NEMI"/></td></tr>				
 		</table>
 	</form>
