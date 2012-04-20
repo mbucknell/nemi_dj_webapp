@@ -723,35 +723,90 @@ class StatisticalMethodManager(models.Manager):
 class SourceCitationRef(models.Model):
     
     source_citation_id = models.IntegerField(primary_key=True) 
-    source_citation = models.CharField(max_length=30, blank=False, help_text='Source citation')
-    source_citation_name = models.CharField(max_length=450, verbose_name="citation", help_text="Description of source citation")
+    source_citation = models.CharField(max_length=30, 
+                                       blank=False, 
+                                       help_text='Source citation')
+    source_citation_name = models.CharField(max_length=450, 
+                                            verbose_name="citation", 
+                                            help_text="Description of source citation")
     source_citation_information = models.CharField(max_length=1500)
     insert_person = models.ForeignKey(User, null=True)
     insert_date = models.DateField(auto_now_add=True)
     update_date = models.DateField(auto_now=True)
-    approve_flag = models.CharField(max_length=1, choices=[('N', 'No'), ('Y', 'Yes')], default='N')
-    title = models.CharField(max_length=450, help_text='Citation\'s full title')
-    author = models.CharField(max_length=450, help_text='Citation author(s)')
-    abstract_summary = models.CharField(max_length=2000, blank=True, verbose_name='abstract/summary statement', help_text='Abstract/summary statement')
-    table_of_contents = models.CharField(max_length=1000, blank=True, help_text="Major headings")
-    link = models.CharField(max_length=450, blank=True, help_text="Link to source citation")
-    notes = models.CharField(max_length=600, blank=True, verbose_name='special notes or comments', help_text='Special notes or comments about this citation')
-    publication_year = models.IntegerField(max_length=4, null=True, help_text='Publication year')
+    approve_flag = models.CharField(max_length=1, 
+                                    choices=[('N', 'No'), ('Y', 'Yes')], 
+                                    default='N')
+    title = models.CharField(max_length=450, 
+                             help_text='Citation\'s full title')
+    author = models.CharField(max_length=450, 
+                              help_text='Citation author(s)')
+    abstract_summary = models.CharField(max_length=2000, 
+                                        blank=True, 
+                                        verbose_name='abstract/summary statement', 
+                                        help_text='Abstract/summary statement')
+    table_of_contents = models.CharField(max_length=1000, 
+                                         blank=True, 
+                                         help_text="Major headings")
+    link = models.CharField(max_length=450, 
+                            blank=True, 
+                            help_text="Link to source citation")
+    notes = models.CharField(max_length=600, 
+                             blank=True, 
+                             verbose_name='special notes or comments', 
+                             help_text='Special notes or comments about this citation')
+    publication_year = models.IntegerField(max_length=4, 
+                                           null=True, 
+                                           help_text='Publication year')
     citation_type = models.ForeignKey(CitationTypeRef)
-    source_organization = models.ForeignKey(MethodSourceRef, null=True, blank=True, help_text="Source organization")
-    country = models.CharField(max_length=100, blank=True, help_text='Country where published')
-    complexity = models.CharField(max_length=10, choices=COMPLEXITY_CHOICES, help_text='Method complexity')
-    level_of_training = models.CharField(max_length=20, choices=LEVEL_OF_TRAINING_CHOICES, help_text='Your level of statistical training')
-    item_type = models.ForeignKey(StatisticalItemType, null=True, help_text='Select one item type')
-    item_type_note = models.CharField(max_length=50, blank=True, verbose_name='if other type selected, please describe', help_text='Add a description if item type is other')
-    analysis_types = models.ManyToManyField(StatisticalAnalysisType, null=True, help_text='Select citation purpose')
-    sponser_types = models.ManyToManyField(StatisticalSourceType, null=True, verbose_name='publication source type', help_text='Select one or more publication source types')
-    sponser_type_note = models.CharField(max_length=50, blank=True, verbose_name='if other source selected, please describe', help_text='Add a description if publication source type is other')
-    media_emphasized = models.ManyToManyField(MediaNameDOM, null=True, help_text='Media emphasized but not limited to')
-    media_emphasized_note = models.CharField(max_length=50, blank=True, verbose_name='If other media selected, please describe', help_text="Add a description if media emphasized is other")
-    subcategory = models.CharField(max_length=150, blank=True, verbose_name='media subcategory', help_text='Enter a media subcategory if appropriate')
-    design_objectives = models.ManyToManyField(StatisticalDesignObjective, null=True, help_text = 'Select all design or data analysis objectives that apply')
-    special_topics = models.ManyToManyField(StatisticalTopics, null=True, blank=True)
+    source_organization = models.ForeignKey(MethodSourceRef, 
+                                            null=True, 
+                                            blank=True, 
+                                            help_text="Source organization")
+    country = models.CharField(max_length=100, 
+                               blank=True, 
+                               help_text='Country where published')
+    complexity = models.CharField(max_length=10, 
+                                  choices=COMPLEXITY_CHOICES, 
+                                  help_text='Relatively speaking...')
+    level_of_training = models.CharField(max_length=20, 
+                                         choices=LEVEL_OF_TRAINING_CHOICES, 
+                                         help_text='Your level of statistical training')
+    item_type = models.ForeignKey(StatisticalItemType, 
+                                  null=True, 
+                                  help_text='The form of the item, e.g., book, journal article, web site, etc.')
+    item_type_note = models.CharField(max_length=50, 
+                                      blank=True, 
+                                      verbose_name='if other type selected, please describe', 
+                                      help_text='Add a description if item type is other')
+    analysis_types = models.ManyToManyField(StatisticalAnalysisType, 
+                                            null=True, 
+                                            help_text='Do you already have the data or are you designing a monitoring program?')
+    sponser_types = models.ManyToManyField(StatisticalSourceType, 
+                                           null=True, 
+                                           verbose_name='publication source type', 
+                                           help_text='What type of organization produced this item?')
+    sponser_type_note = models.CharField(max_length=50, 
+                                         blank=True, 
+                                         verbose_name='if other source selected, please describe', 
+                                         help_text='Add a description if publication source type is other')
+    media_emphasized = models.ManyToManyField(MediaNameDOM, 
+                                              null=True, 
+                                              help_text='Water, air, biological tissue, other?')
+    media_emphasized_note = models.CharField(max_length=50, 
+                                             blank=True, 
+                                             verbose_name='If other media selected, please describe', 
+                                             help_text="Add a description if media emphasized is other")
+    subcategory = models.CharField(max_length=150, 
+                                   blank=True, 
+                                   verbose_name='media subcategory', 
+                                   help_text='Enter a media subcategory if appropriate')
+    design_objectives = models.ManyToManyField(StatisticalDesignObjective, 
+                                               null=True, 
+                                               help_text = 'What water resources information need are you addressing, e.g., time trends, standards evaluation, etc.?')
+    special_topics = models.ManyToManyField(StatisticalTopics, 
+                                            null=True, 
+                                            blank=True,
+                                            help_text='Looking for help with nondetect, autocorrelation, data collected using sensor, etc.?')
     
     objects = models.Manager()
     stat_methods = StatisticalMethodManager()

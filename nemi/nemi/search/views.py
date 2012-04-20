@@ -1193,20 +1193,20 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
         if form.cleaned_data['complexity'] != 'all':
             qs = qs.filter(complexity__exact=form.cleaned_data['complexity'])
             
-        if form.cleaned_data['analysis_types']:
-            qs = qs.filter(analysis_types__exact=form.cleaned_data['analysis_types'])
+        if form.cleaned_data['analysis_type']:
+            qs = qs.filter(analysis_types__exact=form.cleaned_data['analysis_type'])
             
         if form.cleaned_data['publication_source_type']:
             qs = qs.filter(sponser_types__exact=form.cleaned_data['publication_source_type'])
             
-        if form.cleaned_data['design_objectives']:
-            qs = qs.filter(design_objectives__exact=form.cleaned_data['design_objectives'])
+        if form.cleaned_data['study_objective']:
+            qs = qs.filter(design_objectives__exact=form.cleaned_data['study_objective'])
             
         if form.cleaned_data['media_emphasized']:
             qs = qs.filter(media_emphasized__exact=form.cleaned_data['media_emphasized'])
             
-        if form.cleaned_data['special_topics']:
-            qs = qs.filter(special_topics__exact=form.cleaned_data['special_topics'])
+        if form.cleaned_data['special_topic']:
+            qs = qs.filter(special_topics__exact=form.cleaned_data['special_topic'])
             
         return qs
             
@@ -1214,11 +1214,11 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
         criteria = []
         criteria.append(get_criteria_from_field_data(form, 'item_type'))
         criteria.append(get_criteria(form['complexity']))
-        criteria.append(get_criteria_from_field_data(form, 'analysis_types'))
+        criteria.append(get_criteria_from_field_data(form, 'analysis_type'))
         criteria.append(get_criteria_from_field_data(form, 'publication_source_type'))
-        criteria.append(get_criteria_from_field_data(form, 'design_objectives'))
+        criteria.append(get_criteria_from_field_data(form, 'study_objective'))
         criteria.append(get_criteria_from_field_data(form, 'media_emphasized'))
-        criteria.append(get_criteria_from_field_data(form, 'special_topics'))
+        criteria.append(get_criteria_from_field_data(form, 'special_topic'))
         
         return {'criteria' : criteria}
         

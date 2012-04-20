@@ -1,7 +1,7 @@
 ''' This module contains the forms needed to implement the NEMI search pages '''
 
 from django.forms import Form, ModelForm, ChoiceField, MultipleChoiceField, CheckboxSelectMultiple, RadioSelect, CharField, SelectMultiple, TextInput, HiddenInput
-from django.forms import Textarea, ModelMultipleChoiceField
+from django.forms import Textarea, ModelMultipleChoiceField, Select
 from django.utils.safestring import mark_safe
 from models import MethodVW, MediaNameDOM, InstrumentationRef, MethodSubcategoryRef, MethodSourceRef, AnalyteCodeVW, AnalyteCodeRel, MethodAnalyteAllVW
 from models import StatisticalItemType, COMPLEXITY_CHOICES, StatisticalAnalysisType, StatisticalSourceType, StatisticalDesignObjective, RegulationRef
@@ -302,13 +302,33 @@ class TabularSearchForm(Form):
 class StatisticalSearchForm(Form):
     '''Extends the standard form to implement the query filtering form for the Statistical Methods'''
     
-    item_type = ModelChoiceField(queryset=StatisticalItemType.objects.all(), empty_label='Any', required=False)
-    complexity = ChoiceField(choices=[(u'all', u'Any')] + COMPLEXITY_CHOICES, required=False)
-    analysis_types = ModelChoiceField(queryset=StatisticalAnalysisType.objects.all(), empty_label='Any', required=False)
-    publication_source_type = ModelChoiceField(queryset=StatisticalSourceType.objects.all(), empty_label='Any', required=False)
-    design_objectives = ModelChoiceField(queryset=StatisticalDesignObjective.objects.all(), empty_label='Any', required=False)
-    media_emphasized = ModelChoiceField(queryset=MediaNameDOM.stat_media.all(), empty_label='Any', required=False)
-    special_topics = ModelChoiceField(queryset=StatisticalTopics.objects.all(), empty_label='Any', required=False)
+    item_type = ModelChoiceField(queryset=StatisticalItemType.objects.all(), 
+                                 empty_label='Any', 
+                                 required=False, 
+                                 help_text='The form of the item, e.g., book, journal article, web site, etc.')
+    complexity = ChoiceField(choices=[(u'all', u'Any')] + COMPLEXITY_CHOICES, 
+                             required=False,
+                             help_text='Relatively speaking...')
+    analysis_type = ModelChoiceField(queryset=StatisticalAnalysisType.objects.all(), 
+                                     empty_label='Any', 
+                                     required=False,
+                                     help_text='Do you already have the data or are you designing a monitoring program?')
+    publication_source_type = ModelChoiceField(queryset=StatisticalSourceType.objects.all(), 
+                                               empty_label='Any', 
+                                               required=False,
+                                               help_text='What type of organization produced this item?')
+    study_objective = ModelChoiceField(queryset=StatisticalDesignObjective.objects.all(), 
+                                       empty_label='Any', 
+                                       required=False,
+                                       help_text='What water resources information need are you addressing, e.g., time trends, standards, evaluation, etc?')
+    media_emphasized = ModelChoiceField(queryset=MediaNameDOM.stat_media.all(), 
+                                        empty_label='Any', 
+                                        required=False,
+                                        help_text='Water, air, biological tissue, other?')
+    special_topic = ModelChoiceField(queryset=StatisticalTopics.objects.all(), 
+                                     empty_label='Any', 
+                                     required=False,
+                                     help_text='Looking for help with nondetects, autocorrelation, data collected using sensors, etc?')
     
 class StatisticalSourceEditForm(ModelForm):
     '''Extends the ModelForm to implement the statistical source edit form.
@@ -377,11 +397,11 @@ class StatisticalSourceEditForm(ModelForm):
         # be fixed in 1.4 but won't be done in 1.3.x versions.
         # For now, I'll have to duplicate the help text here.
         
-        self.fields['analysis_types'].help_text = 'Select citation purpose'
-        self.fields['sponser_types'].help_text = 'Select one or more sponser/publishing types'
-        self.fields['media_emphasized'].help_text = 'Media emphasized by not limited to'
-        self.fields['design_objectives'].help_text = 'Select all design or data analysis objectives that apply'
-        self.fields['special_topics'].help_text = 'Select all special topics that apply'
+        self.fields['analysis_types'].help_text = 'Do you already have the data or are you designing a monitoring program?'
+        self.fields['sponser_types'].help_text = 'What type of organization produced this item?'
+        self.fields['media_emphasized'].help_text = 'Water, air, biological tissue, other?'
+        self.fields['design_objectives'].help_text = 'What water resources information need are you addressing, e.g., time trends, standards evaluation, etc.?'
+        self.fields['special_topics'].help_text = 'Looking for help with nondetect, autocorrelation, data collected using sensor, etc.?'
 
         # We may want to get the verbose help from a database.
         self.fields['source_citation'].verbose_help = 'The published literature citation of the method, or volume from which the method comes. Ordering information is also included (if available).'
