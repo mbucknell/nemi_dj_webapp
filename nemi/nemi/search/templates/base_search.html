@@ -5,7 +5,8 @@
 	<!-- Imports the tablesorter and ui plugins -->
 	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.min.js"></script>
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.8.16.custom.min.js"></script>
-	
+	<script src="{{ STATIC_URL }}script/jquery.stickytableheaders.js"></script>
+
 	<script type="text/javascript">
 		$(document).ready(function(){
 			// Column headers with class nosort should be disabled. The code below collects them in 
@@ -29,6 +30,8 @@
 				headers: noSort,
 				sortList: sortList
 			});
+			// Sets up sticky headers for the sort table.
+			$.StickyTableHeaders($('#sort-table'));
 			// Implements search box show/hide feature 
 			$("#search-box-toggle").click(function(){
 				if ($("#search-box-body").is(":hidden")) {
