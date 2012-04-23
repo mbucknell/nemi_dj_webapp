@@ -31,7 +31,8 @@
 				sortList: sortList
 			});
 			// Sets up sticky headers for the sort table.
-			$.StickyTableHeaders($('#sort-table'));
+			//NOTE: leaving out for now beause it is incredibly slow on IE. 
+//			$('#sort-table').stickyTableHeaders();
 			// Implements search box show/hide feature 
 			$("#search-box-toggle").click(function(){
 				if ($("#search-box-body").is(":hidden")) {
