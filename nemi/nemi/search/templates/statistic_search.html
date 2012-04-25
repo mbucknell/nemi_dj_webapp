@@ -10,7 +10,7 @@
 {% block sidebar_nav %} {% endblock %}
 
 {% block search_box_body %}
-	<p>Select search criteria from the drop down menus below and press 'Search NEMI' to perform a search.</p>
+	<p>Select criteria from the drop down menus below and press 'Search NEMI' to perform a search.</p>
 	<form action="{% url search-statistics %}" method="get"> {% csrf_token %}
  		<h4> {{search_form.non_field_errors }} </h4>
 		<table id="search-table">
