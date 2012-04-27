@@ -66,7 +66,7 @@
 				{% if insert_user %}
 					<tr><th>User who created the method:</th><td>{{ insert_user.get_full_name }} - {{ insert_user.username }}</td></tr>
 				{% else %}
-					<tr><th>Username:</th><td>{{ user.get_full_name }} - {{ user.username }}</td></tr>
+					<tr><th>Username:</th><td></td><td>{{ user.get_full_name }} - {{ user.username }}</td></tr>
 				{% endif %}			
 				{% for field in form  %}
 					<tr>
@@ -77,13 +77,15 @@
 							{{ field.label_tag }}:
 						{% endif %}
 						</label></th>
-						<td>{{ field }}
+						<td style="vertical-align: top;">
 							{% if field|verbose_help %}
 								<div style="display: inline-block; margin: 4px;" >
 								<img id="field-help" src="{{ STATIC_URL }}images/q_mark.gif"
 			 				onclick="javascript:showInfo('{{ field.label}}', '{{ field|verbose_help }}')">	
 								</div>
 							{% endif %}
+						</td>
+						<td>{{ field }}</td>
 						</td>
 						<td>{{ field.errors }}</td>
 					</tr>

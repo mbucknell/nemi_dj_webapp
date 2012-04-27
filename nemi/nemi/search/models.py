@@ -724,8 +724,9 @@ class SourceCitationRef(models.Model):
     
     source_citation_id = models.IntegerField(primary_key=True) 
     source_citation = models.CharField(max_length=30, 
-                                       blank=False, 
-                                       help_text='Source citation')
+                                       blank=False,
+                                       verbose_name='source abbreviation',
+                                       help_text='Enter an acroynym or shortened name')
     source_citation_name = models.CharField(max_length=450, 
                                             verbose_name="citation", 
                                             help_text="Description of source citation")

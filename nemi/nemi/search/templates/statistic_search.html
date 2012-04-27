@@ -27,26 +27,22 @@
 
 {% block results_table_header %}
 	<th class="nosort"></th> 
+	<th>Author</th>
     <th>Title</th>
 	<th>Source Organization</th>
+	<th>Link</th>	
 	<th>Country</th>
-	<th>Author</th>
-	<th>Source Citation</th>
-	<th>Link</th>
-	<th>Notes</th>
 {% endblock %}
 
 {% block results_table_data %}
 	{% for r in results %}
 		<tr>
 			<td><a title="View source details" href={%url search-statistical_source_summary r.source_citation_id %}>View</a></td> 
+			<td>{{ r.author }}</td>
   			<td>{{ r.title }}</td>
 			<td>{{ r.source_organization }}</td>
-			<td>{{ r.country }}</td>
-			<td>{{ r.author }}</td>
-			<td>{{ r.source_citation }}</td>
 			<td><a href={{ r.link }} target="_blank">{{ r.link }}</a></td>
-			<td>{{ r.notes }}</td>
+			<td>{{ r.country }}</td>
 		</tr>
 	{% endfor %}
 {% endblock %}

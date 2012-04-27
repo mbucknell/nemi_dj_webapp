@@ -404,4 +404,4 @@ class StatisticalSourceEditForm(ModelForm):
         self.fields['special_topics'].help_text = 'Looking for help with nondetect, autocorrelation, data collected using sensor, etc.?'
 
         # We may want to get the verbose help from a database.
-        self.fields['source_citation'].verbose_help = 'The published literature citation of the method, or volume from which the method comes. Ordering information is also included (if available).'
+        self.fields['source_citation_name'].verbose_help = 'The published literature citation of the method, or volume from which the method comes. Ordering information is also included (if available).'
