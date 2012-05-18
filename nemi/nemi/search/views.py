@@ -15,9 +15,9 @@ from django.views.generic import View, DetailView, ListView
 from django.views.generic.edit import TemplateResponseMixin, CreateView, UpdateView
 
 # project specific packages
-from forms import GeneralSearchForm, AnalyteSearchForm, AnalyteSelectForm, KeywordSearchForm, MicrobiologicalSearchForm, RegulatorySearchForm
+from forms import GeneralSearchForm, AnalyteSearchForm, KeywordSearchForm, MicrobiologicalSearchForm, RegulatorySearchForm
 from forms import BiologicalSearchForm, ToxicitySearchForm, PhysicalSearchForm, StatisticalSearchForm, StatisticalSourceEditForm, TabularSearchForm
-from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw
+from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw, AnalyteCodeVW
 from models import RegQueryVW, SourceCitationRef, CitationTypeRef, RegulatoryMethodReport
 from utils.forms import get_criteria, get_criteria_from_field_data, get_multi_choice
 from utils.view_utils import dictfetchall, xls_response, tsv_response
@@ -441,22 +441,26 @@ class AnalyteSearchView(SearchResultView, AnalyteSearchFormMixin):
         '''
         return {'results' : [{'m' : r, 'greenness' : _greenness_profile(r)} for r in self.get_values_qs(qs)]}
 
-class AnalyteSelectView(View, TemplateResponseMixin):
-    ''' Extends the standard view to implement the analyte select pop up page. '''
-
-    template_name = 'find_analyte.html'
+class AnalyteSelectView(View):
+    ''' Extends the standard view to implement a view which returns json data containing
+    a list of the matching analyte values in values_list key.
+    '''
     
     def get(self, request, *args, **kwargs):
         if request.GET:
-            select_form = AnalyteSelectForm(request.GET)
-            kind = request.GET.get('kind', 'name')
+            if request.GET['selection']:
+                if request.GET['kind'] == 'code':
+                    qs = AnalyteCodeVW.objects.filter(
+                        analyte_analyte_code__icontains=request.GET['selection']).order_by('analyte_analyte_code').values_list('analyte_analyte_code', 
+                                                                                                                               flat=True).distinct()
+                else:
+                    qs = AnalyteCodeRel.objects.filter(analyte_name__icontains=request.GET['selection']).order_by('analyte_name').values_list('analyte_name', flat=True)                                   
+                
+                if qs.count() > 0:
+                    qs_str = '[' + ', '.join('"%s"' % v for v in qs) + ']'
+                    return HttpResponse('{"values_list" : ' +  qs_str+ "}", mimetype="application/json")
             
-        else:
-            select_form = AnalyteSelectForm(request.GET)
-            kind = 'name'
-            
-        return self.render_to_response({'select_form' : select_form,
-                                        'kind' : kind})
+        return HttpResponse('{"values_list" : ""}', mimetype="application/json")
         
 
 class MicrobiologicalSearchView(SearchResultView, FilterFormMixin):

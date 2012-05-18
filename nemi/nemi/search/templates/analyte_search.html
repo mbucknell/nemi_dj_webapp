@@ -6,12 +6,15 @@
 {% endblock %}
 
 {% block search_box_body %}
+	{% include "find_analyte_dialog.html" with analyte_value_id="analyte-search-value" %}
 	<form id="search-form" action={% url search-analyte %} method="get">{% csrf_token %}
 		<table id="search-table">
 			<tr>
 					<th>Analyte (required):</th>
 					<td style="white-space: nowrap;" id='kind-element'>{{ search_form.analyte_kind }}{{ search_form.analyte_value }}{{ search_form.analyte_value.errors }}
-					<input id="find-analytes" onclick="return showAnalyteFind('{% url search-analyte_select %}')" type="button" value="Find...">
+					<input id="find-analytes" 
+						onclick="return showAnalyteDialog($('input:radio[name=analyte_kind]:checked').val(), $('#analyte-search-value').val())"
+						 type="button" value="Find...">
 					</td>
 			</tr>
 			<tr><th>{{ search_form.media_name.label_tag }}:</th><td>{{ search_form.media_name }}</td></tr>

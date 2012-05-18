@@ -128,35 +128,7 @@ class AnalyteSearchForm(Form):
         qs = MethodVW.objects.order_by('method_type_desc').values_list('method_type_desc', flat=True).distinct()
         self.fields['method_types'].choices = [(desc, desc) for desc in qs]
         self.fields['method_types'].initial = [desc for desc in qs]
-
                   
-class AnalyteSelectForm(Form):
-    ''' This class extends the standard Form to implement the analyte select form. This form
-    allows the user to enter a partial string to and then see which analytes match that string.
-    The analyte kind (by name or code) is set when the form is instantiated by setting the kind field. If
-    the kind is not code, it is assumed to be name. If the selection field is not empty, the values_list is filled
-    in by querying the database for analyte name/code that contain the string in the selection field.
-    '''
-    
-    kind = CharField(widget=HiddenInput())
-    selection = CharField()
-    values_list = ChoiceField(widget=SelectMultiple(attrs={'id': 'values-list',
-                                                           'size' : 20}))
-
-    def __init__(self, *args, **kwargs):
-        super(AnalyteSelectForm, self).__init__(*args, **kwargs)
-        
-        if 'selection' in self.data:
-            value = self.data['selection']
-            if value != "":
-                if self.data['kind'] == 'code':
-                    qs = AnalyteCodeVW.objects.filter(analyte_analyte_code__icontains=value).order_by('analyte_analyte_code').values_list('analyte_analyte_code', flat=True).distinct()
-                
-                else:
-                    qs = AnalyteCodeRel.objects.filter(analyte_name__icontains=value).order_by('analyte_name').values_list('analyte_name', flat=True)
-                
-                self.fields['values_list'].choices=[(choice, choice) for choice in qs]    
-
 class KeywordSearchForm(Form):
     
     ''' Extends the standard Form to implement the keyword search form. 
