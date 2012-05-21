@@ -10,13 +10,12 @@
 {% block content %}
 	<h2>Statistical Source Details</h2>
 	{% if data %}
-		{% load data_format %}
 		<table class="info-table">
 			<tr><th>Source Abbreviation</th><td>{{ data.source_citation }}</td>
 			<tr><th>Title</th><td>{{ data.title }}</td></tr>
 			<tr><th>Author</th><td>{{ data.author }}</td></tr>
-			<tr><th>Abstract/Summary Statement</th><td>{{ data.abstract_summary|obey_linefeeds }}</td></tr>
-			<tr><th>Table of Contents</th><td>{{ data.table_of_contents|obey_linefeeds }}</td></tr>
+			<tr><th>Abstract/Summary Statement</th><td>{{ data.abstract_summary|linebreaksbr }}</td></tr>
+			<tr><th>Table of Contents</th><td>{{ data.table_of_contents|linebreaksbr }}</td></tr>
 			<tr><th>Citation</th><td>{{ data.source_citation_name }}</td></tr>
 			<tr><th>Source Organization</th><td>{{ data.source_organization }}</td></tr>
 			<tr><th>Source Organization Country</th><td>{{ data.country }}</td></tr>

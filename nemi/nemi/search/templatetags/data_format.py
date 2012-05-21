@@ -30,30 +30,3 @@ def decimal_format(num):
 ## Set flag to indicate that the function does not introduce any HTML unsafe characters.
 decimal_format.is_safe = True
 
-@register.filter(name='obey_linefeeds')
-@stringfilter
-def obey_linefeeds(data, autoescape=None):
-    '''Returns data with <br /> substituted for any line feeds.
-    Filter correctly handles autoescaping.
-    '''
-    #If auto escape is used, we will need to escape the data string.
-    if autoescape:
-        esc = conditional_escape
-    else:
-        esc = lambda x: x
-        
-    lines = data.splitlines()
-    if lines:
-        result = esc(lines[0])
-        i = 1
-        while (i < len(lines)):
-            result += '<br />%s' % esc(lines[i])
-            i += 1
-        
-        return mark_safe(result)
-    else:
-        return data
-    
-obey_linefeeds.needs_autoescape = True
-
-        
