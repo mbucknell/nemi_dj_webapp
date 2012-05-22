@@ -33,6 +33,10 @@ a[class='popup']{
    padding-left: 18px;
    background: transparent url(Icon-Extlink.png) no-repeat center left;
 }
+.external-link a {
+	padding-left: 18px;
+	background: transparent url(Icon-Extlink.png) no-repeat center left;
+}
 .abbrev{
 	cursor: help;
 }
@@ -208,4 +212,8 @@ column in the table */
 }
 #data-entry-table ul {
 	list-style-type: none;
+}
+.method-subcategory-div {
+	position: relative;
+	left: 4em;
 }

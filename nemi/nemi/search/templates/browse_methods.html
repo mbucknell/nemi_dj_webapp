@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}NEMI Browse Methods{% endblock %}
+
+{% block page_script %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$(".method-subcategory-div").each(function(){
+				var tableEl = $(this).find("table");
+				$(this).find('img').click(function(){
+					if ($(this).attr('alt') == 'show') {
+						$(this).attr('src', "{{ STATIC_URL }}/images/triangle-down-image36.gif");
+						$(this).attr('alt', 'hide');
+						tableEl.show();
+					}
+					else{
+						$(this).attr('src', "{{ STATIC_URL }}/images/triangle-right-image36.gif");
+						$(this).attr('alt', 'show');
+						tableEl.hide();
+					}
+				});
+			});
+		});
+	</script>
+{% endblock %}
+
+{% block content %}
+	{% load data_format %}
+	<p style="font-size: large;"><b>NEMI contains {{ object_list|length }} methods.</b></p>
+	{% regroup object_list by method_category as objects_by_category %}
+	{% for by_category in objects_by_category %}
+		<h2>{{ by_category.grouper|lower|capfirst }} - {{ by_category.list|length}} methods</h2>
+		{% regroup by_category.list by method_subcategory as objects_by_subcategory %}
+		{% for by_subcategory in objects_by_subcategory %}
+			<div class="method-subcategory-div">
+				<h4><img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" />&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>				
+				<table class="data-table" style="display:none;">
+					<tr><th></th><th>Method Number</th><th>Method Descriptive Name</th><th>Method Source</th></tr>
+					{% for object in by_subcategory.list %}
+						<tr>
+							<td><input type=button onclick="return showNewPage('{% url search-method_summary object.method_id %}');" value="View"/></td>
+							<td>{{ object.source_method_identifier }}</td>
+							<td>{{ object.method_descriptive_name }}</td>
+							<td>
+								<a title="Click to show/hide details" 
+								href="javascript:show_hide('#{{ object.method_id }}-method-source-detail')">
+								{% if "EPA" in object.method_source %}
+									EPA
+								{% else %}
+								   {% if "USGS" in object.method_source %}
+										USGS
+									{% else %}
+										{{ object.method_source }}
+									{% endif %}
+								{% endif %}
+								</a>
+								<div id="{{ object.method_id }}-method-source-detail" style="display: none;">
+									<table class="inside-table">
+										<tr><th>Contact Information:</th><td>{{ object.method_source_contact|safe }}</td></tr>
+										<tr>
+											<th>URL:</th>
+											<td><span class="external-link">{{ object.method_source_url|clickable_links }}</span></td>
+										</tr>
+									</table>
+								</div>
+							</td>
+						</tr>
+					{% endfor %}
+				</table>
+			</div>
+		{% endfor %}
+	{% endfor %}
+{% endblock %}

@@ -99,4 +99,7 @@ urlpatterns = patterns("",
         url(r'^method_summary_reg/(?P<rev_id>\d+)/$',
             views.RegulatoryMethodSummaryView.as_view(),
             name='search-method_summary_reg'),
+        url(r'^browse_methods/$',
+            views.BrowseMethodsView.as_view(),
+            name='search-browse'),
         )

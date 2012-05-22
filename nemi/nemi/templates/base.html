@@ -8,13 +8,26 @@
 		<title>{% block title %}National Environmental Methods Index{% endblock %}</title>
 	    <script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery-latest.js"></script>		
 		<script type="text/javascript">
-			function winPopup(url) {
-				w = window.open(url, 'winPopup', 'Scrollbars=1, resizable=1, width=400, height=400');
+			$(document).ready(function(){
+				// Any link wrapped in an external-link class should have the target attribute set to
+				// open the link in a new browser window or tab.
+				$('.external-link a').attr('target','_blank');
+			});
+			// Open the url in a new tab or window
+			function showOnNewWindow(url) {
+				w = window.open(url);
 				if (w.opener == null) {
 					w.opener = self;
 				}
 				w.focus();
+				return false;
 			}
+			// Open the url in the same browser window or tab
+			function showNewPage(url) {
+				w = window.open(url, '_self');
+				return false;
+			}
+			// Toggle the visibility of the element divID.
 			function show_hide(divID){
 				if ($(divID).is(":hidden")) {
 					$(divID).show();

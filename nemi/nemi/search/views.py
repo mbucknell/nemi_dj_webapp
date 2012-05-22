@@ -134,7 +134,7 @@ class SearchResultView(View, TemplateResponseMixin):
                 header_defs.append(def_qs.get(definition_abbrev=abbrev))
             except(DefinitionsDOM.MultipleObjectsReturned, DefinitionsDOM.DoesNotExist):
                 header_defs.append(DefinitionsDOM(definition_name=abbrev.replace('_', ' ').title(),
-                                                  definition_description='No definition available.')) 
+                                                  definition_description='')) 
             
         return header_defs
 
@@ -940,6 +940,16 @@ ORDER BY score(1) desc;')
             #Render a blank form
             form = KeywordSearchForm()
             return self.render_to_response({'form' : form})
+        
+class BrowseMethodsView(ListView):
+    '''
+    Extends ListView to implement the browse all methods page. Methods are sorted by category, subcategory, 
+    and identifier.
+    '''
+    template_name = 'browse_methods.html'
+    
+    queryset = MethodVW.objects.order_by('method_category', 'method_subcategory', 'source_method_identifier')
+    
         
 class BaseMethodSummaryView(View, TemplateResponseMixin):
     '''Extends the basic view to implement a method summary page. This class

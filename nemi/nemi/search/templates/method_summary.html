@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}NEMI Method Summary{% endblock %}
 {% block content %}
+	{% load data_format %}
 	<h2>Method Summary</h2>
 	{% if data %}
 		<table class="info-table">
@@ -22,13 +23,8 @@
 			</tr>
 			<tr><th>Subcategory</th><td>{{ data.method_subcategory }}</td></tr>
 			<tr><th>Method Source</th>
-				<td><a title="Click to show/hide details" href="javascript:show_hide('#method-source-detail')">{{ data.method_source_name }}</a>
-					<div id="method-source-detail" style="display: none;">
-						<table class="inside-table">
-							<tr><th>Contact Information:</th><td>{{ data.method_source_contact|safe }}</td></tr>
-							<tr><th>URL:</th><td>{{ data.method_source_url }}</td></tr>
-						</table>
-					</div>
+				<td>
+					{% include "method_source_details.html" with r=data %}
 				</td>
 			</tr>
 			<tr><th>Citation</th>

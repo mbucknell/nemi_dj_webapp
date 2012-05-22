@@ -51,7 +51,7 @@
 					{{ r.METHOD_SOURCE }}:&nbsp;{{ r.METHOD_OFFICIAL_NAME }}<br />
 					{% if r.LINK_TO_FULL_METHOD %}
 						This is a proprietary method. 
-						<a class="popup" href="javascript:winPopup('{{  r.LINK_TO_FULL_METHOD }}')" title="Link to method owner's method documentation (in a new window)">
+						<a class="popup" href="javascript:showOnNewWindow('{{  r.LINK_TO_FULL_METHOD }}')" title="Link to method owner's method documentation (in a new window)">
 						Please visit the method owner's site for method documentation</a>
 					{% else %}
 						{% if r.MIMETYPE %}
