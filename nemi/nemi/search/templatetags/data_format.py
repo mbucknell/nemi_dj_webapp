@@ -1,10 +1,11 @@
 
 from django import template
 from django.template.defaultfilters import stringfilter
-from django.utils.html import conditional_escape
+from django.utils.html import urlize
 from django.utils.safestring import mark_safe
 
 from decimal import Decimal
+import re
 
 
 register = template.Library()
@@ -30,3 +31,18 @@ def decimal_format(num):
 ## Set flag to indicate that the function does not introduce any HTML unsafe characters.
 decimal_format.is_safe = True
 
+@stringfilter
+@register.filter(name='clickable_links')
+def clickable_links(data):
+    '''
+    Returns data translated into clickable links. This is different from the Django provided
+    urlize in two ways. One is the ref attribute in the 'a' tag is not set to nofollow. The
+    second way is that data can contain more than one link as long as they are separated by
+    "<br /> tag. The returned string will insert the <br /> tag between the clickable links.
+    '''
+    
+    # The following line will find any <br> or <br/> tag with spaces within the tag and replace those varients with <br/>
+    urlstr = re.sub('<br(>|/>)','<br/>', data.replace(' ', ''))
+    urls = urlstr.split('<br/>')
+    result = [urlize(u, autoescape=False) for u in urls]
+    return mark_safe('<br />'.join(result))

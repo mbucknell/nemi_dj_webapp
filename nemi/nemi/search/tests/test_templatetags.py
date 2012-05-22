@@ -6,9 +6,8 @@ Created on Mar 14, 2012
 from django.conf import settings
 from django.forms import Form, CharField
 from django.utils import unittest
-from nemi.search.templatetags.data_format import decimal_format, obey_linefeeds
+from nemi.search.templatetags.data_format import decimal_format, clickable_links
 from nemi.search.templatetags.form_field_attr import verbose_help
-
 
 class DecimalFormatTestCase(unittest.TestCase):
 
@@ -32,15 +31,36 @@ class DecimalFormatTestCase(unittest.TestCase):
         #Test with a decimal number with no integer part
         self.assertEqual(decimal_format(.567), 0.567)
         
-class ObeyLineFeedsTestCase(unittest.TestCase):
-    
-    def test_with_no_lfs(self):
-        self.assertEqual(obey_linefeeds('Test data with no lfs'), 'Test data with no lfs')
-
-    def test_with_lfs(self):
-        self.assertEqual(obey_linefeeds('Test data line 1\nTest data line 2'), 'Test data line 1<br />Test data line 2')
-        self.assertEqual(obey_linefeeds('Line 1\nLine 2\nLine 3'), 'Line 1<br />Line 2<br />Line 3')
+class ClickableLinksTestCase(unittest.TestCase):
+    def test_no_link(self):
+        #Test with data that does not represent a link
+        self.assertEqual(clickable_links('Hello'), 'Hello')
         
+    def test_one_link(self):
+        #Test with data with a single link
+        link1 = 'http://www.usgs.gov'
+        self.assertEqual(clickable_links(link1), 
+                         '<a href="' + link1 + '">' + link1 + '</a>')
+    
+    def test_two_links(self):
+        # Test with two links with various variation of the <br> tag as separators.
+        link1 = 'http://www.usgs.gov'
+        link2 = 'http://ww.epa.gov'
+        result = '<a href="' + link1 + '">' + link1 + '</a>' + '<br />' + '<a href="' + link2 + '">' + link2 + '</a>'
+        
+        self.assertEqual(clickable_links(link1 + '<br>' + link2), result)
+        self.assertEqual(clickable_links(link1 + '<br/>' + link2), result)
+        self.assertEqual(clickable_links(link1 + '<br />' + link2), result)
+    
+    def test_two_links_bad_break_tag(self):
+        # Test with two links but with a malformed break tag
+        link1 = 'http://www.usgs.gov'
+        link2 = 'http://www.epa.gov'
+        result = '<a href="' + link1 + '">' + link1 + '</a>' + '<br />' + '<a href="' + link2 + '">' + link2 + '</a>'
+        
+        self.assertNotEqual(clickable_links(link1 + 'br>' + link2), result)
+        self.assertNotEqual(clickable_links(link1 + '<br' + link2), result)
+       
 class VerboseHelpTestCase(unittest.TestCase):
     
     def test_with_no_attributes(self):
