@@ -38,7 +38,7 @@
 					{% for object in by_subcategory.list %}
 						<tr>
 							<td><input type=button onclick="return showNewPage('{% url search-method_summary object.method_id %}');" value="View"/></td>
-							<td>{{ object.source_method_identifier }}</td>
+							<td>{{ object.source_method_identifier|safe }}</td>
 							<td>{{ object.method_descriptive_name }}</td>
 							<td>
 								<a title="Click to show/hide details" 
