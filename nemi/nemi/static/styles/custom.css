@@ -169,7 +169,8 @@ about an object. The headers are meant to be the left most
 column in the table */
 .info-table {
 	text-align: left;
-	border: solid #aaaaaa 1px;
+	border-top: solid #aaaaaa 1px;
+	
 }
 .info-table th {
 	vertical-align: center;
@@ -213,6 +214,7 @@ column in the table */
 #data-entry-table ul {
 	list-style-type: none;
 }
+/* styles the subcategory list on the Browse Methods page */
 .method-subcategory-div {
 	position: relative;
 	left: 4em;

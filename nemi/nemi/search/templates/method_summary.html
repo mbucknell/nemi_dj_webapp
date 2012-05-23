@@ -1,56 +1,59 @@
-{% extends "base.html" %}
+{% extends "base_method_summary.html" %}
+
 {% block title %}NEMI Method Summary{% endblock %}
-{% block content %}
-	{% load data_format %}
-	<h2>Method Summary</h2>
+
+{% block summary_info %}
 	{% if data %}
 		<table class="info-table">
 			<tr>
 				<th>Method Information</th>
 				<td><b>Descriptive Name: </b>{{ data.method_descriptive_name }}<br/>
-					<b>Official Name: </b>{{ data.method_official_name }}<br/>
+					<b>Official Name: </b>{{ data.method_official_name|safe }}<br/>
 					<b>Method Number: </b>{{ data.source_method_identifier|safe }}<br/>
 					<b>Revision: </b>{{ data.revision_information }}
 				</td>
 			</tr>
 			<tr>
-				<th>Media</th>
-				<td><b>Media: </b>{{ data.media_name }}&nbsp;&nbsp;&nbsp;&nbsp;
+				{% include "field_def.html" with field=field_defs.MEDIA_NAME %}
+				<td>{{ data.media_name }}&nbsp;&nbsp;&nbsp;&nbsp;
 					{% if data.waterbody_type %}
 					   <b>       Waterbody type: </b>{{ data.waterbody_type }}
 					{% endif %}
 				</td>
 			</tr>
-			<tr><th>Subcategory</th><td>{{ data.method_subcategory }}</td></tr>
-			<tr><th>Method Source</th>
+			<tr>
+				{% include "field_def.html" with field=field_defs.METHOD_SUBCATEGORY %}
+				<td>{{ data.method_subcategory }}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.METHOD_SOURCE %}
 				<td>
 					{% include "method_source_details.html" with r=data %}
 				</td>
 			</tr>
-			<tr><th>Citation</th>
-				<td><a title="Click to show/hide details" href="javascript:show_hide('#citation-detail')">{{ data.source_citation_name }}</a>
+			<tr>
+				{% include "field_def.html" with field=field_defs.CITATION %}
+				<td><a title="Click to show/hide details" href="javascript:show_hide('#citation-detail')">{{ data.source_citation_name|safe }}</a>
 					<div id="citation-detail" style="display: none;">
 						<table class="inside-table">
-							<tr><th>Method Number:</th><td>{{ data.source_method_identifier|safe }}</td></tr>
-							<tr><th>Method Official Name:</th><td>{{ data.method_official_name }}</td></tr>
 							<tr><th>Citation Information:</th><td>{{ data.source_citation_information }}</td></tr>
 						</table>
 					</div>
 				</td>
 			</tr>
-			<tr><th>Brief Method Summary</th><td>{{ data.brief_method_summary|safe }}</td></tr>
-			<tr><th>Scope and Application</th><td>{{ data.scope_and_application|safe }}</td></tr>
-			<tr><th>Applicable Conc Range</th><td>{{ data.applicable_conc_range }}</td></tr>
-			<tr><th>Method Download</th><td>{% include "method_download.html" %}</td></tr>
-			<tr><th>Interferences</th><td>{{ data.interferences|safe }}</td></tr>
-			<tr><th>QC Requirements</th><td>{{ data.qc_requirements|safe }}</td></tr>
-			<tr><th>Sample Handling</th><td>{{ data.sample_handling|safe }}</td></tr>
-			<tr><th>Max Holding Time</th><td>{{ data.max_holding_time }}</td></tr>
-			<tr><th>Relative Cost/Effort</th><td>{{ data.relative_cost }}</td></tr>
-			<tr><th>Sample Prep Method(s)</th><td>{{ data.sample_prep_methods }}</td></tr>
+			<tr>{% include "field_def.html" with field=field_defs.BRIEF_METHOD_SUMMARY %}<td>{{ data.brief_method_summary|safe }}</td></tr>
+			<tr>{% include "field_def.html" with field=field_defs.SCOPE_AND_APPLICATION %}<td>{{ data.scope_and_application|safe }}</td></tr>
+			<tr>{% include "field_def.html" with field=field_defs.APPLICABLE_CONC_RANGE %}<td>{{ data.applicable_conc_range|safe }}</td></tr>
+			<tr>{% include "field_def.html" with field=field_defs.METHOD_DOWNLOAD %}<td>{% include "method_download.html" %}</td></tr>
+			<tr>{% include "field_def.html" with field=field_defs.INTERFERENCES %}<td>{{ data.interferences|safe }}</td></tr>
+			<tr>{% include "field_def.html" with field=field_defs.QC_REQUIREMENTS %}<td>{{ data.qc_requirements|safe }}</td></tr>
+			<tr>{% include "field_def.html" with field=field_defs.SAMPLE_HANDLING %}<td>{{ data.sample_handling|safe }}</td></tr>
+			<tr>{% include "field_def.html" with field=field_defs.MAX_HOLDING_TIME %}<td>{{ data.max_holding_time }}</td></tr>
+			<tr>{% include "field_def.html" with field=field_defs.RELATIVE_COST %}<td>{{ data.relative_cost }}</td></tr>
+			<tr>{% include "field_def.html" with field=field_defs.SAMPLE_PREP_METHODS %}<td>{{ data.sample_prep_methods }}</td></tr>
 		</table>
 	{% else %}
-	<p>No data found</p>
+		<p>No data found</p>
 	{% endif %}
 	<hr/>
 	<h4>Method <i>{{data.source_method_identifier|safe }}</i> has {{ analyte_data|length }} analyte{{ analyte_data|pluralize }} associated with it.</h4>
@@ -74,32 +77,33 @@
 			{% for a in analyte_data %}
 				<tr>
 					<td>{% include "analyte_synonyms.html" with analyte_name=a.r.analyte_name|force_escape analyte_code=a.r.analyte_code syn=a.syn  %}</td>
+
 					<td>
-						{% if a.dl_value == 999 %}
+						{% if a.r.dl_value == 999 %}
 							N/A
 						{% else %}
-							{{ a.dl_value|floatformat:2 }} <span class="abbrev" title="{{ a.dl_units_description }}">{{ a.dl_units }}</span>
+							{{ a.r.dl_value|floatformat:2 }} <span class="abbrev" title="{{ a.r.dl_units_description }}">{{ a.r.dl_units }}</span>
 						{% endif %}
 					</td>
 					<td>
-						{% if a.accuracy == -999 %}
+						{% if a.r.accuracy == -999 %}
 							N/A
 						{% else %}
-							{{ a.accuracy|floatformat:0}}<span class="abbrev" title="{{ a.accuracy_units_description }}">{{ a.accuracy_units }}</span>
+							{{ a.r.accuracy|floatformat:0}}<span class="abbrev" title="{{ a.r.accuracy_units_description }}">{{ a.r.accuracy_units }}</span>
 						{% endif %}
 					</td>
 					<td>
-						{% if a.precision == 999 %}
+						{% if a.r.precision == 999 %}
 							N/A
 						{% else %}
-							{{ a.precision|floatformat:2 }} <span class="abbrev" title="{{ a.precision_units_description }}">{{ a.precision_units }}</span>
+							{{ a.r.precision|floatformat:2 }} <span class="abbrev" title="{{ a.r.precision_units_description }}">{{ a.r.precision_units }}</span>
 						{% endif %}
 					</td>
-					<td>{{ a.false_positive_value|default_if_none:"" }}</td>
-					<td>{{ a.false_negative_value|default_if_none:"" }}</td>
+					<td>{{ a.r.false_positive_value|default_if_none:"" }}</td>
+					<td>{{ a.r.false_negative_value|default_if_none:"" }}</td>
 					<td>
-						{% if a.prec_acc_conc_used %}
-							{{ a.prec_acc_conc_used|floatformat:2 }} <span class="abbrev" title="{{ a.dl_units_description }}">{{ a.dl_units }}</span>
+						{% if a.r.prec_acc_conc_used %}
+							{{ a.r.prec_acc_conc_used|floatformat:2 }} <span class="abbrev" title="{{ a.r.dl_units_description }}">{{ a.r.dl_units }}</span>
 						{% endif %}
 					</td>
 				</tr>

@@ -1,5 +1,7 @@
-<li><a title="Click to show/hide synonyms" href="javascript: show_hide('#analyte-details{{ forloop.counter }}')">
-{{ analyte_name }}{% if analyte_code %}<br/>({{analyte_code}}){% endif %}</a>
+<div>
+	<a title="Click to show/hide synonyms" href="javascript: show_hide('#analyte-details{{ forloop.counter }}')">
+		{{ analyte_name }}{% if analyte_code %}<br/>({{analyte_code}}){% endif %}
+	</a>
 	<div id="analyte-details{{ forloop.counter }}" style="display: none;">
 		<ul>
 			{% for s in syn %}
@@ -7,4 +9,4 @@
 			{% endfor %}
 		</ul>
 	</div>
-</li>
+</div>

@@ -1,25 +1,45 @@
-{% extends "base.html" %}
+{% extends "base_method_summary.html" %}
+
 {% block title %}NEMI Stream Physical Method Summary{% endblock %}
-{% block content %}
-	<h2>Summary of Method</h2>
+
+{% block summary_info %}
 	{% if data %}
 		<table class="info-table">
 			<tr><th>Method Information</th>
 				<td><b>Descriptive Name: </b>{{ data.method_descriptive_name }}<br/>
-					<b>Official Name: </b>{{ data.method_official_name }}<br/>
+					<b>Official Name: </b>{{ data.method_official_name|safe }}<br/>
 					<b>Method Number: </b>{{ data.source_method_identifier|safe }}<br/>
 					<b>Revision: </b>{{ data.revision_information }}<br/>
 					<b>Media: </b>{{ data.media_name }}<br/>
 					<b>Subcategory: </b>{{ data.method_subcategory }}
 				</td>
 			</tr>
-			<tr><th>Brief Method Summary</th><td>{{ data.brief_method_summary|safe }}</td></tr>
-			<tr><th>Scope and Application</th><td>{{ data.scope_and_application|safe }}</td></tr>
-			<tr><th>Relative Cost/Effort</th><td>{{ data.relative_cost }}</td></tr>
-			<tr><th>Interferences</th><td>{{ data.interferences|safe }}</td></tr>
-			<tr><th>QC Requirements</th><td>{{ data.qc_requirements|safe }}</td></tr>
-			<tr><th>Source</th><td>{{ data.method_source_contact|safe }}</td></tr>
-			<tr><th>Citation</th><td>{{ data.source_citation_name }}</td></tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.BRIEF_METHOD_SUMMARY %}
+				<td>{{ data.brief_method_summary|safe }}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.SCOPE_AND_APPLICATION %}
+				<td>{{ data.scope_and_application|safe }}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.RELATIVE_COST %}
+				<td>{{ data.relative_cost }}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.INTERFERENCES %}
+				<td>{{ data.interferences|safe }}</td></tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.QC_REQUIREMENTS %}
+				<td>{{ data.qc_requirements|safe }}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.METHOD_SOURCE %}
+				<td>{{ data.method_source_contact|safe }}</td></tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.CITATION %}
+				<td>{{ data.source_citation_name }}</td>
+			</tr>
 		</table>
 	{% endif %}
 {% endblock %}

@@ -1,40 +1,76 @@
-{% extends "base.html" %}
+{% extends "base_method_summary.html" %}
+
 {% block title %}NEMI Biological Method Summary{% endblock %}
-{% block content %}
-	<h2>Summary of Method Fish Monitoring Guide</h2>
+
+{% block summary_info %}
 	{% if data %}
 		<table class="info-table">
 			<tr>
 				<th>Method Information</th>
 				<td><b>Descriptive Name: </b>{{ data.method_descriptive_name }}<br/>
-					<b>Official Name: </b>{{ data.method_official_name }}<br/>
+					<b>Official Name: </b>{{ data.method_official_name|safe }}<br/>
 					<b>Method Number: </b>{{ data.source_method_identifier|safe }}<br/>
 					<b>Revision: </b>{{ data.revision_information }}
 				</td>
 			</tr>
-			<tr><th>Media</th><td>{{ data.media_name }}</td></tr>
-			<tr><th>Subcategory</th><td>{{ data.method_subcategory }}</td></tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.MEDIA_NAME %}
+				<td>{{ data.media_name }}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.METHOD_SUBCATEGORY %}
+				<td>{{ data.method_subcategory }}</td>
+			</tr>
 			<tr><th>Method Type</th><td>{{ data.method_type_desc }}</td></tr>
 			<tr>
-				<th>Target Organisms</th>
+				{% include "field_def.html" with field=field_defs.TARGET_ORGANISM %}
 				<td>
-					<ul class="inside-list">
+					<div class="inside-list">
 						{% for d in analyte_data %}
 							{% include "analyte_synonyms.html" with analyte_name=d.r.analyte_name syn=d.syn %}
 						{% endfor %}
-					</ul>			
+					</div>			
 				</td>
 			</tr>			
-			<tr><th>Brief Method Summary</th><td>{{ data.brief_method_summary|safe }}</td></tr>
-			<tr><th>Scope and Application</th><td>{{ data.scope_and_application|safe }}</td></tr>
-			<tr><th>Relative Cost/Effort</th><td>{{ data.relative_cost }}</td></tr>
-			<tr><th>Interferences</th><td>{{ data.interferences|safe }}</td></tr>
-			<tr><th>QC Requirements</th><td>{{ data.qc_requirements|safe }}</td></tr>
-			<tr><th>Sample Handling</th><td>{{ data.sample_handling|safe }}</td></tr>
-			<tr><th>Max Holding Time</th><td>{{ data.max_holding_time }}</td></tr>
-			<tr><th>Method Download</th><td>{% include "method_download.html" %}</td></tr>
-			<tr><th>Source</th><td>{{ data.method_source_contact|safe }}</td></tr>
-			<tr><th>Citation</th><td>{{ data.source_citation_name }}</td></tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.BRIEF_METHOD_SUMMARY %}
+				<td>{{ data.brief_method_summary|safe }}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.SCOPE_AND_APPLICATION %}
+				<td>{{ data.scope_and_application|safe }}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.RELATIVE_COST %}
+				<td>{{ data.relative_cost }}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.INTERFERENCES %}
+				<td>{{ data.interferences|safe }}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.QC_REQUIREMENTS %}
+				<td>{{ data.qc_requirements|safe }}</td></tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.SAMPLE_HANDLING %}
+				<td>{{ data.sample_handling|safe }}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.MAX_HOLDING_TIME %}
+				<td>{{ data.max_holding_time }}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.METHOD_DOWNLOAD %}
+				<td>{% include "method_download.html" %}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.METHOD_SOURCE %}
+				<td>{{ data.method_source_contact|safe }}</td>
+			</tr>
+			<tr>
+				{% include "field_def.html" with field=field_defs.CITATION %}
+				<td>{{ data.source_citation_name }}</td>
+			</tr>
 		</table>
 	{% endif %}
 {% endblock %}

@@ -956,6 +956,20 @@ class BaseMethodSummaryView(View, TemplateResponseMixin):
     should be extended to implement specific pages by at least providing
     a template_name parameter.
     '''    
+    # The set of fields for which we want definitions in the view
+    field_abbrev_set = []
+   
+    def get_field_defs(self):
+        defs = DefinitionsDOM.objects.filter(definition_abbrev__in=self.field_abbrev_set)
+        field_defs = {}
+        
+        for d in defs:
+            field_defs[d.definition_abbrev] = {'name': d.definition_name, 
+                                               'description' : d.definition_description,
+                                              }
+            
+        return field_defs;
+        
     def get_context(self, request, *args, **kwargs):
         '''Returns additional context information to be sent to the template'''
         return {}
@@ -973,6 +987,29 @@ class BaseMethodSummaryView(View, TemplateResponseMixin):
         else:
             raise Http404
         
+    def get_analyte_data(self, summary_data):
+        ''' Return a list of analytes information for the method object in summary data. 
+        By default this returns a list of dictionaries containing information about each
+        analyte in the method. Each dictionary contains two keywords.
+        'r' keyword contains one analyte values query set object for the method id. The 'syn'
+        keyword contains the a list of synonyms for that analyte.
+        '''
+        analyte_data = []
+        
+        analyte_qs = _analyte_value_qs(summary_data.method_id)
+        for r in analyte_qs:
+            name = r['analyte_name'].lower()
+            code = r['analyte_code'].lower()
+            inner_qs = AnalyteCodeRel.objects.filter(Q(analyte_name__iexact=name)|Q(analyte_code__iexact=code)).values_list('analyte_code', flat=True).distinct()
+            qs = AnalyteCodeRel.objects.all().filter(analyte_code__in=inner_qs).order_by('analyte_name').values('analyte_name')
+            syn = []
+            for a in qs:
+                syn.append(a['analyte_name'])
+                
+            analyte_data.append({'r' : r, 'syn' : syn})  
+            
+        return analyte_data
+          
     def get(self, request, *args, **kwargs):
         '''Processes the get request and returns the appropriate http response.
         The method summary information for a method id is retrieved from MethodSummaryVW
@@ -984,32 +1021,34 @@ class BaseMethodSummaryView(View, TemplateResponseMixin):
             return self.render_to_response ({'data' : None,
                                              'analyte_data' : None}) 
                                                        
-        #Get analytes for the method and each analyte's synonyms.
-        analyte_data = []
-        
-        analyte_qs = _analyte_value_qs(self.data.method_id)
-        for r in analyte_qs:
-            name = r['analyte_name'].lower()
-            code = r['analyte_code'].lower()
-            inner_qs = AnalyteCodeRel.objects.filter(Q(analyte_name__iexact=name)|Q(analyte_code__iexact=code)).values_list('analyte_code', flat=True).distinct()
-            qs = AnalyteCodeRel.objects.all().filter(analyte_code__in=inner_qs).order_by('analyte_name').values('analyte_name')
-            syn = []
-            for a in qs:
-                syn.append(a['analyte_name'])
-                
-            analyte_data.append({'r' : r, 'syn' : syn})
-            
         context = self.get_context(request, *args, **kwargs)
+        context['field_defs'] = self.get_field_defs()
         context['data'] = self.data
-        context['analyte_data'] = analyte_data
+        context['analyte_data'] = self.get_analyte_data(self.data)
         
         return self.render_to_response(context)
     
-
+    
 class MethodSummaryView(BaseMethodSummaryView):   
     ''' Extends the BaseMethodSummaryView to implement the standard Method Summary page.'''
 
     template_name='method_summary.html'
+    
+    field_abbrev_set = ['MEDIA_NAME',
+                        'METHOD_SUBCATEGORY',
+                        'METHOD_SOURCE',
+                        'CITATION',
+                        'BRIEF_METHOD_SUMMARY',
+                        'SCOPE_AND_APPLICATION',
+                        'APPLICABLE_CONC_RANGE',
+                        'METHOD_DOWNLOAD',
+                        'INTERFERENCES',
+                        'QC_REQUIREMENTS',
+                        'SAMPLE_HANDLING',
+                        'MAX_HOLDING_TIME',
+                        'RELATIVE_COST',
+                        'SAMPLE_PREP_METHODS'
+                       ]
     
     def get_context(self, request, *args, **kwargs):
         '''Returns a dictionary with one keyword, 'notes' which contains a value query set generated from MethodAnalyteVw which
@@ -1037,18 +1076,75 @@ class BiologicalMethodSummaryView(BaseMethodSummaryView):
     '''Extends the BaseMethodSummaryView to implement the biological method summary page.'''
     
     template_name = 'biological_method_summary.html'
+
+    field_abbrev_set = ['MEDIA_NAME',
+                        'METHOD_SUBCATEGORY',
+                        'TARGET_ORGANISM',
+                        'METHOD_SOURCE',
+                        'CITATION',
+                        'BRIEF_METHOD_SUMMARY',
+                        'SCOPE_AND_APPLICATION',
+                        'METHOD_DOWNLOAD',
+                        'INTERFERENCES',
+                        'QC_REQUIREMENTS',
+                        'SAMPLE_HANDLING',
+                        'MAX_HOLDING_TIME',
+                        'RELATIVE_COST',
+                        'SAMPLE_PREP_METHODS'
+                       ]
     
+        
 class ToxicityMethodSummaryView(BaseMethodSummaryView):
     '''Extends the BaseMethodSummaryView to implement the toxicity method summary page.'''
     
     template_name = 'toxicity_method_summary.html'
+
+    field_abbrev_set = [
+                        'METHOD_SOURCE',
+                        'CITATION',
+                        'BRIEF_METHOD_SUMMARY',
+                        'SCOPE_AND_APPLICATION',
+                        'APPLICABLE_CONC_RANGE',
+                        'METHOD_DOWNLOAD',
+                        'INTERFERENCES',
+                        'QC_REQUIREMENTS',
+                        'SAMPLE_HANDLING',
+                        'MAX_HOLDING_TIME',
+                        'RELATIVE_COST',
+                        'ENDPOINT',
+                       ] 
     
-class StreamPhysicalMethodSummaryView(DetailView):
-    ''' Extends the DetailView to implement the Stream Physical Method Summary view.'''
+       
+class StreamPhysicalMethodSummaryView(BaseMethodSummaryView):
+    ''' Extends the BaseMethodSummaryView to implement the Stream Physical Method Summary view.
+    Overrides get_summary_data to get method from MethodStgSummaryVw. Overrides get_analyte_data since
+    this view does not require analyte data.
+    '''
 
     template_name = 'stream_physical_method_summary.html'
-    context_object_name = 'data'
-    model = MethodStgSummaryVw
+    
+    field_abbrev_set = ['MEDIA_NAME',
+                        'METHOD_SOURCE',
+                        'CITATION',
+                        'BRIEF_METHOD_SUMMARY',
+                        'SCOPE_AND_APPLICATION',
+                        'INTERFERENCES',
+                        'QC_REQUIREMENTS',
+                        'RELATIVE_COST',
+                       ]    
+    
+    def get_summary_data(self, **kwargs):
+        if 'method_id' in kwargs:
+            try:
+                return MethodStgSummaryVw.objects.get(method_id=kwargs['method_id'])
+            except MethodStgSummaryVw.DoesNotExist:
+                return None
+        else:
+            raise Http404
+        
+    def get_analyte_data(self, summary_data):
+        return []
+    
     
 class ExportMethodAnalyte(View, TemplateResponseMixin):
     ''' Extends the standard view. This view creates a
