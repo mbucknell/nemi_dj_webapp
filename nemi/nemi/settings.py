@@ -155,7 +155,10 @@ LOGGING = {
         },
     }
 }
-from local_settings import *
+try:
+    from local_settings import *
+except ImportError:
+    pass
 
 # Add any apps and middleware classes defined in local_settings
 if ADDITIONAL_APPS:
