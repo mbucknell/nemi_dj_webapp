@@ -6,15 +6,18 @@
 		$(document).ready(function(){
 			$(".method-subcategory-div").each(function(){
 				var tableEl = $(this).find("table");
-				$(this).find('img').click(function(){
-					if ($(this).attr('alt') == 'show') {
-						$(this).attr('src', "{{ STATIC_URL }}/images/triangle-down-image36.gif");
-						$(this).attr('alt', 'hide');
+				$(this).find('button').click(function(){
+					imgEl = $(this).find('img');
+					if (imgEl.attr('alt') == 'show') {
+						imgEl.attr('src', "{{ STATIC_URL }}/images/triangle-down-image36.gif");
+						imgEl.attr('alt', 'hide');
+						imgEl.attr('title', 'Hide methods');
 						tableEl.show();
 					}
 					else{
-						$(this).attr('src', "{{ STATIC_URL }}/images/triangle-right-image36.gif");
-						$(this).attr('alt', 'show');
+						imgEl.attr('src', "{{ STATIC_URL }}/images/triangle-right-image36.gif");
+						imgEl.attr('alt', 'show');
+						imgEl.attr('title', 'Show methods');
 						tableEl.hide();
 					}
 				});
@@ -32,7 +35,7 @@
 		{% regroup by_category.list by method_subcategory as objects_by_subcategory %}
 		{% for by_subcategory in objects_by_subcategory %}
 			<div class="method-subcategory-div">
-				<h4><img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" />&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>				
+				<h4><button class="show-hide-toggle" title="Show methods" type="button"><img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" /></button>&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>				
 				<table class="data-table" style="display:none;">
 					<tr><th></th><th>Method Number</th><th>Method Descriptive Name</th><th>Method Source</th></tr>
 					{% for object in by_subcategory.list %}

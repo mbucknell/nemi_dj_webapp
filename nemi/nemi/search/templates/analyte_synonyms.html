@@ -1,8 +1,9 @@
-<div>
-	<a title="Click to show/hide synonyms" href="javascript: show_hide('#analyte-details{{ forloop.counter }}')">
-		{{ analyte_name }}{% if analyte_code %}<br/>({{analyte_code}}){% endif %}
-	</a>
-	<div id="analyte-details{{ forloop.counter }}" style="display: none;">
+<div class="show-hide-detail-div">
+	<button class="show-hide-toggle" title="Show detail" type="button">
+		<img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show"/>
+	</button>
+	{{ analyte_name }}{% if analyte_code %}({{analyte_code}}){% endif %}
+	<div class="hidden-details-div" style="display: none;">
 		<ul>
 			{% for s in syn %}
 				<li>{{ s }}</li>

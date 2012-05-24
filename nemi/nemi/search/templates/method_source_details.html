@@ -1,6 +1,10 @@
 {% load data_format %}
-<a title="Click to show/hide details" href="javascript: show_hide('#method-source-details{{ forloop.counter }}')">{{ r.method_source }}</a>
-	<div id="method-source-details{{ forloop.counter }}" style="display: none;">
+<div class="show-hide-detail-div">
+	<button class="show-hide-toggle" title="Show detail" type="button">
+		<img src="{{ STATIC_URL }}/images/triangle-right-image36.gif" alt="show"/>
+	</button>
+	{{ r.method_source }}
+	<div class="hidden-details-div" style="display: none;">
 		<table class="inside-table">
 			<tr><th>Contact Information:</th><td>{{ r.method_source_contact|safe }}</td></tr>
 			<tr>
@@ -8,3 +12,4 @@
 				<td><span class="external-link">{{ r.method_source_url|clickable_links }}</span></td></tr>
 		</table>
 	</div> 
+</div>

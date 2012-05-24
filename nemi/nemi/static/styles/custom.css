@@ -219,3 +219,16 @@ column in the table */
 	position: relative;
 	left: 4em;
 }
+/* styles for the button which shows/hides details */
+.show-hide-toggle {
+	border: none;
+	background: transparent;
+}
+.show-hide-detail-div table {
+	position: relative;
+	left: 2em;
+}
+.show-hide-detail-div ul {
+	list-style-type: none;
+	margin: 0px;
+}

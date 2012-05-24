@@ -1,16 +1,21 @@
 <!-- This html can be included in other files to show the greenness profile -->
 {% if r.greenness.profile|length == 4 %}
-	<div style="line-height: 0px;">
-	    <a title="Click to show/hide details" href="javascript:show_hide('#greenness-detail{{ forloop.counter }}')"><img src="{{ STATIC_URL }}images/{{ r.greenness.profile.0 }}"><img src="{{ STATIC_URL }}images/{{ r.greenness.profile.1 }}"><br/><img src="{{ STATIC_URL }}images/{{ r.greenness.profile.2 }}"><img src="{{ STATIC_URL }}images/{{ r.greenness.profile.3 }}"></a>
-	</div>
-	<div id="greenness-detail{{ forloop.counter }}" style="display: none;">
-		<table class="inside-table">
-			<tr><th>PBT</th><td>{{ r.greenness.pbt }}</td></tr>
-			<tr><th>Corrosive</th><td>{{ r.greenness.corrosive }}</td></tr>
-			<tr><th>Hazardous</th><td>{{ r.greenness.hazardous }}</td></tr>
-			<tr><th>Waster Amt</th><td>{{ r.greenness.waste_amt }}</td></tr>
-			<tr><th>Assumptions/Comments</th><td>{{ r.m.assumptions_comments }}</td></tr>
-		</table>
+	<div class="show-hide-detail-div">
+		<button class="show-hide-toggle" title="Show detail" type="button">
+			<img src="{{ STATIC_URL }}/images/triangle-right-image36.gif" alt="show"/>
+		</button>
+		<div style="line-height: 0px; display: inline-block;">
+		    <img src="{{ STATIC_URL }}images/{{ r.greenness.profile.0 }}"><img src="{{ STATIC_URL }}images/{{ r.greenness.profile.1 }}"><br/><img src="{{ STATIC_URL }}images/{{ r.greenness.profile.2 }}"><img src="{{ STATIC_URL }}images/{{ r.greenness.profile.3 }}"></a>
+		</div>
+		<div class="hidden-details-div" id="greenness-detail" style="display: none;">
+			<table class="inside-table">
+				<tr><th>PBT</th><td>{{ r.greenness.pbt }}</td></tr>
+				<tr><th>Corrosive</th><td>{{ r.greenness.corrosive }}</td></tr>
+				<tr><th>Hazardous</th><td>{{ r.greenness.hazardous }}</td></tr>
+				<tr><th>Waster Amt</th><td>{{ r.greenness.waste_amt }}</td></tr>
+				<tr><th>Assumptions/Comments</th><td>{{ r.m.assumptions_comments }}</td></tr>
+			</table>
+		</div>
 	</div>
 {% else %}
 	{{ r.m.assumptions_comments }}

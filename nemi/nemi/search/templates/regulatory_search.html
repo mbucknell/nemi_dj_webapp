@@ -41,18 +41,9 @@
 
 {% block totals %}
 	{{ block.super }}
-	<p><b>Total number of unique methods:&nbsp;{{ method_count }}</b>
+	<p><b>Total number of unique methods:&nbsp;{{ method_count }}</b></p>
 	<br/><br/>
-	<div style="display: inline-block;"><b>Analyte: <a title="Click to show/hide synonyms" href="javascript: show_hide('#analyte-details')">
-		{{ analyte_name }}{% if analyte_code %}&nbsp;({{ analyte_code }}){% endif %}</a></b>
-		<div id="analyte-details{{ forloop.counter }}" style="display: none;">
-			<ul>
-				{% for s in syn %}
-					<li>{{ s }}</li>
-				{% endfor %}
-			</ul>
-		</div>
-	</div>
+	<b>Analyte:</b>{% include "analyte_synonyms.html" %}	
 {% endblock %}
 
 {% block results_table_data %}

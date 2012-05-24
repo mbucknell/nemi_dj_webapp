@@ -73,6 +73,26 @@
 					$(this).removeClass('selected-page');
 				}
 			});
+			// Add click event handler to all show/hide detail buttons 
+			$('.show-hide-detail-div').each(function(){
+					var hiddenDivEl = $(this).find('.hidden-details-div');
+					$(this).find('button').click(function(){
+					var imgEl = $(this).find('img');
+					
+					if (imgEl.attr('alt') == 'show'){
+						imgEl.attr('src', "{{ STATIC_URL }}/images/triangle-down-image36.gif");
+						imgEl.attr('alt', 'hide');
+						imgEl.attr('title', 'Hide details');
+						hiddenDivEl.show();
+					}
+					else{
+						imgEl.attr('src', "{{ STATIC_URL }}/images/triangle-right-image36.gif");
+						imgEl.attr('alt', 'show');
+						imgEl.attr('title', 'Show details');
+						hiddenDivEl.hide();
+					}					
+				});
+			});
 		});
 		// Show header information dialogs 
 		function showInfo(header, info) {
@@ -89,6 +109,7 @@
 				$('#header-info').dialog('open');	
 			}			
 		};
+		
 	</script>
 	
 	{% block local_page_script %}<!-- put page specific script here -->{% endblock %}
