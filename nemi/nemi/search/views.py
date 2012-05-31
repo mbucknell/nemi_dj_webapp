@@ -24,7 +24,7 @@ from utils.view_utils import dictfetchall, xls_response, tsv_response
 
 
 def _greenness_profile(d):
-    '''Returns a dicitionary with five keywords. The first keyword is profile whose is 
+    '''Returns a dictionary with five keywords. The first keyword is profile whose is 
     a list of four gifs representing the greenness profile of the dictionary d or an empty list if there is not
     enough information for a complete profile. The second through 5th keyword represent the verbose greenness value for
     pbt, toxic, corrisive, and waste_amt
@@ -158,7 +158,7 @@ class SearchResultView(View, TemplateResponseMixin):
             form = self.form_class(request.GET)
             if form.is_valid():
                 context = {'search_form' : form,
-                           'query_string' : '?' + request.get_full_path().split('&', 1)[1],
+                           'query_string' : '?' + request.get_full_path().split('?', 1)[1],
                            'header_defs' : self.get_header_defs(),
                            'hide_search' : True,
                            'show_results' : True}
@@ -212,13 +212,13 @@ class ExportSearchView(View):
                     return xls_response(HEADINGS, self.get_export_qs(self.get_qs(form)), self.filename)
                 
                 else:
-                    return Http404
+                    raise Http404
             
             else:
-                return Http404
+                raise Http404
             
         else:
-            return Http404
+            raise Http404
                 
 class GeneralSearchFormMixin(FilterFormMixin):
     '''Extends the FilterFormMixin to implement the search form used on the General Search page.'''
@@ -466,7 +466,7 @@ class AnalyteSelectView(View):
 class MicrobiologicalSearchView(SearchResultView, FilterFormMixin):
     '''Extends the SearchResultView and FilterFormMixin to implement the microbiological search page.'''
     
-    template_name = "microbiological_search.html"
+    template_name = 'microbiological_search.html'
     form_class = MicrobiologicalSearchForm
     
     result_fields = ('method_id',

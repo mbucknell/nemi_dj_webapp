@@ -8,7 +8,7 @@
 
 {% block search_box_body %}
 	{% include "find_analyte_dialog.html" with analyte_value_id="analyte-search-value" %}
-	<form id="search-form" action={% url search-regulatory %} method="get">{% csrf_token %}
+	<form id="search-form" action={% url search-regulatory %} method="get">
 		<table id="search-table">
 			<tr>
 				<th>Analyte (required):</th>

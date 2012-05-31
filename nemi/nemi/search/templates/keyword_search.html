@@ -28,7 +28,7 @@
 
 {% block search_box %}
 	<h3>Keyword Search</h3>
-	<form action="{% url search-keyword %}" method="get"> {% csrf_token %}
+	<form action="{% url search-keyword %}" method="get">
 	<p>Keyword(s): {{ form.keywords }}&nbsp;<input id="search-button" type="submit" value="Search NEMI"/></p>
 	</form>
 	<p><b>The results below are links to methods that best match the search terms entered. Results are based on a complete 

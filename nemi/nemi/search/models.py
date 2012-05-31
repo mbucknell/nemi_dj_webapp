@@ -17,7 +17,7 @@ class MethodVW(models.Model):
     brief_method_summary = models.CharField(max_length=4000)
     scope_and_application = models.CharField(max_length=2000, blank=True)
     media_name = models.CharField(max_length=30)
-    dl_type_id = models.IntegerField()
+    dl_type_id = models.IntegerField(null=True)
     dl_note = models.CharField(max_length=2000, blank=True)
     applicable_conc_range = models.CharField(max_length=300, blank=True)
     conc_range_units = models.CharField(max_length=20, blank=True)

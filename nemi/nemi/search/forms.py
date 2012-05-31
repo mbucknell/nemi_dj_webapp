@@ -214,7 +214,7 @@ class ToxicitySearchForm(Form):
         
         #Get media choices
         m_qs = qs.values_list('media_name', flat=True).distinct().order_by('media_name')
-        self.fields['media'].choices = [(u'all', u'Any')] + [(m, m) for m in m_qs]
+        self.fields['media'].choices = [(u'all', u'Any')] + [(m, m.capitalize()) for m in m_qs]
         
         #Get method types
         qs = MethodVW.objects.filter(method_category__exact='TOXICITY ASSAY').values_list('method_type_desc', flat=True).distinct().order_by('method_type_desc')

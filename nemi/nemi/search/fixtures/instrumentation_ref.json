@@ -1,0 +1,1266 @@
+[
+    {
+        "pk": 125, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Cont. L-L Extractor", 
+            "instrumentation_description": "Continuous Liquid-Liquid Extractor"
+        }
+    }, 
+    {
+        "pk": 126, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "SPCES", 
+            "instrumentation_description": "Solid Phase Cartridge Extraction System"
+        }
+    }, 
+    {
+        "pk": 128, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Alph-Scin_AGPC", 
+            "instrumentation_description": "Alpha Scintillation or Alpha Gas Particle Counter"
+        }
+    }, 
+    {
+        "pk": 127, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Isokinetic sampler", 
+            "instrumentation_description": "Isokinetic Sampler (see Method Summary for more information)"
+        }
+    }, 
+    {
+        "pk": 131, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Multiprobe sonde", 
+            "instrumentation_description": "Multiprobe sonde"
+        }
+    }, 
+    {
+        "pk": 132, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "AAS", 
+            "instrumentation_description": "Atomic Absorption Spectrometry"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "AGPC", 
+            "instrumentation_description": "Alpha Gas Particle Counter"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "AMPER", 
+            "instrumentation_description": "Amperometer"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "ASCINT", 
+            "instrumentation_description": "Alpha Scintillation"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "ASPEC", 
+            "instrumentation_description": "Alpha Spectrometer/Counter"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "ASV", 
+            "instrumentation_description": "Anodic Stripping Voltammetry"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "BRIDGE", 
+            "instrumentation_description": "Resistor Network"
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "COLOR_STRIP", 
+            "instrumentation_description": "Color Strip Indicator"
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "CVAA", 
+            "instrumentation_description": "Cold Vapor Atomic Absorption"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "EA", 
+            "instrumentation_description": "Elemental Analyzer"
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "FLAA", 
+            "instrumentation_description": "Flame Atomic Absorption"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GC-ECD", 
+            "instrumentation_description": "Gas Chromatography with Electron Capture Detection"
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GC-ELCD", 
+            "instrumentation_description": "Gas Chromatography with Electrolytic Conductivity Detection"
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GC-MS", 
+            "instrumentation_description": "Gas Chromatography with Mass Spectrometry Detection"
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GC-NPD", 
+            "instrumentation_description": "Gas Chromatography with Nitrogen - Phosphorus Detection"
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GC-PID", 
+            "instrumentation_description": "Gas Chromatography with Photoionization Detection"
+        }
+    }, 
+    {
+        "pk": 16, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GC-FID", 
+            "instrumentation_description": "Gas Chromatography with Flame Ionization Detection"
+        }
+    }, 
+    {
+        "pk": 17, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GF-AAS", 
+            "instrumentation_description": "Graphite Furnace-Atomic Absorption Spectrometer"
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GRAV", 
+            "instrumentation_description": "Gravimetry"
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "HPLC", 
+            "instrumentation_description": "High Performance Liquid Chromatography"
+        }
+    }, 
+    {
+        "pk": 20, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "HPLC-ED", 
+            "instrumentation_description": "High Performance Liquid Chromatography with Electrochemical Detection"
+        }
+    }, 
+    {
+        "pk": 21, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "HPLC-PCDFL", 
+            "instrumentation_description": "High Performance Chromatography with Post Column Derivitization and Fluorescence Detection"
+        }
+    }, 
+    {
+        "pk": 22, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "HPLC-UV", 
+            "instrumentation_description": "High Performance Liquid Chromatography with Ultraviolet Detection"
+        }
+    }, 
+    {
+        "pk": 23, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "IC/ICP-MS", 
+            "instrumentation_description": "Ion Chromatography followed by Inductively Coupled Plasma - Mass Spectrometry"
+        }
+    }, 
+    {
+        "pk": 24, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "ICP-AES", 
+            "instrumentation_description": "Inductively Coupled Plasma - Atomic Emission Spectroscopy"
+        }
+    }, 
+    {
+        "pk": 25, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "ICP-MS", 
+            "instrumentation_description": "Inductively Coupled Plasma - Mass Spectrometry"
+        }
+    }, 
+    {
+        "pk": 26, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "IA", 
+            "instrumentation_description": "Immunoassay"
+        }
+    }, 
+    {
+        "pk": 27, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "IONCHR", 
+            "instrumentation_description": "Ion Chromatography"
+        }
+    }, 
+    {
+        "pk": 28, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "ISE", 
+            "instrumentation_description": "Ion Selective Electrode"
+        }
+    }, 
+    {
+        "pk": 29, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "LSCINT", 
+            "instrumentation_description": "Liquid Scintillation Counting"
+        }
+    }, 
+    {
+        "pk": 30, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "MF", 
+            "instrumentation_description": "Membrane Filtration"
+        }
+    }, 
+    {
+        "pk": 31, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "PH_MET", 
+            "instrumentation_description": "pH Meter"
+        }
+    }, 
+    {
+        "pk": 32, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "PREP", 
+            "instrumentation_description": "Preparatory Procedure"
+        }
+    }, 
+    {
+        "pk": 33, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "SAMPLE", 
+            "instrumentation_description": "Sampling Procedure/Protocol"
+        }
+    }, 
+    {
+        "pk": 34, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "SPECTR", 
+            "instrumentation_description": "Spectroscopy (Colorimetry; Photometry)"
+        }
+    }, 
+    {
+        "pk": 35, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "TEM", 
+            "instrumentation_description": "Transmission Electron Microscopy"
+        }
+    }, 
+    {
+        "pk": 36, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "TITR", 
+            "instrumentation_description": "Titration"
+        }
+    }, 
+    {
+        "pk": 37, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "TOX", 
+            "instrumentation_description": "Toxicity"
+        }
+    }, 
+    {
+        "pk": 38, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "TURBID", 
+            "instrumentation_description": "Turbidity"
+        }
+    }, 
+    {
+        "pk": 39, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GABC", 
+            "instrumentation_description": "Gross Alpha and Beta Counters"
+        }
+    }, 
+    {
+        "pk": 40, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "BCOUNT", 
+            "instrumentation_description": "Beta Counter"
+        }
+    }, 
+    {
+        "pk": 41, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "PICRB", 
+            "instrumentation_description": "Pulse Ionization Chamber and Radon Bubbler"
+        }
+    }, 
+    {
+        "pk": 42, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "VIS_COMP", 
+            "instrumentation_description": "Visual Comparison"
+        }
+    }, 
+    {
+        "pk": 43, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "SPECTR_AUTO", 
+            "instrumentation_description": "Automated Spectrophotometer"
+        }
+    }, 
+    {
+        "pk": 44, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "THERMO", 
+            "instrumentation_description": "Thermometer"
+        }
+    }, 
+    {
+        "pk": 45, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "HYDRIDE_AA", 
+            "instrumentation_description": "Gaseous Hydride Method with Atomic Absorption Detection"
+        }
+    }, 
+    {
+        "pk": 46, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "CVAFS", 
+            "instrumentation_description": "Cold Vapor Atomic Fluoresence Spectrophotometer"
+        }
+    }, 
+    {
+        "pk": 47, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GAMMA", 
+            "instrumentation_description": "Gamma Radiation Detector"
+        }
+    }, 
+    {
+        "pk": 48, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "TOH", 
+            "instrumentation_description": "Total Organic Halogen Analyzer"
+        }
+    }, 
+    {
+        "pk": 49, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "NAA-GAMMA", 
+            "instrumentation_description": "Neutron Activation Analysis with Gamma Radiation Detector"
+        }
+    }, 
+    {
+        "pk": 50, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GC-ECD/ELCD", 
+            "instrumentation_description": "Gas Chromatography with Electron Capture Detection or Electrolytic Conductivity Detection"
+        }
+    }, 
+    {
+        "pk": 51, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "MEM_ELECT", 
+            "instrumentation_description": "Membrane Electrode"
+        }
+    }, 
+    {
+        "pk": 52, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "MEM_OR_TITR", 
+            "instrumentation_description": "Membrane Electrode or Titration"
+        }
+    }, 
+    {
+        "pk": 53, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GC-FPD", 
+            "instrumentation_description": "Gas Chromatograph with Flame Photometric Detector"
+        }
+    }, 
+    {
+        "pk": 54, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "TOC", 
+            "instrumentation_description": "Total Organic Carbon Analyzer"
+        }
+    }, 
+    {
+        "pk": 55, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "XRF", 
+            "instrumentation_description": "X-Ray Fluoresence"
+        }
+    }, 
+    {
+        "pk": 56, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "CIE-UV", 
+            "instrumentation_description": "Capillary Ion Electrophoresis with Indirect UV Detection"
+        }
+    }, 
+    {
+        "pk": 57, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "PLATE", 
+            "instrumentation_description": "Plate Count"
+        }
+    }, 
+    {
+        "pk": 58, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "PLP", 
+            "instrumentation_description": "Pulsed-Laser Phosphorimetry"
+        }
+    }, 
+    {
+        "pk": 59, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "PCD", 
+            "instrumentation_description": "Pyrolysis and Chemiluminescence Detection"
+        }
+    }, 
+    {
+        "pk": 60, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "CNC", 
+            "instrumentation_description": "CNC (Condensation Nucleus Counter)"
+        }
+    }, 
+    {
+        "pk": 61, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "DI-FM", 
+            "instrumentation_description": "Dye injection, Fluorimetric Measurement"
+        }
+    }, 
+    {
+        "pk": 62, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "PO-MCD", 
+            "instrumentation_description": "Persulfate Ox and Membrane Conductivity Detection"
+        }
+    }, 
+    {
+        "pk": 63, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "PLUM", 
+            "instrumentation_description": "Portable Luminometer"
+        }
+    }, 
+    {
+        "pk": 64, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "SURVEY", 
+            "instrumentation_description": "Transit-stadia survey equipment"
+        }
+    }, 
+    {
+        "pk": 65, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "PB-FLUME", 
+            "instrumentation_description": "Palmer-Bowlus flume"
+        }
+    }, 
+    {
+        "pk": 66, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "FLUOR", 
+            "instrumentation_description": "Fluorescence Spectroscopy"
+        }
+    }, 
+    {
+        "pk": 67, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GAGE", 
+            "instrumentation_description": "Nonrecording Water Level Gages"
+        }
+    }, 
+    {
+        "pk": 68, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "TOD", 
+            "instrumentation_description": "Total Oxygen Demand Instrument"
+        }
+    }, 
+    {
+        "pk": 69, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "BGPC", 
+            "instrumentation_description": "Beta Gas Proportional Counter"
+        }
+    }, 
+    {
+        "pk": 70, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "BCWMS", 
+            "instrumentation_description": "Broad Crested Weir Measuring System"
+        }
+    }, 
+    {
+        "pk": 71, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "MCD", 
+            "instrumentation_description": "Membrane Conductivity Detection"
+        }
+    }, 
+    {
+        "pk": 72, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "HPLC-FLUV", 
+            "instrumentation_description": "HPLC with dual detector-fluoresence and UV"
+        }
+    }, 
+    {
+        "pk": 73, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "RECORD", 
+            "instrumentation_description": "Recording Water Level Gages"
+        }
+    }, 
+    {
+        "pk": 74, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "COMM", 
+            "instrumentation_description": "Remote Interrogation Water Level Gages"
+        }
+    }, 
+    {
+        "pk": 75, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "TUBE", 
+            "instrumentation_description": "Tube Culture"
+        }
+    }, 
+    {
+        "pk": 76, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "MICRO", 
+            "instrumentation_description": "Direct Optical Microscopy"
+        }
+    }, 
+    {
+        "pk": 77, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "E_MICRO", 
+            "instrumentation_description": "Epifluorescence Microscopy"
+        }
+    }, 
+    {
+        "pk": 78, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "AVM", 
+            "instrumentation_description": "Acoustic Velocity Meter"
+        }
+    }, 
+    {
+        "pk": 79, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "PRAC", 
+            "instrumentation_description": "Laboratory Practice Guidance"
+        }
+    }, 
+    {
+        "pk": 80, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "MPN", 
+            "instrumentation_description": "Most Probable Number"
+        }
+    }, 
+    {
+        "pk": 81, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "IMS-FA", 
+            "instrumentation_description": "Filtration-immunomagnetic Separation-immunofluorescent Microscopy"
+        }
+    }, 
+    {
+        "pk": 82, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "FA", 
+            "instrumentation_description": "Filtration-flotation-immunofluorescent Microscopy"
+        }
+    }, 
+    {
+        "pk": 83, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GEL", 
+            "instrumentation_description": "Gel Enumeration"
+        }
+    }, 
+    {
+        "pk": 84, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "NA", 
+            "instrumentation_description": "Not Applicable"
+        }
+    }, 
+    {
+        "pk": 85, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "COLOR", 
+            "instrumentation_description": "Colorimeter"
+        }
+    }, 
+    {
+        "pk": 86, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "MS", 
+            "instrumentation_description": "Mass Spectrometry"
+        }
+    }, 
+    {
+        "pk": 87, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GPC", 
+            "instrumentation_description": "Gas Proportional Counter"
+        }
+    }, 
+    {
+        "pk": 88, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "ELEC-DIAL", 
+            "instrumentation_description": "Electrodialysis"
+        }
+    }, 
+    {
+        "pk": 89, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "CENT", 
+            "instrumentation_description": "Centrifuge"
+        }
+    }, 
+    {
+        "pk": 90, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "WHTSTNE-BRDG", 
+            "instrumentation_description": "Wheatstone Bridge"
+        }
+    }, 
+    {
+        "pk": 91, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GC (Unsp. detector)", 
+            "instrumentation_description": "Gas Chromatograph (Unspecified Detector)"
+        }
+    }, 
+    {
+        "pk": 92, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "LC-MS", 
+            "instrumentation_description": "Liquid Chromatography-Mass Spectrometery (also High Performance LC-MS; HPLC-MS)"
+        }
+    }, 
+    {
+        "pk": 93, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GC-SCD", 
+            "instrumentation_description": "Gas Chromatography with Sulfur Chemiluminescence Detection"
+        }
+    }, 
+    {
+        "pk": 94, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "UV-FLUOR", 
+            "instrumentation_description": "UV-Fluorescence"
+        }
+    }, 
+    {
+        "pk": 95, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Geiger Counter", 
+            "instrumentation_description": "Geiger-Mueller Counter"
+        }
+    }, 
+    {
+        "pk": 96, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "FE", 
+            "instrumentation_description": "Flame Emission"
+        }
+    }, 
+    {
+        "pk": 97, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "TITR-C", 
+            "instrumentation_description": "Titration with Color Indicator"
+        }
+    }, 
+    {
+        "pk": 98, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "TITR-A", 
+            "instrumentation_description": "Titration with an Amperometer"
+        }
+    }, 
+    {
+        "pk": 99, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "TITR-pH", 
+            "instrumentation_description": "Titration with a pH Meter"
+        }
+    }, 
+    {
+        "pk": 100, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "ICone", 
+            "instrumentation_description": "Imhoff Cone"
+        }
+    }, 
+    {
+        "pk": 101, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "LC-MS-MS", 
+            "instrumentation_description": "Liquid Chromatography with Tandem Mass Spectrometry"
+        }
+    }, 
+    {
+        "pk": 102, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "PI-QitTof-MS", 
+            "instrumentation_description": "Photoionization (PI), Quadrupole ion trap, Time-of-flight, mass spectrometry"
+        }
+    }, 
+    {
+        "pk": 103, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "PI/MS/MS", 
+            "instrumentation_description": "Photoionization with Tandem Mass Spectrometry"
+        }
+    }, 
+    {
+        "pk": 104, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GC-PI-MS-MS", 
+            "instrumentation_description": "Gas Chromatography with Photoionization and Tandem Mass Spectrometry Detection"
+        }
+    }, 
+    {
+        "pk": 105, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "LDGD", 
+            "instrumentation_description": "Lithium Drifted Germanium Detectors"
+        }
+    }, 
+    {
+        "pk": 106, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "MULTI-SPEC", 
+            "instrumentation_description": "Multichannel Analyzer Spectrometer"
+        }
+    }, 
+    {
+        "pk": 107, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Carbon determinator", 
+            "instrumentation_description": "Carbon determinator"
+        }
+    }, 
+    {
+        "pk": 108, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "LIG THERMO-FI", 
+            "instrumentation_description": "Liquid-in-glass Thermometer, Full-Immersion"
+        }
+    }, 
+    {
+        "pk": 109, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "LIG THERMO-PI", 
+            "instrumentation_description": "Liquid-in-glass Thermometer, Partial-Immersion"
+        }
+    }, 
+    {
+        "pk": 110, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Thermistor", 
+            "instrumentation_description": "Thermistor"
+        }
+    }, 
+    {
+        "pk": 111, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Organism", 
+            "instrumentation_description": "Organism: Refer to method for specific species and genus"
+        }
+    }, 
+    {
+        "pk": 112, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Seine", 
+            "instrumentation_description": "Seine"
+        }
+    }, 
+    {
+        "pk": 113, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Invert Net", 
+            "instrumentation_description": "Invertebrate Net (w/ handle)"
+        }
+    }, 
+    {
+        "pk": 114, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Invert fixed-area", 
+            "instrumentation_description": "Invertebrate Fixed-Area Sampler"
+        }
+    }, 
+    {
+        "pk": 115, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Plankton Net", 
+            "instrumentation_description": "Plankton Net"
+        }
+    }, 
+    {
+        "pk": 116, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Dredge", 
+            "instrumentation_description": "Dredge"
+        }
+    }, 
+    {
+        "pk": 117, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Corer", 
+            "instrumentation_description": "Corer"
+        }
+    }, 
+    {
+        "pk": 118, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Sediment Grab", 
+            "instrumentation_description": "Sediment Grab"
+        }
+    }, 
+    {
+        "pk": 119, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Electrofisher", 
+            "instrumentation_description": "Electrofishing Unit"
+        }
+    }, 
+    {
+        "pk": 120, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Artificial Substrate", 
+            "instrumentation_description": "Artificial Substrate"
+        }
+    }, 
+    {
+        "pk": 121, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Bottle Sampler", 
+            "instrumentation_description": "Bottle Sampler"
+        }
+    }, 
+    {
+        "pk": 122, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "pH Sensor", 
+            "instrumentation_description": "pH Sensor"
+        }
+    }, 
+    {
+        "pk": 123, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Conductivity Sensor", 
+            "instrumentation_description": "Conductivity Sensor"
+        }
+    }, 
+    {
+        "pk": 124, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Luminescence Sensor", 
+            "instrumentation_description": "Luminescence Sensor"
+        }
+    }, 
+    {
+        "pk": 129, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Analytical balance", 
+            "instrumentation_description": "Analytical balance"
+        }
+    }, 
+    {
+        "pk": 130, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Sep_Funnel", 
+            "instrumentation_description": "Separatory Funnel"
+        }
+    }, 
+    {
+        "pk": 133, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "HPLC-MS", 
+            "instrumentation_description": "High Performance Liquid Chromatography with Mass Spectrometry"
+        }
+    }, 
+    {
+        "pk": 141, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Nephelometer", 
+            "instrumentation_description": "Nephelometer"
+        }
+    }, 
+    {
+        "pk": 143, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "IC-ESI-MS/MS", 
+            "instrumentation_description": "Ion Chromatography Electrospray Ionization Tandem Mass Spectometry"
+        }
+    }, 
+    {
+        "pk": 144, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "POCIS", 
+            "instrumentation_description": "Polar Organic Chemical Integrative Sampler (POCIS)"
+        }
+    }, 
+    {
+        "pk": 145, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "HPLC-FL", 
+            "instrumentation_description": "HPLC with fluorescence"
+        }
+    }, 
+    {
+        "pk": 148, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "SWQA", 
+            "instrumentation_description": "Methodology for State 303(d)/305(b) Integrated Reports"
+        }
+    }, 
+    {
+        "pk": 135, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Algal samplers", 
+            "instrumentation_description": "Algal sampling devices"
+        }
+    }, 
+    {
+        "pk": 136, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "SPMD", 
+            "instrumentation_description": "Semipermeable Membrane Device (SPMD)"
+        }
+    }, 
+    {
+        "pk": 138, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Backpack Electrofish", 
+            "instrumentation_description": "Backpack Electrofishing Unit"
+        }
+    }, 
+    {
+        "pk": 139, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "PCR", 
+            "instrumentation_description": "Polymerase Chain Reaction (PCR) instrument"
+        }
+    }, 
+    {
+        "pk": 140, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "SmartCycler", 
+            "instrumentation_description": "SmartCycler PCR instrument"
+        }
+    }, 
+    {
+        "pk": 137, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Auger", 
+            "instrumentation_description": "Auger"
+        }
+    }, 
+    {
+        "pk": 142, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "K-D Concentrator", 
+            "instrumentation_description": "Kuderna-Danish Concentrator Tube"
+        }
+    }, 
+    {
+        "pk": 134, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "IC-ESI/MS", 
+            "instrumentation_description": "Ion Chromatography with suppressed conductivity and electrospray ionization mass spectometry"
+        }
+    }, 
+    {
+        "pk": 146, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Stats book", 
+            "instrumentation_description": "Statistical procedures documentation"
+        }
+    }, 
+    {
+        "pk": 147, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Stats software", 
+            "instrumentation_description": "Statistical procedures software"
+        }
+    }, 
+    {
+        "pk": 158, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "DA_AUTO", 
+            "instrumentation_description": "Automated Discrete Analyzer"
+        }
+    }, 
+    {
+        "pk": 149, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Graduated Steel Tape", 
+            "instrumentation_description": "Graduated Steel Tape"
+        }
+    }, 
+    {
+        "pk": 150, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Water Level Tape", 
+            "instrumentation_description": "Electric Water Level Tape"
+        }
+    }, 
+    {
+        "pk": 151, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "GPS Unit", 
+            "instrumentation_description": "GPS Unit"
+        }
+    }, 
+    {
+        "pk": 152, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Camera", 
+            "instrumentation_description": "Camera"
+        }
+    }, 
+    {
+        "pk": 153, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Air Line", 
+            "instrumentation_description": "Air Line"
+        }
+    }, 
+    {
+        "pk": 154, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Mechanical Slug", 
+            "instrumentation_description": "Mechanical Slug"
+        }
+    }, 
+    {
+        "pk": 155, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "FA Recorder", 
+            "instrumentation_description": "Float-Activated Recorder"
+        }
+    }, 
+    {
+        "pk": 156, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Pressure Transducer", 
+            "instrumentation_description": "Submersible Pressure Transducer"
+        }
+    }, 
+    {
+        "pk": 157, 
+        "model": "search.instrumentationref", 
+        "fields": {
+            "instrumentation": "Orifice Weir", 
+            "instrumentation_description": "Circular Orifice Weir"
+        }
+    }
+]

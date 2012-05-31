@@ -1,7 +1,7 @@
 {% extends "base_search.html" %}
 {% block title %}NEMI Toxicity Search{% endblock %}
 {% block search_box_body %}
-	<form action="{% url search-toxicity %}" method="get"> {% csrf_token %}
+	<form action="{% url search-toxicity %}" method="get"> 
 		<h4> {{search_form.non_field_errors }} </h4>
 		<table id="search-table">
 		{{ search_form }}
@@ -16,7 +16,7 @@
 			<td>{{ r.method_descriptive_name }}</td>
 			<td>{{ r.method_subcategory }}</td>
 			<td>{% include "method_source_details.html" %}</td>
-			<td>{{ r.media_name }}</td>
+			<td>{{ r.media_name|lower|capfirst }}</td>
 			<td>{{ r.matrix }}</td>
 			<td>{{ r.relative_cost_symbol }}</td>
 		</tr>

@@ -1,7 +1,7 @@
 {% extends "base_search.html" %}
 {% block title %}NEMI Microbiological Search{% endblock %}
 {% block search_box_body %}
-	<form action="{% url search-microbiological %}" method="get"> {% csrf_token %}
+	<form action="{% url search-microbiological %}" method="get">
 		<h4> {{search_form.non_field_errors }} </h4>
 		<table id="search-table">
 		{{ search_form }}

@@ -3,7 +3,7 @@
 {% block title %}NEMI Tabular Regulatory Method Report{% endblock %}
 
 {% block search_box %}
-	<form action={% url search-tabular_reg %} method="get">{% csrf_token %}
+	<form action={% url search-tabular_reg %} method="get">
 		<p>{{ search_form.analyte.label }}:&nbsp;{{ search_form.analyte }}&nbsp;<input id="search-button" type="submit" value="Search NEMI"/></p>
 	</form>
 {% endblock %}
