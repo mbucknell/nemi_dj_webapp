@@ -4,6 +4,7 @@ Created on Mar 13, 2012
 @author: mbucknel
 '''
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 from django.test import Client, TestCase
 
 from nemi.search.utils.forms import get_criteria_from_field_data
@@ -1122,7 +1123,208 @@ class TestTabularRegulatorySearchView(TestCase):
         self.assertEqual(resp.context['results'][0]['analyte_code'], 'E-10275')
         self.assertItemsEqual(resp.context['results'][0]['syn'], ['Amenable cyanide', 'Available Cyanide', 'Cyanide amenable to chlorination'])
 
-          
+   
+class TestKeywordSearchView(TestCase):
+    '''Decided to not test query as it doesn't use the Django ORM. This would require a special test runner
+    to do this.
+    '''
+    
+    def test_view_no_query(self):
+        resp = self.client.get(reverse('search-keyword'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'keyword_search.html')
+        self.assertIn('form', resp.context)
+        self.assertNotIn('current_url', resp.context)
+        self.assertNotIn('results', resp.context)
+
+class TestBrowseMethodsView(TestCase):
+    fixtures = ['method_vw.json']
+    
+    def test_view(self):
+        resp = self.client.get(reverse('search-browse'))
+        
+        self.assertEqual(resp.status_code, 200);
+        self.assertTemplateUsed(resp, 'browse_methods.html')
+        self.assertEqual(len(resp.context['object_list']), 16)
+        
+        
+class TestMethodSummaryView(TestCase):
+    fixtures = ['definitions_dom.json',
+                'method_summary_vw.json']
+#I am having trouble dumping the MethodAnalyteVW using the dumpdata command so I'm omiting this for now.                
+#                'method_analyte_vw.json',
+#                'analyte_code_rel.json']
+    
+    def test_view_with_valid_id(self):
+        resp = self.client.get(reverse('search-method_summary', kwargs={'method_id' : 4846}))
+        
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'method_summary.html')
+        self.assertIn('data', resp.context)
+        self.assertEqual(resp.context['data'].method_id, 4846)
+        self.assertIn('field_defs', resp.context)
+        self.assertIn('analyte_data', resp.context)
+        self.assertIn('notes', resp.context)
+        # Add more tests to test analyte_data  and notes contents when method_analyte_vw.json fixture is available.
+        
+    def test_view_with_invalid_id(self):
+        resp = self.client.get(reverse('search-method_summary', kwargs={'method_id' : 1}))
+        
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'method_summary.html')
+        self.assertIn('data', resp.context)
+        self.assertIsNone(resp.context['data'])
+        self.assertIn('analyte_data', resp.context)
+        self.assertIsNone(resp.context['analyte_data'])
+        self.assertNotIn('field_defs', resp.context)
+        
+        
+class TestRegulatoryMethodSummaryView(TestCase):
+    fixtures = ['definitions_dom.json',
+                'reg_query_vw.json']
+#I am having trouble dumping the MethodAnalyteVW using the dumpdata command so I'm omiting this for now.                
+#                'method_analyte_vw.json',
+#                'analyte_code_rel.json']
+
+    def test_view_with_valid_id(self):
+        resp = self.client.get(reverse('search-method_summary_reg', kwargs={'rev_id' : 14}))
+        
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'method_summary.html')
+        self.assertIn('data', resp.context)
+        self.assertEqual(resp.context['data'].revision_id, 14)
+        self.assertIn('field_defs', resp.context)
+        self.assertIn('analyte_data', resp.context)
+        self.assertIn('notes', resp.context)
+        # Add more tests to test analyte_data  and notes contents when method_analyte_vw.json fixture is available.
+        
+    def test_view_with_invalid_id(self):
+        resp = self.client.get(reverse('search-method_summary_reg', kwargs = {'rev_id' : 1565}))
+        
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'method_summary.html')
+        self.assertIn('data', resp.context)
+        self.assertIsNone(resp.context['data'])
+        self.assertIn('analyte_data', resp.context)
+        self.assertIsNone(resp.context['analyte_data'])
+        self.assertNotIn('field_defs', resp.context)
+        
+class TestBiologicalMethodSummaryView(TestCase):
+    fixtures = ['definitions_dom.json',
+                'method_summary_vw.json']
+#I am having trouble dumping the MethodAnalyteVW using the dumpdata command so I'm omiting this for now.                
+#                'method_analyte_vw.json',
+#                'analyte_code_rel.json']
+
+    def test_view_with_valid_id(self):
+        resp = self.client.get(reverse('search-biological_method_summary', kwargs={'method_id' : 4845}))
+        
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'biological_method_summary.html')
+        self.assertIn('data', resp.context)
+        self.assertEqual(resp.context['data'].method_id, 4845)
+        self.assertIn('field_defs', resp.context)
+        self.assertIn('analyte_data', resp.context)  
+        
+    def test_view_with_invalid_id(self):
+        resp = self.client.get(reverse('search-biological_method_summary', kwargs={'method_id' : 1}))
+        
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'biological_method_summary.html')
+        self.assertIn('data', resp.context)
+        self.assertIsNone(resp.context['data'])
+        self.assertIn('analyte_data', resp.context)
+        self.assertIsNone(resp.context['analyte_data'])
+        self.assertNotIn('field_defs', resp.context)      
+
+class TestToxicityMethodSummaryView(TestCase):
+    fixtures = ['definitions_dom.json',
+                'method_summary_vw.json']
+#I am having trouble dumping the MethodAnalyteVW using the dumpdata command so I'm omiting this for now.                
+#                'method_analyte_vw.json',
+#                'analyte_code_rel.json']
+
+    def test_view_with_valid_id(self):
+        resp = self.client.get(reverse('search-toxicity_method_summary', kwargs={'method_id' : 4845}))
+        
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'toxicity_method_summary.html')
+        self.assertIn('data', resp.context)
+        self.assertEqual(resp.context['data'].method_id, 4845)
+        self.assertIn('field_defs', resp.context)
+        self.assertIn('analyte_data', resp.context)  
+        
+    def test_view_with_invalid_id(self):
+        resp = self.client.get(reverse('search-toxicity_method_summary', kwargs={'method_id' : 1}))
+        
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'toxicity_method_summary.html')
+        self.assertIn('data', resp.context)
+        self.assertIsNone(resp.context['data'])
+        self.assertIn('analyte_data', resp.context)
+        self.assertIsNone(resp.context['analyte_data'])
+        self.assertNotIn('field_defs', resp.context)      
+           
+
+class TestStreamPhysicalMethodSummaryView(TestCase):
+    fixtures = ['definitions_dom.json',
+                'method_stg_summary_vw.json']
+
+
+    def test_view_with_valid_id(self):
+        resp = self.client.get(reverse('search-stream_physical_method_summary', kwargs={'method_id' : 4830}))
+        
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'stream_physical_method_summary.html')
+        self.assertIn('data', resp.context)
+        self.assertEqual(resp.context['data'].method_id, 4830)
+        self.assertIn('field_defs', resp.context)
+        self.assertIn('analyte_data', resp.context)
+        self.assertEqual(len(resp.context['analyte_data']), 0)  
+        
+    def test_view_with_invalid_id(self):
+        resp = self.client.get(reverse('search-toxicity_method_summary', kwargs={'method_id' : 1}))
+        
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'toxicity_method_summary.html')
+        self.assertIn('data', resp.context)
+        self.assertIsNone(resp.context['data'])
+        self.assertIn('analyte_data', resp.context)
+        self.assertIsNone(resp.context['analyte_data'])
+        self.assertNotIn('field_defs', resp.context)  
+        
+            
+class TestExportMethodAnalyte(TestCase): 
+    # Add fixtures when when download MethodAnalyteVw data and create a fixture
+    
+    def test_view(self):
+        resp = self.client.get(reverse('search-method_analyte_export', kwargs={'method_id' : 1})) 
+        self.assertEqual(resp.status_code, 200) 
+        self.assertEqual(resp['Content-Type'], 'text/tab-separated-values')
+        self.assertEqual(resp['Content-Disposition'], 'attachment; filename=1_analytes.tsv')  
+        
+# TODO: Need to add more tests for the statistical methods views        
+class TestAddStatisticalSourceView(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create_user('user1', '', password='test')
+        self.user1.is_staff = True
+        self.user1.is_active = True
+        self.user1.save()
+        
+        
+    def test_view_get(self):
+        resp = self.client.get(reverse('search-create_statistical_source')) 
+        
+        self.assertRedirects(resp, '/accounts/login/?next=%s' % (reverse('search-create_statistical_source')))
+        
+        self.client.login(username='user1', password='test')
+        resp = self.client.get(reverse('search-create_statistical_source'))
+        
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'create_statistic_source.html')
+        self.assertIn('form', resp.context)
+        
+                                 
 class TestStatisticSearchViewNoMethods(TestCase):
     fixtures = ['static_data.json']  
       

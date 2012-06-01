@@ -1146,7 +1146,7 @@ class StreamPhysicalMethodSummaryView(BaseMethodSummaryView):
         return []
     
     
-class ExportMethodAnalyte(View, TemplateResponseMixin):
+class ExportMethodAnalyte(View):
     ''' Extends the standard view. This view creates a
     tab-separated file of the analyte data. Required keyword argument,
     method_id is used to retrieve the analyte information. This uses

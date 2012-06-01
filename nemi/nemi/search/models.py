@@ -82,7 +82,7 @@ class MethodSummaryVW(models.Model):
     mimetype = models.CharField(max_length=50, blank=True)
 #    mydoc -- Unused
 #    method_pdf -- Unused
-    pdf_size  = models.IntegerField(blank=True)
+    pdf_size  = models.IntegerField(null=True)
     method_id = models.IntegerField(primary_key=True) 
     source_method_identifier = models.CharField(max_length=30)
     method_descriptive_name = models.CharField(max_length=250)
@@ -104,7 +104,7 @@ class MethodSummaryVW(models.Model):
     sample_handling = models.CharField(max_length=3000, blank=True)
     max_holding_time = models.CharField(max_length=300, blank=True)
     sample_prep_methods = models.CharField(max_length=100, blank=True)
-    relative_cost_id = models.IntegerField(blank=True)
+    relative_cost_id = models.IntegerField(null=True)
     method_source = models.CharField(max_length=20)
     method_source_name = models.CharField(max_length=150)
     method_source_url = models.CharField(max_length=200, blank=True)
@@ -128,7 +128,7 @@ class MethodSummaryVW(models.Model):
     analysis_amt_ml = models.CharField(max_length=10, blank=True)
     analysis_amt_g = models.CharField(max_length=10, blank=True)
     ph_of_analytical_sample = models.CharField(max_length=10, blank=True)
-    calc_waste_amt = models.DecimalField(max_digits=9, decimal_places=2, blank=True)
+    calc_waste_amt = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
     quality_review_id = models.CharField(max_length=100, blank=True)
     pbt = models.CharField(max_length=1, blank=True)
     toxic = models.CharField(max_length=1, blank=True)
