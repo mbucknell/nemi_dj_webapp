@@ -40,10 +40,17 @@ a[class='popup']{
 .abbrev{
 	cursor: help;
 }
-.page-header{
-	width: 100%;
-	margin: 0px;
+#page-header{
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 5%;
+	margin-right: 5%;
 	border-bottom: solid darkred 2px;
+}
+#page-content {
+	margin-top: 10px;
+	margin-left: 5%;
+	margin-right: 5%;
 }
 #page-top-nav li {
 	display: inline-block;
@@ -53,6 +60,10 @@ a[class='popup']{
 	margin: 5px;
 	text-decoration: none;
 	background-color: lightgrey;
+}
+#keyword-search-div {
+	float: right;
+	margin-top: 0.5em;
 }
 /* Used to style form error message */
 .errorlist{

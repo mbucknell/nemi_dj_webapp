@@ -5,7 +5,7 @@ Created on Mar 13, 2012
 '''
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.test import Client, TestCase
+from django.test import TestCase
 
 from nemi.search.utils.forms import get_criteria_from_field_data
 from nemi.search.views import GeneralSearchView, AnalyteSearchView, MicrobiologicalSearchView, BiologicalSearchView, ToxicitySearchView, PhysicalSearchView
@@ -1133,9 +1133,22 @@ class TestKeywordSearchView(TestCase):
         resp = self.client.get(reverse('search-keyword'))
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'keyword_search.html')
-        self.assertIn('form', resp.context)
+        self.assertNotIn('keyword', resp.context)
         self.assertNotIn('current_url', resp.context)
         self.assertNotIn('results', resp.context)
+        self.assertNotIn('error', resp.context)
+        
+    def test_view_blank_search_field(self):
+        resp = self.client.get(reverse('search-keyword'),
+                                       {'keyword_search_field' : ''})
+        
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'keyword_search.html')
+        self.assertNotIn('keyword', resp.context)
+        self.assertNotIn('current_url', resp.context)
+        self.assertNotIn('results', resp.context)
+        self.assertIn('error', resp.context)
+       
 
 class TestBrowseMethodsView(TestCase):
     fixtures = ['method_vw.json']

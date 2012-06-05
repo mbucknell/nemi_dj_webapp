@@ -128,12 +128,7 @@ class AnalyteSearchForm(Form):
         qs = MethodVW.objects.order_by('method_type_desc').values_list('method_type_desc', flat=True).distinct()
         self.fields['method_types'].choices = [(desc, desc) for desc in qs]
         self.fields['method_types'].initial = [desc for desc in qs]
-                  
-class KeywordSearchForm(Form):
-    
-    ''' Extends the standard Form to implement the keyword search form. 
-    '''
-    keywords = CharField()
+        
     
 class MicrobiologicalSearchForm(Form):
     ''' Extends the Form class to implement the microbiological search form.

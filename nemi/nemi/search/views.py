@@ -15,7 +15,7 @@ from django.views.generic import View, DetailView, ListView
 from django.views.generic.edit import TemplateResponseMixin, CreateView, UpdateView
 
 # project specific packages
-from forms import GeneralSearchForm, AnalyteSearchForm, KeywordSearchForm, MicrobiologicalSearchForm, RegulatorySearchForm
+from forms import GeneralSearchForm, AnalyteSearchForm, MicrobiologicalSearchForm, RegulatorySearchForm
 from forms import BiologicalSearchForm, ToxicitySearchForm, PhysicalSearchForm, StatisticalSearchForm, StatisticalSourceEditForm, TabularSearchForm
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw, AnalyteCodeVW
 from models import RegQueryVW, SourceCitationRef, CitationTypeRef, RegulatoryMethodReport
@@ -890,21 +890,25 @@ class KeywordSearchView(View, TemplateResponseMixin):
         '''
         if request.GET:
             # Form has been submitted.
-            form = KeywordSearchForm(request.GET)
-            if form.is_valid():
+            keyword = request.GET['keyword_search_field']
+            if keyword.strip() == '':
+                #Render a blank form
+                return self.render_to_response({'error' : True})
+            
+            else:
                 # Execute as raw query since  it uses a CONTAINS clause and context grammer.
                 cursor = connection.cursor() #@UndefinedVariable
                 cursor.execute('SELECT DISTINCT score(1) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
 mf.link_to_full_method, mf.mimetype, mf.revision_id, mf.method_official_name, mf.method_descriptive_name, mf.method_source \
 FROM nemi_data.method_fact mf, nemi_data.revision_join rj \
 WHERE mf.revision_id = rj.revision_id AND \
-(CONTAINS(mf.source_method_identifier, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + form.cleaned_data['keywords'] + '.<progression> \
+(CONTAINS(mf.source_method_identifier, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + keyword + '.<progression> \
 <seq><rewrite>transform((TOKENS, "{", "}", " "))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", " ; "))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", "AND"))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", "ACCUM"))</rewrite></seq>\
 </progression></textquery><score datatype="INTEGER" algorithm="COUNT"/></query>\', 1) > 1 \
-OR CONTAINS(rj.method_pdf, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + form.cleaned_data['keywords'] + '.<progression> \
+OR CONTAINS(rj.method_pdf, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + keyword + '.<progression> \
 <seq><rewrite>transform((TOKENS, "{", "}", " "))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", " ; "))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", "AND"))</rewrite></seq>\
@@ -918,28 +922,23 @@ ORDER BY score(1) desc;')
                     page = int(request.GET.get('page', '1'))
                 except ValueError:
                     page = 1
-
+    
                 # If page request is out of range, deliver last page of results.
                 try:
                     results = paginator.page(page)
                 except (EmptyPage, InvalidPage):
                     results = paginator.page(paginator.num_pages)
-
+    
                 path = request.get_full_path()
                 # Remove the &page parameter.
                 current_url = path.rsplit('&page=')[0]
-                return self.render_to_response({'form': form,
+                return self.render_to_response({'keyword': keyword,
                                                 'current_url' : current_url,
-                                                'results' : results}) 
-                
-            else:
-                # There is an error in form validation so resubmit the form.
-                return self.render_to_response({'form' : form})
-
+                                                'results' : results})
+            
         else:
             #Render a blank form
-            form = KeywordSearchForm()
-            return self.render_to_response({'form' : form})
+            return self.render_to_response({})
         
 class BrowseMethodsView(ListView):
     '''

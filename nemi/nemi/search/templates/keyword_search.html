@@ -1,4 +1,4 @@
-{% extends "base_search.html" %}
+{% extends "base.html" %}
 
 {% block title %}NEMI Keyword Search {% endblock %}
 
@@ -26,17 +26,15 @@
 	</style>
 {% endblock %}
 
-{% block search_box %}
-	<h3>Keyword Search</h3>
-	<form action="{% url search-keyword %}" method="get">
-	<p>Keyword(s): {{ form.keywords }}&nbsp;<input id="search-button" type="submit" value="Search NEMI"/></p>
-	</form>
-	<p><b>The results below are links to methods that best match the search terms entered. Results are based on a complete 
-	search of the database, including full-method PDF file when available.</b></p>
-	<p>If you have any questions or comments, or if you do not get the results you expect, send us feedback, including the search terms
-	you used and what method or methods you expected to see but didn't.</p>
-{% endblock %}
-{% block results_box %}
+{% block content%}
+	{% if error %}
+		<p class="errorlist"><b>Please enter non blank text in the search box</b>
+	{% else %}
+		<p>If you have any questions or comments, or if you do not get the results you expect, send us feedback, including the search terms
+		you used and what method or methods you expected to see but didn't.
+		</p>
+	{% endif %}
+	
 	{% if results.object_list %}
 		<div id="results">
 			{% include "results_nav.html" %}

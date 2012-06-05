@@ -56,15 +56,25 @@
 	
 	<body>
 		{% block header %}
-			<div class="page-header">
+			<div id="page-header">
 				<img src="{{ STATIC_URL }}images/bannerv3.7.gif" alt="NEMI Logo"></img>
 				<div id="beta-marker"><p>Provisional - Site in review</p></div>
 			</div>
 		{% endblock %}
 		
-		{% block content %}
-		<!-- Put all non header content here -->
-		{% endblock %}
-		
+		<div id="page-content">
+			{% block keyword_search %}
+				<div id="keyword-search-div">
+					<form action="{% url search-keyword %}" method="get">
+						<b>Keyword(s)</b> 
+						<input id="keyword-search-field" type="text" name="keyword_search_field" value="{{ keyword }}"/>&nbsp;<input id="search-button" type="submit" value="Search"/>
+					</form>
+				</div>
+			{% endblock %}
+			
+			{% block content %}
+			<!-- Put all non header content here -->
+			{% endblock %}
+		</div>
 	</body>
 </html>	
