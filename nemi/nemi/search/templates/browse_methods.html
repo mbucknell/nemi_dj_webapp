@@ -46,8 +46,9 @@
 							<td><input type=button onclick="return showOnNewWindow('{% url search-method_summary object.method_id %}');" value="View"/></td>
 							<td>{{ object.source_method_identifier|safe }}</td>
 							<td>{{ object.method_descriptive_name }}</td>
-							<td>
-								<a title="Click to show/hide details" 
+							<td>{% include "method_source_details.html" with r=object %}
+							<!-- every where else we just show the method_source so I commented this out.
+<!--								<a title="Click to show/hide details" 
 								href="javascript:show_hide('#{{ object.method_id }}-method-source-detail')">
 								{% if "EPA" in object.method_source %}
 									EPA
@@ -68,6 +69,7 @@
 										</tr>
 									</table>
 								</div>
+								-->
 							</td>
 						</tr>
 					{% endfor %}
