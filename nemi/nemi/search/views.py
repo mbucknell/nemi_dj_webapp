@@ -1240,6 +1240,11 @@ class AddStatisticalSourceView(CreateView):
         
         return HttpResponseRedirect(self.get_success_url())
     
+    def get_context_data(self, **kwargs):
+        context = super(AddStatisticalSourceView, self).get_context_data(**kwargs)
+        context['action_url'] = reverse('search-create_statistical_source')
+        return context
+    
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(AddStatisticalSourceView, self).dispatch(*args, **kwargs)
@@ -1279,6 +1284,7 @@ class UpdateStatisticalSourceView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(UpdateStatisticalSourceView, self).get_context_data(**kwargs)
         context['insert_user'] = self.object.insert_person
+        context['action_url'] = reverse('search-update_statistical_source', kwargs={'pk': self.object.source_citation_id})
         return context
 
     def get_success_url(self):

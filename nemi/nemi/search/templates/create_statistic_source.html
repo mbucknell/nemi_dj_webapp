@@ -1,11 +1,9 @@
 {% extends "base_edit_stats_method.html" %}
 
-{% block title %}Create New Statistical Source{% endblock %}
+{% block title %}Add Statistical Method{% endblock %}
+
+{% block page_title %}Add Statistical Method{% endblock %}
 
 {% block section_header %}Enter information to create a statistical method {% endblock %}
-
-{% block form_header %}
-	<form action="{% url search-create_statistical_source %}" method="post">{% csrf_token %}
-{% endblock form_header %}
 
 {% block form_submit %} <input type="submit" value="Create Citation"/> {% endblock %}

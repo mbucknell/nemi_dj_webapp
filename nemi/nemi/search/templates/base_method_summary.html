@@ -1,6 +1,12 @@
 {% extends "base.html" %}
+<!-- Extend this template to implement standard method summary pages -->
 
 {% block title %}NEMI Method Summary{% endblock %}
+
+{% block page_style %}
+	<!--  Style sheets for ui-dialog plugins -->
+	<link type="text/css" href="{{ STATIC_URL }}styles/jquery-ui/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" media="screen"/>
+{% endblock %}
 
 {% block page_script %}
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.8.16.custom.min.js"></script>
@@ -58,10 +64,11 @@
 	</script>
 {% endblock %}
 
-{% block page_style %}
-	<!--  Style sheets for ui-dialog plugins -->
-	<link type="text/css" href="{{ STATIC_URL }}styles/jquery-ui/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" media="screen"/>
-{% endblock %}
+{% block page_title %}Summary of Method {{ data.source_method_identifier|safe }}{% endblock %}
+
+{% block navigation %} {% endblock navigation %}
+
+{% block keyword_search %} {% endblock keyword_search %}
 
 {% block content %}
 
@@ -72,10 +79,6 @@
 		</div>
 	{% endblock %}
 	
-	{% block summary_header %}
-		<h2>Summary of Method {{ data.source_method_identifier|safe }}</h2>
-	{% endblock %}
-	
-	{% block summary_info %}{% endblock %}
+	{% block summary_info %}<!-- Insert method summary information here -->{% endblock %}
 	
 {% endblock %}

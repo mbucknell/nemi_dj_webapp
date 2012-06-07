@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 <!-- Extend this template to implement method search pages that contain a search box and then a data table -->
 {% block title %}NEMI Search{% endblock %}
+
+{% block page_style %}
+	<!--  Style sheets for tablesorter and ui-dialog plugins -->
+	<link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesort/style.css" media="screen" type="text/css" />
+	<link type="text/css" href="{{ STATIC_URL }}styles/jquery-ui/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" media="screen"/>
+
+	{% block local_page_style %}<!-- Put page specific style here -->{% endblock %}
+
+{% endblock %}
+
 {% block page_script %}
 	<!-- Imports the tablesorter and ui plugins -->
 	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.min.js"></script>
@@ -116,33 +126,8 @@
 	
 {% endblock %}
 
-{% block page_style %}
-	<!--  Style sheets for tablesorter and ui-dialog plugins -->
-	<link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesort/style.css" media="screen" type="text/css" />
-	<link type="text/css" href="{{ STATIC_URL }}styles/jquery-ui/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" media="screen"/>
-
-	{% block local_page_style %}<!-- Put page specific style here -->{% endblock %}
-
-{% endblock %}
-
 {% block content %}
 	<div id="nav_and_search">
-		{% block sidebar_nav %}
-			<div id="sidebar">
-				<ul>
-					<li><a href={% url search-general %}>General</a></li>
-					<li><a href={% url search-analyte %}>Analyte</a></li>
-					<li><a href={% url search-keyword %}>Keyword</a></li>
-					<li><a href={% url search-microbiological %}>Microbiological</a></li>
-					<li><a href={% url search-biological %}>Biological</a></li>
-					<li><a href={% url search-toxicity %}>Toxicity</a></li>
-					<li><a href={% url search-physical %}>Physical</a></li>
-					<li><a href={% url search-stream_physical %}>Stream Physical</a></li>
-					<li><a href={% url search-regulatory %}>Regulatory</a></li>
-					<li><a href={% url search-tabular_reg %}>Tabular Regulatory</a></li>
-				</ul>
-			</div>
-		{% endblock %}
 		{% block search_box %}
 			<div id="search-box">
 				<div id="search-box-header">

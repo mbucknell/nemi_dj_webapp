@@ -52,47 +52,63 @@ a[class='popup']{
 	margin-left: 5%;
 	margin-right: 5%;
 }
-#page-top-nav li {
-	display: inline-block;
-}
-#page-top-nav a {
-	padding: 5px;
-	margin: 5px;
-	text-decoration: none;
-	background-color: lightgrey;
+#page-navigation {
+	background-color: Beige;	
 }
 #keyword-search-div {
 	float: right;
-	margin-top: 0.5em;
+	margin : 0.5em;
+	font-size: large;
 }
 /* Used to style form error message */
 .errorlist{
 	color: red;
 }
-#sidebar{
-	float: left;
-	maxWidth: 300px;
+#navigation-bar {
 	display: inline-block;
-	background-color: #AAAAAA;
-	padding : 4px;
-	margin: 10px;
-	border: solid 2px darkred;
+	font-size: large;
+	margin: 0px;
+	
 }
-#sidebar a {
-	text-decoration: none;
-	color: darkred;
-}
-#sidebar a.selected-page {
-	background-color: white;
-}
-#sidebar ul{
-	font-weight: bold;
-	font-size: 14px;
+#navigation-bar ul {
 	list-style: none;
-	padding: 4px;
+	margin: 0px;
+	padding: 0px;
 }
-#search-box {
-	display: inline-block;
+#navigation-bar li {
+	white-space: nowrap;
+}
+#navigation-menu>li>a{
+	 border-right: 2px solid DarkGoldenRod;
+}
+#navigation-menu>li{
+	margin-top: 2px;
+}
+#navigation-bar a:link, #navigation-bar a:visited {
+	text-decoration: none;
+	color: black;	
+	padding: 0.5em;
+	margin: 0px;
+	background-color: Beige;
+}
+#navigation-bar a:hover {
+	background-color: DarkGoldenRod;
+	color: white;
+}
+#navigation-bar .sub_menu li{
+	font-size: small;
+}
+
+#page-title {
+	background-color: SeaGreen;
+	padding-top: 0.25em;
+	padding-bottom: 0.25em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	margin: 0px;
+}
+#nav_and_search {
+	margin: 0px;
 }
 #search-button {
 	border: solid 1px grey;
@@ -105,7 +121,8 @@ a[class='popup']{
 	color: black;
 }
 #search-box {
-	margin-top: 10px;
+	display: inline-block;
+	margin-top: 0px;
 	border: solid DarkSeaGreen 1px;
 	padding: 0px;
 	width: 700px;

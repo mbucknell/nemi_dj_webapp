@@ -1,8 +1,13 @@
 {% extends "base.html" %}
+<!--  Extend this template to implement pages to create and edit statistical methods -->
 
 {% load form_field_attr %}
 
-{% block title %} {% endblock %}
+{% block title %}<!--  Add page specific title --> {% endblock %}
+
+{% block page_style %}
+	<link type="text/css" href="{{ STATIC_URL }}styles/jquery-ui/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" media="screen"/>
+{% endblock %}
 
 {% block page_script %}
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.8.16.custom.min.js"></script>
@@ -34,10 +39,6 @@
 	</script>
 {% endblock %}
 
-{% block page_style %}
-	<link type="text/css" href="{{ STATIC_URL }}styles/jquery-ui/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" media="screen"/>
-{% endblock %}
-
 {% block header %}
 	{{ block.super }}
 		{% block edit_help_dialog %}
@@ -46,55 +47,54 @@
 				<p>Place holder</p>
 			</div>	
 		{% endblock %}
-		{% include "stat_page_header.html" %}
-
 {% endblock %}
 
 {% block content %}
 	<h3><i>{% block section_header %}SECTION HEADER GOES HERE{% endblock %}</i></h3>
 	<p>A '*' by a field's label indicates the field is required.</p>
 	<br/>
+	
 	{% block edit_form %} 
-		{% block form_header %}<!-- Put html form tag here with the action needed --> {% endblock %}
+		<form action="{{ action_url }}" method="post">{% csrf_token %}
 		
-		{% block form_input_fields %}
-			{% if form.errors %}
-				<p class="errorlist"><b>Need to correct errors and resubmit</b></p>
-			{% endif %}
-			<p class="errorlist"> {{ form.non_field_errors }} </p>
-			<table id="data-entry-table">
-				{% if insert_user %}
-					<tr><th>User who created the method:</th><td>{{ insert_user.get_full_name }} - {{ insert_user.username }}</td></tr>
-				{% else %}
-					<tr><th>Username:</th><td></td><td>{{ user.get_full_name }} - {{ user.username }}</td></tr>
-				{% endif %}			
-				{% for field in form  %}
-					<tr>
-						<th><label for="id_{{ field.html_name }}" title="{{ field.help_text }}">
-						{% if field.field.required %}
-							{{ field.label_tag }}*:
-						{% else %}
-							{{ field.label_tag }}:
-						{% endif %}
-						</label></th>
-						<td style="vertical-align: top;">
-							{% if field|verbose_help %}
-								<div style="display: inline-block; margin: 4px;" >
-								<img id="field-help" src="{{ STATIC_URL }}images/q_mark.gif"
-			 				onclick="javascript:showInfo('{{ field.label}}', '{{ field|verbose_help }}')">	
-								</div>
+			{% block form_input_fields %}
+				{% if form.errors %}
+					<p class="errorlist"><b>Need to correct errors and resubmit</b></p>
+				{% endif %}
+				<p class="errorlist"> {{ form.non_field_errors }} </p>
+				<table id="data-entry-table">
+					{% if insert_user %}
+						<tr><th>User who created the method:</th><td>{{ insert_user.get_full_name }} - {{ insert_user.username }}</td></tr>
+					{% else %}
+						<tr><th>Username:</th><td></td><td>{{ user.get_full_name }} - {{ user.username }}</td></tr>
+					{% endif %}			
+					{% for field in form  %}
+						<tr>
+							<th><label for="id_{{ field.html_name }}" title="{{ field.help_text }}">
+							{% if field.field.required %}
+								{{ field.label_tag }}*:
+							{% else %}
+								{{ field.label_tag }}:
 							{% endif %}
-						</td>
-						<td>{{ field }}</td>
-						</td>
-						<td>{{ field.errors }}</td>
-					</tr>
-				{% endfor %}
-			</table>
-		{% endblock form_input_fields %}
-				
-		{% block form_submit %} {% endblock %}
-
+							</label></th>
+							<td style="vertical-align: top;">
+								{% if field|verbose_help %}
+									<div style="display: inline-block; margin: 4px;" >
+									<img id="field-help" src="{{ STATIC_URL }}images/q_mark.gif"
+				 				onclick="javascript:showInfo('{{ field.label}}', '{{ field|verbose_help }}')">	
+									</div>
+								{% endif %}
+							</td>
+							<td>{{ field }}</td>
+							</td>
+							<td>{{ field.errors }}</td>
+						</tr>
+					{% endfor %}
+				</table>
+			{% endblock form_input_fields %}
+					
+			{% block form_submit %}<!-- Put submit button here --> {% endblock %}
+		 </form>
 	{% endblock edit_form%}
 
 {% endblock content %}

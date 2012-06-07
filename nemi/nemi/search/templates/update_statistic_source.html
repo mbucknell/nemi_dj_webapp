@@ -1,11 +1,9 @@
 {% extends "base_edit_stats_method.html" %}
 
-{% block title %}Update Statistical Source{% endblock %}
+{% block title %}Edit Statistical Source{% endblock %}
+
+{% block page_title %}Edit Statistical Source - {{ form.source_citation.value }}{% endblock %}
 
 {% block section_header %}Edit information to update this statistical method{% endblock %}
-
-{% block form_header %}
-	<form action="{% url search-update_statistical_source  object.source_citation_id %}" method="post">{% csrf_token %}
-{% endblock %}
 
 {% block form_submit %}<input type="submit" value="Update Citation"/> {% endblock %}

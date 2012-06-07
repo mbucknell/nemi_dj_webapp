@@ -1,9 +1,9 @@
 ''' This module contains the forms needed to implement the NEMI search pages '''
 
-from django.forms import Form, ModelForm, ChoiceField, MultipleChoiceField, CheckboxSelectMultiple, RadioSelect, CharField, SelectMultiple, TextInput, HiddenInput
-from django.forms import Textarea, ModelMultipleChoiceField, Select
+from django.forms import Form, ModelForm, ChoiceField, MultipleChoiceField, CheckboxSelectMultiple, RadioSelect, CharField, TextInput
+from django.forms import Textarea, ModelMultipleChoiceField
 from django.utils.safestring import mark_safe
-from models import MethodVW, MediaNameDOM, InstrumentationRef, MethodSubcategoryRef, MethodSourceRef, AnalyteCodeVW, AnalyteCodeRel, MethodAnalyteAllVW
+from models import MethodVW, MediaNameDOM, InstrumentationRef, MethodSubcategoryRef, MethodSourceRef, MethodAnalyteAllVW
 from models import StatisticalItemType, COMPLEXITY_CHOICES, StatisticalAnalysisType, StatisticalSourceType, StatisticalDesignObjective, RegulationRef
 from models import RegulatoryMethodReport, StatisticalTopics, SourceCitationRef
 from django.forms.models import ModelChoiceField

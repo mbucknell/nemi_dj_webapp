@@ -1,3 +1,7 @@
+<!-- 
+Template is designed to be included in other templates and creates a table header element for fields with descriptions to be shown in popups.
+Contains template variable field which is a dictionary object containing keys 'name' and 'description'
+ -->
 <th><span style="float: left;">{{ field.name }}</span>
 	<a style="float: right; margin-left: 4px;" title="Click to display definition"
 			href="javascript:showInfo('{{ field.name }}', '{{ field.description|escapejs }}')">

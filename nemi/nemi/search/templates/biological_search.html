@@ -1,5 +1,9 @@
 {% extends "base_search.html" %}
+
 {% block title %}NEMI Biological Search{% endblock %}
+
+{% block page_title %}Search Biological Methods{% endblock %}
+
 {% block search_box_body %}
 	<form action="{% url search-biological %}" method="get">
 		<h4> {{ search_form.non_field_errors }} </h4>
@@ -9,6 +13,7 @@
 		</table>			
 	</form>
 {% endblock %}
+
 {% block results_table_data %}
 	{% for r in results %}
 		<tr>

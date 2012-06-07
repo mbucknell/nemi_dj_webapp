@@ -1,15 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}NEMI Statistical Source Citation{% endblock %}
+{% block title %}NEMI Statistical Source Details{% endblock %}
 
-{% block header %}
-	{{ block.super }}
-	{% include "stat_page_header.html" %}
-{% endblock %}
+{% block page_title %}Statistical Source Details - {{ data.source_citation }}{% endblock %}
 
 {% block content %}
-	<h2>Statistical Source Details</h2>
 	{% if data %}
+	<br />
 		<table class="info-table">
 			<tr><th>Source Abbreviation</th><td>{{ data.source_citation }}</td>
 			<tr><th>Title</th><td>{{ data.title }}</td></tr>

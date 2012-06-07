@@ -6,6 +6,8 @@
 	<script src="{{ STATIC_URL }}script/analyte_select.js"></script>
 {% endblock %}
 
+{% block page_title %}Search Regulatory Methods{% endblock %}
+
 {% block search_box_body %}
 	{% include "find_analyte_dialog.html" with analyte_value_id="analyte-search-value" %}
 	<form id="search-form" action={% url search-regulatory %} method="get">
