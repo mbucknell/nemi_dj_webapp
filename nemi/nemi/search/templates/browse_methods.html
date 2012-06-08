@@ -6,9 +6,9 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$(".method-subcategory-div").each(function(){
-				var tableEl = $(this).find("table");
-				$(this).find('button').click(function(){
-					imgEl = $(this).find('img');
+				var tableEl = $(this).find(".data-table");
+				$(this).find('.subcategory-button').click(function(){
+					var imgEl = $(this).find('img');
 					if (imgEl.attr('alt') == 'show') {
 						imgEl.attr('src', "{{ STATIC_URL }}/images/triangle-down-image36.gif");
 						imgEl.attr('alt', 'hide');
@@ -21,6 +21,24 @@
 						imgEl.attr('title', 'Show methods');
 						tableEl.hide();
 					}
+				});
+			});
+			$(".show-hide-detail-div").each(function(){
+				var detailsDiv = $(this).find(".hidden-details-div");
+				$(this).find('button').click(function(){
+					var detailsImgEl = $(this).find('img');
+					if (detailsImgEl.attr('alt') == 'show') {
+						detailsImgEl.attr('src', "{{ STATIC_URL }}/images/triangle-down-image36.gif");
+						detailsImgEl.attr('alt', 'hide');
+						detailsImgEl.attr('title', 'Hide details');
+						detailsDiv.show();
+					}
+					else{
+						detailsImgEl.attr('src', "{{ STATIC_URL }}/images/triangle-right-image36.gif");
+						detailsImgEl.attr('alt', 'show');
+						detailsImgEl.attr('title', 'Show details');
+						detailsDiv.hide();
+					}						
 				});
 			});
 		});
@@ -38,7 +56,7 @@
 		{% regroup by_category.list by method_subcategory as objects_by_subcategory %}
 		{% for by_subcategory in objects_by_subcategory %}
 			<div class="method-subcategory-div">
-				<h4><button class="show-hide-toggle" title="Show methods" type="button"><img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" /></button>&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>				
+				<h4><button class="show-hide-toggle subcategory-button" title="Show methods" type="button"><img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" /></button>&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>				
 				<table class="data-table" style="display:none;">
 					<tr><th></th><th>Method Number</th><th>Method Descriptive Name</th><th>Method Source</th></tr>
 					{% for object in by_subcategory.list %}
