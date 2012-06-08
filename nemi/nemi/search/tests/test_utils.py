@@ -80,6 +80,16 @@ class TestGetCriteriaFromFieldData(unittest.TestCase):
         self.assertEqual(get_criteria_from_field_data(my_form, 'char'), ('Char', 'name'))
         self.assertEqual(get_criteria_from_field_data(my_form, 'my_int'), ('My int', 12))
         
+    def test_with_label_overrider(self):
+        my_form = self.MyForm({'choice' : 2,
+                               'char' : 'name',
+                               'my_int' : 12})
+        my_form.is_valid()
+        result_choice = get_criteria_from_field_data(my_form, 'choice', 'What is my choice')
+        self.assertEqual(result_choice[0], 'What is my choice')
+        self.assertEqual(result_choice[1], StatisticalItemType.objects.get(pk=2))
+        
+                
     def test_with_bad_field(self):
         my_form = self.MyForm(data={'choice' : None,
                                     'char' : '',

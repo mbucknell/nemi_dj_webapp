@@ -27,7 +27,7 @@ def get_criteria(field):
     else:
         return (field.label, _get_choice_select(field))
     
-def get_criteria_from_field_data(form, field_name):
+def get_criteria_from_field_data(form, field_name, label_override=None ):
     '''Returns a tuple representing field_name's label and data from form.
     If the field's data value is none, the function returns None.
     '''
@@ -35,7 +35,11 @@ def get_criteria_from_field_data(form, field_name):
         return None
     
     else:
-        return (form[field_name].label, form.cleaned_data[field_name])
+        if label_override == None:
+            return (form[field_name].label, form.cleaned_data[field_name])
+        else:
+            return (label_override, form.cleaned_data[field_name])
+            
     
 def get_multi_choice(form, name):
     ''' Returns the list of selected choices in a MultipleChoiceField. The form must be validated and the

@@ -1386,6 +1386,6 @@ class TestStatisticSearchView(TestCase):
                                                               'special_topics' : ''})
         
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.context['criteria'], [get_criteria_from_field_data(resp.context['search_form'], 'item_type'), None, None, None, None, None, None])
+        self.assertEqual(resp.context['criteria'],  [None, get_criteria_from_field_data(resp.context['search_form'], 'item_type'), None, None, None, None, None])
         self.assertEqual(resp.context['results'].count(), 4);
         

@@ -1327,11 +1327,11 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
             
     def get_context_data(self, form):
         criteria = []
+        criteria.append(get_criteria_from_field_data(form, 'study_objective', label_override='What you are interested in'))
         criteria.append(get_criteria_from_field_data(form, 'item_type'))
         criteria.append(get_criteria(form['complexity']))
         criteria.append(get_criteria_from_field_data(form, 'analysis_type'))
         criteria.append(get_criteria_from_field_data(form, 'publication_source_type'))
-        criteria.append(get_criteria_from_field_data(form, 'study_objective'))
         criteria.append(get_criteria_from_field_data(form, 'media_emphasized'))
         criteria.append(get_criteria_from_field_data(form, 'special_topic'))
         

@@ -81,6 +81,9 @@ a[class='popup']{
 #navigation-menu>li>a{
 	 border-right: 2px solid DarkGoldenRod;
 }
+#navigation-menu>li:last-child>a { 
+	border-right: none; /* Doesn't work in IE 8 */
+} 
 #navigation-menu>li{
 	margin-top: 2px;
 }
