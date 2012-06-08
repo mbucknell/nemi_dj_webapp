@@ -269,6 +269,11 @@ class TabularSearchForm(Form):
 class StatisticalSearchForm(Form):
     '''Extends the standard form to implement the query filtering form for the Statistical Methods'''
     
+    study_objective = ModelChoiceField(queryset=StatisticalDesignObjective.objects.exclude(objective='Revisit'),
+                                       label='What are you interested in',
+                                       empty_label='Any', 
+                                       required=False,
+                                       help_text='What water resources information need are you addressing, e.g., time trends, standards, evaluation, etc?')
     item_type = ModelChoiceField(queryset=StatisticalItemType.objects.all(), 
                                  empty_label='Any', 
                                  required=False, 
@@ -284,10 +289,6 @@ class StatisticalSearchForm(Form):
                                                empty_label='Any', 
                                                required=False,
                                                help_text='What type of organization produced this item?')
-    study_objective = ModelChoiceField(queryset=StatisticalDesignObjective.objects.all(), 
-                                       empty_label='Any', 
-                                       required=False,
-                                       help_text='What water resources information need are you addressing, e.g., time trends, standards, evaluation, etc?')
     media_emphasized = ModelChoiceField(queryset=MediaNameDOM.stat_media.all(), 
                                         empty_label='Any', 
                                         required=False,

@@ -10,7 +10,13 @@
  		<h4> {{search_form.non_field_errors }} </h4>
 		<table id="search-table">
 			{% for f in search_form %}
-				<tr><th><label for="id_{{ f.html_name }}" title="{{ f.help_text }}">{{ f.label }}:</label></th><td>{{ f }}</td></tr>
+				<tr><th><label for="id_{{ f.html_name }}" title="{{ f.help_text }}">
+					{% if f.label|last == "?" %}
+						{{ f.label }}
+					{% else %}
+						{{ f.label }}:
+					{% endif %}	
+					</label></th><td>{{ f }}</td></tr>
 			{% endfor %}
 			<tr><td></td><td><input id="search-button" type="submit" value="Search NEMI"/></td></tr>
 		</table>

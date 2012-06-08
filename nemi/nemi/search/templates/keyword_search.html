@@ -2,8 +2,6 @@
 
 {% block title %}NEMI Keyword Search {% endblock %}
 
-{% block page_title %}Search by Keyword{% endblock %}
-
 {% block page_style %}
 	<style>
 		#results {
@@ -28,6 +26,7 @@
 	</style>
 {% endblock %}
 
+{% block page_title %}Methods containing the keyword(s): {{ keyword }}{% endblock %}
 {% block content%}
 	{% if error %}
 		<p class="errorlist"><b>Please enter text in the search box</b>

@@ -136,6 +136,7 @@ a[class='popup']{
 #search-box th {
 	background-color: white;
 	text-align: left;
+	white-space: nowrap;
 	vertical-align: top;
 	padding: 4px;
 	width: 1px;
