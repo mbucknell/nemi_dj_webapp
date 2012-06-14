@@ -255,6 +255,7 @@ column in the table */
 .show-hide-toggle {
 	border: none;
 	background: transparent;
+	outline: none;
 }
 .show-hide-detail-div table {
 	position: relative;
