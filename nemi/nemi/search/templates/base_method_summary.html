@@ -66,10 +66,6 @@
 
 {% block page_title %}Summary of Method {{ data.source_method_identifier|safe }}{% endblock %}
 
-{% block navigation %} {% endblock navigation %}
-
-{% block keyword_search %} {% endblock keyword_search %}
-
 {% block content %}
 
 	{% block header_info %}
@@ -78,7 +74,7 @@
 			<p>Place holder</p>
 		</div>
 	{% endblock %}
-	
+	<br />
 	{% block summary_info %}<!-- Insert method summary information here -->{% endblock %}
 	
 {% endblock %}

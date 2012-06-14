@@ -4,23 +4,11 @@
 
 {% block page_style %}
 	<style>
-		#results {
-			position: relative;
-			padding-left : 4em;
-			padding-right: 4em;
+		.results-nav {
+			float: right;
 		}
-		.main-link, .main-link a{
-			font-size: medium;
-			color : darkgreen;
-			padding-top: 1em;
-			padding-bottom: 0.3em;
-		}
-		.method-info {
-			position: relative;
-			left: 3em;
-		}
-		.results-nav, .results-nav a{
-			color: darkblue;
+ 		.results-nav, .results-nav a{
+			color: DarkGoldenRod;
 			font-size: medium;
 		}
 	</style>
@@ -39,30 +27,47 @@
 	{% if results.object_list %}
 		<div id="results">
 			{% include "results_nav.html" %}
-			{% for r in results.object_list %}
-				<div class="main-link">
-					{{ r.METHOD_SUMMARY_SCORE }}%&nbsp;
-					<a class="popup" title="Method details (in a new tab)" target="_blank" href="{% url search-method_summary r.METHOD_ID %}">
-					{{ r.METHOD_NUMBER|safe }}&nbsp;{{ r.METHOD_DESCRIPTIVE_NAME }}
-					</a>
-				</div>
-				<div class="method-info">
-					{{ r.METHOD_SOURCE }}:&nbsp;{{ r.METHOD_OFFICIAL_NAME }}<br />
-					{% if r.LINK_TO_FULL_METHOD %}
-						This is a proprietary method. 
-						<a class="popup" href="javascript:showOnNewWindow('{{  r.LINK_TO_FULL_METHOD }}')" title="Link to method owner's method documentation (in a new window)">
-						Please visit the method owner's site for method documentation</a>
-					{% else %}
-						{% if r.MIMETYPE %}
-							<a href="http://www.nemi.gov/pls/nemi_pdf/nemi_data.download_pdf?p_file={{ r.REVISION_ID }}" 
-							title="Click to download PDF version of this method's documentation">
-							<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat (pdf) icon">Download full method now (PDF file)</a>
-						{% else %}
-							Method .pdf will be loaded into the database soon. Please contact the webmaster if you are in need of the full method.
-						{% endif %}
-					{% endif %}
-				</div>
-			{% endfor %}
+			<br /><br />
+			<table class="data-table" style="width: 100%">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Score</th>
+						<th>Method Number</th>
+						<th>Descriptive Method Name</th>
+						<th>Method Source</th>
+						<th>Official Name</th>
+						<th>Link to Method</th>
+					</tr>
+				</thead>
+				</tbody>
+					{% for r in results.object_list %}
+						<tr>
+							<td class="view-button"><a class="view-button" title="View method details" href="{% url search-method_summary r.METHOD_ID %}">View</a></td>
+							<td>{{ r.METHOD_SUMMARY_SCORE }}</td>
+							<td>{{ r.METHOD_NUMBER|safe }}</td>
+							<td>{{ r.METHOD_DESCRIPTIVE_NAME }}</td>
+							<td>{{ r.METHOD_SOURCE}}</td>
+							<td>{{ r.METHOD_OFFICIAL_NAME }}</td>
+							<td>
+								{% if r.LINK_TO_FULL_METHOD %}
+									This is a proprietary method. 
+									<a class="popup" href="javascript:showOnNewWindow('{{  r.LINK_TO_FULL_METHOD }}')" title="Link to method owner's method documentation (in a new window)">
+									Please visit the method owner's site for method documentation</a>
+								{% else %}
+									{% if r.MIMETYPE %}
+										<a href="http://www.nemi.gov/pls/nemi_pdf/nemi_data.download_pdf?p_file={{ r.REVISION_ID }}" 
+										title="Click to download PDF version of this method's documentation">
+										<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat (pdf) icon">Download full method now (PDF file)</a>
+									{% else %}
+										Method .pdf will be loaded into the database soon. Please contact the webmaster if you are in need of the full method.
+									{% endif %}
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
 			<br/>
 			{% include "results_nav.html" %}
 		</div>

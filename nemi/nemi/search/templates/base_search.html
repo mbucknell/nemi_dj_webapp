@@ -27,9 +27,9 @@
 				noSort[i] = { sorter: false }
 			});
 			// This sets the first sortable column to be the initial sortList.
-			var lastItem = $("#sort-table th").last().index();
+			var lastItemIndex = $("#sort-table thead th:last").index();
 			var sortList = [];
-			for (var i=0; i <= lastItem; i++){
+			for (var i=0; i <= lastItemIndex; i++){
 				if (!noSort[i]) {
 					sortList = [[i, 0]]
 					break;
@@ -197,6 +197,9 @@
 						<thead>
 						<tr>
 							{% block results_table_header %}
+								{% block results_table_view_column_header %}
+									<th class="nosort"></th>
+								{% endblock %}
 								{% for header in header_defs %}
 									{% if header.definition_name == "Greenness Profile" %}
 										<th class="nosort">

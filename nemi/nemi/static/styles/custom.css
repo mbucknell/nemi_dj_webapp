@@ -265,3 +265,22 @@ column in the table */
 	list-style-type: none;
 	margin: 0px;
 }
+td.view-button {
+	padding-top: 6px;
+	padding-bottom: 6px;
+	text-align: center;
+}
+.view-button a:link, .view-button a:visited {
+	text-decoration: none;
+	background: #F5F5F5;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 8px;
+	padding-right: 8px;
+	border: 1px outset grey;
+	border-radius: 40px;
+}
+.view-button a:hover {
+	color: black;
+	background: #E0E0E0;
+}

@@ -17,8 +17,9 @@
 {% block results_table_data %}
 	{% for r in results %}
 		<tr>
+			<td class="view-button"><a title="View method details" href="{% url search-biological_method_summary r.method_id %}">View</a></td>		
 			<td>{{ r.analyte_type }}</td>
-			<td><a class="popup" title="Metod details (in a new tab)" target="_blank" href="{% url search-biological_method_summary r.method_id %}">{{ r.source_method_identifier|safe }}</a></td>
+			<td>{{ r.source_method_identifier|safe }}</a></td>
 			<td>{{ r.method_descriptive_name }}</td>
 			<td>{% include "method_source_details.html" %}</td>
 			<td>{{ r.method_type_desc }}</td>

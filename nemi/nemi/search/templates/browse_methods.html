@@ -83,7 +83,7 @@
 						<tr><th></th><th>Method Number</th><th>Method Descriptive Name</th><th>Method Source</th></tr>
 						{% for object in by_subcategory.list %}
 							<tr>
-								<td><input type=button onclick="return showOnNewWindow('{% url search-method_summary object.method_id %}');" value="View"/></td>
+								<td class="view-button"><a title="View method details" href="{% url search-method_summary object.method_id %}">View</a></td>
 								<td>{{ object.source_method_identifier|safe }}</td>
 								<td>{{ object.method_descriptive_name }}</td>
 								<td>{% include "method_source_details.html" with r=object %}

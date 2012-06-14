@@ -73,12 +73,6 @@
 		{% endblock %}
 		
 		<div id="page-content">
-			{% block page_title_section %}
-				<h1 id="page-title">
-					{% block page_title %}NEMI{% endblock %} <!-- Put page specific label here -->
-				</h1>
-			{% endblock %}
-			
 			{% block navigation %}
 				<div id="page-navigation">
 					{% block navigation_menu %}				
@@ -126,6 +120,12 @@
 					{% endblock %}				
 				</div>
 			{% endblock %}
+			
+			{% block page_title_section %}
+				<h1 id="page-title">
+					{% block page_title %}NEMI{% endblock %} <!-- Put page specific label here -->
+				</h1>
+			{% endblock %}			
 			
 			{% block content %}
 				<!-- Put page specific content here -->

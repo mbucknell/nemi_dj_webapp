@@ -38,7 +38,7 @@
 {% block results_table_data %}
 	{% for r in results %}
 		<tr>
-			<td><a title="View source details" href={%url search-statistical_source_summary r.source_citation_id %}>View</a></td> 
+			<td class="view-button"><a title="View source details" href={%url search-statistical_source_summary r.source_citation_id %}>View</a></td> 
 			<td>{{ r.author }}</td>
   			<td>{{ r.title }}</td>
 			<td>{{ r.source_organization }}</td>
