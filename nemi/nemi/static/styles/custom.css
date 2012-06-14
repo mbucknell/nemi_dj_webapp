@@ -272,13 +272,13 @@ td.view-button {
 }
 .view-button a:link, .view-button a:visited {
 	text-decoration: none;
-	background: #F5F5F5;
+	background: #F0F0F0;
 	padding-top: 2px;
 	padding-bottom: 2px;
 	padding-left: 8px;
 	padding-right: 8px;
-	border: 1px outset grey;
-	border-radius: 40px;
+	border: 1px solid darkgrey;
+	border-radius: 8px;
 }
 .view-button a:hover {
 	color: black;
