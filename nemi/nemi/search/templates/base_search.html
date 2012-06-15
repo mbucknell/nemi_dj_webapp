@@ -111,7 +111,7 @@
 {% endblock %}
 
 {% block content %}
-	<div id="nav_and_search">
+	<div id="search-methods">
 		{% block search_box %}
 			<div id="search-box">
 				<div id="search-box-header">
@@ -143,12 +143,10 @@
 					$("#search-box-toggle").text("-");
 				</script>
 			{% endif %}
-		</div>
-	{% endblock search_box %}
-	<br/>
+		{% endblock search_box %}
+	</div>	
 	{% block results_box %}
 		{% block export_results %}<!-- Put links to export results to different formats here --> {% endblock %}
-		<br />
 		{% if show_results %}
 			{% block totals %}
 				<!--  Shows total number of results found -->

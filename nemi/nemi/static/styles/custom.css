@@ -49,9 +49,17 @@ a[class='popup']{
 }
 #page-content {
 	margin-top: 10px;
+	margin-bottom: 10px;
 	margin-left: 5%;
 	margin-right: 5%;
 }
+#page-footer {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	margin-left: 5%;
+	margin-right: 5%;
+	border-top: solid darkred 2px;
+	}
 #page-navigation {
 	background-color: Beige;	
 }
@@ -108,11 +116,10 @@ a[class='popup']{
 	padding-bottom: 0.25em;
 	padding-left: 0.5em;
 	padding-right: 0.5em;
-	margin: 0px;
+	margin-top: 0px;
+	margin-bottom: 20px;
 }
-#nav_and_search {
-	margin: 0px;
-}
+
 #search-button {
 	border: solid 1px grey;
 	background-color: DarkSeaGreen;

@@ -67,14 +67,13 @@
 {% block page_title %}Summary of Method {{ data.source_method_identifier|safe }}{% endblock %}
 
 {% block content %}
-
-	{% block header_info %}
-		<!--  Place holder for the field information dialog  -->
-		<div id="header-info" style="display: none;">
-			<p>Place holder</p>
-		</div>
-	{% endblock %}
-	<br />
-	{% block summary_info %}<!-- Insert method summary information here -->{% endblock %}
-	
+	<div id="method-summary-content"
+		{% block header_info %}
+			<!--  Place holder for the field information dialog  -->
+			<div id="header-info" style="display: none;">
+				<p>Place holder</p>
+			</div>
+		{% endblock %}
+		{% block summary_info %}<!-- Insert method summary information here -->{% endblock %}
+	</div>
 {% endblock %}

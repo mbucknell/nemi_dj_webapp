@@ -131,5 +131,14 @@
 				<!-- Put page specific content here -->
 			{% endblock %}
 		</div>
+		<div id="page-footer">
+			{% block footer %}
+			<div id="logos" style="padding-top: 10px;">
+				<a href="http://epa.gov" style="position: relative; left: 5%;"><img src={{ STATIC_URL }}images/epa1.gif /></a>
+				<a href="http://usgs.gov" style="position: relative; left: 10%;"><img src={{ STATIC_URL }}images/usgs_id_green.gif /></a>
+				<a href="http://cida.usgs.gov" style="position: relative; left: 20%;"><img src={{ STATIC_URL }}images/cida_logo_4c-150_notext.jpg /></a>
+			</div>
+			{% endblock %}
+		</div>
 	</body>
 </html>	
