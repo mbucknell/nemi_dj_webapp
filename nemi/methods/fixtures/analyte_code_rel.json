@@ -1,0 +1,354 @@
+[
+    {
+        "pk": "Po", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "7440-08-6", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "Cyanide", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "NEMI", 
+            "analyte_code": "57-12-5", 
+            "changed": "2001-09-17", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "Nickel-63", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "13981-37-8", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": -1
+        }
+    }, 
+    {
+        "pk": "TNB", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-35-4", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "2-Amino-4-nitrotoluene", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-55-8", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "2-Methyl-5-nitroaniline", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-55-8", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "2-Methyl-5-nitrobenzenamine", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-55-8", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "5-Nitro-o-toluidine", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-55-8", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": -1
+        }
+    }, 
+    {
+        "pk": "Benzenamine, 2-methyl-5-nitro-", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-55-8", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "C.I. 37105", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-55-8", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "Scarlet G Base", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-55-8", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "2-Methoxy-5-nitroaniline", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-59-2", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "5-Nitro-o-anisidine", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-59-2", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": -1
+        }
+    }, 
+    {
+        "pk": "Benzenamine, 2-methoxy-5-nitro-", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-59-2", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "o-Anisidine, 5-nitro", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-59-2", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "1,3-Dinitrobenzene", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-65-0", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": -1
+        }
+    }, 
+    {
+        "pk": "1,3-Dinitrobenzol", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-65-0", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "2,4-Dinitrobenzene", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-65-0", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "2,6-Dinitrobenzene", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-65-0", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "Benzene, 1,3-dinitro-", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-65-0", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "Binitrobenzene", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-65-0", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "DNB", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-65-0", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "m-Dinitrobenzene", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-65-0", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "1-Methyl-4-(1-methylethyl) benzene", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-87-6", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "4-Isopropyl-1-methylbenzene", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-87-6", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "4-Isopropyltoluene", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-87-6", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "Benzene, 1-methyl-4-(1-methylethyl)-", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-87-6", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "Cymol", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "99-87-6", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "Polonium", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "7440-08-6", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": -1
+        }
+    },
+    {
+        "pk": "Amenable cyanide", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "E-10275", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "Cyanide amenable to chlorination", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "EMMI95", 
+            "analyte_code": "E-10275", 
+            "changed": "1995-12-31", 
+            "analyte_type": "", 
+            "preferred": null
+        }
+    }, 
+    {
+        "pk": "Available Cyanide", 
+        "model": "methods.analytecoderel", 
+        "fields": {
+            "data_entry": "NEMI", 
+            "analyte_code": "E-10275", 
+            "changed": "2002-02-21", 
+            "analyte_type": "", 
+            "preferred": -1
+        }
+    } 
+]

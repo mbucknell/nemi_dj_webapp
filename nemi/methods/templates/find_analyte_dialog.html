@@ -1,0 +1,96 @@
+<!-- This can be included in pages where you want a Find Analyte Dialog. This template requires the template variable analyte_value_id 
+which contains the id of the input object which will be the destination of the analyte value selected.
+When you want to show the Find Analyte dialog, call showAnalyteDialog.
+-->
+<script type="text/javascript">
+	$(document).ready(function(){
+		// Create dailog
+		$('#find-analyte-dialog').dialog({
+			autoOpen: false,
+			title: 'Find Analyte',
+			height: 450,
+			width: 400,
+			modal: true
+		});
+		
+		// Add click event handler for the analyte select list.
+		$('#analyte-values-select').click(function(){
+			var selection = $(this).find("option:selected").text();
+			$('#{{ analyte_value_id }}').val(selection);
+			
+			// Set dialog back to original state and close.
+			$('#analyte-values-select').hide();
+			$('#no-analyte-values').show();
+			$('#find-analyte-dialog').dialog('close');
+		});
+	});
+
+	function getValuesList(kind /* analyte kind String */, value /* analyte value String */){
+		/*
+		Makes an ajax call to the server to return a list of analytes matching value of kind code or name
+		The returned values are shown if non zero, otherwise show the no analytes section..
+		*/
+		$.ajax({
+			url: '{% url methods-analyte_select %}',
+			data: {
+				kind : kind,
+				selection: value
+			},
+			success:  function(resp){
+				var valuesEl = $('#analyte-values-select');
+				if (resp.values_list.length > 0) {
+					valuesEl.html('');
+					for (var i=0; i < resp.values_list.length; i++) {
+						valuesEl.append('<option value=' + resp.values_list[i] + '>' + resp.values_list[i] + '</option>')
+					}
+					valuesEl.show();
+					$('#no-analyte-values').hide();
+				}
+				else {
+					valuesEl.hide();
+					$('#no-analyte-values').show();
+				}
+			}
+		});
+		return false;
+	}
+	
+	function showAnalyteDialog(kind /* String, code or name */, value /* String */){
+		/* Assign the kind and value to the appropiate input fields, then retrieve the values list if value is not 
+		empty. Show the dialog.
+		*/
+		$('#analyte-kind').val(kind);
+		$('#analyte-selection').val(value);
+		// Make ajax call to fill in selection list if value is non null
+		if (value) {
+			getValuesList(kind, value);
+		}
+		else {
+			$('#analyte-values-select').html('');			
+		}
+		var dialogEl = $('#find-analyte-dialog');
+		if (!dialogEl.dialog('isOpen')) {
+			// Position dialog to the right of the Find button
+			var buttonPos = $('#find-analytes').offset();
+			dialogEl.dialog('open');
+			dialogEl.dialog('option', 'position', [buttonPos.left, buttonPos.top]);
+			dialogEl.dialog('option', 'title', 'Find analyte ' + kind);
+		}
+		return false;
+	};
+</script>
+
+<div id="find-analyte-dialog" style="display: none;">
+<p>Enter a few characters of the analyte {{ kind }}, click Find, and then select one of the values in the list<p>
+	<form id="search-box-body">
+		<p><input type="text" name="analyte_selection" id="analyte-selection"/>
+			<input id="analyte-find-button" type="submit" value="Find matches" 
+			onclick="return getValuesList($('#analyte-kind').val(), $('#analyte-selection').val())">
+		</p>
+		<p id="analyte-values-list">
+			<select style="width: 90%; display: none;" multiple="multiple" id="analyte-values-select" name="analyte_values_select" size="15"></select>
+			<span id="no-analyte-values">No matches</span>
+		</p>
+		<input type="hidden" id="analyte-kind" name="analyte_kind"/>
+	</form>
+</div>

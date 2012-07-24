@@ -1,0 +1,22 @@
+{% extends "base_search.html" %}
+
+{% block title %}NEMI Stream Physical Habitat Methods{% endblock %}
+
+{% block page_title %}Search Stream Physical Habitat Methods {% endblock %}
+
+{% block search_box %}{% endblock %}
+
+{% block criteria %}{% endblock %}
+
+{% block results_table_data %}
+	{% for r in results %}
+		<tr>
+			<td class="view-button"><a title="View method details" href="{% url methods-stream_physical_method_summary r.method_id %}">View</a></td>
+			<td>{{ r.source_method_identifier|safe }}</td>
+			<td>{{ r.method_descriptive_name }}</td>
+			<td>{% include "method_source_details.html" %}</td>
+			<td>{{ r.media_name }}</td>
+			<td>{{ r.relative_cost_symbol }}</td>
+		</tr>
+	{% endfor %}			
+{% endblock %}

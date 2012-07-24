@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}NEMI Statistical Source Details{% endblock %}
+
+{% block page_title %}Statistical Source Details - {{ data.source_citation }}{% endblock %}
+
+{% block content %}
+	{% if data %}
+	<br />
+		<table class="info-table">
+			<tr><th>Source Abbreviation</th><td>{{ data.source_citation }}</td>
+			<tr><th>Title</th><td>{{ data.title }}</td></tr>
+			<tr><th>Author</th><td>{{ data.author }}</td></tr>
+			<tr><th>Abstract/Summary Statement</th><td>{{ data.abstract_summary|linebreaksbr }}</td></tr>
+			<tr><th>Table of Contents</th><td>{{ data.table_of_contents|linebreaksbr }}</td></tr>
+			<tr><th>Citation</th><td>{{ data.source_citation_name }}</td></tr>
+			<tr><th>Source Organization</th><td>{{ data.source_organization }}</td></tr>
+			<tr><th>Source Organization Country</th><td>{{ data.country }}</td></tr>
+			<tr><th>Publication Year</th><td>{{ data.publication_year }}</td></tr>
+			<tr><th>Link</th><td><a href={{ data.link }} target="_blank">{{ data.link }}</a></td></tr>
+			<tr><th>Special Notes</th><td>{{ data.notes }}</td></tr>			
+			<tr><th>Item Type</th><td>{{ data.item_type }}</td></tr>
+			<tr>
+				<th>Publication Source Type</th>
+				<td>
+					{% for t in data.sponser_types.all %}
+						{{ t }}<br />
+					{% endfor %}
+					{% if data.sponser_type_note %}
+						Additional information:&nbsp;{{ data.sponser_type_note }}
+					{% endif %}
+				</td>
+			</tr>
+			<tr><th>Purpose</th>
+				<td>
+					{% for t in data.analysis_types.all %}
+						{{ t }}<br />
+					{% endfor %}
+				</td>
+			</tr>
+			<tr>
+				<th>Design or Data Analysis Objectives</th>
+				<td>
+					{% for t in data.design_objectives.all %}
+						{{ t }}<br />
+					{% endfor %}
+				</td>
+			</tr>	
+			<tr><th>Complexity</th><td>{{ data.complexity }}</td></tr>
+			<tr><th>Level of Training</th><td>{{ data.level_of_training }}</td></tr>
+			<tr>
+				<th>Media Emphasized</th>
+				<td>
+					{% for t in data.media_emphasized.all %}
+						{{ t }}<br />
+					{% endfor %}
+					{% if data.media_emphasized_note %}
+						Additional information:&nbsp;{{ data.media_emphasized_note }}
+					{% endif %}
+				</td>
+			</tr>
+			<tr><th>Subcategory</th><td>{{ data.subcategory }}</td></tr>
+			<tr>
+				<th>Special Topics</th>
+				<td>
+					{% for t in data.special_topics.all %}
+						{{ t }}<br />
+					{% endfor %}
+				</td>
+			</tr>
+			<tr><th>Insert user</th><td>{{ data.insert_person.get_full_name }} ({{ data.insert_person.username }})</td></tr>
+		</table>
+		<input style="margin: 4px;" type="button" value="Edit Citation" onclick="location.href='{% url methods-update_statistical_source data.source_citation_id %}';"> 
+	{% else %}
+		<p>Source citation data not found.</p>
+	{% endif %}
+{% endblock %}

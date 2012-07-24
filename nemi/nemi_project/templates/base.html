@@ -79,25 +79,25 @@
 						<div id="navigation-bar">
 							<ul class="dropdown" id="navigation-menu">
 								<li><a href={% url home %}>Home</a></li>
-								<li><a href={% url search-browse %}>Browse All Methods</a></li>
+								<li><a href={% url methods-browse %}>Browse All Methods</a></li>
 								<li><a href="#">Search</a>
 									<ul class="sub_menu">
-										<li><a href={% url search-general %}>All by criteria</a></li>
-										<li><a href={% url search-analyte %}>All by analyte</a></li>
-										<li><a href={% url search-microbiological %}>Microbiological</a></li>
-										<li><a href={% url search-biological %}>Biological</a></li>
-										<li><a href={% url search-toxicity %}>Toxicity</a></li>
-										<li><a href={% url search-physical %}>Physical</a></li>
-										<li><a href={% url search-stream_physical %}>Stream Physical</a></li>
-										<li><a href={% url search-regulatory %}>Regulatory</a></li>
-										<li><a href={% url search-tabular_reg %}>Tabular Regulatory</a></li>
+										<li><a href={% url methods-general %}>All by criteria</a></li>
+										<li><a href={% url methods-analyte %}>All by analyte</a></li>
+										<li><a href={% url methods-microbiological %}>Microbiological</a></li>
+										<li><a href={% url methods-biological %}>Biological</a></li>
+										<li><a href={% url methods-toxicity %}>Toxicity</a></li>
+										<li><a href={% url methods-physical %}>Physical</a></li>
+										<li><a href={% url methods-stream_physical %}>Stream Physical</a></li>
+										<li><a href={% url methods-regulatory %}>Regulatory</a></li>
+										<li><a href={% url methods-tabular_reg %}>Tabular Regulatory</a></li>
 									</ul>
 								</li>
 								<li><a href="#">Statistical Methods</a>
 									<ul class="sub_menu">
-										<li><a href={% url search-statistics %}>Search by criteria</a></li>
-										<li><a href={% url search-create_statistical_source %}>Add methods</a></li>
-										<li><a href={% url search-update_stat_source_list %}>Update methods</a></li>
+										<li><a href={% url methods-statistics %}>Search by criteria</a></li>
+										<li><a href={% url methods-create_statistical_source %}>Add methods</a></li>
+										<li><a href={% url methods-update_stat_source_list %}>Update methods</a></li>
 									</ul>
 								</li>	
 								<li><a href="http://infotrek.er.usgs.gov/apex/f?p=240:1:1236718013547534">MEMO (Sensors)</a></li>
@@ -112,7 +112,7 @@
 					
 					{% block keyword_search %}
 						<div id="keyword-search-div">
-							<form action="{% url search-keyword %}" method="get">
+							<form action="{% url methods-keyword %}" method="get">
 								Keyword(s): 
 								<input id="keyword-search-field" type="text" name="keyword_search_field" value="{{ keyword }}"/>&nbsp;<input id="search-button" type="submit" value="Search"/>
 							</form>
