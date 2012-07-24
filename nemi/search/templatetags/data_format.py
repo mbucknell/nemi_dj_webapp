@@ -10,7 +10,7 @@ import re
 
 register = template.Library()
 
-@register.filter(name='decimal_format')
+@register.filter(name='decimal_format', is_safe=True)
 def decimal_format(num):
     ''' Returns a normalized decimal number with no trailing zeros and
     if the decimal number has no fraction part returns only the integer part
@@ -27,9 +27,6 @@ def decimal_format(num):
             return nv;
     else:
         return num
-
-## Set flag to indicate that the function does not introduce any HTML unsafe characters.
-decimal_format.is_safe = True
 
 @stringfilter
 @register.filter(name='clickable_links')

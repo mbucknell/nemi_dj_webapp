@@ -7,9 +7,9 @@ Created on Mar 15, 2012
 from django.forms import Form, ChoiceField, CharField, ModelChoiceField, MultipleChoiceField, IntegerField
 from django.utils import unittest
 
-from nemi.search.models import StatisticalItemType
-from nemi.search.utils.forms import get_criteria, get_criteria_from_field_data, get_multi_choice
-from nemi.search.utils.view_utils import tsv_response, xls_response
+from search.models import StatisticalItemType
+from search.utils.forms import get_criteria, get_criteria_from_field_data, get_multi_choice
+from search.utils.view_utils import tsv_response, xls_response
 
 
 class TestGetCriteria(unittest.TestCase):

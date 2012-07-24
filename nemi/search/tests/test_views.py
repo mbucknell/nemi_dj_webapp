@@ -7,9 +7,9 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from nemi.search.utils.forms import get_criteria_from_field_data
-from nemi.search.views import GeneralSearchView, AnalyteSearchView, MicrobiologicalSearchView, BiologicalSearchView, ToxicitySearchView, PhysicalSearchView
-from nemi.search.views import StreamPhysicalSearchView, RegulatorySearchView, TabularRegulatorySearchView
+from search.utils.forms import get_criteria_from_field_data
+from search.views import GeneralSearchView, AnalyteSearchView, MicrobiologicalSearchView, BiologicalSearchView, ToxicitySearchView, PhysicalSearchView
+from search.views import StreamPhysicalSearchView, RegulatorySearchView, TabularRegulatorySearchView
 
 
 class TestGeneralSearchView(TestCase):

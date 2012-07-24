@@ -13,7 +13,7 @@ TEMPLATE_DEBUG = DEBUG
 
 PROJECT_HOME = os.path.dirname(__file__)
 
-ADMINS = (
+ADMINS = (('Mary Bucknell', 'mbucknell@usgs.gov'),
     # ('Your Name', 'your_email@example.com'),
 )
 
@@ -54,7 +54,7 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
-TEST_RUNNER = 'nemi.test_runner.ManagedModelTestRunner'
+TEST_RUNNER = 'nemi_project.test_runner.ManagedModelTestRunner'
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -74,11 +74,6 @@ STATIC_ROOT = ''
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
-
-# URL prefix for admin static files -- CSS, JavaScript and images.
-# Make sure to use a trailing slash.
-# Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -106,11 +101,12 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'nemi.urls'
+ROOT_URLCONF = 'nemi_project.urls'
 
 TEMPLATE_DIRS = (
                  os.path.join (PROJECT_HOME, 'templates'),
@@ -174,7 +170,7 @@ if os.getenv('JENKINS_URL', False):
     JENKINS_TASKS = (
                      'django_jenkins.tasks.django_tests',
                      )
-    JENKINS_TEST_RUNNER = 'nemi.test_jenkins_runner.ManagedModelTestRunner'
+    JENKINS_TEST_RUNNER = 'nemi_project.test_jenkins_runner.ManagedModelTestRunner'
     INSTALLED_APPS += ('django_jenkins',)
     PROJECT_APPS = ('search',)
     DATABASES['default'].update(dict(

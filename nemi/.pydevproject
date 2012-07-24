@@ -2,18 +2,18 @@
 <?eclipse-pydev version="1.0"?>
 
 <pydev_project>
-<pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">django-python</pydev_property>
-<pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python 2.7</pydev_property>
+<pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">nemi_django1.4</pydev_property>
+<pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python 2.6</pydev_property>
 <pydev_variables_property name="org.python.pydev.PROJECT_VARIABLE_SUBSTITUTION">
 <key>DJANGO_MANAGE_LOCATION</key>
-<value>nemi/manage.py</value>
+<value>manage.py</value>
 <key>DJANGO_SETTINGS_MODULE</key>
-<value>nemi.settings</value>
+<value>nemi_project.settings</value>
 </pydev_variables_property>
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
 <path>/nemi</path>
 </pydev_pathproperty>
 <pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
-<path>/Users/mbucknel/.virtualenvs/dev_django/lib/python2.6/site-packages/cx_Oracle-5.1-py2.6.egg-info</path>
+<path>/Users/mbucknel/.virtualenvs/nemi_django_1.4/lib/python2.6/site-packages/cx_Oracle-5.1-py2.6.egg-info</path>
 </pydev_pathproperty>
 </pydev_project>

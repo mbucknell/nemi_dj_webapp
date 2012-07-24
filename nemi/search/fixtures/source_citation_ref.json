@@ -10,7 +10,7 @@
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "", 
-            "update_date": null, 
+            "update_date": "2009-12-16", 
             "design_objectives": [], 
             "source_citation_information": "", 
             "title": "", 
@@ -45,7 +45,7 @@
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "", 
-            "update_date": null, 
+            "update_date": "2011-09-15", 
             "design_objectives": [], 
             "source_citation_information": "", 
             "title": "Colorimetric determination of nitrate plus nitrite in water by enzymatic reduction, automated discrete analyzer methods: U.S. Geological Survey Techniques and Methods.", 
@@ -80,7 +80,7 @@
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "", 
-            "update_date": null, 
+            "update_date": "2011-08-04", 
             "design_objectives": [], 
             "source_citation_information": "", 
             "title": "", 
@@ -115,7 +115,7 @@
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "", 
-            "update_date": null, 
+            "update_date": "2011-09-15", 
             "design_objectives": [], 
             "source_citation_information": "", 
             "title": "Data Quality Assessment: Statistical Methods for Practioners: EPA QA/G-9S", 
@@ -150,7 +150,7 @@
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "", 
-            "update_date": null, 
+            "update_date": "2012-07-24", 
             "design_objectives": [], 
             "source_citation_information": "", 
             "title": "Data Quality Assessment: A Reviewer's Guide: EPA QA/G-9R", 
@@ -185,7 +185,7 @@
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "", 
-            "update_date": null, 
+            "update_date": "2012-07-24", 
             "design_objectives": [], 
             "source_citation_information": "", 
             "title": "Data Quality Objectives Decision Error Feasibility Trials Software (DEFT) - USER'S GUIDE: EPA QA/G-4D. Office of Environmental Information", 
@@ -220,7 +220,7 @@
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "", 
-            "update_date": null, 
+            "update_date": "2012-07-24", 
             "design_objectives": [], 
             "source_citation_information": "", 
             "title": "ProUCL Version 4.1 Uer Guide (Draft): Statistical Software for Environmental Applications for Data Sets with and without Nondetect Observations: U.S. Environmental Protection Agency Report EPA/600/R-07/041", 
@@ -255,7 +255,7 @@
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "", 
-            "update_date": null, 
+            "update_date": "2012-07-24", 
             "design_objectives": [], 
             "source_citation_information": "", 
             "title": "Statistical Analysis of Groundwater Monitoring Data at RCRA Facilities - Unified Guidance. Office of Resource Conservation and Recovery", 
@@ -290,7 +290,7 @@
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "", 
-            "update_date": null, 
+            "update_date": "2012-07-24", 
             "design_objectives": [], 
             "source_citation_information": "", 
             "title": "Guidance on Systematic Planning Using the Data Quality Objectives Process: EPA QA/G-4", 
@@ -325,7 +325,7 @@
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "", 
-            "update_date": null, 
+            "update_date": "2012-07-24", 
             "design_objectives": [], 
             "source_citation_information": "USGS Techniques and Methods Report Book 1, Chapter A1", 
             "title": "Groundwater technical procedures of the U.S. Geological Survey: U.S. Geological Survey Techniques and Methods", 
@@ -360,7 +360,7 @@
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "", 
-            "update_date": null, 
+            "update_date": "2012-07-24", 
             "design_objectives": [], 
             "source_citation_information": "USGS Techniques and Methods Report Book 6, Chapter E2", 
             "title": "OPR-PPR, a Computer Program for Assessing Data Importance to Model Predictions Using Linear Statistics: Reston Virginia, U.S. Geological Survey Techniques and Methods Report TM-6E2", 
@@ -395,7 +395,7 @@
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "", 
-            "update_date": null, 
+            "update_date": "2012-07-24", 
             "design_objectives": [], 
             "source_citation_information": "", 
             "title": "Statistical Methods in Water Resources", 
@@ -430,7 +430,7 @@
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "", 
-            "update_date": null, 
+            "update_date": "2012-07-24", 
             "design_objectives": [], 
             "source_citation_information": "", 
             "title": "Cumulative uncertainty in measured streamflow and water quality data for small watersheds", 
@@ -464,7 +464,7 @@
             ], 
             "table_of_contents": "", 
             "insert_date": "2012-02-09", 
-            "insert_person": 21, 
+            "insert_person": null, 
             "special_topics": [
                 6, 
                 3, 
@@ -566,7 +566,7 @@
             ], 
             "table_of_contents": "", 
             "insert_date": "2012-02-08", 
-            "insert_person": 21, 
+            "insert_person": null, 
             "special_topics": [
                 3
             ], 
@@ -618,7 +618,7 @@
             ], 
             "table_of_contents": "Excel programs to calculate: \r\n1. Confidence interval calculation for source partitioning using stable isotopes. \r\n2. Concentration-dependent stable isotope mixing model.\r\n3. Stable isotope mixing model for an excess number of sources", 
             "insert_date": "2012-02-13", 
-            "insert_person": 2, 
+            "insert_person": null, 
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "F", 
@@ -664,7 +664,7 @@
             ], 
             "table_of_contents": "1. The concept of rapid bioassessment; 2. Application of rapid bioassessment protocols (RBPs); 3. Elements of biomonitoring; 4. Performance based methods system (PBMS); 5. Habitat assessment and physiochemical parameters; 6. Periphyton protocols; 7. Benthic macroinvertebrate protocols; 8. Fish protocols; 9. Biological data analysis; 10. Data integration and reporting. 11. Literature cited; Appendix A. Sample data forms for the protocols; Appendix B. Tolerance, functional feeding group, and habit/behavior designations for benthos; Appendix C. Tolerance and trophic guilds of selected fish species; Appendix D. Survey approach for compilation of historical data. ", 
             "insert_date": "2012-03-09", 
-            "insert_person": 2, 
+            "insert_person": null, 
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "F", 
@@ -705,7 +705,7 @@
             "analysis_types": [], 
             "table_of_contents": "No table of contents", 
             "insert_date": "2012-02-03", 
-            "insert_person": 2, 
+            "insert_person": null, 
             "special_topics": [
                 1
             ], 
@@ -751,7 +751,7 @@
             ], 
             "table_of_contents": "", 
             "insert_date": "2012-02-08", 
-            "insert_person": 2, 
+            "insert_person": null, 
             "special_topics": [
                 2
             ], 
@@ -796,7 +796,7 @@
             ], 
             "table_of_contents": "", 
             "insert_date": "2012-02-13", 
-            "insert_person": 2, 
+            "insert_person": null, 
             "special_topics": [
                 2
             ], 
@@ -843,7 +843,7 @@
             ], 
             "table_of_contents": "", 
             "insert_date": "2012-03-20", 
-            "insert_person": 2, 
+            "insert_person": null, 
             "special_topics": [
                 4
             ], 
@@ -935,7 +935,7 @@
             ], 
             "table_of_contents": "Chapter 1. Who,\r\nChapter 2. What,\r\nChapter 3. Why,", 
             "insert_date": "2012-02-02", 
-            "insert_person": 2, 
+            "insert_person": null, 
             "special_topics": [
                 2
             ], 
@@ -982,7 +982,7 @@
             ], 
             "table_of_contents": "Version 2 of entering statistical methods", 
             "insert_date": "2012-02-10", 
-            "insert_person": 2, 
+            "insert_person": null, 
             "special_topics": [
                 1
             ], 
@@ -1029,7 +1029,7 @@
             ], 
             "table_of_contents": "", 
             "insert_date": "2012-02-13", 
-            "insert_person": 2, 
+            "insert_person": null, 
             "special_topics": [
                 4
             ], 
@@ -1111,7 +1111,7 @@
             ], 
             "table_of_contents": "1. Chapter 1\r\n2. Chapter 2\r\n3. Chapter 3\r\n", 
             "insert_date": "2012-02-01", 
-            "insert_person": 2, 
+            "insert_person": null, 
             "special_topics": [
                 2
             ], 
@@ -1158,7 +1158,7 @@
             ], 
             "table_of_contents": "", 
             "insert_date": "2012-02-08", 
-            "insert_person": 2, 
+            "insert_person": null, 
             "special_topics": [
                 2
             ], 
@@ -1204,7 +1204,7 @@
             ], 
             "table_of_contents": "", 
             "insert_date": "2012-04-02", 
-            "insert_person": 41, 
+            "insert_person": null, 
             "special_topics": [], 
             "subcategory": "", 
             "approve_flag": "F", 

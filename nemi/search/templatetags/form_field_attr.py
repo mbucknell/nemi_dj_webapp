@@ -9,12 +9,10 @@ from django import template
 
 register = template.Library()
 
-@register.filter(name='verbose_help')
+@register.filter(name='verbose_help', is_safe=True)
 def verbose_help(field):
     try:
         return field.form.fields[field.name].verbose_help
     except AttributeError:
         return settings.TEMPLATE_STRING_IF_INVALID
-    
-verbose_help.is_safe = True
-    
+        

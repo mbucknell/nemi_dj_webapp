@@ -1,0 +1,11 @@
+Django==1.4
+coverage==3.5.2
+cx-Oracle==5.1
+django-debug-toolbar==0.9.4
+django-jenkins==0.13.0
+logilab-astng==0.24.0
+logilab-common==0.58.1
+pylint==0.25.2
+unittest2==0.5.1
+wsgiref==0.1.2
+xlwt==0.7.4
