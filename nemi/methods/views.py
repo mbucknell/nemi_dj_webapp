@@ -1,26 +1,26 @@
 ''' This module includes the view functions which implement the various
-search pages.
+NEMI methods pages.
 '''
 
 # django packages
-from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
+
 from django.db import connection
-from django.db.models import Q, Max
-from django.forms import Form
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.db.models import Q
+from django.http import HttpResponse, Http404
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.utils.decorators import method_decorator
-from django.views.generic import View, DetailView, ListView
-from django.views.generic.edit import TemplateResponseMixin, CreateView, UpdateView
+from django.views.generic import View, ListView
+from django.views.generic.edit import TemplateResponseMixin
 
 # project specific packages
+from common.models import DefinitionsDOM
+from common.utils.forms import get_criteria, get_multi_choice
+from common.utils.view_utils import dictfetchall
+from common.views import FilterFormMixin, SearchResultView, ExportSearchView
 from forms import GeneralSearchForm, AnalyteSearchForm, MicrobiologicalSearchForm, RegulatorySearchForm
-from forms import BiologicalSearchForm, ToxicitySearchForm, PhysicalSearchForm, StatisticalSearchForm, StatisticalSourceEditForm, TabularSearchForm
-from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, DefinitionsDOM, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw, AnalyteCodeVW
-from models import RegQueryVW, SourceCitationRef, CitationTypeRef, RegulatoryMethodReport
-from utils.forms import get_criteria, get_criteria_from_field_data, get_multi_choice
-from utils.view_utils import dictfetchall, xls_response, tsv_response
+from forms import BiologicalSearchForm, ToxicitySearchForm, PhysicalSearchForm, TabularSearchForm
+from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw, AnalyteCodeVW
+from models import RegQueryVW,  RegulatoryMethodReport
+
 
 
 def _greenness_profile(d):
@@ -93,133 +93,7 @@ def _analyte_value_qs(method_id):
                                'false_negative_value',
                                'prec_acc_conc_used').distinct()
  
-class FilterFormMixin(object):
-    '''This mixin class is designed to process a form which sets query filter conditions.
-    The method get_qs, should check the form's cleaned data and filter the query as appropriate and
-    return the query set.
-    The method, get_context_data, returns context data generated from the form.
-    '''
-    
-    form_class = Form
 
-    def get_qs(self, form):
-        return None
-    
-    def get_context_data(self, form):
-        return {}
-                                     
-class SearchResultView(View, TemplateResponseMixin):
-    ''' This class extends the standard view and template response mixin. This class
-    should be mixed with a class that provides a get_qs(form) method, get_context_data(form) method, and a form_class parameter.
-    '''
-    
-    result_fields = () # Fields to be displayed on the results page
-    result_field_order_by = '' #Field to order the query results. If null, no order is specified
-    
-    header_abbrev_set = () # The header definitions to retrieve from the DOM. These should be in the order (from left to right)
-    # that they will appear on the screen
-    
-    def get_header_defs(self):
-        ''' Returns a list of DefinitionsDOM objects matching the definition_abbrev using abbrev_set. 
-        The objects will only have the definition_name and definition_description field set.
-        The objects will be in the same order as abbrev_set and if an object is missing or there are multiple
-        in the DefinitionsDOM table, then the name in abbrev_set is used with spaces replacing underscores and words
-        capitalized with a standard description.
-        '''
-        def_qs = DefinitionsDOM.objects.filter(definition_abbrev__in=self.header_abbrev_set)
-        
-        header_defs = []
-        for abbrev in self.header_abbrev_set:
-            try:
-                header_defs.append(def_qs.get(definition_abbrev=abbrev))
-            except(DefinitionsDOM.MultipleObjectsReturned, DefinitionsDOM.DoesNotExist):
-                header_defs.append(DefinitionsDOM(definition_name=abbrev.replace('_', ' ').title(),
-                                                  definition_description='')) 
-            
-        return header_defs
-
-    def get_values_qs(self, qs):
-        ''' Returns the qs as a values query set with result_fields in the set and ordered by result_field_order_by.'''
-        v_qs = qs.values(*self.result_fields).distinct()
-        if self.result_field_order_by:
-            v_qs = v_qs.order_by(self.result_field_order_by)
-            
-        return v_qs
-    
-    def get_results_context(self, qs):
-        '''Returns a dictionary containing the query set results. By default this returns self.get_values_qs() as the 'results' key.
-        If you need to process the values query set further or generate additional information from the query set, override this method.
-        '''
-        return {'results': self.get_values_qs(qs)}
-
-    def get(self, request, *args, **kwargs):
-        '''Process the GET request.'''
-        if request.GET:
-            form = self.form_class(request.GET)
-            if form.is_valid():
-                context = {'search_form' : form,
-                           'query_string' : '?' + request.get_full_path().split('?', 1)[1],
-                           'header_defs' : self.get_header_defs(),
-                           'hide_search' : True,
-                           'show_results' : True}
-                context.update(self.get_context_data(form))
-                context.update(self.get_results_context(self.get_qs(form)))
-                
-                return self.render_to_response(context)          
-             
-            else:
-                return self.render_to_response({'search_form' : form,
-                                        'hide_search' : False,
-                                        'show_results' : False}) 
-            
-        else:
-            return self.render_to_response({'search_form' : self.form_class(),
-                                            'hide_search' : False,
-                                            'show_results' : False})
-                
-class ExportSearchView(View):
-    ''' Extends the standard View to implement the view which exports the search results
-    table. This should be extended along with the FilterFormMixin.
-    '''
-
-    export_fields = () # Fields in the query set to be exported to file
-    export_field_order_by = '' # Field name to order the export query results by. If null, no order is specified
-    filename = '' #Provide the name of the file to create. The appropriate suffix will be added to the filename
-    
-    def get_export_qs(self, qs):
-        ''' Return a values list query set from the objects query set using export_fields to select fields
-        and export_field_order_by to order the query set.
-        '''
-        export_qs = qs.values_list(*self.export_fields).distinct()
-        if self.export_field_order_by:
-            export_qs = export_qs.order_by(self.export_field_order_by)
-            
-        return export_qs
-    
-
-    def get(self, request, *args, **kwargs):
-        '''Processes the get request.'''
-        if request.GET:
-            form = self.form_class(request.GET)
-            if form.is_valid():
-                HEADINGS = [name.replace('_', ' ').title() for name in self.export_fields]
-                export_type = kwargs.get('export', '')
-                
-                if export_type == 'tsv':
-                    return tsv_response(HEADINGS, self.get_export_qs(self.get_qs(form)), self.filename)
-                
-                elif export_type == 'xls':
-                    return xls_response(HEADINGS, self.get_export_qs(self.get_qs(form)), self.filename)
-                
-                else:
-                    raise Http404
-            
-            else:
-                raise Http404
-            
-        else:
-            raise Http404
-                
 class GeneralSearchFormMixin(FilterFormMixin):
     '''Extends the FilterFormMixin to implement the search form used on the General Search page.'''
 
@@ -1212,151 +1086,3 @@ class ExportMethodAnalyte(View):
             
             return response
         
-class AddStatisticalSourceView(CreateView):
-    ''' Extends CreateView to implement the create statistiscal source page.
-    '''
-       
-    template_name = 'create_statistic_source.html'
-    form_class = StatisticalSourceEditForm
-    model = SourceCitationRef
-    
-    def get_success_url(self):
-        return reverse('methods-statistical_source_detail', kwargs={'pk' : self.object.source_citation_id})        
-    
-    def form_valid(self, form):
-        ''' Returns the success url after saving the new statistical source.
-        The source is created with approve_flag set to 'F' and the code determines the new id number to use.
-        '''
-        self.object = form.save(commit=False)
-        
-        r = SourceCitationRef.objects.aggregate(Max('source_citation_id'))
-        self.object.source_citation_id = r['source_citation_id__max'] + 1
-        self.object.approve_flag = 'F'
-        self.object.citation_type = CitationTypeRef.objects.get(citation_type='Statistic')
-        self.object.insert_person = self.request.user
-        
-        self.object.save()
-        form.save_m2m()
-        
-        return HttpResponseRedirect(self.get_success_url())
-    
-    def get_context_data(self, **kwargs):
-        context = super(AddStatisticalSourceView, self).get_context_data(**kwargs)
-        context['action_url'] = reverse('methods-create_statistical_source')
-        return context
-    
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(AddStatisticalSourceView, self).dispatch(*args, **kwargs)
-    
-class UpdateStatisticalSourceListView(ListView):
-    ''' Extends the standard ListView to implement the view which
-    will show a list of views that the logged in user can edit.
-    '''
-    
-    template_name = 'update_stat_source_list.html'
-    context_object_name = 'source_methods'
-    
-    def get_queryset(self):
-        if self.request.user.groups.filter(name__exact='nemi_admin'):
-            qs = SourceCitationRef.stat_methods.all()
-        
-        else:
-            qs = SourceCitationRef.stat_methods.filter(insert_person__exact=self.request.user)
-            
-        return qs.order_by('source_citation')
-    
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UpdateStatisticalSourceListView, self).dispatch(*args, **kwargs)
-
-class UpdateStatisticalSourceView(UpdateView):
-    ''' Extends the standard UpdateView to implement the Update Statistical source page.'''
-    
-    template_name='update_statistic_source.html'
-    form_class = StatisticalSourceEditForm
-    model = SourceCitationRef
-    
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(UpdateStatisticalSourceView, self).dispatch(*args, **kwargs)
-    
-    def get_context_data(self, **kwargs):
-        context = super(UpdateStatisticalSourceView, self).get_context_data(**kwargs)
-        context['insert_user'] = self.object.insert_person
-        context['action_url'] = reverse('methods-update_statistical_source', kwargs={'pk': self.object.source_citation_id})
-        return context
-
-    def get_success_url(self):
-        return reverse('methods-statistical_source_detail', kwargs={'pk' : self.object.source_citation_id})            
-
-class StatisticSearchView(SearchResultView, FilterFormMixin):
-    '''
-    Extends the SearchResultView and FilterFormMixin to implement the view to display statistical methods.
-    This view does not define any headers, therefore the template creates the table headers.
-    '''
-    
-    template_name = 'statistic_search.html'
-    form_class = StatisticalSearchForm
-    
-    def get_qs(self, form):
-        qs = SourceCitationRef.stat_methods.all()
-        
-        if form.cleaned_data['item_type']:
-            qs = qs.filter(item_type__exact=form.cleaned_data['item_type'])
-            
-        if form.cleaned_data['complexity'] != 'all':
-            qs = qs.filter(complexity__exact=form.cleaned_data['complexity'])
-            
-        if form.cleaned_data['analysis_type']:
-            qs = qs.filter(analysis_types__exact=form.cleaned_data['analysis_type'])
-            
-        if form.cleaned_data['publication_source_type']:
-            qs = qs.filter(sponser_types__exact=form.cleaned_data['publication_source_type'])
-            
-        if form.cleaned_data['study_objective']:
-            qs = qs.filter(design_objectives__exact=form.cleaned_data['study_objective'])
-            
-        if form.cleaned_data['media_emphasized']:
-            qs = qs.filter(media_emphasized__exact=form.cleaned_data['media_emphasized'])
-            
-        if form.cleaned_data['special_topic']:
-            qs = qs.filter(special_topics__exact=form.cleaned_data['special_topic'])
-            
-        return qs
-            
-    def get_context_data(self, form):
-        criteria = []
-        criteria.append(get_criteria_from_field_data(form, 'study_objective', label_override='What you are interested in'))
-        criteria.append(get_criteria_from_field_data(form, 'item_type'))
-        criteria.append(get_criteria(form['complexity']))
-        criteria.append(get_criteria_from_field_data(form, 'analysis_type'))
-        criteria.append(get_criteria_from_field_data(form, 'publication_source_type'))
-        criteria.append(get_criteria_from_field_data(form, 'media_emphasized'))
-        criteria.append(get_criteria_from_field_data(form, 'special_topic'))
-        
-        return {'criteria' : criteria}
-        
-    def get_header_defs(self):
-        return None
-        
-    def get_results_context(self, qs):
-        return {'results' : qs}
-            
-class StatisticalSourceSummaryView(DetailView):
-    ''' Extends DetailView to implement the Statistical Source Summary view'''
-    
-    template_name = 'statistical_source_summary.html'
-    
-    model = SourceCitationRef
-    
-    context_object_name = 'data'
-    
-class StatisticalSourceDetailView(DetailView):
-    ''' Extends DetailView to implement the Statistical Source Detail view.'''
-    
-    template_name = 'statistical_source_detail.html'
-    
-    model = SourceCitationRef
-    
-    context_object_name = 'data'

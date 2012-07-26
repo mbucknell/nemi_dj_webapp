@@ -1,413 +1,413 @@
 [
     {
         "pk": 2, 
-        "model": "methods.statisticalanalysistype", 
+        "model": "common.statisticalanalysistype", 
         "fields": {
             "analysis_type": "Data analysis"
         }
     }, 
     {
         "pk": 1, 
-        "model": "methods.statisticalanalysistype", 
+        "model": "common.statisticalanalysistype", 
         "fields": {
             "analysis_type": "Monitoring program design"
         }
     }, 
     {
         "pk": 6, 
-        "model": "methods.statisticalsourcetype", 
+        "model": "common.statisticalsourcetype", 
         "fields": {
             "source": "Academic Institution"
         }
     }, 
     {
         "pk": 3, 
-        "model": "methods.statisticalsourcetype", 
+        "model": "common.statisticalsourcetype", 
         "fields": {
             "source": "Government Agency (Federal, USA)"
         }
     }, 
     {
         "pk": 4, 
-        "model": "methods.statisticalsourcetype", 
+        "model": "common.statisticalsourcetype", 
         "fields": {
             "source": "Government Agency (State, USA)"
         }
     }, 
     {
         "pk": 5, 
-        "model": "methods.statisticalsourcetype", 
+        "model": "common.statisticalsourcetype", 
         "fields": {
             "source": "Government Agency (Tribal, NA)"
         }
     }, 
     {
         "pk": 10, 
-        "model": "methods.statisticalsourcetype", 
+        "model": "common.statisticalsourcetype", 
         "fields": {
             "source": "Industry"
         }
     }, 
     {
         "pk": 9, 
-        "model": "methods.statisticalsourcetype", 
+        "model": "common.statisticalsourcetype", 
         "fields": {
             "source": "International Government Agency"
         }
     }, 
     {
         "pk": 1, 
-        "model": "methods.statisticalsourcetype", 
+        "model": "common.statisticalsourcetype", 
         "fields": {
             "source": "Journal"
         }
     }, 
     {
         "pk": 2, 
-        "model": "methods.statisticalsourcetype", 
+        "model": "common.statisticalsourcetype", 
         "fields": {
             "source": "Nongovernmental Organization"
         }
     }, 
     {
         "pk": 8, 
-        "model": "methods.statisticalsourcetype", 
+        "model": "common.statisticalsourcetype", 
         "fields": {
             "source": "Other"
         }
     }, 
     {
         "pk": 7, 
-        "model": "methods.statisticalsourcetype", 
+        "model": "common.statisticalsourcetype", 
         "fields": {
             "source": "Regional Organization"
         }
     }, 
     {
         "pk": "AGRICULTURAL PRODUCTS", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 2
         }
     }, 
     {
         "pk": "AIR", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 3
         }
     }, 
     {
         "pk": "ANIMAL TISSUE", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 4
         }
     }, 
     {
         "pk": "Biological", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 12
         }
     }, 
     {
         "pk": "Dredged Material", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 11
         }
     }, 
     {
         "pk": "Groundwater", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 9
         }
     }, 
     {
         "pk": "OTHER", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 7
         }
     }, 
     {
         "pk": "SOILS/SEDIMENT", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 5
         }
     }, 
     {
         "pk": "Sediment", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 10
         }
     }, 
     {
         "pk": "Surface Water", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 8
         }
     }, 
     {
         "pk": "VARIOUS", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 6
         }
     }, 
     {
         "pk": "WATER", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 1
         }
     }, 
     {
         "pk": 3, 
-        "model": "methods.statisticalitemtype", 
+        "model": "common.statisticalitemtype", 
         "fields": {
             "item": "Book"
         }
     }, 
     {
         "pk": 4, 
-        "model": "methods.statisticalitemtype", 
+        "model": "common.statisticalitemtype", 
         "fields": {
             "item": "Book Chapter / Section"
         }
     }, 
     {
         "pk": 5, 
-        "model": "methods.statisticalitemtype", 
+        "model": "common.statisticalitemtype", 
         "fields": {
             "item": "Downloadable Software"
         }
     }, 
     {
         "pk": 2, 
-        "model": "methods.statisticalitemtype", 
+        "model": "common.statisticalitemtype", 
         "fields": {
             "item": "Journal Article"
         }
     }, 
     {
         "pk": 6, 
-        "model": "methods.statisticalitemtype", 
+        "model": "common.statisticalitemtype", 
         "fields": {
             "item": "Online Calculator"
         }
     }, 
     {
         "pk": 7, 
-        "model": "methods.statisticalitemtype", 
+        "model": "common.statisticalitemtype", 
         "fields": {
             "item": "Other"
         }
     }, 
     {
         "pk": 1, 
-        "model": "methods.statisticalitemtype", 
+        "model": "common.statisticalitemtype", 
         "fields": {
             "item": "Report / Guidance Document"
         }
     }, 
     {
         "pk": 8, 
-        "model": "methods.statisticalitemtype", 
+        "model": "common.statisticalitemtype", 
         "fields": {
             "item": "Website"
         }
     }, 
     {
         "pk": 4, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Characterize  spatial trends"
         }
     }, 
     {
         "pk": 3, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Characterize temporal trends (long-term, annual, seasonal)"
         }
     }, 
     {
         "pk": 13, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Compare a location to a reference site"
         }
     }, 
     {
         "pk": 14, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Compare control and experimental treatments"
         }
     }, 
     {
         "pk": 11, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Derive water quality threshold values"
         }
     }, 
     {
         "pk": 5, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Design or evaluate data from a probability survey"
         }
     }, 
     {
         "pk": 10, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Determine flow-adjusted chemical concentrations"
         }
     }, 
     {
         "pk": 9, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Develop source identification/apportionment information"
         }
     }, 
     {
         "pk": 18, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Estimate concentrations at unsampled locations"
         }
     }, 
     {
         "pk": 8, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Estimate downstream loadings of chemicals or suspended materials"
         }
     }, 
     {
         "pk": 7, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Estimate river flow statistics"
         }
     }, 
     {
         "pk": 12, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Estimate volumes of contaminated soil, sediment, or other material"
         }
     }, 
     {
         "pk": 17, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Evaluate bioassay/bioaccumulation/toxicity data"
         }
     }, 
     {
         "pk": 16, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Evaluate biological data (e.g., benthic macroinvertebrates, fish, diatoms)"
         }
     }, 
     {
         "pk": 2, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Evaluate compliance with a threshold value"
         }
     }, 
     {
         "pk": 15, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Evaluate continuous data (e.g., measurements collected hourly or more often)"
         }
     }, 
     {
         "pk": 6, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Evaluate relationships among variables"
         }
     }, 
     {
         "pk": 19, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Revisit"
         }
     }, 
     {
         "pk": 1, 
-        "model": "methods.statisticaldesignobjective", 
+        "model": "common.statisticaldesignobjective", 
         "fields": {
             "objective": "Summarize data in terms of means, medians, distributions, percentiles"
         }
     }, 
     {
         "pk": 4, 
-        "model": "methods.statisticaltopics", 
+        "model": "common.statisticaltopics", 
         "fields": {
             "stat_special_topic": "Assessing and managing autocorrelation"
         }
     }, 
     {
         "pk": 6, 
-        "model": "methods.statisticaltopics", 
+        "model": "common.statisticaltopics", 
         "fields": {
             "stat_special_topic": "Characterizing the uncertainty of an estimated value"
         }
     }, 
     {
         "pk": 3, 
-        "model": "methods.statisticaltopics", 
+        "model": "common.statisticaltopics", 
         "fields": {
             "stat_special_topic": "Evaluating whether data follow a certain (e.g., normal) distribution"
         }
     }, 
     {
         "pk": 1, 
-        "model": "methods.statisticaltopics", 
+        "model": "common.statisticaltopics", 
         "fields": {
             "stat_special_topic": "Handling nondetects"
         }
     }, 
     {
         "pk": 2, 
-        "model": "methods.statisticaltopics", 
+        "model": "common.statisticaltopics", 
         "fields": {
             "stat_special_topic": "Identifying outliers"
         }
     }, 
     {
         "pk": 5, 
-        "model": "methods.statisticaltopics", 
+        "model": "common.statisticaltopics", 
         "fields": {
             "stat_special_topic": "Measurements taken using a water quality sensor"
         }
     }, 
     {
         "pk": 1, 
-        "model": "methods.citationtyperef", 
+        "model": "common.citationtyperef", 
         "fields": {
             "citation_type": "Method"
         }
     }, 
     {
         "pk": 2, 
-        "model": "methods.citationtyperef", 
+        "model": "common.citationtyperef", 
         "fields": {
             "citation_type": "Statistic"
         }

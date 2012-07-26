@@ -1,4 +1,3 @@
-
 from django.utils import unittest
 
 import test_views

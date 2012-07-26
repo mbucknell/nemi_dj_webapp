@@ -1,7 +1,7 @@
 [
     {
         "pk": 91, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "ADVNT", 
             "method_source_contact": "ADVNT Biotechnologies<br>\r\nP.O. Box 870<br>\r\n1920 W. Commerce Drive<br>\r\nLakeside, AZ 85929<br>\r\nwww.baddbox.com; support@baddbox.com<br>\r\nPhone 888-223-3269<br>\r\nFAX 623-879-9697", 
@@ -12,7 +12,7 @@
     }, 
     {
         "pk": 102, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "AFS", 
             "method_source_contact": "http://www.sdafs.org/", 
@@ -23,7 +23,7 @@
     }, 
     {
         "pk": 3, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "AOAC", 
             "method_source_contact": "AOAC International<br>\r\n481 North Frederick Avenue<br>\r\nSuite 500<br>\r\nGaithersburg, Maryland 20877-2417 USA<br>\r\nPhone: 1-301-924-7077 (worldwide), or 1-800-379-2622 (toll-free from North America)<br>\r\nFax: 1-301-924-7089<br>\r\nE-mail: aoac@aoac.org", 
@@ -34,7 +34,7 @@
     }, 
     {
         "pk": 8, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "ASTM", 
             "method_source_contact": "ASTM International<br>\r\n100 Barr Harbor Drive West<br> Conshohocken, PA 19428<br>\r\nTelephone: (610) 832-9500<br>\r\nFax: (610) 832-9555<br>\r\nEmail: service@astm.org", 
@@ -45,7 +45,7 @@
     }, 
     {
         "pk": 97, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Abraxis", 
             "method_source_contact": "Abraxis LLC </br> 54 Steamwhistle Drive </br> Warminster, PA 18974 </br> Phone: 215-357-3911 </br> www.abraxiskits.com", 
@@ -56,7 +56,7 @@
     }, 
     {
         "pk": 111, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Bioo Scientific", 
             "method_source_contact": "Bioo Scientific, 3913 Todd Lane Suite 312, Austin, TX 78744, email: info@biooscientific.com", 
@@ -67,7 +67,7 @@
     }, 
     {
         "pk": 103, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "CDC", 
             "method_source_contact": "", 
@@ -78,7 +78,7 @@
     }, 
     {
         "pk": 16, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "DOE", 
             "method_source_contact": "U.S. DOE National Analytical Management Program (NAMP)<br>\r\n850 Energy Drive<br>\r\nMS 4149<br>\r\nIdaho Falls, ID  83401<br>\r\nphone: 208-526-7001<br>\r\nfax: 208-  526-2548<br> email: verwolmc@id.doe.gov", 
@@ -89,7 +89,7 @@
     }, 
     {
         "pk": 15, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "DOE EML", 
             "method_source_contact": "U.S. Department of Energy Environmental Measurements Laboratory<br>\r\n201 Varick St.<br>\r\n5th Floor<br>\r\nNew York, NY 10012-4811", 
@@ -100,7 +100,7 @@
     }, 
     {
         "pk": 14, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "DOE RESL", 
             "method_source_contact": "U.S. Department of Energy Radiological and Environmental Services Laboratory<br>\r\n850 Energy Drive<br>\r\nMS4149<br>\r\nIdaho Falls, ID 83401", 
@@ -111,7 +111,7 @@
     }, 
     {
         "pk": 82, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Dynal Biotech", 
             "method_source_contact": "Dynal Biotech Inc., 9099 North Deerbrook Trail, Brown Deer, WI USA 53223<br>Tel: 1-800-558-4511; Fax: 414-357-4518<br>\r\nuscustserv@dynalbiotech.com; www.dynalbiotech.com", 
@@ -122,7 +122,7 @@
     }, 
     {
         "pk": 88, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EERF", 
             "method_source_contact": "", 
@@ -133,7 +133,7 @@
     }, 
     {
         "pk": 116, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA", 
             "method_source_contact": "", 
@@ -144,7 +144,7 @@
     }, 
     {
         "pk": 7, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA OAR/OAQPS/EMAEMC", 
             "method_source_contact": "http://www.epa.gov/ttn/emc/staffdir.html", 
@@ -155,7 +155,7 @@
     }, 
     {
         "pk": 112, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA OEI", 
             "method_source_contact": "U.S. EPA Office of Environmental Information, http://www.epa.gov/oei/", 
@@ -166,7 +166,7 @@
     }, 
     {
         "pk": 107, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA Region 7 ENSV", 
             "method_source_contact": "", 
@@ -177,7 +177,7 @@
     }, 
     {
         "pk": 119, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA-CAT", 
             "method_source_contact": "", 
@@ -188,7 +188,7 @@
     }, 
     {
         "pk": 17, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA-EAD", 
             "method_source_contact": "4303 USEPA Headquarters<br>\nAriel Rios Building<br>\n1200 Pennsylvania Avenue, N. W.<br> \nWashington, DC 20460", 
@@ -199,7 +199,7 @@
     }, 
     {
         "pk": 117, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA-EMAP", 
             "method_source_contact": "", 
@@ -210,7 +210,7 @@
     }, 
     {
         "pk": 70, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA-MICRO", 
             "method_source_contact": "U.S.EPA National Exposure Research Laboratory (NERL)<br>\r\nMicrobiological and Chemical Exposure Assessment Research Division (MCEARD)<br>\r\n[formerly the Environmental Monitoring Systems Laboratory (EMSL), Cincinnati, OH]<br>\r\n26 West Martin Luther King Drive<br>\r\nCincinnati, Ohio 45268-0001<br>\r\nFax: 513-569-7757<br>\r\nemail: <A href=\"mailto:DWmethods.help@epa.gov\">DWmethods.help@epa.gov</a>", 
@@ -221,7 +221,7 @@
     }, 
     {
         "pk": 21, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA-NERL", 
             "method_source_contact": "U.S.EPA National Exposure Research Laboratory (NERL)<br>\r\nMicrobiological and Chemical Exposure Assessment Research Division (MCEARD)<br>\r\n[formerly the Environmental Monitoring Systems Laboratory (EMSL), Cincinnati, OH]<br>\r\n26 West Martin Luther King Drive<br>\r\nCincinnati, Ohio 45268-0001<br>\r\nFax: 513-569-7757<br>\r\nemail: <A href=\"mailto:DWmethods.help@epa.gov\">DWmethods.help@epa.gov</a>", 
@@ -232,7 +232,7 @@
     }, 
     {
         "pk": 22, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA-OGWDW/TSC", 
             "method_source_contact": "U.S. EPA Office of Ground Water and Drinking Water<br> \r\nTechnical Support Center<br>\r\n26 West Martin Luther King Drive<br> \r\nCincinnati, OH 45268-1320", 
@@ -243,7 +243,7 @@
     }, 
     {
         "pk": 80, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA-OPP", 
             "method_source_contact": "<a href=\"http://www.epa.gov/oppbead1/methods/contacts4methods.htm\">http://www.epa.gov/oppbead1/methods/contacts4methods.htm</a>", 
@@ -254,7 +254,7 @@
     }, 
     {
         "pk": 90, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA-ORD / EPA-OST", 
             "method_source_contact": "U.S. Environmental Protection Agency<br>\r\nWater Science (Office of Science and Technology)<br>\r\nOffice of Research and Development\r\n", 
@@ -265,7 +265,7 @@
     }, 
     {
         "pk": 95, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA-OW", 
             "method_source_contact": "U.S. Environmental Protection Agency<br> \r\nOffice of Water (4101M) <br>\r\n1200 Pennsylvania Avenue, N.W.<br> \r\nWashington, D.C.20460", 
@@ -276,7 +276,7 @@
     }, 
     {
         "pk": 101, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA-OW/OST", 
             "method_source_contact": "U.S. Environmental Protection Agency<br>Office of Science and Technology, Office of Water<br>1200 Pennsylvania Avenue NW<br>Washington, D.C.", 
@@ -287,7 +287,7 @@
     }, 
     {
         "pk": 118, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA-QUALITY", 
             "method_source_contact": "", 
@@ -298,7 +298,7 @@
     }, 
     {
         "pk": 58, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA-RCA", 
             "method_source_contact": "U.S. EPA Office of Solid Waste (OSW) Methods Team<br>\r\nAriel Rios Bldg. (5307W)<br>\r\n1200 Pennsylvania Ave. NW<br> Washington, DC 20460<br>\r\nPhone: 703-308-8855<br>\r\nFax: 703-308-0511", 
@@ -309,7 +309,7 @@
     }, 
     {
         "pk": 23, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EPA-TSC/NERL", 
             "method_source_contact": "U.S. EPA Office of Ground Water and Drinking Water<br>\r\nTechnical Support Center<br>\r\n26 West Martin Luther King Drive<br>\r\nCincinnati, OH  45268-1320<br><br>\r\nU.S.EPA National Exposure Research Laboratory (NERL)<br>\r\n26 West Martin Luther King Drive<br>\r\nCincinnati, OH, 45268-0001<br>\r\nPhone: 513-569-7931<br>\r\nFax: 513-569-7757", 
@@ -320,7 +320,7 @@
     }, 
     {
         "pk": 98, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "EnvCanada-NWRI", 
             "method_source_contact": "National Water Research Institute<br>\r\nEnvironment Canada<br>\r\n867 Lakeshore Road, P.O. Box 5050<br>\r\nBurlington, ON L7R 4A6<br>\r\nEmail: nwriscience.liaison*ec.gc.ca<br>\r\n<i>Note: To use the email address, please replace the asterisk (*) with an at symbol (@)</i><br>\r\n<a href=\"http://www.nwri.ca/\">http://www.nwri.ca/</a><br>\r\n", 
@@ -331,7 +331,7 @@
     }, 
     {
         "pk": 74, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Envirologix", 
             "method_source_contact": "EnviroLogix Inc.<br>\r\n500 Riverside Industrial Parkway<br>\r\nPortland, ME, 04103-1418  USA<br>\r\nphone (207) 797-0300<br>\r\nFAX  (207) 797-7533<br>\r\nwww.envirologix.com", 
@@ -342,7 +342,7 @@
     }, 
     {
         "pk": 35, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Hach Co.", 
             "method_source_contact": "Hach Company<br>\r\nP.O. Box 389<br>\r\nLoveland, Colorado, 80539-0389<br>\r\nphone: 800-227-4224<br>\r\nfax: 970-669-2932", 
@@ -353,7 +353,7 @@
     }, 
     {
         "pk": 72, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "IDEXX", 
             "method_source_contact": "IDEXX Laboratories<br> One IDEXX Drive<br> Westbrook, ME 04092<br>  Technical Assistance, 1-800-321-0207 or 207-856-0300<br> www.idexx.com", 
@@ -364,7 +364,7 @@
     }, 
     {
         "pk": 79, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Ind. Test Systems", 
             "method_source_contact": "Industrial Test Systems, Inc.<br>1875 Langston Street <br>Rock Hill, SC 29730<br>Phone: 1-803-329-9743<br>E-mail: its@cetlink.net  ", 
@@ -375,7 +375,7 @@
     }, 
     {
         "pk": 76, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Kingwood Diag.", 
             "method_source_contact": "Kingwood Diagnostics, LLC<br>469 Point Breeze Road<br>Flemington, NJ 08822<br>Phone: 908-788-0165<br>E-mail: info@detect-water-terrorism.com", 
@@ -386,7 +386,7 @@
     }, 
     {
         "pk": 106, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Leck Mitchell", 
             "method_source_contact": "Leck Mitchell, PhD, PE, 656 Independence Valley Dr., Grand Junction, CO 81507", 
@@ -397,7 +397,7 @@
     }, 
     {
         "pk": 78, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Ludlum", 
             "method_source_contact": "Ludlum Measurements, Inc.<br>501 Oak St., PO Box 810<br>Sweetwater, TX 79556", 
@@ -408,7 +408,7 @@
     }, 
     {
         "pk": 89, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "MD DNR", 
             "method_source_contact": "Maryland Department of Natural Resources<br>\r\nMonitoring and Non-Tidal Assessment Division<br>\r\nTawes State Office Building, C-2<br>\r\n580 Taylor Ave.<br>\r\nAnnapolis, MD 21401\r\n<br><a href=\"http://www.dnr.state.md.us/\">http://www.dnr.state.md.us/</a>\r\n<br>1-877-620-8DNR\r\n", 
@@ -419,7 +419,7 @@
     }, 
     {
         "pk": 94, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "MI DEQ Surface Water", 
             "method_source_contact": "Michigan Department of Environmental Quality<br>\r\n525 West Allegan Street<br>\r\nP.O. Box 30473<br>\r\nLansing, MI 48909-7973<br>\r\n(517) 373-7917", 
@@ -430,7 +430,7 @@
     }, 
     {
         "pk": 71, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Micrology Labs", 
             "method_source_contact": "Micrology Laboratories L.L.C.<br>\r\n106 West Lincoln Ave<br>\r\nGoshen, IN 46526-3219<br>\r\nphone: 1-888-327-9435<br>\r\nemail: Jonathan N. Roth (jonnr@juno.com) or (micrologylabs@juno.com)<br>\r\nwww.micrologylabs.com", 
@@ -441,7 +441,7 @@
     }, 
     {
         "pk": 110, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Modified Colitag", 
             "method_source_contact": "CPI International, 5580 Skylane Blvd., Santa Rosa, CA, 95403, (800) 878-7654, http://www.colitag.com/colitag-instructions.pdf.", 
@@ -452,7 +452,7 @@
     }, 
     {
         "pk": 75, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "NIOSH", 
             "method_source_contact": "The National Institute for Occupational Safety and Health (NIOSH), Hubert H. Humphrey Bldg., 200 Independence Ave., SW, Washington, DC, 20201, Phone: 202-401-6997", 
@@ -463,7 +463,7 @@
     }, 
     {
         "pk": 121, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "NIWA", 
             "method_source_contact": "", 
@@ -474,7 +474,7 @@
     }, 
     {
         "pk": 115, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "NJ DEP", 
             "method_source_contact": "NJ DEP, http://www.state.nj.us/dep/", 
@@ -485,7 +485,7 @@
     }, 
     {
         "pk": 6, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "NOAA NST", 
             "method_source_contact": "National Oceanic and Atmospheric Administration (NOAA)<br>\r\nNational Status and Trends Program (NS&T)<br>\r\nSSMC-4, N/SCI-1<br>\r\n1305 East West Highway<br>\r\nSilver Spring, MD 20910<br>\r\nTel. 301-713-3028<br>", 
@@ -496,7 +496,7 @@
     }, 
     {
         "pk": 124, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "NPS", 
             "method_source_contact": "", 
@@ -507,7 +507,7 @@
     }, 
     {
         "pk": 123, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "NTU UK", 
             "method_source_contact": "", 
@@ -518,7 +518,7 @@
     }, 
     {
         "pk": 1, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "O-I-Analytical", 
             "method_source_contact": "OI Analytical<br> \r\nP.O. Box 9010<br> \r\nCollege Station, TX 77842-9010<br>\r\nPhone: (979) 690-1711<br> \r\nFax: (979) 690-0440<br> \r\nE-mail: oimail@oico.com", 
@@ -529,7 +529,7 @@
     }, 
     {
         "pk": 92, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "ORNL", 
             "method_source_contact": "Oak Ridge National Laboratory<br>\r\nP.O. Box 2008<br>\r\nOak Ridge, TN 37831\r\n", 
@@ -540,7 +540,7 @@
     }, 
     {
         "pk": 120, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Ok St U", 
             "method_source_contact": "", 
@@ -551,7 +551,7 @@
     }, 
     {
         "pk": 81, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Osborne Scientific", 
             "method_source_contact": "Osborne Scientific Group, P.O. Box 870, Lakeside, AZ 85929, Tel: 1-888-223-3269; Fax: 1-623-780-2219, sales@osborne-scientific.com; http://osborne-scientific.com", 
@@ -562,7 +562,7 @@
     }, 
     {
         "pk": 83, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Oxoid Limited", 
             "method_source_contact": "Oxoid Limited, Wade Road, Basingstoke Hampshire, RG24 8PW, England, Tel: 44 (0) 1256841144, FAX: 44 (0) 1256 463388, oxoid@oxoid.com; http://www.oxoid.com/", 
@@ -573,7 +573,7 @@
     }, 
     {
         "pk": 108, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "PALINTEST LTD", 
             "method_source_contact": "PALINTEST LTD, 21 Kenton Lands Road, PO Box 18395, Erlanger, KY 41018 phone 606/341-7423", 
@@ -584,7 +584,7 @@
     }, 
     {
         "pk": 85, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "R -Biopharm", 
             "method_source_contact": "R -Biopharm Inc., 7950 Old US 27 South, 49068 Marshall, Michigan, USA, Phone: +1 269 7 89 30 33, Fax: +1 269 7 89 30 70, www.r-biopharm.com", 
@@ -595,7 +595,7 @@
     }, 
     {
         "pk": 84, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Response Biomedical", 
             "method_source_contact": "Response Biomedical Corp., 8081 Lougheed Highway, Burnaby, B.C. V5A 1W9, Canada, Tel: 1.888.591.5577; Fax: 604.412.9830, http://www.responsebio.com; dtrotter@responsebio.com", 
@@ -606,7 +606,7 @@
     }, 
     {
         "pk": 73, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "SDI", 
             "method_source_contact": "Strategic Diagnostics, Inc.<br>\r\n111 Pencader Dr.<br>\r\nNewark, DE 19702<br>\r\nphone: 302-456-6789<br>\r\nwww.sdix.com  ", 
@@ -617,7 +617,7 @@
     }, 
     {
         "pk": 77, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "SE International", 
             "method_source_contact": "S.E. International, Inc.<br>PO Box 39, 436 Farm Rd.<br>Sumertown, TN  38483-0039 USA<br>Phone: 931-964-3561", 
@@ -628,7 +628,7 @@
     }, 
     {
         "pk": 109, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "SWAN Analytische", 
             "method_source_contact": "SWAN Analytische Instrumente AG, Studbachstrasse 13, CH-8340 Hinwil, Switzerland", 
@@ -639,7 +639,7 @@
     }, 
     {
         "pk": 5, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Standard Methods", 
             "method_source_contact": "Standard Methods Online is jointly produced by the American Public Health Association (APHA), the American Water Works Association (AWWA), and the Water Environment Federation (WEF).<br>\nThese organizations may be contacted by phone for more information on Standard Methods Online:<br>\nAPHA: (301) 893-1894<br>\nAWWA: (800) 926-7337, (1-303-794-7711, outside U.S. / Canada)<br>\nWEF: (800) 666-0206 (1-703-684-2452 outside U.S. / Canada)", 
@@ -650,7 +650,7 @@
     }, 
     {
         "pk": 87, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Syagen", 
             "method_source_contact": "Syagen Technology Inc.,<br>1411 Warner Ave.<br>Tustin, CA 92780<br>Phone: 714-258-4400", 
@@ -661,7 +661,7 @@
     }, 
     {
         "pk": 2, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Syngenta", 
             "method_source_contact": "Syngenta Crop Protection<br> \r\nP.O. Box 18300<br>\r\nGreensboro, NC, 27419<br>\r\nFor emergencies, exposure concerns, spills or leaks please call: 1-800-888-8372<br>\r\nFor Product Support and Compliance please call: 1-800-334-9481 x2368.", 
@@ -672,7 +672,7 @@
     }, 
     {
         "pk": 105, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Systea Scientific", 
             "method_source_contact": "Systea Scientific, LLC, 900 Jorie Blvd, Suite 35, Oak Brook, IL 60523", 
@@ -683,7 +683,7 @@
     }, 
     {
         "pk": 86, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "TECRA Intl.", 
             "method_source_contact": "TECRA International Pty. Ltd.<br>\r\nLevel 2, 384 Eastern Valley Way<br>\r\nChatswood NSW 2067, Australia<br>\r\nFax: + 61 2 9453 3422<br>\r\nTelephone: + 61 2 8977 3000<br>\r\nwww.tecra.net", 
@@ -694,7 +694,7 @@
     }, 
     {
         "pk": 104, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "Thermo-Scientific", 
             "method_source_contact": "Thermo Scientific, 166 Cummings Center, Beverly, MA 01915", 
@@ -705,7 +705,7 @@
     }, 
     {
         "pk": 96, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "UC-Davis", 
             "method_source_contact": "Timothy Doane<br>\r\nDept. LAWR<br>\r\nUniversity of California<br>\r\nDavis, CA 95616<br>\r\ntadoane@ucdavis.edu", 
@@ -716,7 +716,7 @@
     }, 
     {
         "pk": 11, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "US FDA", 
             "method_source_contact": "U.S. Food and Drug Administration<br>5600 Fishers Lane<br>Rockville, MD 20857-0001<br>Phone: 1-888-INFO-FDA (1-888-463-6332)", 
@@ -727,7 +727,7 @@
     }, 
     {
         "pk": 36, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "USDA-ARS", 
             "method_source_contact": "USDA-ARS<br> \r\n808 E. Blackland Rd.<br>\r\nTemple, TX  76502-6712<br> \r\nPhone: 254-770-6521<br>\r\nEmail: daren.harmel@ars.usda.gov", 
@@ -738,7 +738,7 @@
     }, 
     {
         "pk": 100, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "USDA-FS", 
             "method_source_contact": "USDA Forest Service<br>1400 Independence Ave., SW<br>Washington, D.C.<br>20250-0003", 
@@ -749,7 +749,7 @@
     }, 
     {
         "pk": 66, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "USGS", 
             "method_source_contact": "USGS Branch of Information Services<br> \r\nBox 25286, MS 417<br> \r\nFederal Center<br>\r\nDenver, CO 80225-0286<br> \r\nPhone: 303-202-4700", 
@@ -760,7 +760,7 @@
     }, 
     {
         "pk": 4, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "USGS Mercury Lab, WI", 
             "method_source_contact": "USGS Wisconsin District Mercury Lab<br>8505 Research Way<br>Middleton, WI 53562<br>(608) 821-3878", 
@@ -771,7 +771,7 @@
     }, 
     {
         "pk": 13, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "USGS NAWQA", 
             "method_source_contact": "USGS National Water-Quality Assessment Program<br>12201 Sunrise Valley Dr<br>Mail Stop 413<br> Reston, VA 20192<br>703-648-5716", 
@@ -782,7 +782,7 @@
     }, 
     {
         "pk": 113, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "USGS OSW", 
             "method_source_contact": "U.S. Geological Survey Office of Surface Water, http://water.usgs.gov/osw/", 
@@ -793,7 +793,7 @@
     }, 
     {
         "pk": 65, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "USGS-NWQL", 
             "method_source_contact": "USGS National Water Quality Laboratory<br>P.O. Box 25046, MS 407, Buildling 95<br>Denver Federal Center<br>Denver, CO 80225-0046<br>Phone 303.236.2000", 
@@ -804,7 +804,7 @@
     }, 
     {
         "pk": 12, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "USGS-OWQ", 
             "method_source_contact": "Office of Water Quality<br>\r\nU.S. Geological Survey<br>\r\n12201 Sunrise Valley Drive<br>\r\nMail Stop 412 <br>\r\nReston, VA 20192\r\n", 
@@ -815,7 +815,7 @@
     }, 
     {
         "pk": 93, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "WDNR Fish Habitat", 
             "method_source_contact": "State of Wisconsin, Department of Natural Resources\r\nBureau of Fisheries Management and Habitat Protection\r\n101 S. Webster St.\r\nMadison, WI 53707\r\n608-267-7498", 
@@ -826,7 +826,7 @@
     }, 
     {
         "pk": 122, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "WEST Inc", 
             "method_source_contact": "", 
@@ -837,7 +837,7 @@
     }, 
     {
         "pk": 99, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "YSI Inc", 
             "method_source_contact": "YSI World Headquarters<br>\r\n1700/1725 Brannum Lane<br>\r\nYellow Springs, OH 45387-1107<br>\r\nUSA<br>\r\nPhone: +1-937-767-7241<br>\r\nUS 800-765-4974<br>\r\nFax: +1-937-767-9353<br>\r\nEmail: environmental@ysi.com", 
@@ -848,7 +848,7 @@
     }, 
     {
         "pk": 114, 
-        "model": "methods.methodsourceref", 
+        "model": "common.methodsourceref", 
         "fields": {
             "method_source": "eWATER", 
             "method_source_contact": "eWATER CRC, http://www.ewatercrc.com.au/", 

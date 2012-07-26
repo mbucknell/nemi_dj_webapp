@@ -1,7 +1,7 @@
 [
     {
         "pk": "False Positive", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The percent of samples analyzed that are reported to contain an analyte, when none of the samples in the set actually contain the analyte. Often, the percent of false positives is determined using blank samples, or samples in which the analyte is below the lowest limit of quantitation, or below the detection limit.", 
             "definition_abbrev": "FALSE_POSITIVE_VALUE", 
@@ -13,7 +13,7 @@
     }, 
     {
         "pk": "False Negative", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The percent of samples analyzed that are reported not to contain an analyte, when all of the samples in the set actually contain the analyte. Often, the percent of false negatives is determined using samples in which the analyte is above its specified regulatory contaminant level.", 
             "definition_abbrev": "FALSE_NEGATIVE_VALUE", 
@@ -25,7 +25,7 @@
     }, 
     {
         "pk": "Spiking Level", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The concentration of analytes in sample used to determine precision and accuracy.", 
             "definition_abbrev": "PREC_ACC_CONC_USED", 
@@ -37,7 +37,7 @@
     }, 
     {
         "pk": "Endpoint", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The conditions (physical, chemical or biological) which define when the analysis is completed and the result is obtained. The endpoint can be simply a step in sample preparation that puts the analyte in a state that can be easily detected and enumerated (biological organisms) or quantified (chemicals). In somewhat more complex cases, an endpoint may be the period of elapsed time for a biological analyte to reach a specific developmental stage, or for a chemical analyte to complete a reaction.", 
             "definition_abbrev": "ENDPOINT", 
@@ -49,7 +49,7 @@
     }, 
     {
         "pk": "Method Category", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The major category of a method (e.g., Physical, Chemical, Biological, Toxicity Assay)", 
             "definition_abbrev": "METHOD_CATEGORY", 
@@ -61,7 +61,7 @@
     }, 
     {
         "pk": "Rapidity", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "A qualitative rating of relative time between when a sample is taken and when analytical data capable of being interpreted for use in making decisions is obtained from the analytical system. Shipping times and data interpretation times are NOT included in this rating. For chemical and radiological methods, ratings are as follows: \"rapid\" = one hour or less to obtain a result; \"moderate\" takes 1 - 3 hours; \"slow\" takes 3 - 8  hours; and \"very slow\" takes more than 8 hours to obtain a result.  For biological methods three time categories are used instead of the qualitative ratings used for other analytes:  < 24 hours; 24 - 48 hours; and > 48 hours.", 
             "definition_abbrev": "RAPIDITY", 
@@ -73,7 +73,7 @@
     }, 
     {
         "pk": "Analyte Specificity", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The ability to detect the presence of one particular analyte from among many other similar or dissimilar analytes.\r\n<br><br>\r\nNOTE: In most cases analyte specificity falls into one of three categories: Good, Moderate, or Poor.  However, there are cases in NEMI-CBR where, due to the nature of the contaminants, a method may have multiple ratings or may have a qualified rating.  These are explained below.\r\n<br><br>\r\nAn analyte specificity of \"Poor*\" (\"Poor\" followed by an asterisk) is shown when a method analyzes for an element (or anion or other single analyte), yet the analyte of interest is a compound (Ex: if you are looking for a method for 'Ammonium bifluoride' you will find methods for Fluoride only). If the analyte of interest is the element (if you are looking just for Fluoride, for example) then the analyte specificity for a given method would likely be rated better than poor.<br><br>\r\n\r\nWhen an analyte is on the CBR list of high-priority contaminants (for example, arsenic) then ratings for analyte specificity are given for both the analyte and for compounds (such as Arsenic trioxide). The analyte specificity for the method will be shown first (with an asterisk) then a slash '/' followed by specificity for any compounds included in the CBR database, like this: Good*/Poor*", 
             "definition_abbrev": "ANALYTE_SPECIFICITY", 
@@ -85,7 +85,7 @@
     }, 
     {
         "pk": "Class Specificity", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The ability to detect the presence of one particular chemical class or biological species from among many other similar or dissimilar classes or species.", 
             "definition_abbrev": "CLASS_SPECIFICITY", 
@@ -97,7 +97,7 @@
     }, 
     {
         "pk": "Yellow Flag", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Method for this analyte has been verified but has not been validated by an  independent study; typically it may have been verified by the method  developer.", 
             "definition_abbrev": "YELLOW_FLAG", 
@@ -109,7 +109,7 @@
     }, 
     {
         "pk": "Green Flag", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Method for this analyte is part of EPA's Standardized Analytical Methods (SAM) list.", 
             "definition_abbrev": "GREEN_FLAG", 
@@ -121,7 +121,7 @@
     }, 
     {
         "pk": "Combination of Green and Yellow Flags", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Method for this analyte is included in EPA's  Standardized Analytical Methods (SAM) list but it has not been validated by an independent study; typically it may have been verified by the method developer.", 
             "definition_abbrev": "GREEN_N_YELLOW_FLAG", 
@@ -133,7 +133,7 @@
     }, 
     {
         "pk": "Validation Flag", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Flags have been provided for three situations: (1) a green flag indicates the method is included in EPA's Standardized Analytical Method (SAM) compendium for the specified analyte and has been validated; (2) a yellow flag indicates that the method has been verfied but has not been independently validated; and (3) a flag with both yellow and green indicates that the method is included in EPA's SAM compendium but that the specified analyte has been verified but has not been validated. \r\n<br><br>\r\nMost analyte/method combinations do not have a flag. This indicates that these methods have been independently validated but are not in the SAM compendium.", 
             "definition_abbrev": "VALID_FLAG_DEF", 
@@ -145,7 +145,7 @@
     }, 
     {
         "pk": "Screening", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "For water security purposes this method provides qualitative and/or quantitative results in 3 hours or less.", 
             "definition_abbrev": "SCREENING", 
@@ -157,7 +157,7 @@
     }, 
     {
         "pk": "Confirmatory", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "For water security purposes this method provides quantitative results with low false pos/neg rates with respect to the presence of the analyte.<br><br>\r\nAn \"N/A\" value in this field indicates that the method, while useful as a confirmatory method for the total element, is not useful for confirming the identity of the individual\u00a0inorganic compounds listed by EPA.", 
             "definition_abbrev": "CONFIRMATORY", 
@@ -169,7 +169,7 @@
     }, 
     {
         "pk": "Get the Method", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "A link either to the complete method in PDF Format in the case of public methods, or a link to a Web site in the case of proprietary methods.", 
             "definition_abbrev": "GET_METHOD", 
@@ -181,7 +181,7 @@
     }, 
     {
         "pk": "Revision Information", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "For methods that are periodically revised, this is the date and revision number of the method.", 
             "definition_abbrev": "REVISION_INFO", 
@@ -193,7 +193,7 @@
     }, 
     {
         "pk": "Greenness Profile", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "<img src=\"/images/symbol_explanation.JPG\" width = \"447\" height = \"419\">\r\n<br><br>\r\nAcceptance Criteria:\r\n<br><br>\r\nA method FAILS the criterion if: \r\n<br><br>\r\n<ol><li> PBT - A chemical used in the method is listed as a PBT (persistent, bioaccumulative, and toxic), as defined by the EPA's Toxic Release Inventory (TRI)<sup>1</sup> </li>\r\n<br>\r\n<li>  Hazardous - A chemical used in the method is listed on the TRI1 or on one of the Resource Conservation and Recovery Act (RCRA)'s D, F, P or U hazardous waste lists<sup>2</sup> </li> \r\n<br>\r\n<li> Corrosive - pH during the analysis is &lt; 2 or &gt; 12.</li>\r\n<br>\r\n<li> Waste Amt - Waste amount generated is > 50 g.</li> \r\n</ol><br>\r\nReferences:<br>\r\n1) Emergency Planning and Community Right-to-Know Act; Section 313; Toxic Release Inventory (TRI), the most recent chemical list available in 2006 is for the reporting year 2004, (http://www.epa.gov/tri/chemical/).\r\n<br>\r\n2) Code of Federal Regulations, Title 40, Part 261, (http://ecfr.gpoaccess.gov/).\r\n", 
             "definition_abbrev": "GREENNESS", 
@@ -205,7 +205,7 @@
     }, 
     {
         "pk": "Target organisms", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The group of organisms to be collected as specified in the method.", 
             "definition_abbrev": "TARGET_ORGANISM", 
@@ -217,7 +217,7 @@
     }, 
     {
         "pk": "Method Name", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "<b>Descriptive Name:</b> A brief descriptive name - useful when a method's official name is long or not very descriptive. Contains either the analyte name or a class of analytes, the media the method applies to, and the instrument used for analysis.<p>\r\n\r\n<b>Official Name:</b> The title of the method that appears on the method from the organization that published it.", 
             "definition_abbrev": "METHOD_NAME", 
@@ -229,7 +229,7 @@
     }, 
     {
         "pk": "Method Download", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Methods published by a public agency (US EPA, USGS, etc.) have a .pdf-version of their method available for download from NEMI.  Proprietary methods (ASTM, Syngenta, etc.) have to be acquired from the company directly.  In these cases, a link to the organization's Web site is provided.", 
             "definition_abbrev": "METHOD_DOWNLOAD", 
@@ -241,7 +241,7 @@
     }, 
     {
         "pk": "pH of Analytical Sample", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The pH of the sample when analyzed.", 
             "definition_abbrev": "PH_OF_ANALYTICAL_SAMPLE", 
@@ -253,7 +253,7 @@
     }, 
     {
         "pk": "PBT", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "PBT: A chemical used in the method is listed as \"persistent, bioaccumulative, and toxic (PBT)\", as defined by the EPA's Toxic Release Inventory.\r\n<br><br>\r\nEmergency Planning and Community Right-to-Know Act; Section 313; Toxic Release Inventory (TRI), the most recent chemical list available in 2006 is for the reporting year 2004, (available on the internet at http://www.epa.gov/tri/chemical/).", 
             "definition_abbrev": "PBT", 
@@ -265,7 +265,7 @@
     }, 
     {
         "pk": "Toxic", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "If the method uses a chemical listed on EPA's Toxic Release Inventory (TRI) or RCRA's D, F, P, or U lists it fails the greenness test for toxics.", 
             "definition_abbrev": "TOXIC", 
@@ -277,7 +277,7 @@
     }, 
     {
         "pk": "Corrosive", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "If the pH is less than 2 or greater than 12 the method fails the greenness test for corrosivity.", 
             "definition_abbrev": "CORROSIVE", 
@@ -289,7 +289,7 @@
     }, 
     {
         "pk": "Waste", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "If the waste from the method is greater than 50 grams, it fails the greenness test for waste.", 
             "definition_abbrev": "WASTE_AMT", 
@@ -301,7 +301,7 @@
     }, 
     {
         "pk": "Regulation", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Regulatory program is listed that the methods is approved for.  Click on the regulatory program in the method row for more information.", 
             "definition_abbrev": "REGULATION", 
@@ -313,7 +313,7 @@
     }, 
     {
         "pk": "Analytical Sample Amt (mL)", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The sample worked up for analysis in milliliters.", 
             "definition_abbrev": "ANALYSIS_AMT_ML", 
@@ -325,7 +325,7 @@
     }, 
     {
         "pk": "Analytical Sample Amt (g)", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "If the analytical sample amount is given in mL, this is converted to grams, with the assumed density of 1 for water-based samples.", 
             "definition_abbrev": "ANALYSIS_AMT_G", 
@@ -337,7 +337,7 @@
     }, 
     {
         "pk": "Calculated Waste Amt (g)", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The sum of the amounts (in g) of the analytical sample and all chemicals used to treat the analytical sample.", 
             "definition_abbrev": "CALC_WASTE_AMT", 
@@ -349,7 +349,7 @@
     }, 
     {
         "pk": "Hazardous", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "A method fails the criterion for hazardous if: a chemical used in the method is listed on the Toxic Release Inventory (TRI<sup>1</sup>) or on one of the Resource Conservation and Recovery Act (RCRA)'s D, F, P or U hazardous waste lists<sup>2</sup> \r\n<br><br>\r\n1) Emergency Planning and Community Right-to-Know Act; Section 313; Toxic Release Inventory (TRI), the most recent chemical list available in 2006 is for the reporting year 2004, (<a href=\"http://www.epa.gov/tri/chemical/\" target=\"_blank\">http://www.epa.gov/tri/chemical/</a>).\r\n<br>\r\n2) Code of Federal Regulations, Title 40, Part 261, (<a href=\"http://ecfr.gpoaccess.gov/\" target=\"_blank\">http://ecfr.gpoaccess.gov/</a>).\r\n", 
             "definition_abbrev": "HAZARDOUS", 
@@ -361,7 +361,7 @@
     }, 
     {
         "pk": "Media", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The categories of media are Water, Air, Soil/Sediment, and Other. The last catergory (Other) includes methods that are applicable to a unique medium (e.g., Steam), or to a variety of media (e.g., Water and Soil). Method summaries will specify applicable media and matrices (if available).", 
             "definition_abbrev": "MEDIA_NAME", 
@@ -373,7 +373,7 @@
     }, 
     {
         "pk": "Brief Method Summary", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Method summaries provide general information on methods. This includes: determinative technique employed (e.g., colorimetry) and some summarized procedural information (e.g., \"sample is treated with barium chloride to precipitate out barium sulfate, which is determined via colorimetry of turbimetry\"", 
             "definition_abbrev": "BRIEF_METHOD_SUMMARY", 
@@ -385,7 +385,7 @@
     }, 
     {
         "pk": "Method Number", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The identification number assigned by the method publisher (e.g., EPA Method 1631 is known as \"1631\" in the NEMI database; ASTM Method D2036-98 is known as \"D-2036-98\", etc.). ", 
             "definition_abbrev": "SOURCE_METHOD_IDENTIFIER", 
@@ -397,7 +397,7 @@
     }, 
     {
         "pk": "Official Method Name", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The title of the method that appears on the method from the organization that published it.", 
             "definition_abbrev": "METHOD_OFFICIAL_NAME", 
@@ -409,7 +409,7 @@
     }, 
     {
         "pk": "Descriptive Method Name", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "A brief descriptive name - useful when a method's official name is long or not very descriptive. Contains either the analyte name or a class of analytes, the media the method applies to, and the instrument used for analysis.", 
             "definition_abbrev": "METHOD_DESCRIPTIVE_NAME", 
@@ -421,7 +421,7 @@
     }, 
     {
         "pk": "Scope and application", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Analyte or analyte classes of interest (e.g., manganese, PAHs) and applicability of methods to different matrices (e.g., water, ground water, TCLP sludges)", 
             "definition_abbrev": "SCOPE_AND_APPLICATION", 
@@ -433,7 +433,7 @@
     }, 
     {
         "pk": "Detection level type", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The Detection Level (DL) can be (1) the point where a substance will be detected, but not quantitated (e.g., Method Detection Limit; MDL); (2) the lowest concentration at which the analyte can be accuractely quantitated (e.g., Minimum Level; ML); the lowest level of an analyte that can be determined by an instrument ignoring the possibility of analyte loss/contamination through sample pretreatment procedures (e.g., Instrument Detection Limit; IDL), (3) the lowest level in the calibration range.", 
             "definition_abbrev": "DL_TYPE", 
@@ -445,7 +445,7 @@
     }, 
     {
         "pk": "Comments on Detection Level Field", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Includes information on how the detection level was determined.", 
             "definition_abbrev": "DL_NOTE", 
@@ -457,7 +457,7 @@
     }, 
     {
         "pk": "Applicable concentration range", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Range of concentrations over which analytes can be measured with typical use of the method. The range can be extended to higher or lower concentrations by using appropriate sample preparative techniques, e.g., dilution, adjusting sample size, concentration of extracts, etc.", 
             "definition_abbrev": "APPLICABLE_CONC_RANGE", 
@@ -469,7 +469,7 @@
     }, 
     {
         "pk": "Interferences", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Interferences are any items which can lead to erroneously high or low results in the analysis of a sample.", 
             "definition_abbrev": "INTERFERENCES", 
@@ -481,7 +481,7 @@
     }, 
     {
         "pk": "Concentration range units", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The units in which the Applicable concentration range values are expressed.", 
             "definition_abbrev": "CONC_RANGE_UNITS", 
@@ -493,7 +493,7 @@
     }, 
     {
         "pk": "Quality Control Requirements", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "A general description or listing of key quality control elements that are in the method (e.g., matrix spikes, reagent blanks).", 
             "definition_abbrev": "QC_REQUIREMENTS", 
@@ -505,7 +505,7 @@
     }, 
     {
         "pk": "Sample handling", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "A general description of sample handling requirements prior to instrumental analysis (e.g., any preservation requirements, sample container requirements, etc.).", 
             "definition_abbrev": "SAMPLE_HANDLING", 
@@ -517,7 +517,7 @@
     }, 
     {
         "pk": "Maximum Holding Time", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The maximum amount of time a sample may be held after it was collected and before it is analyzed.", 
             "definition_abbrev": "MAX_HOLDING_TIME", 
@@ -529,7 +529,7 @@
     }, 
     {
         "pk": "Sample Preparation Methods", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The methods or procedures necessary to prepare a sample for instrumental analysis (e.g., extraction, digestion, filtration, concentration, etc.).", 
             "definition_abbrev": "SAMPLE_PREP_METHODS", 
@@ -541,7 +541,7 @@
     }, 
     {
         "pk": "Relative Cost", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Relative cost per procedure of a typical analytical measurement using the specified methods (i.e., the cost of analyzing a single sample). Additional considerations affect total project costs (e.g., labor and equipment/supplies for a typical sample preparation, QA/QC requirements to validate results reported, number of samples being analyzed, etc.).", 
             "definition_abbrev": "RELATIVE_COST", 
@@ -553,7 +553,7 @@
     }, 
     {
         "pk": "Instrumentation", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Key or major instrumentation needed to perform an analysis with the specified method. This is a reference to the determinative technique used by the method (e.g., colorimetry, GC-MS).", 
             "definition_abbrev": "INSTRUMENTATION", 
@@ -565,7 +565,7 @@
     }, 
     {
         "pk": "Comments on precision and accuracy fields", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Description of how precision and accuracy data were determined.", 
             "definition_abbrev": "PRECISION_DESCRIPTOR_NOTES", 
@@ -577,7 +577,7 @@
     }, 
     {
         "pk": "Method Subcategory", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "Subcategories of analytes for which a method may be listed (e.g., \"organics\" is a subcategory of the \"chemical\" category).", 
             "definition_abbrev": "METHOD_SUBCATEGORY", 
@@ -589,7 +589,7 @@
     }, 
     {
         "pk": "Method Source", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The name, address, and Internet web site of the organization that published the method.", 
             "definition_abbrev": "METHOD_SOURCE", 
@@ -601,7 +601,7 @@
     }, 
     {
         "pk": "Citation", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The published literature citation of the method, or volume from which the method comes. Ordering information is also included (if available).", 
             "definition_abbrev": "CITATION", 
@@ -613,7 +613,7 @@
     }, 
     {
         "pk": "Analyte", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The name assigned to a substance or feature that describes it in terms of its molecular composition, taxonomic nomenclature or other characteristic.", 
             "definition_abbrev": "ANALYTE_NAME", 
@@ -625,7 +625,7 @@
     }, 
     {
         "pk": "Analyte code", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "A unique tracking number for each analyte in the database. For organic chemicals, the ID number is equivalent to the CAS (Chemical Abstracts SocietY) Registry Number. For anions, the ID number is derived from the CASRN for common salts. For method-defined analytes (analytes that are not chemically distinct, such as \"oil and grease\", and \"chemical oxygen demand\") ID numbers are taken from EPA's Environmental Monitoring Method Index codes. For some biological analytes, ITIS numbers are used.", 
             "definition_abbrev": "ANALYTE_CODE", 
@@ -637,7 +637,7 @@
     }, 
     {
         "pk": "Precision", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "An expression of the reproducibility of measurements. Analytical precision is the measurement of the variability associated with two or more replicate analyses.<br>\r\n<br>\r\n\"N/A\" indicates precision data are not available or could not be found for the method.", 
             "definition_abbrev": "PRECISION", 
@@ -649,7 +649,7 @@
     }, 
     {
         "pk": "Bias", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The systematic or persistent distortion of a measured value from its true value  (this can occur during sampling design, the sampling process, or laboratory  analysis).<br>\r\n<br>\r\n\"N/A\" indicates bias data are not available or could not be found for the method.", 
             "definition_abbrev": "ACCURACY", 
@@ -661,7 +661,7 @@
     }, 
     {
         "pk": "Detection level", 
-        "model": "methods.definitionsdom", 
+        "model": "common.definitionsdom", 
         "fields": {
             "definition_description": "The lowest \"measurable\" concentration for an analyte by the specified method. The DL for a specific analyte can be influenced by a number of factors, such as the sample matrix used in a DL study or the laboratory's experience with the method. Often a DL will be determined in reagent grade (very pure) water to demonstrate the optimal DL. In many cases, the reported DL will be generated by the method developer, which has considerable experience with the method. Therefore the reported DL may be much lower than that achievable by a laboratory using the method for the first time. Also, a reported DL may reflect single laboratory performance or the pooled performance of multiple laboratories (the latter providing a picture of overall method performance across the laboratory community). When comparing listed DLs it's important to take into consideration the kind of DLs in questions, and the variables (e.g., matrix) that can effect DLs. Available information on how DLs were determined for a paparticular method is given in the DL Notes fields.  Reporting units are the units of measurement in the particular method.", 
             "definition_abbrev": "DL_VALUE", 

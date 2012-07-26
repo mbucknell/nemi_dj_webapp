@@ -13,7 +13,7 @@
 
 {% block search_box_body %}
 	<p>Select criteria from the drop down menus below and press 'Search NEMI' to perform a search.</p>
-	<form action="{% url methods-statistics %}" method="get"> 
+	<form action="{% url sams-statistics %}" method="get"> 
  		<h4> {{search_form.non_field_errors }} </h4>
 		<table id="search-table">
 			{% for f in search_form %}
@@ -46,7 +46,7 @@
 {% block results_table_data %}
 	{% for r in results %}
 		<tr>
-			<td class="view-button"><a title="View source details" href={%url methods-statistical_source_summary r.source_citation_id %}>View</a></td> 
+			<td class="view-button"><a title="View source details" href="{%url sams-method_summary r.source_citation_id %}">View</a></td> 
 			<td>{{ r.author }}</td>
   			<td>{{ r.title }}</td>
   			<td>{{ r.publication_year }}</td>

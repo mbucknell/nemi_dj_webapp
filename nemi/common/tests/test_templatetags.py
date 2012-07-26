@@ -6,8 +6,8 @@ Created on Mar 14, 2012
 from django.conf import settings
 from django.forms import Form, CharField
 from django.utils import unittest
-from methods.templatetags.data_format import decimal_format, clickable_links
-from methods.templatetags.form_field_attr import verbose_help
+from common.templatetags.data_format import decimal_format, clickable_links
+from common.templatetags.form_field_attr import verbose_help
 
 class DecimalFormatTestCase(unittest.TestCase):
 

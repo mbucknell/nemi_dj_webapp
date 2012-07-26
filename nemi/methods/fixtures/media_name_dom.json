@@ -1,84 +1,84 @@
 [
     {
         "pk": "AGRICULTURAL PRODUCTS", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 2
         }
     }, 
     {
         "pk": "AIR", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 3
         }
     }, 
     {
         "pk": "ANIMAL TISSUE", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 4
         }
     }, 
     {
         "pk": "Biological", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 12
         }
     }, 
     {
         "pk": "Dredged Material", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 11
         }
     }, 
     {
         "pk": "Groundwater", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 9
         }
     }, 
     {
         "pk": "OTHER", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 7
         }
     }, 
     {
         "pk": "SOILS/SEDIMENT", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 5
         }
     }, 
     {
         "pk": "Sediment", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 10
         }
     }, 
     {
         "pk": "Surface Water", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 8
         }
     }, 
     {
         "pk": "VARIOUS", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 6
         }
     }, 
     {
         "pk": "WATER", 
-        "model": "methods.medianamedom", 
+        "model": "common.medianamedom", 
         "fields": {
             "media_id": 1
         }

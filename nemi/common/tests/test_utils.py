@@ -4,19 +4,61 @@ Created on Mar 15, 2012
 @author: mbucknel
 '''
 
-from django.forms import Form, ChoiceField, CharField, ModelChoiceField, MultipleChoiceField, IntegerField
+from django import forms 
+from django.conf import settings
+from django.core.management import call_command
+from django.db.models import loading
 from django.utils import unittest
 
-from methods.models import StatisticalItemType
-from methods.utils.forms import get_criteria, get_criteria_from_field_data, get_multi_choice
-from methods.utils.view_utils import tsv_response, xls_response
+from common.utils.forms import get_criteria, get_criteria_from_field_data, get_multi_choice
+from common.utils.view_utils import tsv_response, xls_response
+
+from models import TestModel
+
+NO_SETTING = ('!', None)
+
+class TestSettingsManager(object):
+    """
+    A class which can modify some Django settings temporarily for a
+    test and then revert them to their original values later.
+
+    Automatically handles resyncing the DB if INSTALLED_APPS is
+    modified.
+    
+    This code came from http://djangosnippets.org/snippets/1011/
+
+    """
+    def __init__(self):
+        self._original_settings = {}
+
+    def set(self, **kwargs):
+        for k,v in kwargs.iteritems():
+            self._original_settings.setdefault(k, getattr(settings, k,
+                                                          NO_SETTING))
+            setattr(settings, k, v)
+        if 'INSTALLED_APPS' in kwargs:
+            self.syncdb()
+
+    def syncdb(self):
+        loading.cache.loaded = False
+        call_command('syncdb', verbosity=0)
+
+    def revert(self):
+        for k,v in self._original_settings.iteritems():
+            if v == NO_SETTING:
+                delattr(settings, k)
+            else:
+                setattr(settings, k, v)
+        if 'INSTALLED_APPS' in self._original_settings:
+            self.syncdb()
+        self._original_settings = {}
 
 
 class TestGetCriteria(unittest.TestCase):
     
     def test_choice_select_integer_value(self):
-        class MyForm(Form):
-            choice_field = ChoiceField(choices=[('all', 'Any'), (1, 'One'), (2, 'Two'), (3, 'Three')])       
+        class MyForm(forms.Form):
+            choice_field = forms.ChoiceField(choices=[('all', 'Any'), (1, 'One'), (2, 'Two'), (3, 'Three')])       
                 
         test_form = MyForm(data={'choice_field' : 1})
         self.assertEqual(get_criteria(test_form['choice_field']), ('Choice field', 'One'))
@@ -25,8 +67,8 @@ class TestGetCriteria(unittest.TestCase):
         self.assertIsNone(get_criteria(test_form['choice_field']))
         
     def test_choice_select_string_value(self):
-        class MyForm(Form):
-            choice_field = ChoiceField(choices=[('all', 'Any'), ('one', 'One'), ('two', 'Two'), ('three', 'Three')]) 
+        class MyForm(forms.Form):
+            choice_field = forms.ChoiceField(choices=[('all', 'Any'), ('one', 'One'), ('two', 'Two'), ('three', 'Three')]) 
             
         test_form = MyForm(data={'choice_field' : 'two'})
         self.assertEqual(get_criteria(test_form['choice_field']), ('Choice field', 'Two')) 
@@ -35,8 +77,8 @@ class TestGetCriteria(unittest.TestCase):
         self.assertIsNone(get_criteria(test_form['choice_field']))
         
     def test_not_choice_field(self):
-        class MyForm(Form):
-            char_field = CharField(max_length=10)
+        class MyForm(forms.Form):
+            char_field = forms.CharField(max_length=10)
             
         test_form = MyForm(data={'char_field' : 'one'})
         self.assertRaises(AttributeError, get_criteria, (test_form['char_field']))   
@@ -44,20 +86,22 @@ class TestGetCriteria(unittest.TestCase):
         
 class TestGetCriteriaFromFieldData(unittest.TestCase):
     
-    class MyForm(Form):
-        choice = ModelChoiceField(queryset=StatisticalItemType.objects.all(), required=False)
-        char = CharField(max_length=10, required=False)
-        my_int = IntegerField(required=False)
+    class MyForm(forms.Form):
+        choice = forms.ModelChoiceField(queryset=TestModel.objects.all(), required=False)
+        char = forms.CharField(max_length=10, required=False)
+        my_int = forms.IntegerField(required=False)
         
+    def __init__(self, *args, **kwargs):
+        super(TestGetCriteriaFromFieldData, self).__init__(*args, **kwargs)
+        self.settings_manager = TestSettingsManager()    
+
     def setUp(self):
-        m1 = StatisticalItemType(stat_item_index=1, item='Item 1')
-        m1.save()
-        
-        m2 = StatisticalItemType(stat_item_index=2, item='Item 2')
-        m2.save()
-        
-        m3 = StatisticalItemType(stat_item_index=3, item='Item 3')
-        m3.save()
+
+        self.settings_manager.set(INSTALLED_APPS=('common','common.tests'))
+            
+        self.m1 = TestModel.objects.create(name='Item 1')        
+        self.m2 = TestModel.objects.create(name='Item 2')
+        self.m3 = TestModel.objects.create(name='Item 3')
         
     def test_with_no_selection(self):
         my_form = self.MyForm(data={'choice' : None,
@@ -70,24 +114,24 @@ class TestGetCriteriaFromFieldData(unittest.TestCase):
         self.assertIsNone(get_criteria_from_field_data(my_form, 'my_int'))
         
     def test_with_selection(self):
-        my_form = self.MyForm({'choice' : 2,
+        my_form = self.MyForm({'choice' : self.m2.pk,
                                'char' : 'name',
                                'my_int' : 12})
         my_form.is_valid()
         result_choice = get_criteria_from_field_data(my_form, 'choice')
         self.assertEqual(result_choice[0], 'Choice')
-        self.assertEqual(result_choice[1], StatisticalItemType.objects.get(pk=2))
+        self.assertEqual(result_choice[1], self.m2)
         self.assertEqual(get_criteria_from_field_data(my_form, 'char'), ('Char', 'name'))
         self.assertEqual(get_criteria_from_field_data(my_form, 'my_int'), ('My int', 12))
         
     def test_with_label_overrider(self):
-        my_form = self.MyForm({'choice' : 2,
+        my_form = self.MyForm({'choice' : self.m2.pk,
                                'char' : 'name',
                                'my_int' : 12})
         my_form.is_valid()
         result_choice = get_criteria_from_field_data(my_form, 'choice', 'What is my choice')
         self.assertEqual(result_choice[0], 'What is my choice')
-        self.assertEqual(result_choice[1], StatisticalItemType.objects.get(pk=2))
+        self.assertEqual(result_choice[1], self.m2)
         
                 
     def test_with_bad_field(self):
@@ -100,11 +144,14 @@ class TestGetCriteriaFromFieldData(unittest.TestCase):
         my_form.is_valid()
         self.assertRaises(KeyError, get_criteria_from_field_data, my_form, 'bad_choice')
         
+    def tearDown(self):
+        self.settings_manager.revert()
+        
 class TestGetMultiChoice(unittest.TestCase):
     
     def test_with_string_values(self):
-        class MyForm(Form):
-            multi_choice = MultipleChoiceField(choices=[('c1', 'Choice 1'), ('c2', 'Choice 2'), ('c3', 'Choice 3')])
+        class MyForm(forms.Form):
+            multi_choice = forms.MultipleChoiceField(choices=[('c1', 'Choice 1'), ('c2', 'Choice 2'), ('c3', 'Choice 3')])
             
         my_form = MyForm(data={'multi_choice' : ['c1', 'c3']})
         my_form.is_valid()
@@ -115,8 +162,8 @@ class TestGetMultiChoice(unittest.TestCase):
         self.assertEqual(get_multi_choice(my_form, 'multi_choice'), ['Choice 2'])
         
     def test_with_integer_values(self):
-        class MyForm(Form):
-            multi_choice = MultipleChoiceField(choices=[(1, 'Choice 1'), (2, 'Choice 2'), (3, 'Choice 3')])
+        class MyForm(forms.Form):
+            multi_choice = forms.MultipleChoiceField(choices=[(1, 'Choice 1'), (2, 'Choice 2'), (3, 'Choice 3')])
             
         my_form = MyForm(data={'multi_choice' : [2, 3]})
         my_form.is_valid()
@@ -127,8 +174,8 @@ class TestGetMultiChoice(unittest.TestCase):
         self.assertEqual(get_multi_choice(my_form, 'multi_choice'), ['Choice 1'])
 
     def test_bad_field(self):
-        class MyForm(Form):
-            multi_choice = MultipleChoiceField(choices=[(1, 'Choice 1'), (2, 'Choice 2'), (3, 'Choice 3')])
+        class MyForm(forms.Form):
+            multi_choice = forms.MultipleChoiceField(choices=[(1, 'Choice 1'), (2, 'Choice 2'), (3, 'Choice 3')])
             
         my_form = MyForm(data={'multi_choice' : [1, 2]})
         my_form.is_valid()
