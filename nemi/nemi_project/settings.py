@@ -155,11 +155,12 @@ LOGGING = {
 }
 
 try:
+    ADDITIONAL_APPS = ()
+    ADDITIONAL_MW_CLASSES = ()
     from local_settings import *
 except ImportError:
     # add apps to this variable for this specific server configuration
-    ADDITIONAL_APPS = ()
-    ADDITIONAL_MW_CLASSES = ()
+    pass
 
 # Add any apps and middleware classes defined in local_settings
 if ADDITIONAL_APPS:
