@@ -93,14 +93,15 @@ class InGroupTestCase(unittest.TestCase):
         self.g2 = Group.objects.create(name='group2')
         self.g3 = Group.objects.create(name='group3')
         
+        self.u1 = User.objects.create_user('thisuser')
+
+        
     def test_in_group(self):
         self.assertFalse(in_group(None, self.g1.name)) 
         
         user = 'Some string'
         self.assertFalse(in_group(user, self.g1.name))       
-        
-        self.u1 = User.objects.create_user('user1')
-        
+                
         self.assertFalse(in_group(self.u1, self.g1.name))
         self.assertFalse(in_group(self.u1, '%s, %s, %s' % (self.g1.name, self.g2.name, self.g3.name)))
         

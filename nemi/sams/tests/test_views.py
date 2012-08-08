@@ -43,6 +43,8 @@ class TestAddStatMethodOnlineView(TestCase):
         self.assertIn('action_url', resp.context)
         self.assertEqual(resp.context['action_url'], reverse('sams-create_method'))
         
+        self.client.logout()
+        
     def test_view_post_with_error(self):
         self.client.login(username='user1', password='test')
         
@@ -55,6 +57,8 @@ class TestAddStatMethodOnlineView(TestCase):
         self.assertIn('action_url', resp.context)
         self.assertEqual(resp.context['action_url'], reverse('sams-create_method'))
         self.assertNotEqual(len(resp.context['form'].errors), 0)
+
+        self.client.logout()
         
     def test_view_post(self):
         self.client.login(username='user1', password='test')
@@ -83,6 +87,8 @@ class TestAddStatMethodOnlineView(TestCase):
         self.assertEqual(len(StatMediaRelStg.objects.filter(method_id=q1[0].method_id)), 1)
         self.assertEqual(len(StatTopicRelStg.objects.filter(method_id=q1[0].method_id)), 0)
         self.assertRedirects(resp, '/sams/method_detail/%s/' % q1[0].method_id)
+
+        self.client.logout()
                                  
 class TestStatisticSearchViewNoMethods(TestCase):
     fixtures = ['static_data.json']  
