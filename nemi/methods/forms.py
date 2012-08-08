@@ -3,8 +3,8 @@
 from django.forms import Form, ChoiceField, MultipleChoiceField, CheckboxSelectMultiple, RadioSelect, CharField, TextInput
 from django.utils.safestring import mark_safe
 
-from common.models import MediaNameDOM, MethodSourceRef
-from models import MethodVW, InstrumentationRef, MethodSubcategoryRef, MethodAnalyteAllVW, RegulationRef, RegulatoryMethodReport
+from common.models import InstrumentationRef, MediaNameDOM, MethodSourceRef, MethodSubcategoryRef
+from models import MethodVW, MethodAnalyteAllVW, RegulationRef, RegulatoryMethodReport
 
 def _choice_cmp(a,b):
     ''' Returns -1, 1, or 0 by comparing the 2nd element in a with b.

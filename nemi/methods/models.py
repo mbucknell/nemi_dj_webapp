@@ -5,6 +5,11 @@ only and therefore have managed set to Fasle in each model's Meta data.
 
 from django.db import models
 
+class MethodVWManager(models.Manager):
+    
+    def get_query_set(self):
+        return super(MethodVWManager, self).get_query_set().exclude(method_subcategory_id=16)
+    
 class MethodVW(models.Model):
     
     method_id = models.IntegerField(primary_key=True)
@@ -68,6 +73,8 @@ class MethodVW(models.Model):
     corrosive = models.CharField(max_length=1, blank=True)
     waste = models.CharField(max_length=1, blank=True)
     assumptions_comments = models.CharField(max_length=2000, blank=True)
+    
+    objects = MethodVWManager()
     
     class Meta:
         db_table = u'method_vw'
@@ -320,25 +327,6 @@ class AnalyteCodeVW(models.Model):
         db_table = 'analyte_code_vw'
         managed = False
         
-class InstrumentationRef(models.Model):
-    
-    instrumentation_id = models.IntegerField(primary_key=True)
-    instrumentation = models.CharField(max_length=20)
-    instrumentation_description = models.CharField(max_length=200)
-    
-    class Meta:
-        db_table = 'instrumentation_ref'
-        managed = False
-        
-class MethodSubcategoryRef(models.Model):
-    
-    method_subcategory_id = models.IntegerField(primary_key=True)
-    method_category = models.CharField(max_length=50)
-    method_subcategory = models.CharField(max_length=40)
-    
-    class Meta:
-        db_table = 'method_subcategory_ref'
-        managed = False
         
 class MethodAnalyteJnStgVW(models.Model):
     
@@ -564,14 +552,3 @@ class RegulatoryMethodReport(models.Model):
         db_table = 'regulatory_method_report'
         managed = False
         
-class RelativeCostRef(models.Model):
-    
-    relative_cost_id = models.IntegerField(primary_key=True) 
-    relative_cost_symbol = models.CharField(max_length=7)
-    relative_cost = models.CharField(max_length=40)
-    cost_effort_key = models.CharField(max_length=10)
-    
-    class Meta:
-        db_table = 'relative_cost_ref'
-        managed = False
-

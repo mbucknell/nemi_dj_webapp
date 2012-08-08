@@ -8,31 +8,31 @@
 	{% if data %}
 		<br />
 		<table class="info-table">
-			<tr><th>Title</th><td>{{ data.title }}</td></tr>
-			<tr><th>Author</th><td>{{ data.author }}</td></tr>
-			<tr><th>Abstract/Summary Statement</th><td>{{ data.abstract_summary|linebreaksbr }}</td></tr>
-			<tr><th>Table of Contents</th><td>{{ data.table_of_contents|linebreaksbr }}</td></tr>
-			<tr><th>Citation</th><td>{{ data.source_citation_name }}</td></tr>
-			<tr><th>Source Organization</th><td>{{ data.source_organization }}</td></tr>
-			<tr><th>Source Organization Country</th><td>{{ data.country }}</td></tr>
-			<tr><th>Publication Year</th><td>{{ data.publication_year }}</td></tr>
-			<tr><th>Link</th><td><a href={{ data.link }} target="_blank">{{ data.link }}</a>
-			<tr><th>Special notes</th><td>{{ data.notes }}</td></tr>			
-			<tr><th>Item Type</th><td>{{ data.item_type }}</td></tr>
+			<tr><th>Title</th><td>{{ data.method_official_name }}</td></tr>
+			<tr><th>Author</th><td>{{ data.source_citation.author }}</td></tr>
+			<tr><th>Abstract/Summary Statement</th><td>{{ data.brief_method_summary|linebreaksbr }}</td></tr>
+			<tr><th>Table of Contents</th><td>{{ data.source_citation.table_of_contents|linebreaksbr }}</td></tr>
+			<tr><th>Citation</th><td>{{ data.source_citation.source_citation_name }}</td></tr>
+			<tr><th>Source Organization</th><td>{{ data.method_source }}</td></tr>
+			<tr><th>Source Organization Country</th><td>{{ data.source_citation.country }}</td></tr>
+			<tr><th>Publication Year</th><td>{{ data.source_citation.publication_year }}</td></tr>
+			<tr><th>Link</th><td><a href={{ data.link_to_full_method }} target="_blank">{{ data.link_to_full_method }}</a>
+			<tr><th>Special notes</th><td>{{ data.assumptions_comments }}</td></tr>			
+			<tr><th>Item Type</th><td>{{ data.source_citation.item_type }}</td></tr>
 			<tr>
 				<th>Publication Source Type</th>
 				<td>
-					{% for t in data.sponser_types.all %}
+					{% for t in data.source_citation.sponser_types.all %}
 						{{ t }}<br />
 					{% endfor %}
-					{% if data.sponser_type_note %}
-						Additional information:&nbsp;{{ data.sponser_type_note }}
+					{% if data.source_citation.sponser_type_note %}
+						Additional information:&nbsp;{{ data.source_citation.sponser_type_note }}
 					{% endif %}
 				</td>
 			</tr>
 			<tr><th>Purpose</th>
 				<td>
-					{% for t in data.analysis_types.all %}
+					{% for t in data.statanalysisrel_set.all %}
 						{{ t }}<br />
 					{% endfor %}
 				</td>
@@ -40,16 +40,16 @@
 			<tr>
 				<th>Design or Data Analysis Objectives</th>
 				<td>
-					{% for t in data.design_objectives.all %}
+					{% for t in data.statdesignrel_set.all %}
 						{{ t }}<br />
 					{% endfor %}
 				</td>
 			</tr>	
-			<tr><th>Complexity</th><td>{{ data.complexity }}</td></tr>
+			<tr><th>Complexity</th><td>{{ data.sam_complexity }}</td></tr>
 			<tr>
 				<th>Media Emphasized</th>
 				<td>
-					{% for t in data.media_emphasized.all %}
+					{% for t in data.statmediarel_set.all %}
 						{{ t }}<br />
 					{% endfor %}
 					{% if data.media_emphasized_note %}
@@ -57,11 +57,11 @@
 					{% endif %}
 				</td>
 			</tr>
-			<tr><th>Subcategory</th><td>{{ data.subcategory }}</td></tr>
+			<tr><th>Subcategory</th><td>{{ data.media_subcategory }}</td></tr>
 			<tr>
 				<th>Special Topics</th>
 				<td>
-					{% for t in data.special_topics.all %}
+					{% for t in data.stattopicrel_set.all %}
 						{{ t }}<br />
 					{% endfor %}
 				</td>

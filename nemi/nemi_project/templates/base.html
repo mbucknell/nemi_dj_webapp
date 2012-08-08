@@ -75,7 +75,8 @@
 		<div id="page-content">
 			{% block navigation %}
 				<div id="page-navigation">
-					{% block navigation_menu %}				
+					{% block navigation_menu %}	
+						{% load in_group from user_auth %}			
 						<div id="navigation-bar">
 							<ul class="dropdown" id="navigation-menu">
 								<li><a href={% url home %}>Home</a></li>
@@ -98,6 +99,9 @@
 										<li><a href={% url sams-statistics %}>Search by criteria</a></li>
 										<li><a href={% url sams-create_method %}>Add methods</a></li>
 										<li><a href={% url sams-update_method_list %}>Update methods</a></li>
+										{% if user|in_group:"nemi_admin" %}
+											<li><a href="{% url sams-method_review_list %}">Review methods</a></li>
+										{% endif %}
 									</ul>
 								</li>	
 								<li><a href="http://infotrek.er.usgs.gov/apex/f?p=240:1:1236718013547534">MEMO (Sensors)</a></li>

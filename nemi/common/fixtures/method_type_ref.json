@@ -1,0 +1,37 @@
+[
+    {
+        "pk": 1, 
+        "model": "common.methodtyperef", 
+        "fields": {
+            "method_type_desc": "Sample Analysis"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "common.methodtyperef", 
+        "fields": {
+            "method_type_desc": "Sample Collection"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "common.methodtyperef", 
+        "fields": {
+            "method_type_desc": "Statistical Technique"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "common.methodtyperef", 
+        "fields": {
+            "method_type_desc": "Sample Processing/Preparation"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "common.methodtyperef", 
+        "fields": {
+            "method_type_desc": "Toxicity Test Procedure"
+        }
+    }
+]

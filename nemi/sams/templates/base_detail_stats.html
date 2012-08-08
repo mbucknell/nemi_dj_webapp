@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}NEMI SAMS Method Detail{% endblock %}
+
+{% block content %}
+	{% if data %}
+		<br />
+		<table class="info-table">
+			<tr><th>Source Abbreviation</th><td>{{ data.method.source_method_identifier }}</td>
+			<tr><th>Title</th><td>{{ data.method.method_official_name }}</td></tr>
+			<tr><th>Author</th><td>{{ data.method.source_citation.author }}</td></tr>
+			<tr><th>Abstract/Summary Statement</th><td>{{ data.method.brief_method_summary|linebreaksbr }}</td></tr>
+			<tr><th>Table of Contents</th><td>{{ data.method.source_citation.table_of_contents|linebreaksbr }}</td></tr>
+			<tr><th>Citation</th><td>{{ data.method.source_citation.source_citation_name }}</td></tr>
+			<tr><th>Source Organization</th><td>{{ data.method.method_source}}</td></tr>
+			<tr><th>Source Organization Country</th><td>{{ data.method.source_citation.country }}</td></tr>
+			<tr><th>Publication Year</th><td>{{ data.method.source_citation.publication_year }}</td></tr>
+			<tr><th>Link</th><td><a href={{ data.method.link_to_full_method }} target="_blank">{{ data.method.link_to_full_method }}</a></td></tr>
+			<tr><th>Special Notes</th><td>{{ data.method.assumptions_comments }}</td></tr>			
+			<tr><th>Item Type</th><td>{{ data.method.source_citation.item_type }}</td></tr>
+			<tr>
+				<th>Publication Source Type</th>
+				<td>
+					{% for t in data.method.source_citation.sponser_types.all %}
+						{{ t }}<br />
+					{% endfor %}
+					{% if data.method.source_citation.sponser_type_note %}
+						Additional information:&nbsp;{{ data.method.source_citation.sponser_type_note }}
+					{% endif %}
+				</td>
+			</tr>
+			<tr><th>Purpose</th>
+				<td>
+					{% for t in data.analysis_types %}
+						{{ t.analysis_type.analysis_type  }}<br />
+					{% endfor %}
+				</td>
+			</tr>
+			<tr>
+				<th>Design or Data Analysis Objectives</th>
+				<td>
+					{% for t in data.design_objectives %}
+						{{ t.design_objective.objective }}<br />
+					{% endfor %}
+				</td>
+			</tr>	
+			<tr><th>Complexity</th><td>{{ data.method.sam_complexity }}</td></tr>
+			<tr><th>Level of Training</th><td>{{ data.method.level_of_training }}</td></tr>
+			<tr>
+				<th>Media Emphasized</th>
+				<td>
+					{% for t in data.media_emphasized %}
+						{{ t.media_name.media_name|lower|capfirst }}<br />
+					{% endfor %}
+					{% if data.method.media_emphasized_note %}
+						Additional information:&nbsp;{{ data.method.media_emphasized_note }}
+					{% endif %}
+				</td>
+			</tr>
+			<tr><th>Subcategory</th><td>{{ data.method.media_subcategory }}</td></tr>
+			<tr>
+				<th>Special Topics</th>
+				<td>
+					{% for t in data.special_topics %}
+						{{ t.topic.stat_special_topic }}<br />
+					{% endfor %}
+				</td>
+			</tr>
+			<tr><th>Insert user</th><td>{{ data.method.get_insert_user.get_full_name }} ({{ data.method.insert_person_name }})</td></tr>
+		</table>
+		
+		{% block page_actions %}<!-- Put action buttons here -->{% endblock %}	
+			
+	{% else %}
+		<p>Method not found.</p>
+	{% endif %}
+
+{% endblock %}

@@ -5,17 +5,21 @@
 {% block page_title %}Update Statistical Methods{% endblock %}
 
 {% block content %}
-	<h3>List of statistical methods that can be edited</h3>
+	{% if methods %}
+		<h3>List of statistical methods that can be edited</h3>
 		<table class="data-table">
 			<tr>
 				<th></th><th>Source Abbreviation</th><th>Title</th>
 			</tr>
-			{% for method in source_methods %}
+			{% for method in methods %}
 				<tr>
-					<td><input type="button" value="Update" onclick="location.href='{% url sams-update_method method.source_citation_id %}';"></td>
-					<td>{{ method.source_citation }}</td>
-					<td>{{ method.title }}</td>
+					<td><input type="button" value="Update" onclick="location.href='{% url sams-update_method method.method_id %}';"></td>
+					<td>{{ method.source_method_identifier }}</td>
+					<td>{{ method.method_official_name }}</td>
 				</tr>
 			{% endfor %}
 		</table>
+	{% else %}
+		<h3>You currently have no methods to update.</h3>
+	{% endif %}
 {% endblock %}

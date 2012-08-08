@@ -4,10 +4,13 @@ Created on Mar 14, 2012
 @author: mbucknel
 '''
 from django.conf import settings
+from django.contrib.auth.models import Group, User
 from django.forms import Form, CharField
 from django.utils import unittest
+
 from common.templatetags.data_format import decimal_format, clickable_links
-from common.templatetags.form_field_attr import verbose_help
+from common.templatetags.form_field_attr import tooltip
+from common.templatetags.user_auth import in_group
 
 class DecimalFormatTestCase(unittest.TestCase):
 
@@ -61,11 +64,11 @@ class ClickableLinksTestCase(unittest.TestCase):
         self.assertNotEqual(clickable_links(link1 + 'br>' + link2), result)
         self.assertNotEqual(clickable_links(link1 + '<br' + link2), result)
        
-class VerboseHelpTestCase(unittest.TestCase):
+class TooltipTestCase(unittest.TestCase):
     
     def test_with_no_attributes(self):
         data = {'result1' : 1, 'result2' : 2}
-        self.assertEqual(verbose_help(data), settings.TEMPLATE_STRING_IF_INVALID)  
+        self.assertEqual(tooltip(data), settings.TEMPLATE_STRING_IF_INVALID)  
         
     def test_with_attribute(self):
 
@@ -74,11 +77,44 @@ class VerboseHelpTestCase(unittest.TestCase):
             
             def __init__(self, *args, **kwargs):
                 super(MyForm, self).__init__(*args, **kwargs)
-                self.fields['my_field'].verbose_help = 'Verbose help'
+                self.fields['my_field'].tooltip = 'Tooltip'
             
         class MyBoundObject(object):
             form =  MyForm({'my_field' : 'A'}) 
             name = 'my_field'          
 
         test_object = MyBoundObject()
-        self.assertEqual(verbose_help(test_object), 'Verbose help')   
+        self.assertEqual(tooltip(test_object), 'Tooltip')
+        
+class InGroupTestCase(unittest.TestCase):
+    
+    def setUp(self):
+        self.g1 = Group.objects.create(name='group1')
+        self.g2 = Group.objects.create(name='group2')
+        self.g3 = Group.objects.create(name='group3')
+        
+    def test_in_group(self):
+        self.assertFalse(in_group(None, self.g1.name)) 
+        
+        user = 'Some string'
+        self.assertFalse(in_group(user, self.g1.name))       
+        
+        self.u1 = User.objects.create_user('user1')
+        
+        self.assertFalse(in_group(self.u1, self.g1.name))
+        self.assertFalse(in_group(self.u1, '%s, %s, %s' % (self.g1.name, self.g2.name, self.g3.name)))
+        
+        self.u1.groups.add(self.g1)
+        self.assertTrue(in_group(self.u1, self.g1.name))
+        self.assertFalse(in_group(self.u1, self.g2.name))
+        self.assertTrue(in_group(self.u1, '%s, %s' % (self.g1.name, self.g3.name)))
+        self.assertFalse(in_group(self.u1, '%s, %s' % (self.g2.name, self.g3.name)))
+        
+        self.u1.groups.add(self.g2)
+        self.assertTrue(in_group(self.u1, self.g1.name))
+        self.assertTrue(in_group(self.u1, self.g2.name))
+        self.assertTrue(in_group(self.u1, '%s, %s' % (self.g1.name, self.g3.name)))
+        self.assertTrue(in_group(self.u1, '%s, %s' % (self.g2.name, self.g3.name)))
+        self.assertFalse(in_group(self.u1, self.g3.name))
+        
+        

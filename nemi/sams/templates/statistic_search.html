@@ -46,13 +46,13 @@
 {% block results_table_data %}
 	{% for r in results %}
 		<tr>
-			<td class="view-button"><a title="View source details" href="{%url sams-method_summary r.source_citation_id %}">View</a></td> 
-			<td>{{ r.author }}</td>
-  			<td>{{ r.title }}</td>
-  			<td>{{ r.publication_year }}</td>
-			<td>{{ r.source_organization }}</td>
-			<td><a href={{ r.link }} target="_blank">{{ r.link }}</a></td>
-			<td>{{ r.country }}</td>
+			<td class="view-button"><a title="View source details" href="{%url sams-method_summary r.method_id %}">View</a></td> 
+			<td>{{ r.source_citation.author }}</td>
+  			<td>{{ r.method_official_name }}</td>
+  			<td>{{ r.source_citation.publication_year }}</td>
+			<td>{{ r.method_source }}</td>
+			<td><a href={{ r.link_to_full_method }} target="_blank">{{ r.link }}</a></td>
+			<td>{{ r.source_cition.country }}</td>
 		</tr>
 	{% endfor %}
 {% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}NEMI SAMS methods for approval{% endblock %}
+
+{% block page_title %}NEMI SAMS methods ready for approval{% endblock %}
+
+{% block content %}
+	{% if methods %}
+		<h3>Statistical methods ready for approval</h3>
+		<table class="data-table">
+			<tr>
+				<th></th><th>Source Abbreviation</th><th>Title</th><th>Date submitted</th>
+			</tr>
+			{% for method in methods %}
+				<tr>
+					<td><input type="button" value="Review" onclick="location.href='{% url sams-method_detail_for_approval method.method_id %}';"></td>
+					<td>{{ method.source_method_identifier }}</td>
+					<td>{{ method.method_official_name }}</td>
+					<td>{{ method.date_loaded }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<h3>There are no methods to be reviewed.</h3>
+	{% endif %}
+{% endblock %}

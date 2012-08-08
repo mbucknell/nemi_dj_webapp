@@ -6,7 +6,7 @@ class DefinitionsDOM(models.Model):
     
     definition_name = models.CharField(max_length=75, primary_key=True)
     definition_description = models.CharField(max_length=1500)
-    definition_abbrev = models.CharField(max_length=30)
+    definition_abbrev = models.CharField(max_length=30) 
     web_desc_bio = models.CharField(max_length=4000, blank=True)
     web_desc_all = models.CharField(max_length=4000, blank=True)
     web_desc_phys = models.CharField(max_length=4000, blank=True)
@@ -15,7 +15,24 @@ class DefinitionsDOM(models.Model):
     class Meta:
         db_table = u'definitions_dom'
         managed = False
+        
+    def __unicode__(self):
+        return self.definition_name
 
+class MethodSubcategoryRef(models.Model):
+    
+    method_subcategory_id = models.IntegerField(primary_key=True)
+    method_category = models.CharField(max_length=50)
+    method_subcategory = models.CharField(max_length=40)
+    
+    class Meta:
+        db_table = 'method_subcategory_ref'
+        managed = False
+        
+    def __unicode__(self):
+        return self.method_subcategory
+        
+        
 class MethodSourceRef(models.Model):
     
     method_source_id = models.IntegerField(primary_key=True)
@@ -62,25 +79,13 @@ class MediaNameDOM(models.Model):
     stat_media = StatisticalMediaNameManager()
     
     class Meta:
-        db_table = 'media_name_dom'
+        db_table = u'media_name_dom'
         ordering = ['media_name']
         managed = False
         
     def __unicode__(self):
         return self.media_name.lower().title()
 
-        
-class StatisticalAnalysisType(models.Model):
-    
-    stat_analysis_index = models.IntegerField(primary_key=True)
-    analysis_type = models.CharField(max_length=100)
-    
-    class Meta:
-        db_table = 'statistical_analysis_type'
-        ordering = ['analysis_type']
-
-    def __unicode__(self):
-        return self.analysis_type
         
 class StatisticalSourceType(models.Model):
    
@@ -93,41 +98,109 @@ class StatisticalSourceType(models.Model):
 
     def __unicode__(self):
         return self.source
-
-class StatisticalDesignObjective(models.Model):
     
-    stat_design_index = models.IntegerField(primary_key=True)
-    objective = models.CharField(max_length=200)
 
-    class Meta:
-        db_table = 'statistical_design_objective'
-        ordering = ['objective']
-        
-    def __unicode__(self):
-        return self.objective
-
-class StatisticalTopics(models.Model):
+class SourceCitationRef(models.Model):
     
-    stat_topic_index = models.IntegerField(primary_key=True)
-    stat_special_topic = models.CharField(max_length=200)
-    
-    class Meta:
-        db_table = 'statistical_topics'
-        ordering = ['stat_special_topic']
-        
-    def __unicode__(self):
-        return self.stat_special_topic
-        
-class CitationTypeRef(models.Model):
-    citation_type_id = models.IntegerField(primary_key=True)
-    citation_type = models.CharField(max_length=20)
+    source_citation_id = models.IntegerField(primary_key=True) 
+    source_citation = models.CharField(max_length=30) 
+    source_citation_name = models.CharField(max_length=450) 
+    source_citation_information = models.CharField(max_length=1500, blank=True)
+    insert_date = models.DateField(auto_now_add=True)
+    update_date = models.DateField(auto_now=True)
+    title = models.CharField(max_length=450)
+    author = models.CharField(max_length=450) 
+    table_of_contents = models.CharField(max_length=1000)
+    link = models.CharField(max_length=450, blank=True) 
+    publication_year = models.IntegerField(max_length=4, null=True)
+    country = models.CharField(max_length=100, blank=True)
+    item_type = models.ForeignKey(StatisticalItemType)
+    item_type_note = models.CharField(max_length=50, blank=True)
+    sponser_types = models.ManyToManyField(StatisticalSourceType, 
+                                           null=True,
+                                           db_table='publication_source_rel')
+    sponser_type_note = models.CharField(max_length=50, 
+                                         blank=True)
     
     class Meta:
-        db_table = 'citation_type_ref'
-        ordering = ['citation_type']
+        db_table = u'source_citation_ref'
+        managed = False
+
+    def __unicode__(self):
+        return self.source_citation
+        
+class DlRef(models.Model):
+    dl_type_id = models.IntegerField(primary_key=True, unique=True)
+    dl_type = models.CharField(max_length=11, unique=True)
+    dl_type_description = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        db_table = u'dl_ref'
+        managed = False
         
     def __unicode__(self):
-        return self.citation_type        
+        return self.dl_type
+
+class DlUnitsDom(models.Model):
+    dl_units = models.CharField(max_length=20, primary_key=True, unique=True)
+    dl_units_description = models.CharField(max_length=60, blank=True)
+    class Meta:
+        db_table = u'dl_units_dom'
+        managed = False
+        
+    def __unicode__(self):
+        return self.dl_units
+
+class RelativeCostRef(models.Model):
+
+    relative_cost_id = models.IntegerField(primary_key=True) 
+    relative_cost_symbol = models.CharField(max_length=7)
+    relative_cost = models.CharField(max_length=40)
+    cost_effort_key = models.CharField(max_length=10)
+    
+    class Meta:
+        db_table = 'relative_cost_ref'
+        managed = False
+        
+    def __unicode__(self):
+        return self.relative_cost
+
+class InstrumentationRef(models.Model):
+    
+    instrumentation_id = models.IntegerField(primary_key=True)
+    instrumentation = models.CharField(max_length=20)
+    instrumentation_description = models.CharField(max_length=200)
+    
+    class Meta:
+        db_table = 'instrumentation_ref'
+        managed = False
+        
+    def __unicode__(self):
+        return self.instrumentation
+
+class WaterbodyTypeRef(models.Model):
+    
+    waterbody_type_id = models.IntegerField(unique=True, primary_key=True)
+    waterbody_type_desc = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        db_table = u'waterbody_type_ref'
+        managed = False
+        
+    def __unicode__(self):
+        return self.waterbody_type_desc
+
+
+class MethodTypeRef(models.Model):
+    method_type_id = models.IntegerField(primary_key=True)
+    method_type_desc = models.CharField(max_length=100)
+    
+    class Meta:
+        db_table = u'method_type_ref'
+        managed = False
+
+    def __unicode__(self):
+        return self.method_type_desc
 
 COMPLEXITY_CHOICES = [
     (u'Low', u'Low'),
@@ -139,110 +212,261 @@ LEVEL_OF_TRAINING_CHOICES = [
     (u'Intermediate', u'Intermediate'),
     (u'Advanced', u'Advanced')]
 
-
 class StatisticalMethodManager(models.Manager):
-    '''Extends the Manager class to provide a query set that returns a data which has a citation type of Statistic.
+    '''Extends the Manager class to provide a query set that returns a data which has a method category of "STATISTICAL"
     '''
     
     def get_query_set(self):
-        return super(StatisticalMethodManager, self).get_query_set().filter(citation_type__citation_type__exact='Statistic')
-        
-class SourceCitationRef(models.Model):
-    
-    source_citation_id = models.IntegerField(primary_key=True) 
-    source_citation = models.CharField(max_length=30, 
-                                       blank=False,
-                                       verbose_name='source abbreviation',
-                                       help_text='Enter an acronym or shortened name')
-    source_citation_name = models.CharField(max_length=450, 
-                                            verbose_name="citation", 
-                                            help_text="Description of source citation")
-    source_citation_information = models.CharField(max_length=1500)
-    insert_person = models.ForeignKey(User, null=True)
-    insert_date = models.DateField(auto_now_add=True)
-    update_date = models.DateField(auto_now=True)
-    approve_flag = models.CharField(max_length=1, 
-                                    choices=[('N', 'No'), ('Y', 'Yes')], 
-                                    default='N')
-    title = models.CharField(max_length=450, 
-                             help_text='Citation\'s full title')
-    author = models.CharField(max_length=450, 
-                              help_text='Citation author(s)')
-    abstract_summary = models.CharField(max_length=2000, 
-                                        blank=True, 
-                                        verbose_name='abstract/summary statement', 
-                                        help_text='Abstract/summary statement')
-    table_of_contents = models.CharField(max_length=1000, 
-                                         blank=True, 
-                                         help_text="Major headings")
-    link = models.CharField(max_length=450, 
-                            blank=True, 
-                            help_text="Link to source citation")
-    notes = models.CharField(max_length=600, 
-                             blank=True, 
-                             verbose_name='special notes or comments', 
-                             help_text='Special notes or comments about this citation')
-    publication_year = models.IntegerField(max_length=4, 
-                                           null=True, 
-                                           help_text='Publication year')
-    citation_type = models.ForeignKey(CitationTypeRef)
-    source_organization = models.ForeignKey(MethodSourceRef, 
-                                            null=True, 
-                                            blank=True, 
-                                            help_text="Source organization")
-    country = models.CharField(max_length=100, 
-                               blank=True, 
-                               help_text='Country where published')
-    complexity = models.CharField(max_length=10, 
-                                  choices=COMPLEXITY_CHOICES, 
-                                  help_text='Relatively speaking...')
+        return super(StatisticalMethodManager, self).get_query_set().filter(method_subcategory__method_category__exact='STATISTICAL')
+
+class MethodAbstract(models.Model):    
+    method_subcategory = models.ForeignKey(MethodSubcategoryRef, null=True, blank=True)
+    method_source = models.ForeignKey(MethodSourceRef, blank=True)
+    source_citation = models.ForeignKey(SourceCitationRef)
+    source_method_identifier = models.CharField(max_length=30, unique=True)
+    method_descriptive_name = models.CharField(max_length=450, blank=True)
+    method_official_name = models.CharField(max_length=250)
+    media_name = models.ForeignKey(MediaNameDOM, null=True, db_column='media_name', blank=True)
+    brief_method_summary = models.CharField(max_length=4000)
+    scope_and_application = models.CharField(max_length=2000, blank=True)
+    dl_type = models.ForeignKey(DlRef, null=True, blank=True)
+    dl_note = models.CharField(max_length=2000, blank=True)
+    applicable_conc_range = models.CharField(max_length=300, blank=True)
+    conc_range_units = models.ForeignKey(DlUnitsDom, null=True, db_column='conc_range_units', blank=True)
+    interferences = models.CharField(max_length=3000, blank=True)
+    qc_requirements = models.CharField(max_length=2000, blank=True)
+    sample_handling = models.CharField(max_length=3000, blank=True)
+    max_holding_time = models.CharField(max_length=300, blank=True)
+    sample_prep_methods = models.CharField(max_length=100, blank=True)
+    relative_cost = models.ForeignKey(RelativeCostRef, null=True, blank=True)
+    link_to_full_method = models.CharField(max_length=240, blank=True)
+    insert_date = models.DateField(null=True, blank=True)
+    insert_person_name = models.CharField(max_length=50, blank=True)
+    last_update_date = models.DateField(null=True, blank=True)
+    last_update_person_name = models.CharField(max_length=50, blank=True)
+    approved = models.CharField(max_length=1, default='N')
+    approved_date = models.DateField(null=True, blank=True)
+    instrumentation = models.ForeignKey(InstrumentationRef, null=True, blank=True)
+    precision_descriptor_notes = models.CharField(max_length=3000, blank=True)
+    rapidity = models.CharField(max_length=30, blank=True)
+    waterbody_type = models.ForeignKey(WaterbodyTypeRef, null=True, db_column='waterbody_type', blank=True)
+    matrix = models.CharField(max_length=12, blank=True)
+    technique = models.CharField(max_length=50, blank=True)
+    screening = models.CharField(max_length=8, blank=True)
+    reviewer_name = models.CharField(max_length=100, blank=True)
+    regs_only = models.CharField(max_length=1, default='N')
+    method_type = models.ForeignKey(MethodTypeRef)
+    cbr_only = models.CharField(max_length=1, default='N')
+    etv_link = models.CharField(max_length=120, blank=True)
+    collected_sample_amt_ml = models.CharField(max_length=10, blank=True)
+    collected_sample_amt_g = models.CharField(max_length=10, blank=True)
+    liquid_sample_flag = models.CharField(max_length=1, blank=True)
+    analysis_amt_ml = models.CharField(max_length=10, blank=True)
+    analysis_amt_g = models.CharField(max_length=10, blank=True)
+    ph_of_analytical_sample = models.CharField(max_length=10, blank=True)
+    calc_waste_amt = models.DecimalField(null=True, max_digits=7, decimal_places=2, blank=True)
+    quality_review_id = models.CharField(max_length=100, blank=True)
+    pbt = models.CharField(max_length=1, blank=True)
+    toxic = models.CharField(max_length=1, blank=True)
+    corrosive = models.CharField(max_length=1, blank=True)
+    waste = models.CharField(max_length=1, blank=True)
+    assumptions_comments = models.CharField(max_length=2000, blank=True)
+    sam_complexity = models.CharField(max_length=10,  
+                                      blank=True,
+                                      choices=COMPLEXITY_CHOICES, 
+                                      help_text='Relatively speaking...')
     level_of_training = models.CharField(max_length=20, 
+                                         blank=True,
                                          choices=LEVEL_OF_TRAINING_CHOICES, 
                                          help_text='Your level of statistical training')
-    item_type = models.ForeignKey(StatisticalItemType, 
-                                  null=True, 
-                                  help_text='The form of the item, e.g., book, journal article, web site, etc.')
-    item_type_note = models.CharField(max_length=50, 
-                                      blank=True, 
-                                      verbose_name='if other type selected, please describe', 
-                                      help_text='Add a description if item type is other')
-    analysis_types = models.ManyToManyField(StatisticalAnalysisType, 
-                                            null=True, 
-                                            help_text='Do you already have the data or are you designing a monitoring program?')
-    sponser_types = models.ManyToManyField(StatisticalSourceType, 
-                                           null=True, 
-                                           verbose_name='publication source type', 
-                                           help_text='What type of organization produced this item?')
-    sponser_type_note = models.CharField(max_length=50, 
-                                         blank=True, 
-                                         verbose_name='if other source selected, please describe', 
-                                         help_text='Add a description if publication source type is other')
-    media_emphasized = models.ManyToManyField(MediaNameDOM, 
-                                              null=True, 
-                                              help_text='Water, air, biological tissue, other?')
     media_emphasized_note = models.CharField(max_length=50, 
                                              blank=True, 
                                              verbose_name='If other media selected, please describe', 
                                              help_text="Add a description if media emphasized is other")
-    subcategory = models.CharField(max_length=150, 
+    media_subcategory = models.CharField(max_length=150, 
                                    blank=True, 
                                    verbose_name='media subcategory', 
-                                   help_text='Enter a media subcategory if appropriate')
-    design_objectives = models.ManyToManyField(StatisticalDesignObjective, 
-                                               null=True, 
-                                               help_text = 'What water resources information need are you addressing, e.g., time trends, standards evaluation, etc.?')
-    special_topics = models.ManyToManyField(StatisticalTopics, 
-                                            null=True, 
-                                            blank=True,
-                                            help_text='Looking for help with nondetect, autocorrelation, data collected using sensor, etc.?')
-    
+                                   help_text='Enter a media subcategory if appropriate')       
+
     objects = models.Manager()
     stat_methods = StatisticalMethodManager()
     
     class Meta:
-        db_table = 'source_citation_ref'
+        abstract = True
+        
+    def __unicode__(self):
+        return self.source_method_identifier
+        
+    def get_insert_user(self):
+        ''' Returns the User object for the person who inserted the object. If the user can not be found 'None' is returned.
+        '''
+        user_qs = User.objects.filter(username=self.insert_person_name)
+        if user_qs:
+            return user_qs[0]
+        else:
+            return None
+                            
+class MethodOnline(MethodAbstract):
+    method_id = models.AutoField(primary_key=True)
+    comments = models.CharField(max_length=2000, blank=True)
+    ready_for_review = models.CharField(max_length=1, default='N')
+    insert_person_name2 = models.CharField(max_length=100, blank=True) # Don't use this field for SAMS methods
+    delete_after_load = models.CharField(max_length=1)
+    wqsa_category_cd = models.IntegerField(null=True, blank=True)
+    
+    class Meta:
+        db_table = u'method_online'
         managed = False
+        
+class MethodStg(MethodAbstract):
+    method_id = models.IntegerField(primary_key=True)
+    comments = models.CharField(max_length=2000, blank=True)
+    ready_for_review = models.CharField(max_length=1, default='N')
+    date_loaded = models.DateField()
+    wqsa_category_cd = models.IntegerField(null=True, blank=True)
+    
+    class Meta:
+        db_table = u'method_stg'
+        managed = False
+        
+class Method(MethodAbstract):
+    method_id = models.IntegerField(primary_key=True)
+    date_loaded = models.DateField(auto_now_add=True)
+    
+    class Meta:
+        db_table = u'method'
+        managed = False
+ 
+class StatisticalAnalysisType(models.Model):
+    
+    stat_analysis_index = models.IntegerField(primary_key=True)
+    analysis_type = models.CharField(max_length=100)
+    
+    class Meta:
+        db_table = 'statistical_analysis_type'
+        ordering = ['analysis_type']
 
     def __unicode__(self):
-        return self.source_citation
+        return self.analysis_type
+
+class StatisticalDesignObjective(models.Model):
+    
+    stat_design_index = models.IntegerField(primary_key=True)
+    objective = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = u'statistical_design_objective'
+        ordering = ['objective']
+        
+    def __unicode__(self):
+        return self.objective
+
+class StatisticalTopics(models.Model):
+    
+    stat_topic_index = models.IntegerField(primary_key=True)
+    stat_special_topic = models.CharField(max_length=200)
+    
+    class Meta:
+        db_table = u'statistical_topics'
+        ordering = ['stat_special_topic']
+        
+    def __unicode__(self):
+        return self.stat_special_topic
+    
+class StatAnalysisRelAbstract(models.Model):
+    analysis_type = models.ForeignKey(StatisticalAnalysisType, db_column='statisticalanalysistype_id')
+    
+    class Meta:
+        abstract = True
+        
+    def __unicode__(self):
+        return unicode(self.analysis_type)
+        
+class StatAnalysisRelStg(StatAnalysisRelAbstract):
+    method_id = models.IntegerField()
+    
+    class Meta:
+        db_table = u'stat_analysis_rel_stg'
+        
+class StatAnalysisRel(StatAnalysisRelAbstract):
+    method = models.ForeignKey(Method)
+    
+    class Meta:
+        db_table = u'stat_analysis_rel'
+    
+class StatDesignRelAbstract(models.Model):
+    design_objective = models.ForeignKey(StatisticalDesignObjective, db_column='statisticaldesignobjective_id')
+    
+    class Meta:
+        abstract = True
+        
+    def __unicode__(self):
+        return unicode(self.design_objective)
+    
+class StatDesignRelStg(StatDesignRelAbstract):
+    method_id = models.IntegerField()
+    
+    class Meta:
+        db_table = u'stat_design_rel_stg'
+        
+class StatDesignRel(StatDesignRelAbstract):
+    method = models.ForeignKey(Method)
+    
+    class Meta:
+        db_table = u'stat_design_rel'
+        
+class StatTopicRelAbstract(models.Model):
+    topic = models.ForeignKey(StatisticalTopics, db_column='statisticaltopics_id')
+    
+    class Meta:
+        abstract = True
+        
+    def __unicode__(self):
+        return unicode(self.topic)
+        
+class StatTopicRelStg(StatTopicRelAbstract):
+    method_id = models.IntegerField()
+    
+    class Meta:
+        db_table = u'stat_topic_rel_stg'
+        
+class StatTopicRel(StatTopicRelAbstract):
+    method = models.ForeignKey(Method)
+    
+    class Meta:
+        db_table = u'stat_topic_rel'   
+        
+class StatMediaRelAbstract(models.Model):
+    media_name = models.ForeignKey(MediaNameDOM, db_column='medianamedom_id')
+    
+    class Meta:
+        abstract = True
+        
+    def __unicode__(self):
+        return unicode(self.media_name)
+        
+class StatMediaRelStg(StatMediaRelAbstract):
+    method_id = models.IntegerField()
+    
+    class Meta:
+        db_table = u'stat_media_rel_stg'
+        
+class StatMediaRel(StatMediaRelAbstract):
+    method = models.ForeignKey(Method)
+    
+    class Meta:
+        db_table = u'stat_media_rel'
+  
+
+class WebFormDefinition(models.Model):
+    field_name = models.CharField(max_length=32, unique=True)
+    label = models.CharField(max_length=64)
+    tooltip = models.CharField(max_length=200)
+    help_text = models.CharField(max_length=1000)
+    
+    def __unicode__(self):
+        return self.field_name
+    
+    class Meta:
+        db_table = u'web_form_definition'
         

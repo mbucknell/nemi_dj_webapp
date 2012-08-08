@@ -1,0 +1,11 @@
+{% extends "base_detail_stats.html" %}
+
+{% block title %}NEMI Statistical Source Details{% endblock %}
+
+{% block page_title %}Statistical Source Details - {{ data.method.source_method_identifier }}{% endblock %}
+
+{% block page_actions %}
+		<input style="margin: 4px;" type="button" value="Edit Citation" onclick="location.href='{% url sams-update_review_method data.method.method_id %}';"/> 
+		or
+		<input style="margin: 4px;" type="button" value="Approve method" onclick="location.href='{% url sams-approve_method data.method.method_id %}';"/>		
+{% endblock %}

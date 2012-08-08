@@ -70,18 +70,18 @@
 					{% endif %}			
 					{% for field in form  %}
 						<tr>
-							<th><label for="id_{{ field.html_name }}" title="{{ field.help_text }}">
+							<th><label for="id_{{ field.html_name }}" title="{{ field|tooltip }}">
 							{% if field.field.required %}
-								{{ field.label_tag }}*:
+								{{ field.label}}*:
 							{% else %}
-								{{ field.label_tag }}:
+								{{ field.label }}:
 							{% endif %}
 							</label></th>
 							<td style="vertical-align: top;">
-								{% if field|verbose_help %}
+								{% if field.help_text %}
 									<div style="display: inline-block; margin: 4px;" >
 									<img id="field-help" src="{{ STATIC_URL }}images/q_mark.gif"
-				 				onclick="javascript:showInfo('{{ field.label}}', '{{ field|verbose_help }}')">	
+				 				onclick="javascript:showInfo('{{ field.label }}', '{{ field.help_text }}')">	
 									</div>
 								{% endif %}
 							</td>
