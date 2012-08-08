@@ -6,6 +6,8 @@
 
 {% block page_actions %}
 		<input style="margin: 4px;" type="button" value="Edit Citation" onclick="location.href='{% url sams-update_review_method data.method.method_id %}';"/> 
-		or
-		<input style="margin: 4px;" type="button" value="Approve method" onclick="location.href='{% url sams-approve_method data.method.method_id %}';"/>		
+		{% if data.method.approved == "N" %}
+			or
+			<input style="margin: 4px;" type="button" value="Approve method" onclick="location.href='{% url sams-approve_method data.method.method_id %}';"/>
+		{% endif %}		
 {% endblock %}

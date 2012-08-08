@@ -136,7 +136,9 @@ class StatMethodEditForm(BaseDefinitionsForm):
         obj.media_subcategory = data['media_subcategory']
         
         return obj
-    
+
+    ''' The following methods return a list of relational models represented by the form contents combined with the method_id.
+    '''    
     def get_analysis_types(self, method_id):
         result = [StatAnalysisRelStg(method_id=method_id, analysis_type=t) for t in self.cleaned_data['analysis_types']]
         return result

@@ -262,7 +262,7 @@ class ReviewStatMethodStgListView(ListView):
     template_name='methods_for_review.html'
     context_object_name = 'methods'
     
-    queryset = MethodStg.stat_methods.filter(approved='N').order_by('source_method_identifier')
+    queryset = MethodStg.stat_methods.order_by('source_method_identifier')
     
     @method_decorator(login_required)
     @method_decorator(user_passes_test(lambda u: u.groups.filter(name__exact='nemi_admin'),

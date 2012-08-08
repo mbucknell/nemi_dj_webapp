@@ -1,24 +1,52 @@
 {% extends "base.html" %}
 
-{% block title %}NEMI SAMS methods for approval{% endblock %}
+{% block title %}NEMI SAMS Review{% endblock %}
 
-{% block page_title %}NEMI SAMS methods ready for approval{% endblock %}
+{% block page_style %}
+	<!--  Style sheets for tablesorter plugin-->
+	<link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesort/style.css" media="screen" type="text/css" />
+{% endblock %}
+
+{% block page_script %}
+	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.min.js"></script>
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+			// Sets up the table sorter plugin
+			var table = $("#sort-table");
+			$("#sort-table").tablesorter({ 
+				sortList: [[1, 0], [2, 0], [3, 0], [4, 0]],
+				headers:{
+					0: {sorter: false},
+					4: {sorter: 'usLongDate'}		
+				}
+			});
+		});
+	</script>
+	
+{% endblock %}
+
+{% block page_title %}NEMI SAMS Review/Update/Approve{% endblock %}
 
 {% block content %}
 	{% if methods %}
-		<h3>Statistical methods ready for approval</h3>
-		<table class="data-table">
+		<table class="tablesorter data-table" id="sort-table">
+			<thead>
 			<tr>
-				<th></th><th>Source Abbreviation</th><th>Title</th><th>Date submitted</th>
+				<th></th><th>Source Abbreviation</th><th>Approved</th><th>Title</th><th>Date submitted</th>
 			</tr>
+			</thead>
+			<tbody>
 			{% for method in methods %}
 				<tr>
 					<td><input type="button" value="Review" onclick="location.href='{% url sams-method_detail_for_approval method.method_id %}';"></td>
 					<td>{{ method.source_method_identifier }}</td>
+					<td>{{ method.approved }}</td>
 					<td>{{ method.method_official_name }}</td>
 					<td>{{ method.date_loaded }}</td>
 				</tr>
 			{% endfor %}
+			</tbody>
 		</table>
 	{% else %}
 		<h3>There are no methods to be reviewed.</h3>
