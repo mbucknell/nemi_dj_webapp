@@ -5,7 +5,7 @@ Created on Jul 26, 2012
 '''
 
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.test import TestCase
 
 from common.models import SourceCitationRef, Method, StatAnalysisRel, StatDesignRel, StatMediaRel, StatTopicRel, StatisticalItemType, MethodSubcategoryRef
@@ -216,6 +216,10 @@ class TestStatisticSearchView(TestCase):
         self.m3_design = StatDesignRel.objects.create(method=self.m3, design_objective=StatisticalDesignObjective.objects.get(stat_design_index=11))
         self.m3_media = StatMediaRel.objects.create(method=self.m3, media_name=MediaNameDOM.objects.get(media_name='OTHER'))
         self.m3_topic = StatTopicRel.objects.create(method=self.m3, topic=StatisticalTopics.objects.get(stat_topic_index=2))
+        
+    def test_post(self):
+        resp = self.client.post(reverse('sams-statistics'))
+        self.assertEqual(resp.status_code, 405)
 
     def test_filter_by_item_type(self):
         resp = self.client.get(reverse('sams-statistics'), {'item_type' : 3, 
@@ -350,5 +354,155 @@ class TestStatisticSearchView(TestCase):
         self.assertEqual(resp.context['criteria'], [None, None, None, None, None, None, ('Special topic', StatisticalTopics.objects.get(stat_topic_index=3))])
         self.assertEqual(len(resp.context['results']), 1)
         
+class TestSubmitForReviewView(TestCase):
+     
+    def test_permissions(self):
+        url = reverse('sams-submit_for_review', kwargs={'pk' : '1'})
+        
+        resp = self.client.get(url)
+        self.assertRedirects(resp, '/accounts/login/?next=%s' % url)
+
+        self.user1 = User.objects.create_user('user1', '', password='test')
+        self.client.login(username='user1', password='test')
+        
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 404)
+        
+        self.client.logout()
+        
+class TestUpdateStatisticalMethodOnlineView(TestCase):
+    def test_permission(self):
+        url = reverse('sams-update_method', kwargs={'pk' : '1'})
+        
+        resp = self.client.get(url)
+        self.assertRedirects(resp, '/accounts/login/?next=%s' % url)
+
+        self.user1 = User.objects.create_user('user1', '', password='test')
+        self.client.login(username='user1', password='test')
+        
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 404)
+        
+        self.client.logout()
+        
+    
+class TestStatisticalMethodOnlineDetailView(TestCase):
+    
+    def test_permission(self):
+        url = reverse('sams-method_detail', kwargs={'pk' : '1'})
+        
+        resp = self.client.get(url)
+        self.assertRedirects(resp, '/accounts/login/?next=%s' % url)
+
+        self.user1 = User.objects.create_user('user1', '', password='test')
+        self.client.login(username='user1', password='test')
+        
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 404)
+        
+        self.client.logout()
+
+class TestUpdateStatisticalMethodOnlineListView(TestCase):
+
+    def test_permission(self):
+        url = reverse('sams-update_method_list')
+        
+        resp = self.client.get(url)
+        self.assertRedirects(resp, '/accounts/login/?next=%s' % url)
+
+        self.user1 = User.objects.create_user('user1', '', password='test')
+        self.client.login(username='user1', password='test')
+        
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        
+        self.client.logout()
         
         
+class TestApproveStatMethod(TestCase):
+    
+    def setUp(self):
+        self.g1 = Group.objects.create(name='nemi_admin')
+        self.user1 = User.objects.create_user('user1', '', password='test')
+            
+    def test_permissions(self):
+        url = reverse('sams-approve_method', kwargs={'pk' : '1'})
+        resp = self.client.get(url)
+        self.assertRedirects(resp, '/accounts/login/?next=%s' % url)
+
+        self.client.login(username='user1', password='test')
+        
+        resp = self.client.get(url)
+        self.assertRedirects(resp, '/sams/not_allowed/?next=%s' % url)
+        
+        self.user1.groups.add(self.g1)
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 404)
+                
+        self.client.logout()
+    
+class TestReviewStatMethodStgListView(TestCase):
+    
+    def setUp(self):
+        self.g1 = Group.objects.create(name='nemi_admin')
+        self.user1 = User.objects.create_user('user1', '', password='test')
+            
+    def test_permissions(self):
+        url = reverse('sams-method_review_list')
+        resp = self.client.get(url)
+        self.assertRedirects(resp, '/accounts/login/?next=%s' % url)
+
+        self.client.login(username='user1', password='test')
+        
+        resp = self.client.get(url)
+        self.assertRedirects(resp, '/sams/not_allowed/?next=%s' % url)
+        
+        self.user1.groups.add(self.g1)
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+                
+        self.client.logout()
+ 
+class TestStatisticalMethodStgDetailView(TestCase):
+    
+    def setUp(self):
+        self.g1 = Group.objects.create(name='nemi_admin')
+        self.user1 = User.objects.create_user('user1', '', password='test')
+            
+    def test_permissions(self):
+        url = reverse('sams-method_detail_for_approval', kwargs={'pk' : '1'})
+        resp = self.client.get(url)
+        self.assertRedirects(resp, '/accounts/login/?next=%s' % url)
+
+        self.client.login(username='user1', password='test')
+        
+        resp = self.client.get(url)
+        self.assertRedirects(resp, '/sams/not_allowed/?next=%s' % url)
+        
+        self.user1.groups.add(self.g1)
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 404)
+                
+        self.client.logout()
+ 
+class TestUpdateStatisticalMethodStgView(TestCase):
+    def setUp(self):
+        self.g1 = Group.objects.create(name='nemi_admin')
+        self.user1 = User.objects.create_user('user1', '', password='test')
+            
+    def test_permissions(self):
+        url = reverse('sams-update_review_method', kwargs={'pk' : '1'})
+        resp = self.client.get(url)
+        self.assertRedirects(resp, '/accounts/login/?next=%s' % url)
+
+        self.client.login(username='user1', password='test')
+        
+        resp = self.client.get(url)
+        self.assertRedirects(resp, '/sams/not_allowed/?next=%s' % url)
+        
+        self.user1.groups.add(self.g1)
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 404)
+                
+        self.client.logout()
+                            
