@@ -8,7 +8,8 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User, Group
 from django.test import TestCase
 
-from common.models import SourceCitationRef, Method, StatAnalysisRel, StatDesignRel, StatMediaRel, StatTopicRel, StatisticalItemType, MethodSubcategoryRef
+from common.models import SourceCitationRef, PublicationSourceRel, SourceCitationOnlineRef, PublicationSourceRelStg
+from common.models import Method, StatAnalysisRel, StatDesignRel, StatMediaRel, StatTopicRel, StatisticalItemType, MethodSubcategoryRef
 from common.models import StatAnalysisRelStg, StatDesignRelStg, StatMediaRelStg, StatTopicRelStg
 from common.models import MethodTypeRef, InstrumentationRef, StatisticalAnalysisType, StatisticalDesignObjective, StatisticalTopics, MediaNameDOM
 from common.models import MethodSourceRef, StatisticalSourceType, MethodOnline
@@ -80,8 +81,12 @@ class TestAddStatMethodOnlineView(TestCase):
                                  'media_emphasized' : 'OTHER'
                                  })
         q1 = MethodOnline.objects.filter(source_method_identifier='SAMS M1')
+        s1 = SourceCitationOnlineRef.objects.filter(source_citation_id=q1[0].source_citation_id)
         
         self.assertEqual(len(q1), 1)
+        self.assertEqual(len(s1), 1)
+        
+        self.assertEqual(len(PublicationSourceRelStg.objects.filter(source_citation_ref_id=q1[0].source_citation_id)), 1)
         self.assertEqual(len(StatAnalysisRelStg.objects.filter(method_id=q1[0].method_id)), 1)
         self.assertEqual(len(StatDesignRelStg.objects.filter(method_id=q1[0].method_id)), 2)
         self.assertEqual(len(StatMediaRelStg.objects.filter(method_id=q1[0].method_id)), 1)
@@ -142,7 +147,7 @@ class TestStatisticSearchView(TestCase):
                                                     source_citation_name='Statistical Method One',
                                                     item_type=StatisticalItemType.objects.get(item='Book')
                                                     )
-        self.sc1.sponser_types.add(StatisticalSourceType.objects.get(stat_source_index=6))
+        self.s1_sponser_types = PublicationSourceRel.objects.create(source_citation_ref=self.sc1, source=StatisticalSourceType.objects.get(stat_source_index=6))
         
         self.sc2 = SourceCitationRef.objects.create(source_citation_id=2,
                                                     source_citation='SAMS M2',
@@ -153,7 +158,7 @@ class TestStatisticSearchView(TestCase):
                                                     source_citation_name='Statistical Method Two',
                                                     item_type=StatisticalItemType.objects.get(item='Book')
                                                     )
-        self.sc2.sponser_types.add(StatisticalSourceType.objects.get(stat_source_index=6))
+        self.s2_sponser_types = PublicationSourceRel.objects.create(source_citation_ref=self.sc1, source=StatisticalSourceType.objects.get(stat_source_index=6))
         
         self.sc3 = SourceCitationRef.objects.create(source_citation_id=3,
                                                     source_citation='SAMS M3',
@@ -164,7 +169,7 @@ class TestStatisticSearchView(TestCase):
                                                     source_citation_name='Statistical Method Three',
                                                     item_type=StatisticalItemType.objects.get(item='Website')
                                                     )
-        self.sc3.sponser_types.add(StatisticalSourceType.objects.get(stat_source_index=8))
+        self.s2_sponser_types = PublicationSourceRel.objects.create(source_citation_ref=self.sc1, source=StatisticalSourceType.objects.get(stat_source_index=8))
         
         self.m1 = Method.objects.create(method_id=1,
                                         method_subcategory=MethodSubcategoryRef.objects.get(method_subcategory_id=16),

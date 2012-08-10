@@ -22,8 +22,8 @@
 			<tr>
 				<th>Publication Source Type</th>
 				<td>
-					{% for t in data.source_citation.sponser_types.all %}
-						{{ t }}<br />
+					{% for t in data.source_citation.publicationsourcerel_set.all %}
+						{{ t.source }}<br />
 					{% endfor %}
 					{% if data.source_citation.sponser_type_note %}
 						Additional information:&nbsp;{{ data.source_citation.sponser_type_note }}

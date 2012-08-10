@@ -100,14 +100,11 @@ class StatisticalSourceType(models.Model):
         return self.source
     
 
-class SourceCitationRef(models.Model):
+class SourceCitationRefAbstract(models.Model):
     
-    source_citation_id = models.IntegerField(primary_key=True) 
     source_citation = models.CharField(max_length=30) 
     source_citation_name = models.CharField(max_length=450) 
     source_citation_information = models.CharField(max_length=1500, blank=True)
-    insert_date = models.DateField(auto_now_add=True)
-    update_date = models.DateField(auto_now=True)
     title = models.CharField(max_length=450)
     author = models.CharField(max_length=450) 
     table_of_contents = models.CharField(max_length=1000)
@@ -116,18 +113,69 @@ class SourceCitationRef(models.Model):
     country = models.CharField(max_length=100, blank=True)
     item_type = models.ForeignKey(StatisticalItemType)
     item_type_note = models.CharField(max_length=50, blank=True)
-    sponser_types = models.ManyToManyField(StatisticalSourceType, 
-                                           null=True,
-                                           db_table='publication_source_rel')
     sponser_type_note = models.CharField(max_length=50, 
                                          blank=True)
+    insert_date = models.DateField(auto_now_add=True)
+    update_date = models.DateField(auto_now=True)
+    insert_person_name = models.CharField(max_length=50, blank=True)
+    
+    class Meta:
+        abstract = True
+
+    def __unicode__(self):
+        return self.source_citation
+    
+class SourceCitationOnlineRef(SourceCitationRefAbstract):
+    source_citation_id = models.AutoField(primary_key=True)
+                
+    class Meta:
+        db_table = u'source_citation_online_ref'
+        managed = False
+
+
+class SourceCitationStgRef(SourceCitationRefAbstract):
+    
+    source_citation_id = models.IntegerField(primary_key=True)
+              
+    class Meta:
+        db_table = u'source_citation_stg_ref'
+        managed = False
+        
+class SourceCitationRef(SourceCitationRefAbstract):
+    
+    source_citation_id = models.IntegerField(primary_key=True)
     
     class Meta:
         db_table = u'source_citation_ref'
         managed = False
 
+class PublicationSourceRelAbstract(models.Model):
+    source = models.ForeignKey(StatisticalSourceType,
+                               db_column='statisticalsourcetype_id')
+    
+    class Meta:
+        abstract = True
+        
     def __unicode__(self):
-        return self.source_citation
+        return unicode(self.source)
+
+    
+class PublicationSourceRelStg(PublicationSourceRelAbstract):
+    source_citation_ref_id = models.IntegerField(db_column='sourcecitationref_id')
+    
+    class Meta:
+        db_table = u'publication_source_rel_stg'
+        ordering = ['source']
+        
+        
+class PublicationSourceRel(PublicationSourceRelAbstract):
+    source_citation_ref = models.ForeignKey(SourceCitationRef,
+                                            db_column='sourcecitationref_id')
+    
+    class Meta:
+        db_table = u'publication_source_rel'
+        ordering = ['source']
+    
         
 class DlRef(models.Model):
     dl_type_id = models.IntegerField(primary_key=True, unique=True)
@@ -222,7 +270,6 @@ class StatisticalMethodManager(models.Manager):
 class MethodAbstract(models.Model):    
     method_subcategory = models.ForeignKey(MethodSubcategoryRef, null=True, blank=True)
     method_source = models.ForeignKey(MethodSourceRef, blank=True)
-    source_citation = models.ForeignKey(SourceCitationRef)
     source_method_identifier = models.CharField(max_length=30, unique=True)
     method_descriptive_name = models.CharField(max_length=450, blank=True)
     method_official_name = models.CharField(max_length=250)
@@ -308,6 +355,7 @@ class MethodAbstract(models.Model):
                             
 class MethodOnline(MethodAbstract):
     method_id = models.AutoField(primary_key=True)
+    source_citation_id = models.IntegerField()
     comments = models.CharField(max_length=2000, blank=True)
     ready_for_review = models.CharField(max_length=1, default='N')
     insert_person_name2 = models.CharField(max_length=100, blank=True) # Don't use this field for SAMS methods
@@ -320,6 +368,7 @@ class MethodOnline(MethodAbstract):
         
 class MethodStg(MethodAbstract):
     method_id = models.IntegerField(primary_key=True)
+    source_citation_id = models.IntegerField()
     comments = models.CharField(max_length=2000, blank=True)
     ready_for_review = models.CharField(max_length=1, default='N')
     date_loaded = models.DateField()
@@ -331,6 +380,7 @@ class MethodStg(MethodAbstract):
         
 class Method(MethodAbstract):
     method_id = models.IntegerField(primary_key=True)
+    source_citation = models.ForeignKey(SourceCitationRef)
     date_loaded = models.DateField(auto_now_add=True)
     
     class Meta:
@@ -387,12 +437,14 @@ class StatAnalysisRelStg(StatAnalysisRelAbstract):
     
     class Meta:
         db_table = u'stat_analysis_rel_stg'
+        ordering = ['analysis_type']
         
 class StatAnalysisRel(StatAnalysisRelAbstract):
     method = models.ForeignKey(Method)
     
     class Meta:
         db_table = u'stat_analysis_rel'
+        ordering = ['analysis_type']
     
 class StatDesignRelAbstract(models.Model):
     design_objective = models.ForeignKey(StatisticalDesignObjective, db_column='statisticaldesignobjective_id')
@@ -408,12 +460,15 @@ class StatDesignRelStg(StatDesignRelAbstract):
     
     class Meta:
         db_table = u'stat_design_rel_stg'
+        ordering = ['design_objective']
         
 class StatDesignRel(StatDesignRelAbstract):
     method = models.ForeignKey(Method)
     
     class Meta:
         db_table = u'stat_design_rel'
+        ordering = ['design_objective']
+
         
 class StatTopicRelAbstract(models.Model):
     topic = models.ForeignKey(StatisticalTopics, db_column='statisticaltopics_id')
@@ -429,12 +484,14 @@ class StatTopicRelStg(StatTopicRelAbstract):
     
     class Meta:
         db_table = u'stat_topic_rel_stg'
+        ordering = ['topic']
         
 class StatTopicRel(StatTopicRelAbstract):
     method = models.ForeignKey(Method)
     
     class Meta:
-        db_table = u'stat_topic_rel'   
+        db_table = u'stat_topic_rel'
+        ordering = ['topic']
         
 class StatMediaRelAbstract(models.Model):
     media_name = models.ForeignKey(MediaNameDOM, db_column='medianamedom_id')
@@ -450,12 +507,14 @@ class StatMediaRelStg(StatMediaRelAbstract):
     
     class Meta:
         db_table = u'stat_media_rel_stg'
+        ordering = ['media_name']
         
 class StatMediaRel(StatMediaRelAbstract):
     method = models.ForeignKey(Method)
     
     class Meta:
         db_table = u'stat_media_rel'
+        ordering = ['media_name']
   
 
 class WebFormDefinition(models.Model):

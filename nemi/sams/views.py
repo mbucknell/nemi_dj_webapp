@@ -4,14 +4,15 @@ import datetime
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
 from django.db import connection, transaction
-from django.db.models import Max, Model
+from django.db.models import Model
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, FormView, View
 from django.views.generic.edit import TemplateResponseMixin
 
-from common.models import SourceCitationRef, Method, MethodOnline, MethodSubcategoryRef, MethodTypeRef, MethodStg, InstrumentationRef
+from common.models import SourceCitationRef, SourceCitationOnlineRef, SourceCitationStgRef, PublicationSourceRel, PublicationSourceRelStg
+from common.models import Method, MethodOnline, MethodSubcategoryRef, MethodTypeRef, MethodStg, InstrumentationRef
 from common.models import StatAnalysisRelStg,  StatDesignRelStg, StatTopicRelStg, StatMediaRelStg
 from common.models import StatAnalysisRel, StatDesignRel, StatTopicRel, StatMediaRel
 from common.utils.forms import get_criteria_from_field_data, get_criteria
@@ -33,20 +34,15 @@ class AddStatMethodOnlineView(FormView):
     
     def form_valid(self, form):
         #Save the source citation
-        source_citation_id = SourceCitationRef.objects.aggregate(Max('source_citation_id'))['source_citation_id__max']
-        if source_citation_id:
-            source_citation_id = source_citation_id + 1
-        else:
-            source_citation_id = 1
-        source_citation = SourceCitationRef(source_citation_id=source_citation_id)
+        source_citation = SourceCitationOnlineRef(insert_person_name=self.request.user.username)
         source_citation = form.get_source_citation_object(source_citation)
-        
         source_citation.save()
-        source_citation.sponser_types.add(*form.cleaned_data['sponser_types'])
+        for d in form.get_publication_sources(source_citation.source_citation_id):
+            d.save()
         
         #Save the method and related objects
         method = MethodOnline(method_subcategory=MethodSubcategoryRef.objects.get(method_subcategory_id=16),
-                              source_citation = source_citation,
+                              source_citation_id = source_citation.source_citation_id,
                               method_type=MethodTypeRef.objects.get(method_type_id=3),
                               instrumentation=InstrumentationRef.objects.get(instrumentation='NA'),
                               insert_person_name=self.request.user.username,
@@ -85,27 +81,29 @@ class BaseUpdateStatisticalMethodView(FormView):
     '''
     
     form_class = StatMethodEditForm
-    model_class = Model
+    method_model_class = Model
+    source_model_class = Model
     
     def get_initial(self):
-        method = get_object_or_404(self.model_class, method_id=self.kwargs['pk'])
+        method = get_object_or_404(self.method_model_class, method_id=self.kwargs['pk'])
+        source_citation = get_object_or_404(self.source_model_class, source_citation_id=method.source_citation_id)
         result = {}
         
         result['source_method_identifier'] = method.source_method_identifier
         result['method_official_name'] = method.method_official_name
         result['method_source'] = method.method_source
-        result['country'] = method.source_citation.country
-        result['author'] = method.source_citation.author
+        result['country'] = source_citation.country
+        result['author'] = source_citation.author
         result['brief_method_summary'] = method.brief_method_summary
-        result['table_of_contents'] = method.source_citation.table_of_contents
-        result['publication_year'] = method.source_citation.publication_year
-        result['source_citation_name'] = method.source_citation.source_citation_name
+        result['table_of_contents'] = source_citation.table_of_contents
+        result['publication_year'] = source_citation.publication_year
+        result['source_citation_name'] = source_citation.source_citation_name
         result['link_to_full_method'] = method.link_to_full_method
         result['assumptions_comments'] = method.assumptions_comments
-        result['item_type'] = method.source_citation.item_type
-        result['item_type_note'] = method.source_citation.item_type_note
-        result['sponser_types'] = list(method.source_citation.sponser_types.all())
-        result['sponser_type_note'] = method.source_citation.sponser_type_note
+        result['item_type'] = source_citation.item_type
+        result['item_type_note'] = source_citation.item_type_note
+        result['sponser_types'] = [t.source for t in PublicationSourceRelStg.objects.filter(source_citation_ref_id=method.source_citation_id)]
+        result['sponser_type_note'] = source_citation.sponser_type_note
         result['analysis_types'] = [t.analysis_type for t in StatAnalysisRelStg.objects.filter(method_id=method.method_id)]
         result['design_objectives'] = [t.design_objective for t in StatDesignRelStg.objects.filter(method_id=method.method_id)]
         result['sam_complexity'] = method.sam_complexity
@@ -118,12 +116,15 @@ class BaseUpdateStatisticalMethodView(FormView):
         return result
     
     def form_valid(self, form):
-        method = get_object_or_404(self.model_class, method_id=self.kwargs['pk'])
+        method = get_object_or_404(self.method_model_class, method_id=self.kwargs['pk'])
+        source_citation = get_object_or_404(self.source_model_class, source_citation_id=method.source_citation_id)
         
-        source_citation = form.get_source_citation_object(method.source_citation) 
+        source_citation = form.get_source_citation_object(source_citation) 
         source_citation.save()
-        source_citation.sponser_types.clear()
-        source_citation.sponser_types.add(*form.cleaned_data['sponser_types'])
+        
+        PublicationSourceRelStg.objects.filter(source_citation_ref_id=method.source_citation_id).delete()
+        for d in form.get_publication_sources(method.source_citation_id):
+            d.save()
 
         method = form.get_method_object(method)        
         method.last_update_person_name = self.request.user.username
@@ -150,7 +151,7 @@ class BaseUpdateStatisticalMethodView(FormView):
     
     def get_context_data(self, **kwargs):
         context = super(BaseUpdateStatisticalMethodView, self).get_context_data(**kwargs)
-        context['insert_user'] = get_object_or_404(self.model_class, method_id=self.kwargs['pk']).get_insert_user()
+        context['insert_user'] = get_object_or_404(self.method_model_class, method_id=self.kwargs['pk']).get_insert_user()
         context['action_url'] = self.get_action_url()
         return context    
         
@@ -161,7 +162,8 @@ class UpdateStatMethodOnlineView(BaseUpdateStatisticalMethodView):
     '''
 
     template_name = 'update_statistic_source.html'
-    model_class = MethodOnline   
+    method_model_class = MethodOnline
+    source_model_class = SourceCitationOnlineRef   
      
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -180,7 +182,8 @@ class UpdateStatisticalMethodStgView(BaseUpdateStatisticalMethodView):
     '''
     
     template_name = 'update_statistic_source.html'
-    model_class = MethodStg
+    method_model_class = MethodStg
+    source_model_class = SourceCitationStgRef
     
     @method_decorator(login_required)
     @method_decorator(user_passes_test(lambda u: u.groups.filter(name__exact='nemi_admin'),
@@ -223,8 +226,25 @@ class SubmitForReviewView(View, TemplateResponseMixin):
         return super(SubmitForReviewView, self).dispatch(request, *args, **kwargs)
     
     def get(self, request, *args, **kwargs):
-        # Set ready_to_review to 'Y', copy method from MethodOnline to MethodStg and then delete from MethodOnline
+        # Set ready_to_review to 'Y', copy method from MethodOnline/SourceCitationOnlineRef to 
+        #MethodStg/SourceCitationStgRef and then delete from MethodOnline/SourceCitationOnlineRef
         method_online = get_object_or_404(MethodOnline,  method_id=self.kwargs['pk'])
+        sc_online = get_object_or_404(SourceCitationOnlineRef, source_citation_id= method_online.source_citation_id)
+
+        sc_stg = SourceCitationStgRef(source_citation_id = sc_online.source_citation_id,
+                                      source_citation=sc_online.source_citation,
+                                      title=sc_online.title,
+                                      country=sc_online.country,
+                                      author=sc_online.author,
+                                      table_of_contents=sc_online.table_of_contents,
+                                      publication_year=sc_online.publication_year,
+                                      source_citation_name=sc_online.source_citation_name,
+                                      link=sc_online.link,
+                                      item_type=sc_online.item_type,
+                                      item_type_note=sc_online.item_type_note,
+                                      sponser_type_note=sc_online.sponser_type_note,
+                                      insert_person_name=sc_online.insert_person_name)
+        sc_stg.save()
 
         method_stg = MethodStg(method_id= method_online.method_id,
                                ready_for_review='Y',
@@ -233,7 +253,7 @@ class SubmitForReviewView(View, TemplateResponseMixin):
                                date_loaded=datetime.date.today(),
                                method_subcategory=method_online.method_subcategory,
                                method_source=method_online.method_source,
-                               source_citation=method_online.source_citation,
+                               source_citation_id=method_online.source_citation_id,
                                source_method_identifier=method_online.source_method_identifier,
                                method_descriptive_name=method_online.method_descriptive_name,
                                method_official_name=method_online.method_official_name,
@@ -250,7 +270,9 @@ class SubmitForReviewView(View, TemplateResponseMixin):
                                instrumentation=method_online.instrumentation)
         
         method_stg.save()
+        
         method_online.delete()
+        sc_online.delete()
         
         return self.render_to_response({'source_method_id' : method_stg.source_method_identifier})
 
@@ -286,6 +308,7 @@ class ApproveStatMethod(View, TemplateResponseMixin):
     
     def get(self, request, *args, **kwargs):
         method_stg = get_object_or_404(MethodStg, method_id=self.kwargs['pk'])
+        sc_stg = get_object_or_404(SourceCitationStgRef, source_citation_id=method_stg.source_citation_id)
         today = datetime.date.today()
         
         # Set approved flag to 'Y' and approved_date, using raw SQL so that only those columns are updated.
@@ -294,7 +317,26 @@ class ApproveStatMethod(View, TemplateResponseMixin):
                        [today.strftime('%d-%b-%y'), method_stg.method_id])
         transaction.commit_unless_managed()
         
-        # Copy method from MethodStg to Method        
+        # Copy method from SourceCitationStgRef/MethodStg to SourceCitationRef/Method        
+        sc = SourceCitationRef(source_citation_id = sc_stg.source_citation_id,
+                               source_citation=sc_stg.source_citation,
+                               title=sc_stg.title,
+                               country=sc_stg.country,
+                               author=sc_stg.author,
+                               table_of_contents=sc_stg.table_of_contents,
+                               publication_year=sc_stg.publication_year,
+                               source_citation_name=sc_stg.source_citation_name,
+                               link=sc_stg.link,
+                               item_type=sc_stg.item_type,
+                               item_type_note=sc_stg.item_type_note,
+                               sponser_type_note=sc_stg.sponser_type_note,
+                               insert_person_name=sc_stg.insert_person_name)
+        sc.save()
+        #Update source citation relational table by clearing the table and then copy instances from *Stg table
+        PublicationSourceRel.objects.filter(source_citation_ref=sc).delete()
+        for t in PublicationSourceRelStg.objects.filter(source_citation_ref_id=sc_stg.source_citation_id):
+            PublicationSourceRel.objects.create(source_citation_ref=sc, source=t.source)
+            
         method = Method(method_id=method_stg.method_id,
                         last_update_person_name=request.user.username,
                         last_update_date=datetime.date.today(),
@@ -303,7 +345,7 @@ class ApproveStatMethod(View, TemplateResponseMixin):
                         approved_date=today,
                         method_subcategory=method_stg.method_subcategory,
                         method_source=method_stg.method_source,
-                        source_citation=method_stg.source_citation,
+                        source_citation=sc,
                         source_method_identifier=method_stg.source_method_identifier,
                         method_descriptive_name=method_stg.method_descriptive_name,
                         method_official_name=method_stg.method_official_name,
@@ -322,22 +364,22 @@ class ApproveStatMethod(View, TemplateResponseMixin):
         method.save()
         # First delete any instances that  currently exist in relational tables.
         # Then copy instances for the method from the relational tables from *Stg to * tables.
-        StatAnalysisRel.objects.filter(pk=method_stg.method_id).delete()
+        StatAnalysisRel.objects.filter(method=method).delete()
         for t in StatAnalysisRelStg.objects.filter(method_id=method_stg.method_id):
             StatAnalysisRel.objects.create(method=method,
                                            analysis_type=t.analysis_type)
         
-        StatDesignRel.objects.filter(pk=method_stg.method_id).delete()
+        StatDesignRel.objects.filter(method=method).delete()
         for t in StatDesignRelStg.objects.filter(method_id=method_stg.method_id):
             StatDesignRel.objects.create(method=method, 
                                          design_objective=t.design_objective)
             
-        StatTopicRel.objects.filter(pk=method_stg.method_id).delete()
+        StatTopicRel.objects.filter(method=method).delete()
         for t in StatTopicRelStg.objects.filter(method_id=method_stg.method_id):
             StatTopicRel.objects.create(method=method,
                                         topic=t.topic)
         
-        StatMediaRel.objects.filter(pk=method_stg.method_id).delete()
+        StatMediaRel.objects.filter(method=method).delete()
         for t in StatMediaRelStg.objects.filter(method_id=method_stg.method_id):
             StatMediaRel.objects.create(method=method,
                                         media_name=t.media_name)
@@ -367,7 +409,7 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
             qs = qs.filter(statanalysisrel__analysis_type__exact=form.cleaned_data['analysis_type'])
             
         if form.cleaned_data['publication_source_type']:
-            qs = qs.filter(source_citation__sponser_types__exact=form.cleaned_data['publication_source_type'])
+            qs = qs.filter(source_citation__publicationsourcerel__source__exact=form.cleaned_data['publication_source_type'])
             
         if form.cleaned_data['study_objective']:
             qs = qs.filter(statdesignrel__design_objective__exact=form.cleaned_data['study_objective'])
@@ -398,14 +440,14 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
     def get_results_context(self, qs):
         return {'results' : qs}
             
+            
 class StatisticalMethodSummaryView(DetailView):
     ''' Extends DetailView to implement the Statistical Source Summary view'''
     
     template_name = 'statistical_source_summary.html'
-    
     model = Method
-    
     context_object_name = 'data'
+    
     
 class BaseStatMethodStgDetailView(DetailView):
     '''Extends the DetailView to show a method object. This is intended to be extended using MethodOnline or MethodStg
@@ -413,12 +455,19 @@ class BaseStatMethodStgDetailView(DetailView):
     '''
     
     context_object_name = 'data'
+    method_model_class = Model
+    source_citation_modelclass = Model
 
     def get_object(self, queryset=None):
-        '''Conceptually the m2m tables belong with the method object, so redefine
+        '''Conceptually the m2m tables and the source_citation belong with the method object, so redefine
         this method to return a dictionary containing method, analysis_types, design_objectives, media_emphasized, and special_topics
         ''' 
-        result = {'method' : super(BaseStatMethodStgDetailView, self).get_object(queryset)}
+        result = {}
+        result['method'] = get_object_or_404(self.method_model_class, method_id=self.kwargs['pk'])
+        
+        result['source_citation'] = get_object_or_404(self.source_citation_model_class, source_citation_id=result['method'].source_citation_id)
+        result['publication_sources'] = PublicationSourceRelStg.objects.filter(source_citation_ref_id=result['method'].source_citation_id)
+        
         result['analysis_types'] = StatAnalysisRelStg.objects.filter(method_id=result['method'].method_id)
         result['design_objectives'] = StatDesignRelStg.objects.filter(method_id=result['method'].method_id)
         result['media_emphasized'] = StatMediaRelStg.objects.filter(method_id=result['method'].method_id)
@@ -431,7 +480,8 @@ class StatisticalMethodOnlineDetailView(BaseStatMethodStgDetailView):
     ''' Extends DetailView to implement the Statistical Source Detail view.'''
     
     template_name = 'statistical_source_detail.html'
-    model = MethodOnline
+    method_model_class = MethodOnline
+    source_citation_model_class = SourceCitationOnlineRef
     
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -441,7 +491,8 @@ class StatisticalMethodOnlineDetailView(BaseStatMethodStgDetailView):
 class StatisticalMethodStgDetailView(BaseStatMethodStgDetailView):
     
     template_name = 'statistical_method_review_detail.html'
-    model = MethodStg
+    method_model_class = MethodStg
+    source_citation_model_class = SourceCitationStgRef
     
     @method_decorator(login_required)
     @method_decorator(user_passes_test(lambda u: u.groups.filter(name__exact='nemi_admin'),

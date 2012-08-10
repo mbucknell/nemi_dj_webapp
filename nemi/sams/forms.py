@@ -10,6 +10,7 @@ from django.forms import CharField, IntegerField, URLField
 from common.forms import BaseDefinitionsForm
 from common.models import StatisticalDesignObjective, StatisticalItemType, COMPLEXITY_CHOICES, LEVEL_OF_TRAINING_CHOICES, StatisticalAnalysisType, StatisticalSourceType
 from common.models import MediaNameDOM, StatisticalTopics, MethodSourceRef, StatAnalysisRelStg, StatDesignRelStg, StatTopicRelStg, StatMediaRelStg
+from common.models import PublicationSourceRelStg
 
 class SAMSSearchForm(Form):
     '''Extends the standard form to implement the query filtering form for the Statistical Methods'''
@@ -115,6 +116,10 @@ class StatMethodEditForm(BaseDefinitionsForm):
         obj.sponser_type_note = data['sponser_type_note']
         
         return obj
+    
+    def get_publication_sources(self, source_citation_ref_id):
+        result = [PublicationSourceRelStg(source_citation_ref_id=source_citation_ref_id, source=t) for t in self.cleaned_data['sponser_types']]
+        return result
         
     def get_method_object(self, obj):
         ''' Returns obj with the MethodAbstract fields filled in from the form's cleaned data.

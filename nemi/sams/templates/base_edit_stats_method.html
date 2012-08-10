@@ -64,7 +64,7 @@
 				<p class="errorlist"> {{ form.non_field_errors }} </p>
 				<table id="data-entry-table">
 					{% if insert_user %}
-						<tr><th>User who created the method:</th><td>{{ insert_user.get_full_name }} - {{ insert_user.username }}</td></tr>
+						<tr><th>User who created the method:</th><td></td><td>{{ insert_user.get_full_name }} - {{ insert_user.username }}</td></tr>
 					{% else %}
 						<tr><th>Username:</th><td></td><td>{{ user.get_full_name }} - {{ user.username }}</td></tr>
 					{% endif %}			

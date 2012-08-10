@@ -8,24 +8,24 @@
 		<table class="info-table">
 			<tr><th>Source Abbreviation</th><td>{{ data.method.source_method_identifier }}</td>
 			<tr><th>Title</th><td>{{ data.method.method_official_name }}</td></tr>
-			<tr><th>Author</th><td>{{ data.method.source_citation.author }}</td></tr>
+			<tr><th>Author</th><td>{{ data.source_citation.author }}</td></tr>
 			<tr><th>Abstract/Summary Statement</th><td>{{ data.method.brief_method_summary|linebreaksbr }}</td></tr>
-			<tr><th>Table of Contents</th><td>{{ data.method.source_citation.table_of_contents|linebreaksbr }}</td></tr>
-			<tr><th>Citation</th><td>{{ data.method.source_citation.source_citation_name }}</td></tr>
+			<tr><th>Table of Contents</th><td>{{ data.source_citation.table_of_contents|linebreaksbr }}</td></tr>
+			<tr><th>Citation</th><td>{{ data.source_citation.source_citation_name }}</td></tr>
 			<tr><th>Source Organization</th><td>{{ data.method.method_source}}</td></tr>
-			<tr><th>Source Organization Country</th><td>{{ data.method.source_citation.country }}</td></tr>
-			<tr><th>Publication Year</th><td>{{ data.method.source_citation.publication_year }}</td></tr>
+			<tr><th>Source Organization Country</th><td>{{ data.source_citation.country }}</td></tr>
+			<tr><th>Publication Year</th><td>{{ data.source_citation.publication_year }}</td></tr>
 			<tr><th>Link</th><td><a href={{ data.method.link_to_full_method }} target="_blank">{{ data.method.link_to_full_method }}</a></td></tr>
 			<tr><th>Special Notes</th><td>{{ data.method.assumptions_comments }}</td></tr>			
-			<tr><th>Item Type</th><td>{{ data.method.source_citation.item_type }}</td></tr>
+			<tr><th>Item Type</th><td>{{ data.source_citation.item_type }}</td></tr>
 			<tr>
 				<th>Publication Source Type</th>
 				<td>
-					{% for t in data.method.source_citation.sponser_types.all %}
-						{{ t }}<br />
+					{% for t in data.publication_sources %}
+						{{ t.source }}<br />
 					{% endfor %}
-					{% if data.method.source_citation.sponser_type_note %}
-						Additional information:&nbsp;{{ data.method.source_citation.sponser_type_note }}
+					{% if data.source_citation.sponser_type_note %}
+						Additional information:&nbsp;{{ data.source_citation.sponser_type_note }}
 					{% endif %}
 				</td>
 			</tr>
