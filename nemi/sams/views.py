@@ -74,9 +74,9 @@ class AddStatMethodOnlineView(FormView):
     
 class BaseUpdateStatisticalMethodView(FormView):
     '''Extends the FormView to implement an abstract view used to update SAMs methods.
-    Methods can be updated at two stages: when they are in MethodOnline and when they are
-    in MethodStg. This view is intended to be extended with using either MethodOnline or
-    MethodStg as the model_class. Both models use the same *RelStg tables to save many to many 
+    Methods can be updated at two stages: when they are in *Online and when they are
+    in *Stg. This view is intended to be extended with using either *Online or
+    *Stg as the model classes. Both *Stg and *Online use the same *RelStg tables to save many to many 
     fields.
     '''
     
@@ -85,6 +85,8 @@ class BaseUpdateStatisticalMethodView(FormView):
     source_model_class = Model
     
     def get_initial(self):
+        '''Override get_initial to return the form's initial data from the method and source_citation models'''
+        
         method = get_object_or_404(self.method_model_class, method_id=self.kwargs['pk'])
         source_citation = get_object_or_404(self.source_model_class, source_citation_id=method.source_citation_id)
         result = {}
@@ -116,6 +118,8 @@ class BaseUpdateStatisticalMethodView(FormView):
         return result
     
     def form_valid(self, form):
+        '''Override form_valid to save the method information and redirect to the success_url'''
+        
         method = get_object_or_404(self.method_model_class, method_id=self.kwargs['pk'])
         source_citation = get_object_or_404(self.source_model_class, source_citation_id=method.source_citation_id)
         
@@ -150,6 +154,8 @@ class BaseUpdateStatisticalMethodView(FormView):
         return ''
     
     def get_context_data(self, **kwargs):
+        ''' Extends get_context_data to add the insert_user and action_url to the context data'''
+        
         context = super(BaseUpdateStatisticalMethodView, self).get_context_data(**kwargs)
         context['insert_user'] = get_object_or_404(self.method_model_class, method_id=self.kwargs['pk']).get_insert_user()
         context['action_url'] = self.get_action_url()
@@ -332,6 +338,7 @@ class ApproveStatMethod(View, TemplateResponseMixin):
                                sponser_type_note=sc_stg.sponser_type_note,
                                insert_person_name=sc_stg.insert_person_name)
         sc.save()
+        
         #Update source citation relational table by clearing the table and then copy instances from *Stg table
         PublicationSourceRel.objects.filter(source_citation_ref=sc).delete()
         for t in PublicationSourceRelStg.objects.filter(source_citation_ref_id=sc_stg.source_citation_id):
@@ -362,6 +369,7 @@ class ApproveStatMethod(View, TemplateResponseMixin):
                         instrumentation=method_stg.instrumentation
                         )
         method.save()
+        
         # First delete any instances that  currently exist in relational tables.
         # Then copy instances for the method from the relational tables from *Stg to * tables.
         StatAnalysisRel.objects.filter(method=method).delete()
@@ -477,7 +485,7 @@ class BaseStatMethodStgDetailView(DetailView):
 
 
 class StatisticalMethodOnlineDetailView(BaseStatMethodStgDetailView):
-    ''' Extends DetailView to implement the Statistical Source Detail view.'''
+    ''' Extends BaseStatMethodStgDetailView to implement the Statistical Source Detail view.'''
     
     template_name = 'statistical_source_detail.html'
     method_model_class = MethodOnline

@@ -45,6 +45,7 @@ class SAMSSearchForm(Form):
                                      help_text='Looking for help with nondetects, autocorrelation, data collected using sensors, etc?')
     
 class StatMethodEditForm(BaseDefinitionsForm):
+    
     source_method_identifier = CharField(max_length=30,
                                          widget=TextInput(attrs={'size' : 30}))
     method_official_name = CharField(max_length=250,
@@ -118,6 +119,7 @@ class StatMethodEditForm(BaseDefinitionsForm):
         return obj
     
     def get_publication_sources(self, source_citation_ref_id):
+        ''' Returns the list of PublicationSourceRelStg objects associated with source_citation_ref_id'''
         result = [PublicationSourceRelStg(source_citation_ref_id=source_citation_ref_id, source=t) for t in self.cleaned_data['sponser_types']]
         return result
         
@@ -141,22 +143,24 @@ class StatMethodEditForm(BaseDefinitionsForm):
         obj.media_subcategory = data['media_subcategory']
         
         return obj
-
-    ''' The following methods return a list of relational models represented by the form contents combined with the method_id.
-    '''    
+ 
     def get_analysis_types(self, method_id):
+        '''Returns a list of StatAnalysisRelStg objects associated with method_id'''
         result = [StatAnalysisRelStg(method_id=method_id, analysis_type=t) for t in self.cleaned_data['analysis_types']]
         return result
         
     def get_design_objectives(self, method_id):
+        '''Returns a list of StatDesignRelStg objects associated with method_id'''
         result = [StatDesignRelStg(method_id=method_id, design_objective=t) for t in self.cleaned_data['design_objectives']]
         return result
     
     def get_media_emphasized(self, method_id):
+        '''Returns a list of StatMediaRelStg objects associated with method_id'''
         result = [StatMediaRelStg(method_id=method_id, media_name=t) for t in self.cleaned_data['media_emphasized']]
         return result
     
     def get_special_topics(self, method_id):
+        '''Returns a list of StatTopicRelStg objects associated with method_id'''
         result = [StatTopicRelStg(method_id=method_id, topic=t) for t in self.cleaned_data['special_topics']]
         return result
     
