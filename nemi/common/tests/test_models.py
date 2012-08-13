@@ -22,19 +22,12 @@ class TestMethodGetInsertUser(unittest.TestCase):
         self.item_type = StatisticalItemType.objects.create(stat_item_index=1, item='Stat Item')
         self.method_type = MethodTypeRef.objects.create(method_type_id=1, method_type_desc='method_type_desc')
         
-        self.sc = SourceCitationRef.objects.create(source_citation_id=1,
-                                                   source_citation='source_citation',
-                                                   source_citation_name='source_citation_name',
-                                                   publication_year=2012,
-                                                   item_type=self.item_type)
-        self.m1 = self.DummyMethod.objects.create(source_citation=self.sc,
-                                             source_method_identifier='id1',
-                                             method_official_name='name1',
-                                             brief_method_summary='summary1',
-                                             insert_person_name='user1',
-                                             method_type=self.method_type)
-        self.m2 = self.DummyMethod.objects.create(source_citation=self.sc,
-                                                  source_method_identifier='id2',
+        self.m1 = self.DummyMethod.objects.create(source_method_identifier='id1',
+                                                  method_official_name='name1',
+                                                  brief_method_summary='summary1',
+                                                  insert_person_name='user1',
+                                                  method_type=self.method_type)
+        self.m2 = self.DummyMethod.objects.create(source_method_identifier='id2',
                                                   method_official_name='name2',
                                                   brief_method_summary='summary2',
                                                   insert_person_name='user3',

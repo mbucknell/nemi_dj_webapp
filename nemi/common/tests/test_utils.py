@@ -96,7 +96,6 @@ class TestGetCriteriaFromFieldData(unittest.TestCase):
         self.settings_manager = TestSettingsManager()    
 
     def setUp(self):
-
         self.settings_manager.set(INSTALLED_APPS=('common','common.tests'))
             
         self.m1 = TestModel.objects.create(name='Item 1')        
@@ -209,8 +208,4 @@ class TestXlsResponse(unittest.TestCase):
         response = xls_response(headings, list_of_lists, filename)
         
         self.assertEqual(response['Content-Type'],'application/vnd.ms-excel')  
-        self.assertEqual(response['Content-Disposition'], 'attachment; filename=%s.xls' % filename) 
-        
-        # Not sure how to test response contents.
-        
-       
+        self.assertEqual(response['Content-Disposition'], 'attachment; filename=%s.xls' % filename)         
