@@ -55,8 +55,8 @@
   			<td>{{ r.method_official_name }}</td>
   			<td>{{ r.source_citation.publication_year }}</td>
 			<td>{{ r.method_source }}</td>
-			<td><a href={{ r.link_to_full_method }} target="_blank">{{ r.link }}</a></td>
-			<td>{{ r.source_cition.country }}</td>
+			<td><a href={{ r.link_to_full_method }} target="_blank">{{ r.link_to_full_method }}</a></td>
+			<td>{{ r.source_citation.country }}</td>
 		</tr>
 	{% endfor %}
 {% endblock %}
