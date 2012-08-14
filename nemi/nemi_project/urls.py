@@ -11,7 +11,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {}),
+    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'redirect_field_name' : 'redirect_url'}),
     url(r'^methods/', include(methods.urls)),
     url(r'^sams/', include(sams.urls)),
     url(r'^home/', TemplateView.as_view(template_name='home.html'), name='home'),

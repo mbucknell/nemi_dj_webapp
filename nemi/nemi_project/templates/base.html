@@ -69,6 +69,10 @@
 			<div id="page-header">
 				<img src="{{ STATIC_URL }}images/bannerv3.7.gif" alt="NEMI Logo"></img>
 				<div id="beta-marker"><p>Provisional - Site in review</p></div> <!--  This should be removed when the web site is released -->
+				<div id="user-login">
+					{% block user_login %}
+					{% endblock %}
+				</div>
 			</div>
 		{% endblock %}
 		

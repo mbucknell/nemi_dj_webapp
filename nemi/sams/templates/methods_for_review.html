@@ -28,6 +28,10 @@
 
 {% block page_title %}NEMI SAMS Review/Update/Approve{% endblock %}
 
+{% block user_login %}
+	{% include "sams_user_login.html" %}
+{% endblock %}
+
 {% block content %}
 	{% if methods %}
 		<table class="tablesorter data-table" id="sort-table" style="width: 100%">

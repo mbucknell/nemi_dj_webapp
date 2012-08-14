@@ -4,18 +4,17 @@
 
 {% block page_title %}Log On to NEMI{% endblock %}
 
-{% block keyword_search%} {% endblock %}
+{% block keyword_search %} {% endblock %}
 
 {% block navigation %} {% endblock %}
 
 {% block content %}
-	<p><b>Please log in to update or create statistical methods</b></p>
+	<p><b>Please log in to update or create methods</b></p>
 	{% if form.errors %}
 		<p class="errorlist">Your username and password didn't match. Please try again.</p>
 	{% endif %}
 	
-	<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
-		{% csrf_token %}
+	<form method="post" action="{% url 'django.contrib.auth.views.login' %}"> {% csrf_token %}
 		<table id="data-entry-table">
 			<tr>
 			    <td>{{ form.username.label_tag }}:&nbsp;</td>
@@ -30,4 +29,5 @@
 		<input type="submit" value="Login" />
 		<input type="hidden" name="next" value="{{ next }}" />
 	</form>
+{% comment %}	<a href="{% url 'create_user_account' %}">Need a user account?</a> {% endcomment %}
 {% endblock %}

@@ -47,6 +47,11 @@ a[class='popup']{
 	margin-right: 5%;
 	border-bottom: solid darkred 2px;
 }
+#user-login {
+	display: inline-block;
+	float: right;
+	margin-top: 100px;
+}
 #page-content {
 	margin-top: 10px;
 	margin-bottom: 10px;

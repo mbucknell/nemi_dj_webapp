@@ -2,6 +2,10 @@
 
 {% block title %}NEMI Statistical Source Summary{% endblock %}
 
+{% block user_login %}
+	{% include "sams_user_login.html" %}
+{% endblock %}
+
 {% block page_title %}Statistical Source Summary - {{ data.source_citation }}{% endblock %}
 
 {% block content %}

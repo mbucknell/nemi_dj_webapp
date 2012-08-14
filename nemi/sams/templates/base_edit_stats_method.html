@@ -49,6 +49,10 @@
 		{% endblock %}
 {% endblock %}
 
+{% block user_login %}
+	{% include "sams_user_login.html" %}
+{% endblock %}
+
 {% block content %}
 	<h3><i>{% block section_header %}SECTION HEADER GOES HERE{% endblock %}</i></h3>
 	<p>A '*' by a field's label indicates the field is required.</p>

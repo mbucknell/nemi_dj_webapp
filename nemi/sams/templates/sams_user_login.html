@@ -1,0 +1,5 @@
+{% if user.is_authenticated %}
+	{{ user.username }} - <a href="/accounts/logout/?redirect_url={{ request.get_full_path }}">Log out</a>
+{% else %}
+	<a href="/accounts/login/?next={{ request.get_full_path }}">Log in</a>
+{% endif %}
