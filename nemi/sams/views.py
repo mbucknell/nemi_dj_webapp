@@ -101,7 +101,7 @@ class BaseUpdateStatisticalMethodView(FormView):
         result['publication_year'] = source_citation.publication_year
         result['source_citation_name'] = source_citation.source_citation_name
         result['link_to_full_method'] = method.link_to_full_method
-        result['assumptions_comments'] = method.assumptions_comments
+        result['notes'] = method.notes
         result['item_type'] = source_citation.item_type
         result['item_type_note'] = source_citation.item_type_note
         result['sponser_types'] = [t.source for t in PublicationSourceRelStg.objects.filter(source_citation_ref_id=method.source_citation_id)]
@@ -268,7 +268,7 @@ class SubmitForReviewView(View, TemplateResponseMixin):
                                insert_date=method_online.insert_date,
                                insert_person_name=method_online.insert_person_name,                               
                                method_type=method_online.method_type,
-                               assumptions_comments=method_online.assumptions_comments,
+                               notes=method_online.notes,
                                sam_complexity=method_online.sam_complexity,
                                level_of_training=method_online.level_of_training,
                                media_emphasized_note=method_online.media_emphasized_note,
@@ -361,7 +361,7 @@ class ApproveStatMethod(View, TemplateResponseMixin):
                         insert_date=method_stg.insert_date,
                         insert_person_name=method_stg.insert_person_name,                               
                         method_type=method_stg.method_type,
-                        assumptions_comments=method_stg.assumptions_comments,
+                        notes=method_stg.notes,
                         sam_complexity=method_stg.sam_complexity,
                         level_of_training=method_stg.level_of_training,
                         media_emphasized_note=method_stg.media_emphasized_note,

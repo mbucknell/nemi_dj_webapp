@@ -68,7 +68,7 @@ class StatMethodEditForm(BaseDefinitionsForm):
     link_to_full_method = URLField(max_length=240, 
                                    required=False,
                                    widget=TextInput(attrs={'size' : 50}))
-    assumptions_comments = CharField(max_length=2000, 
+    notes = CharField(max_length=2000, 
                          required=False, 
                          widget=Textarea(attrs={'rows' : 9, 'cols' : 50}))
     item_type = ModelChoiceField(queryset=StatisticalItemType.objects.all())
@@ -136,7 +136,7 @@ class StatMethodEditForm(BaseDefinitionsForm):
         obj.method_official_name = data['method_official_name']
         obj.brief_method_summary = data['brief_method_summary']
         obj.link_to_full_method = data['link_to_full_method']
-        obj.assumptions_comments = data['assumptions_comments']
+        obj.notes = data['notes']
         obj.sam_complexity = data['sam_complexity']
         obj.level_of_training = data['level_of_training']
         obj.media_emphasized_note = data['media_emphasized_note']

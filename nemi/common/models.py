@@ -408,6 +408,7 @@ class MethodAbstract(models.Model):
                                              blank=True) 
     media_subcategory = models.CharField(max_length=150, 
                                          blank=True) 
+    notes = models.CharField(max_length=4000, blank=True)
 
     objects = models.Manager()
     stat_methods = StatisticalMethodManager() # Use this manager to retrieve SAMS methods only
