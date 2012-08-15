@@ -2,7 +2,7 @@
 import datetime
 
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import connection, transaction
 from django.db.models import Model
 from django.http import HttpResponseRedirect
@@ -193,7 +193,7 @@ class UpdateStatisticalMethodStgView(BaseUpdateStatisticalMethodView):
     
     @method_decorator(login_required)
     @method_decorator(user_passes_test(lambda u: u.groups.filter(name__exact='nemi_admin'),
-                                       login_url='/sams/not_allowed/'))
+                                       login_url=reverse_lazy('sams-not_allowed')))
     def dispatch(self, request, *args, **kwargs):
         return super(UpdateStatisticalMethodStgView, self).dispatch(request, *args, **kwargs)
     
@@ -294,7 +294,7 @@ class ReviewStatMethodStgListView(ListView):
     
     @method_decorator(login_required)
     @method_decorator(user_passes_test(lambda u: u.groups.filter(name__exact='nemi_admin'),
-                                       login_url='/sams/not_allowed/'))
+                                       login_url=reverse_lazy('sams-not_allowed')))
     def dispatch(self, request, *args, **kwargs):
         return super(ReviewStatMethodStgListView, self).dispatch(request, *args, **kwargs)
     
@@ -308,7 +308,7 @@ class ApproveStatMethod(View, TemplateResponseMixin):
 
     @method_decorator(login_required)
     @method_decorator(user_passes_test(lambda u: u.groups.filter(name__exact='nemi_admin'),
-                                       login_url='/sams/not_allowed/'))
+                                       login_url=reverse_lazy('sams-not_allowed')))
     def dispatch(self, request, *args, **kwargs):
         return super(ApproveStatMethod, self).dispatch(request, *args, **kwargs)
     
@@ -504,7 +504,7 @@ class StatisticalMethodStgDetailView(BaseStatMethodStgDetailView):
     
     @method_decorator(login_required)
     @method_decorator(user_passes_test(lambda u: u.groups.filter(name__exact='nemi_admin'),
-                                       login_url='/sams/not_allowed/'))
+                                       login_url=reverse_lazy('sams-not_allowed')))
     def dispatch(self, request, *args, **kwargs):
         return super(StatisticalMethodStgDetailView, self).dispatch(request, *args, **kwargs)
     
