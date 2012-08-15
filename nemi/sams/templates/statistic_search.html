@@ -54,7 +54,7 @@
 			<td>{{ r.source_citation.author }}</td>
   			<td>{{ r.method_official_name }}</td>
   			<td>{{ r.source_citation.publication_year }}</td>
-			<td>{{ r.method_source|default_if_none:"Not entered" }}</td>
+			<td>{{ r.method_source|default_if_none:"Not assigned" }}</td>
 			<td><a href={{ r.link_to_full_method }} target="_blank">{{ r.link_to_full_method }}</a></td>
 			<td>{{ r.source_citation.country }}</td>
 		</tr>
