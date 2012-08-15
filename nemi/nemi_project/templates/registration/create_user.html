@@ -6,6 +6,6 @@
 
 {% block content %}
 	<form action="{{ request.get_full_path }}" method="get">
-	
+		<table>{{ form.as_table }} </table>
 	</form>
 {% endblock %}

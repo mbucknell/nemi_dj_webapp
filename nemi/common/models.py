@@ -293,6 +293,7 @@ class MethodAbstract(models.Model):
                                            null=True, 
                                            blank=True)
     method_source = models.ForeignKey(MethodSourceRef, 
+                                      null=True,
                                       blank=True)
     source_method_identifier = models.CharField(max_length=30, 
                                                 unique=True)

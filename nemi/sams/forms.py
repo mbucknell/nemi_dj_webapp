@@ -50,7 +50,8 @@ class StatMethodEditForm(BaseDefinitionsForm):
                                          widget=TextInput(attrs={'size' : 30}))
     method_official_name = CharField(max_length=250,
                                      widget=Textarea(attrs={'rows' : 3, 'cols' : 50}))
-    method_source = ModelChoiceField(queryset=MethodSourceRef.objects.all())
+    method_source = ModelChoiceField(queryset=MethodSourceRef.objects.all(),
+                                     required=False)
     country = CharField(max_length=100, 
                         required=False)
     author = CharField(max_length=450, 
