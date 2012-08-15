@@ -17,7 +17,7 @@
 			<tr><th>Abstract/Summary Statement</th><td>{{ data.brief_method_summary|linebreaksbr }}</td></tr>
 			<tr><th>Table of Contents</th><td>{{ data.source_citation.table_of_contents|linebreaksbr }}</td></tr>
 			<tr><th>Citation</th><td>{{ data.source_citation.source_citation_name }}</td></tr>
-			<tr><th>Source Organization</th><td>{{ data.method_source }}</td></tr>
+			<tr><th>Source Organization</th><td>{{ data.method_source|default_if_none:"Not entered" }}</td></tr>
 			<tr><th>Source Organization Country</th><td>{{ data.source_citation.country }}</td></tr>
 			<tr><th>Publication Year</th><td>{{ data.source_citation.publication_year }}</td></tr>
 			<tr><th>Link</th><td><a href={{ data.link_to_full_method }} target="_blank">{{ data.link_to_full_method }}</a>
