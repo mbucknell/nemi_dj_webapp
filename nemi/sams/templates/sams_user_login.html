@@ -1,5 +1,7 @@
 {% if user.is_authenticated %}
 	{{ user.username }} - <a href="{% url nemi_logout %}?redirect_url={{ request.get_full_path|urlencode }}">Log out</a>
+	<br />
+	<a href="{% url nemi_change_password %}?redirect_url={{ request.get_full_path|urlencode }}">Change password</a>
 {% else %}
 	<a href="{% url nemi_login %}?next={{ request.get_full_path|urlencode }}">Log in</a>
 {% endif %}

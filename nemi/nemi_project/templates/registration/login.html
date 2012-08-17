@@ -9,25 +9,26 @@
 {% block navigation %} {% endblock %}
 
 {% block content %}
-	<p><b>Please log in to update or create methods</b></p>
-	{% if form.errors %}
-		<p class="errorlist">Your username and password didn't match. Please try again.</p>
+	<p style="font-size: medium;">Please log in to update or create methods or click 
+	<a href="{% url 'nemi_create_account' %}">here</a>&nbsp;to create a new account.
+	If you would like to change your password, click <a href="{% url 'nemi_change_password' %}">here</a>
+	</p>
+	{% if form.non_field_errors %}
+		<p class="errorlist">{{ form.non_field_errors}}</p>
 	{% endif %}
 	
-	<form method="post" action="{% url 'django.contrib.auth.views.login' %}"> {% csrf_token %}
+	<form method="post" action="{% url 'nemi_login' %}"> {% csrf_token %}
 		<table id="data-entry-table">
-			<tr>
-			    <td>{{ form.username.label_tag }}:&nbsp;</td>
-			    <td>{{ form.username }}</td>
-			</tr>
-			<tr>
-			    <td>{{ form.password.label_tag }}:&nbsp;</td>
-			    <td>{{ form.password }}</td>
-			</tr>
+			{% for field in form %}
+				<tr>
+			    	<td>{{ field.label_tag }}:&nbsp;</td>
+			    	<td>{{ field }}</td>
+			    	<td>{{ field.errors }}</td>
+				</tr>
+			{% endfor %}
 		</table>
 		<br/>
 		<input type="submit" value="Login" />
 		<input type="hidden" name="next" value="{{ next }}" />
 	</form>
-{% comment %}	<a href="{% url 'create_user_account' %}">Need a user account?</a> {% endcomment %}
 {% endblock %}

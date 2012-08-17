@@ -165,6 +165,8 @@ LOGGING = {
     }
 }
 
+NEW_ACCOUNT_NOTIFICATIONS = () # List of emails to send new account notifications to.
+
 try:
     ADDITIONAL_APPS = ()
     ADDITIONAL_MW_CLASSES = ()

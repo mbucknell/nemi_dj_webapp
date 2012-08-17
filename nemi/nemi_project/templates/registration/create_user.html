@@ -5,7 +5,22 @@
 {% block page_title %}NEMI Create User Account {% endblock %}
 
 {% block content %}
-	<form action="{{ request.get_full_path }}" method="get">
-		<table>{{ form.as_table }} </table>
+<p style="font-size: medium;">Please enter the information requested. All fields are required.</p>
+	<form action="{{ request.get_path }}" method="post" autocomplete="off">{% csrf_token %}
+		<table id="data-entry-table">
+			{% for field in form %}
+				<tr>
+					<td style="white-space:nowrap;"><b>{{ field.label_tag }}:</b>
+						{% for e in field.errors %}
+							<br /><span style="color:red;">{{ e }}</span>
+						{% endfor %}
+					</td>
+					<td style="padding-right: 20px;">{{ field }}</td>
+					<td style="color: grey">{{ field.help_text }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		<br />
+		<input type="submit" value="Create account" />
 	</form>
 {% endblock %}
