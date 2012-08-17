@@ -165,6 +165,8 @@ LOGGING = {
     }
 }
 
+SESSION_COOKIE_AGE = 3600 # In seconds, this is one hour
+
 NEW_ACCOUNT_NOTIFICATIONS = () # List of emails to send new account notifications to.
 
 try:
