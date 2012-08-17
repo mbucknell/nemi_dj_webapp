@@ -10,8 +10,7 @@
 
 {% block content %}
 	<p style="font-size: medium;">Please log in to update or create methods or click 
-	<a href="{% url 'nemi_create_account' %}">here</a>&nbsp;to create a new account.
-	If you would like to change your password, click <a href="{% url 'nemi_change_password' %}">here</a>
+	<a href="{% url 'nemi_create_account' %}">here to create a new account.</a>
 	</p>
 	{% if form.non_field_errors %}
 		<p class="errorlist">{{ form.non_field_errors}}</p>
