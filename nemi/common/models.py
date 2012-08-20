@@ -427,7 +427,7 @@ class MethodAbstract(models.Model):
         if user_qs:
             return user_qs[0]
         else:
-            return None
+            return User(username='Unknown')
                             
 class MethodOnline(MethodAbstract):
     

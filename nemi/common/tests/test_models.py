@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import unittest
 
-from common.models import MethodAbstract, SourceCitationRef, StatisticalItemType, MethodTypeRef
+from common.models import MethodAbstract, StatisticalItemType, MethodTypeRef
 
 class TestMethodGetInsertUser(unittest.TestCase):
     
@@ -35,5 +35,5 @@ class TestMethodGetInsertUser(unittest.TestCase):
         
         def test_get_insert_user(self):
             self.assertEqual(self.m1.get_insert_user(), self.u1)
-            self.assertIsNone(self.m2.get_insert_user())
+            self.assertEqual(self.m2.get_insert_user().username, 'Unknown')
         
