@@ -165,7 +165,7 @@ LOGGING = {
     }
 }
 
-SESSION_COOKIE_AGE = 3600 # In seconds, this is one hour
+SESSION_COOKIE_AGE = 28800 # In seconds, this is eight hours
 
 NEW_ACCOUNT_NOTIFICATIONS = () # List of emails to send new account notifications to.
 
