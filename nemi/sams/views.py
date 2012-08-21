@@ -3,7 +3,6 @@ import datetime
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.db import connection, transaction
 from django.db.models import Model
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -317,11 +316,8 @@ class ApproveStatMethod(View, TemplateResponseMixin):
         sc_stg = get_object_or_404(SourceCitationStgRef, source_citation_id=method_stg.source_citation_id)
         today = datetime.date.today()
         
-        # Set approved flag to 'Y' and approved_date, using raw SQL so that only those columns are updated.
-        cursor = connection.cursor()
-        cursor.execute('UPDATE method_stg SET approved = \'Y\', approved_date = %s WHERE method_id = %s', 
-                       [today.strftime('%d-%b-%y'), method_stg.method_id])
-        transaction.commit_unless_managed()
+        # Set approved flag to 'Y' and approved_date using update so that only those columns are updated
+        MethodStg.objects.filter(method_id=method_stg.method_id).update(approved='Y', approved_date=today)
         
         # Copy method from SourceCitationStgRef/MethodStg to SourceCitationRef/Method        
         sc = SourceCitationRef(source_citation_id = sc_stg.source_citation_id,
