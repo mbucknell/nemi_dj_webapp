@@ -84,4 +84,7 @@ urlpatterns = patterns("",
         url(r'^browse_methods/$',
             views.BrowseMethodsView.as_view(),
             name='methods-browse'),
+        url(r'^method_pdf/(?P<method_id>\d+)/$',
+            views.MethodPdfView.as_view(),
+            name='methods-pdf'),
         )

@@ -4,6 +4,8 @@ NEMI methods pages.
 
 # django packages
 
+import re
+
 from django.db import connection
 from django.db.models import Q
 from django.http import HttpResponse, Http404
@@ -20,8 +22,6 @@ from forms import GeneralSearchForm, AnalyteSearchForm, MicrobiologicalSearchFor
 from forms import BiologicalSearchForm, ToxicitySearchForm, PhysicalSearchForm, TabularSearchForm
 from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw, AnalyteCodeVW
 from models import RegQueryVW,  RegulatoryMethodReport
-
-
 
 def _greenness_profile(d):
     '''Returns a dictionary with five keywords. The first keyword is profile whose is 
@@ -93,6 +93,17 @@ def _analyte_value_qs(method_id):
                                'false_negative_value',
                                'prec_acc_conc_used').distinct()
  
+def _clean_name(name):
+    ''' Returns name with characters removed or substituted to produce a name suitable
+    to be saved as a file with an extension.
+    '''
+    remove_pattern = re.compile(r'<.*?>|\(|\)|#')
+    replace_pattern = re.compile(r'\s|\,|/|\.')
+    
+    result = remove_pattern.sub('', name)
+    result = replace_pattern.sub('_', result)
+    
+    return result
 
 class GeneralSearchFormMixin(FilterFormMixin):
     '''Extends the FilterFormMixin to implement the search form used on the General Search page.'''
@@ -1085,4 +1096,31 @@ class ExportMethodAnalyte(View):
                 response.write('\n')
             
             return response
+        
+
+class MethodPdfView(View):
+    ''' Extends the standard View to serve a method's pdf file if it it exists in the database.
+    '''
+    
+    def get(self, request, *args, **kwargs):        
+        cursor = connection.cursor()
+        cursor.execute('SELECT mimetype, method_pdf, source_method_identifier from nemi_data.method_summary_vw where method_id=%s',
+                       [kwargs['method_id']])
+        results_list = dictfetchall(cursor)
+
+        if results_list:
+            if results_list[0]['MIMETYPE'] and results_list[0]['METHOD_PDF']:
+                response = HttpResponse(mimetype=results_list[0]['MIMETYPE'])
+                response['Content-Disposition'] = 'attachment;filename=%s.pdf' % _clean_name(results_list[0]['SOURCE_METHOD_IDENTIFIER'])
+        
+                pdf = results_list[0]['METHOD_PDF'].read()
+                response.write(pdf)
+            
+                return response
+            
+            else:
+                return HttpResponse('No pdf stored for method %s' % results_list[0]['SOURCE_METHOD_IDENTIFIER'])
+        
+        else:
+            raise Http404
         

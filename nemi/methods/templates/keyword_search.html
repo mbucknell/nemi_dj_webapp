@@ -54,18 +54,18 @@
 							<td>{{ r.METHOD_SOURCE}}</td>
 							<td>{{ r.METHOD_OFFICIAL_NAME }}</td>
 							<td>
-								{% if r.LINK_TO_FULL_METHOD %}
-									This is a proprietary method. 
-									<a class="popup" href="javascript:showOnNewWindow('{{  r.LINK_TO_FULL_METHOD }}')" title="Link to method owner's method documentation (in a new window)">
-									Please visit the method owner's site for method documentation</a>
-								{% else %}
-									{% if r.MIMETYPE %}
-										<a href="http://www.nemi.gov/pls/nemi_pdf/nemi_data.download_pdf?p_file={{ r.REVISION_ID }}" 
+								{% if r.MIMETYPE %}
+									<a href="{% url methods-pdf method_id=r.METHOD_ID %}" 
 										title="Click to download PDF version of this method's documentation">
-										<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat (pdf) icon">Download full method now (PDF file)</a>
-									{% else %}
-										Method .pdf will be loaded into the database soon. Please contact the webmaster if you are in need of the full method.
-									{% endif %}
+										<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat (pdf) icon">Download full method now (PDF file)
+									</a>
+								{% elif r.LINK_TO_FULL_METHOD %}				
+									This is a proprietary method. 
+									<a class="popup" href="javascript:showOnNewWindow('{{  r.LINK_TO_FULL_METHOD }}')" 
+									title="Link to method owner's method documentation (in a new window)">
+									Please visit the method owner's site for method documentation</a>								
+								{% else %}
+									Method .pdf will be loaded into the database soon. Please contact the webmaster if you are in need of the full method.
 								{% endif %}
 							</td>
 						</tr>
