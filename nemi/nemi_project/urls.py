@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 
 import methods.urls
 import sams.urls
+import memo.urls
 import views
 
 admin.autodiscover()
@@ -32,6 +33,7 @@ urlpatterns = patterns('',
         name="nemi_create_account_success"),
     url(r'^methods/', include(methods.urls)),
     url(r'^sams/', include(sams.urls)),
+	url(r'^memo/', include(memo.urls)),
     url(r'^home/', 
         TemplateView.as_view(template_name='home.html'), 
         name='home'),

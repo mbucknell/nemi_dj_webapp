@@ -1,0 +1,107 @@
+{% extends "base_search.html" %}
+
+{% block local_page_script %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			updateMfrs();
+			updateAnalytes();
+		});
+		
+		function updateAnalytes() {
+			$.ajax({
+				url: '{% url memo-mfr_analyte_list %}',
+				data: {
+					mfr: $('#mfr-select').val()
+				},
+				success: function(resp) {
+					if (!resp.empty) {
+						var analyte = $('#analyte-select').val();
+						$('#analyte-select option').remove();
+				
+						$.each(resp, function(key, value) {
+						    if (value !== "") {
+							    $('#analyte-select').append(new Option(value, key));
+						    }
+						})
+				
+						$('#analyte-select').val(analyte);
+					}
+				}
+			});
+		}
+	
+		function updateMfrs() {
+			$.ajax({
+				url: '{% url memo-mfr_list %}',
+				data: {
+					analyte: $('#analyte-select').val()
+				},
+				success: function(resp) {
+					if (!resp.empty) {
+						var method = $('#mfr-select').val();
+						$('#mfr-select option').remove();
+				
+						$.each(resp, function(key, value) {
+						    if (value !== "")  {
+							    $('#mfr-select').append(new Option(value, key));
+							}
+						})
+				
+						$('#mfr-select').val(method);
+					}
+				}
+			});
+		}
+	</script>
+{% endblock %}
+
+{% block title %} MEMO Sensor Search {% endblock %}
+
+{% block page_title %}Sensor Search {% endblock %}
+
+{% block search_box_body %}
+	<p>Select search criteria below and press "Search MEMO" to search for matching sensors.</p>
+	<form action="{% url memo-sensor_search %}" method="get">
+		<h4> {{ search_form.non_field_errors }} </h4>
+		<table id="search-table">
+			{% for f in search_form %}
+				<tr><th><label for="id_{{ f.html_name }}" title="{{ f.help_text }}">
+					{% if f.label|last == "?" %}
+						{{ f.label }}
+					{% else %}
+						{{ f.label }}:
+					{% endif %}
+				</label></th><td>{{ f }}</td></tr>
+			{% endfor %}
+			<tr><td></td><td><input id="search-button" type="submit" value="Search MEMO"/></td></tr>
+		</table>
+	</form>
+{% endblock %}
+
+{% block header_information_dialog %} 
+	<h3>Sensors (Source: <a href="http://www.act-us.info">Alliance for Coastal Technologies</a>)</h3>
+{% endblock %}
+
+{% block results_table_header %}
+	<th>Sensor</th>
+	<th>Model Number</th>
+	<th>Accuracy</th>
+	<th>Resolution</th>
+	<th>Sample Rate</th>
+	<th>Sensitivity</th>
+	<th>Analyte</th>
+{% endblock %}
+
+{% block results_table_data %}
+	{% for r in results %}
+		<tr>
+			<td><a href={% url memo-sensor_details r.fm_pk_sensorid %}>{{ r.name|safe }}</a></td>
+			<td>{{ r.model_number|safe }}</td>
+			<td>{{ r.accuracy|safe }}</td>
+			<td>{{ r.resolution|safe }}</td>
+			<td>{{ r.sample_rate|safe }}</td>
+			<td>{{ r.sensitivity|safe }}</td>
+			<td>{{ r.analyte_name|safe }}</td>
+		</tr>
+	{% endfor %}
+{% endblock %}

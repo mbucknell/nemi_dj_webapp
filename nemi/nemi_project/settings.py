@@ -140,6 +140,7 @@ INSTALLED_APPS = (
     'common',
     'methods',
     'sams',
+	'memo',
 )
 
 # A sample logging configuration. The only tangible logging

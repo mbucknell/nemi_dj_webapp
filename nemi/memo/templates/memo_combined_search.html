@@ -1,0 +1,112 @@
+{% extends "base_search.html" %}
+
+{% block local_page_script %}
+	<script type="text/javascript">
+		function updateAnalytes() {
+			$.ajax({
+				url: '{% url memo-analyte_list %}',
+				data: {
+					method: $('#method-select').val()
+				},
+				success: function(resp) {
+					if (!resp.empty) {
+						var analyte = $('#analyte-select').val();
+						$('#analyte-select option').remove();
+				
+						$.each(resp, function(key, value) {
+							$('#analyte-select').append(new Option(value, key));
+						})
+				
+						$('#analyte-select').val(analyte);
+					}
+				}
+			});
+		}
+	
+		function updateMethods() {
+			$.ajax({
+				url: '{% url memo-method_list %}',
+				data: {
+					analyte: $('#analyte-select').val()
+				},
+				success: function(resp) {
+					if (!resp.empty) {
+						var method = $('#method-select').val();
+						$('#method-select option').remove();
+				
+						$.each(resp, function(key, value) {
+							$('#method-select').append(new Option(value, key));
+						})
+				
+						$('#method-select').val(method);
+					}
+				}
+			});
+		}
+	</script>
+{% endblock %}
+
+{% block title %} MEMO Combined Search {% endblock %}
+
+{% block page_title %}Combined Search {% endblock %}
+
+{% block search_box_body %}
+	<p>Select search criteria below and press "Search MEMO" to search for matching sensors and methods.</p>
+	<form action="{% url memo-combined_search %}" method="get">
+		<h4> {{ search_form.non_field_errors }} </h4>
+		<table id="search-table">
+			{% for f in search_form %}
+				<tr><th><label for="id_{{ f.html_name }}" title="{{ f.help_text }}">
+					{% if f.label|last == "?" %}
+						{{ f.label }}
+					{% else %}
+						{{ f.label }}:
+					{% endif %}
+				</label></th><td>{{ f }}</td></tr>
+			{% endfor %}
+			<tr><td></td><td><input id="search-button" type="submit" value="Search MEMO"/></td></tr>
+		</table>
+	</form>
+{% endblock %}
+
+{% block header_information_dialog %} 
+	<h3>Sensors (Source: <a href="http://www.act-us.info">Alliance for Coastal Technologies</a>)</h3>
+{% endblock %}
+
+{% block results_table_header %}
+	<th>Sensor</th>
+	<th>Model Number</th>
+	<th>Analyte</th>
+{% endblock %}
+
+{% block results_table_data %}
+	{% for r in results %}
+		<tr>
+			<td><a href={% url memo-sensor_details r.fm_pk_sensorid %}>{{ r.name }}</a></td>
+			<td>{{ r.model_number }}</td>
+			<td>{{ r.analyte_name }}</td>
+		</tr>
+	{% endfor %}
+{% endblock %}
+
+{% block page_content %}
+	{% if methods %}
+		<h3>Analytical Method (Source: <a href="http://www.nemi.gov">National Environmental Methods Index</a>)</h3>
+		<table class="tablesorter data-table" style="width: 100%">
+			<thead>
+				<tr>
+					<th>Method Descriptive Name</th>
+					<th>Method ID</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for m in methods %}
+					<tr>
+						<td><a href={% url methods-method_summary m.method_id %}>{{ m.method_descriptive_name|safe }}</a></td>
+						<td>{{ m.source_method_identifier|safe }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
+{% endblock %}

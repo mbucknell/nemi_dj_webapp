@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}MEMO Sensor Detail{% endblock %}
+
+{% block page_title %}MEMO Sensor Detail - {{sensor.model_name}}{% endblock %}
+
+{% block content %}
+	{% if sensor %}
+		<h2>Sensor Details</h2>
+		
+		<table class="info-table">
+			<tr><th>Model</th>
+				<td><div>{{ sensor.model_name }}</div>
+					<div><img src="http://filemaker2-server.cbl.umces.edu/sensorimages/{{ sensor.sensorimage }}" width="120" height="140"></div>
+				</td>
+			</tr>
+			<tr><th>Manufacturer</th><td>{{ sensor.mfrcompany }}</td></tr>
+			
+			{% if sensor.accuracy %}
+				<tr><th>Accuracy</th><td>{{ sensor.accuracy }}</td></tr>
+			{% endif %}
+			{% if sensor.resolution %}
+				<tr><th>Resolution</th><td>{{ sensor.resolution }}</td></tr>
+			{% endif %}
+			{% if sensor.sensitivity %}
+				<tr><th>Sensitivity</th><td>{{ sensor.sensitivity }}</td></tr>
+			{% endif %}
+			{% if sensor.sample_rate %}
+				<tr><th>Sample Rate</th><td>{{ sensor.sample_rate }}</td></tr>
+			{% endif %}
+			{% if sensor.range %}
+				<tr><th>Range</th><td>{{ sensor.range }}</td></tr>
+			{% endif %}
+			{% if sensor.weight %}
+				<tr><th>Weight</th><td>{{ sensor.weight }}</td></tr>
+			{% endif %}
+			{% if sensor.power_supply %}
+				<tr><th>Power Supply</th><td>{{ sensor.power_supply }}</td></tr>
+			{% endif %}
+			{% if sensor.battery_life %}
+				<tr><th>Battery Life</th><td>{{ sensor.battery_life }}</td></tr>
+			{% endif %}
+			{% if sensor.output %}
+				<tr><th>Output</th><td>{{ sensor.output }}</td></tr>
+			{% endif %}
+			{% if sensor.operating_temp %}
+				<tr><th>Operating Temperature</th><td>{{ sensor.operating_temp }}</td></tr>
+			{% endif %}
+			{% if sensor.depth_capability %}
+				<tr><th>Depth Capability</th><td>{{ sensor.depth_capability }}</td></tr>
+			{% endif %}
+			{% if sensor.dimensions %}
+				<tr><th>Dimensions</th><td>{{ sensor.dimensions }}</td></tr>
+			{% endif %}
+			{% if sensor.cost and sensor.cost != "Contact Manufacturer" %}
+				<tr><th>Cost</th><td>{{ sensor.cost }}</td></tr>
+			{% endif %}
+			{% if sensor.web_page %}
+				<tr><th>Web Page</th><td><a href="{{ sensor.web_page }}">{{ sensor.model_name }}</a></td></tr>
+			{% endif %}
+			<tr><th>Sensor Description</th><td>{{ sensor.model_description }}</td></tr>
+			<tr>
+				<th>Manufacturer's Information</th>
+				<td>
+					{{ sensor.mfrcompany }} <br/>
+					{{ sensor.mfrstreet }} <br/>
+					{{ sensor.mfrcity }}, {{ sensor.mfrstateprovince }} {{sensor.mfrpostalcode }} <br/>
+					{{ sensor.mfrcountry }} <br/>
+					Phone: {{ sensor.mfrtelephone }} <br/>
+					Fax: {{ sensor.mfrfax }}<br/>
+					<a href="{{sensor.mfrwebsite}}" target="_blank">{{ sensor.mfrwebsite }}</a>
+				</td>
+			</tr>
+		</table>
+		<br/>
+	{% endif %}
+		
+	{% if method %}
+		<h2>NEMI Method Analytes - Performance Information</h2>
+		
+		<table class="info-table">
+			<tr><th>NEMI Method</th><td><a href="{% url methods-method_summary method.method_id %}">{{ method.method_number }}</a></td></tr>
+			<tr><th>Analyte</th><td>{{ method.analyte_name }}</td></tr>
+			<tr><th>Accuracy</th><td>{{ method.accuracy }}</td></tr>
+			<tr><th>Precision</th><td>{{ method.precision }}</td></tr>
+			<tr><th>DL</th><td>{{ method.dl }}</td></tr>
+		</table>
+		
+		<h2>NEMI Method Description</h2>
+		
+		<table class="info-table">
+			<tr><th>Method Number</th><td>{{ method.method_number }}</td></tr>
+			<tr><th>Descriptive Name</th><td>{{ method.method_descriptive_name|safe }}</td></tr>
+			<tr><th>Official Name</th><td>{{ method.method_official_name|safe }}</td></tr>
+			<tr><th>Description</th><td>{{ method.brief_method_summary|safe }}</td></tr>
+			<tr><th>Scope and Application</th><td>{{ method.scope_and_application|safe }}</td></tr>
+		</table>
+		
+	{% endif %}
+{% endblock %}

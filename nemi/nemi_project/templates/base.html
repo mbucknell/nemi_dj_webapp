@@ -108,7 +108,13 @@
 										{% endif %}
 									</ul>
 								</li>	
-								<li><a href="http://infotrek.er.usgs.gov/apex/f?p=240:1:1236718013547534">MEMO (Sensors)</a></li>
+								<li><a href="#">MEMO (Sensors)</a>
+									<ul class="sub_menu">
+										<li><a href={% url memo-combined_search %}>Combined Search</a></li>
+										<li><a href={% url memo-sensor_search %}>Sensor Search</a></li>
+										<li><a href={% url memo-analyte_search %}>Search by Analyte</a></li>
+									</ul>
+								</li>
 								<li><a href="#">About NEMI</a>
 									<ul class="sub_menu">
 										<li><a href="mailto:nemi@usgs.gov?Subject=NEMI%20Feedback">Contact us</a></li>

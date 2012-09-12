@@ -1,0 +1,54 @@
+{% extends "base_search.html" %}
+
+{% block title %} MEMO Analyte Search {% endblock %}
+
+{% block page_title %}Analyte Search {% endblock %}
+
+{% block search_box_body %}
+	<p>Select an analyte from the menu below and press "Search MEMO" to search for sensors which measure that analyte.</p>
+	<form action="{% url memo-analyte_search %}" method="get">
+		<h4> {{ search_form.non_field_errors }} </h4>
+		<table id="search-table">
+			{% for f in search_form %}
+				<tr><th><label for="id_{{ f.html_name }}" title="{{ f.help_text }}">
+					{% if f.label|last == "?" %}
+						{{ f.label }}
+					{% else %}
+						{{ f.label }}:
+					{% endif %}
+				</label></th><td>{{ f }}</td></tr>
+			{% endfor %}
+			<tr><td></td><td><input id="search-button" type="submit" value="Search MEMO"/></td></tr>
+		</table>
+	</form>
+{% endblock %}
+
+{% block header_information_dialog %} 
+	<h4>General Information</h4>
+
+	{{ description|safe }} <br><br>
+{% endblock %}
+
+{% block results_table_header %}
+	<th class="nosort"></th>
+	<th>Name</th>
+	<th>Model Name</th>
+	<th>Analyte</th>
+	<th>Accuracy</th>
+	<th>Sample Rate</th>
+	<th>Manufacturer</th>
+{% endblock %}
+
+{% block results_table_data %}
+	{% for r in results %}
+		<tr>
+			<td class="view-button"><a title="View sensor details" href="{% url memo-sensor_details r.fm_pk_sensorid %}">View</a></td>
+			<td>{{ r.name }}</td>
+			<td>{{ r.model_name }}</td>
+			<td>{{ r.analyte }}</td>
+			<td>{{ r.accuracy }}</td>
+			<td>{{ r.sample_rate }}</td>
+			<td>{{ r.manufacturer }}</td>
+		</tr>
+	{% endfor %}
+{% endblock %}
