@@ -2,47 +2,52 @@
 
 {% block local_page_script %}
 	<script type="text/javascript">
-		function updateAnalytes() {
-			$.ajax({
-				url: '{% url memo-analyte_list %}',
-				data: {
-					method: $('#method-select').val()
-				},
-				success: function(resp) {
-					if (!resp.empty) {
-						var analyte = $('#analyte-select').val();
-						$('#analyte-select option').remove();
-				
-						$.each(resp, function(key, value) {
-							$('#analyte-select').append(new Option(value, key));
-						})
-				
-						$('#analyte-select').val(analyte);
-					}
-				}
-			});
-		}
-	
-		function updateMethods() {
-			$.ajax({
-				url: '{% url memo-method_list %}',
-				data: {
-					analyte: $('#analyte-select').val()
-				},
-				success: function(resp) {
-					if (!resp.empty) {
-						var method = $('#method-select').val();
-						$('#method-select option').remove();
-				
-						$.each(resp, function(key, value) {
-							$('#method-select').append(new Option(value, key));
-						})
-				
-						$('#method-select').val(method);
-					}
-				}
-			});
-		}
+	    $(document).ready(function(){
+	        $('#analyte-select').change(function() {
+	            $.ajax({
+    				url: '{% url memo-method_list %}',
+    				data: {
+    					analyte: $('#analyte-select').val()
+    				},
+    				success: function(resp) {
+    					if (!resp.empty) {
+    						var method = $('#method-select').val();
+    						$('#method-select option').remove();
+
+    						$.each(resp, function(key, value) {
+    							$('#method-select').append(new Option(value, key));
+    						})
+
+    						$('#method-select').val(method);
+    					}
+    				}
+    			});
+	        });
+	        
+	        $('#method-select').change(function(){
+	            $.ajax({
+    				url: '{% url memo-analyte_list %}',
+    				data: {
+    					method: $('#method-select').val()
+    				},
+    				success: function(resp) {
+    					if (!resp.empty) {
+    						var analyte = $('#analyte-select').val();
+    						$('#analyte-select option').remove();
+
+    						$.each(resp, function(key, value) {
+    							$('#analyte-select').append(new Option(value, key));
+    						})
+
+    						$('#analyte-select').val(analyte);
+    					}
+    				}
+    			});
+	        });
+	        
+	        $('#method-select').change();
+	        $('#analyte-select').change();
+	    })
 	</script>
 {% endblock %}
 

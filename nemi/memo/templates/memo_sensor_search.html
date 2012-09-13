@@ -3,55 +3,55 @@
 {% block local_page_script %}
 	<script type="text/javascript">
 		$(document).ready(function(){
-			updateMfrs();
-			updateAnalytes();
+		    $('#analyte-select').change(function() {
+		        $.ajax({
+    				url: '{% url memo-mfr_list %}',
+    				data: {
+    					analyte: $('#analyte-select').val()
+    				},
+    				success: function(resp) {
+    					if (!resp.empty) {
+    						var method = $('#mfr-select').val();
+    						$('#mfr-select option').remove();
+
+    						$.each(resp, function(key, value) {
+    						    if (value !== "")  {
+    							    $('#mfr-select').append(new Option(value, key));
+    							}
+    						})
+
+    						$('#mfr-select').val(method);
+    					}
+    				}
+    			});
+		    });
+		    
+		    $('#mfr-select').change(function() {
+		        $.ajax({
+    				url: '{% url memo-mfr_analyte_list %}',
+    				data: {
+    					mfr: $('#mfr-select').val()
+    				},
+    				success: function(resp) {
+    					if (!resp.empty) {
+    						var analyte = $('#analyte-select').val();
+    						$('#analyte-select option').remove();
+
+    						$.each(resp, function(key, value) {
+    						    if (value !== "") {
+    							    $('#analyte-select').append(new Option(value, key));
+    						    }
+    						})
+
+    						$('#analyte-select').val(analyte);
+    					}
+    				}
+    			});
+		    });
+		    
+		    $('#analyte-select').change();
+		    $('#mfr-select').change();
 		});
-		
-		function updateAnalytes() {
-			$.ajax({
-				url: '{% url memo-mfr_analyte_list %}',
-				data: {
-					mfr: $('#mfr-select').val()
-				},
-				success: function(resp) {
-					if (!resp.empty) {
-						var analyte = $('#analyte-select').val();
-						$('#analyte-select option').remove();
-				
-						$.each(resp, function(key, value) {
-						    if (value !== "") {
-							    $('#analyte-select').append(new Option(value, key));
-						    }
-						})
-				
-						$('#analyte-select').val(analyte);
-					}
-				}
-			});
-		}
-	
-		function updateMfrs() {
-			$.ajax({
-				url: '{% url memo-mfr_list %}',
-				data: {
-					analyte: $('#analyte-select').val()
-				},
-				success: function(resp) {
-					if (!resp.empty) {
-						var method = $('#mfr-select').val();
-						$('#mfr-select option').remove();
-				
-						$.each(resp, function(key, value) {
-						    if (value !== "")  {
-							    $('#mfr-select').append(new Option(value, key));
-							}
-						})
-				
-						$('#mfr-select').val(method);
-					}
-				}
-			});
-		}
 	</script>
 {% endblock %}
 

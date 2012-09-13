@@ -20,15 +20,13 @@ class MemoCombinedSearchForm(Form):
 						  label='Analyte',
 						  required=False,
 						  help_text='Select sensors for a given analyte',
-						  widget=Select(attrs={'onchange':'updateMethods()', 'id':'analyte-select',
-											   'style':'width: 20em'}))
+						  widget=Select(attrs={'id':'analyte-select', 'style':'width: 20em'}))
 							
 	method = ChoiceField(choices=[('', 'Any')] + [(row['method_id'], row['method_no']) for row in MethodSensorListACT.objects.order_by('method_no').values('method_no', 'method_id').distinct()],
 							  label='Method',
 							  required=False,
 							  help_text='Select sensors for a given method',
-							  widget=Select(attrs={'onchange':'updateAnalytes()', 'id':'method-select',
-												   'style':'width: 7em'}))
+							  widget=Select(attrs={'id':'method-select', 'style':'width: 7em'}))
 												
 class MemoSensorSearchForm(Form):
 	'''
@@ -38,12 +36,10 @@ class MemoSensorSearchForm(Form):
 							   label='Analyte',
 							   required=False,
 							   help_text='Select sensors for a given analyte',
-							   widget=Select(attrs={'onchange':'updateMfrs()', 'id':'analyte-select',
-													'style':'width: 20em'}))
+							   widget=Select(attrs={'id':'analyte-select', 'style':'width: 20em'}))
 	
 	mfr = MultipleChoiceField(choices=[('', 'Any')] + [(row['manufacturer'], row['manufacturer']) for row in SensorInfoVw.objects.order_by('manufacturer').values('manufacturer').distinct()],
 							label='Manufacturer',
 							required=False,
 							help_text='Select sensors from a given manufacturer',
-							widget=SelectMultiple(attrs={'onchange':'updateAnalytes()', 'id':'mfr-select',
-														 'style':'width: 20em'}))
+							widget=SelectMultiple(attrs={'id':'mfr-select', 'style':'width: 20em'}))

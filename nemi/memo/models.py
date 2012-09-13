@@ -29,8 +29,8 @@ class SensorInfoVw(models.Model):
 	resolution = models.CharField(max_length=2000, blank=True)
 	sensitivity = models.CharField(max_length=2000, blank=True)
 	manufacturer = models.CharField(max_length=2000, blank=True)
-	fm_pk_sensorid = models.IntegerField(primary_key=True, null=True)
-	analyte_id = models.IntegerField(null=True)
+	fm_pk_sensorid = models.IntegerField(primary_key=True)
+	analyte_id = models.IntegerField()
 	analyte_name = models.CharField(max_length=240)
 	method_no = models.CharField(max_length=4000, blank=True)
 	method_id = models.IntegerField(null=True)
@@ -70,7 +70,7 @@ class MethodAnalyteACT(models.Model):
 		
 class MethodSensorAnalyteListACT(models.Model):
 	analyte_name = models.CharField(max_length=240)
-	analyte_id = models.IntegerField(null=True, primary_key=True)
+	analyte_id = models.IntegerField(primary_key=True)
 	method_id = models.IntegerField(null=True)
 	
 	class Meta:
@@ -84,7 +84,7 @@ class MethodSensorAnalyteListACT(models.Model):
 
 class MethodSensorListACT(models.Model):
 	method_no = models.CharField(max_length=2000, blank=True)
-	method_id = models.IntegerField(null=True, primary_key=True)
+	method_id = models.IntegerField(primary_key=True)
 	analyte_id = models.IntegerField(null=True)
 	
 	class Meta:
