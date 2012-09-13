@@ -7,8 +7,9 @@ from django.db.models import Q
 
 from common.views import FilterFormMixin, SearchResultView
 from common.utils.forms import get_criteria_from_field_data, get_criteria
+from common.models import MethodAnalyteVW
 from models import SensorInfoVw, AnalyteListACT, AnalyteInfo, SensorInfoVw, SensorsACT, MethodAnalyteACT
-from models import MethodSensorAnalyteListACT, MethodSensorListACT, MethodAnalyteVw
+from models import MethodSensorAnalyteListACT, MethodSensorListACT
 from forms import MemoAnalyteSearchForm, MemoCombinedSearchForm, MemoSensorSearchForm
 
 class MemoAnalyteSearchView(SearchResultView, FilterFormMixin):
@@ -70,7 +71,7 @@ class MemoCombinedSearchView(SearchResultView, FilterFormMixin):
 		
 	def get_context_data(self, form):
 		criteria = []		
-		method_qs = MethodAnalyteVw.objects.all()
+		method_qs = MethodAnalyteVW.objects.all()
 		
 		if form.cleaned_data['analyte']:
 			criteria.append(('Analyte', MethodSensorAnalyteListACT.objects.values('analyte_id', 'analyte_name').distinct().get(analyte_id__exact=(form.cleaned_data['analyte']))['analyte_name']))

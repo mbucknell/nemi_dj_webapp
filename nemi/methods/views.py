@@ -14,13 +14,13 @@ from django.views.generic import View, ListView
 from django.views.generic.edit import TemplateResponseMixin
 
 # project specific packages
-from common.models import DefinitionsDOM
+from common.models import DefinitionsDOM, MethodAnalyteVW
 from common.utils.forms import get_criteria, get_multi_choice
 from common.utils.view_utils import dictfetchall
 from common.views import FilterFormMixin, SearchResultView, ExportSearchView
 from forms import GeneralSearchForm, AnalyteSearchForm, MicrobiologicalSearchForm, RegulatorySearchForm
 from forms import BiologicalSearchForm, ToxicitySearchForm, PhysicalSearchForm, TabularSearchForm
-from models import MethodVW, MethodSummaryVW, MethodAnalyteVW, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw, AnalyteCodeVW
+from models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw, AnalyteCodeVW
 from models import RegQueryVW,  RegulatoryMethodReport
 
 def _greenness_profile(d):
