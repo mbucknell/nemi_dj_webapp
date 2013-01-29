@@ -1,6 +1,161 @@
 {% extends "base.html" %}
 
-{% block content %}
-<h2>What's new in NEMI!</h2>
-<p> Introducing NEMI 4.0 with an improved look and feel and easier navigation.</p>
+{% block page_script %}
+	<script type="text/javascript">
+		function updateMethodCount() {
+			$.ajax({
+				url: '{% url methods-method_count %}',
+				success : function(resp) {
+					$('#browse-count-span').html('NEMI current contains ' + resp.method_count + ' methods, protocols and procedures.');	
+				}
+			});
+		}
+	
+		$(document).ready(function() {
+			// Add click handler for the section show/hide button.
+			$(".section-div").each(function() {
+				var contentDiv = $(this).find('.subcategory-div');
+				$(this).find('button').click(function() {
+					var buttonImgEl = $(this).find('img');
+					if (buttonImgEl.attr('alt') == 'show') {
+						$(this).attr('title', 'Hide section');
+						buttonImgEl.attr('alt', 'hide');
+						buttonImgEl.attr('src', '{{ STATIC_URL }}images/triangle-down-image36.gif');
+						contentDiv.show();
+					}
+					else {
+						$(this).attr('title', 'Show section');
+						buttonImgEl.attr('alt', 'show');
+						buttonImgEl.attr('src', '{{ STATIC_URL }}images/triangle-right-image36.gif');
+						contentDiv.hide();
+					}
+				});
+			});
+			// Make section columns equal height 
+			$('.section-div').each(function() {
+				var selectionDiv = $(this).find('.subcategory-selection-div');
+				var actionDiv = $(this).find('.subcategory-action-div');
+				
+				var selectionHeight = selectionDiv.height();
+				var actionHeight = actionDiv.height();
+				
+				if (selectionHeight > actionHeight) {
+					actionDiv.height(selectionHeight);
+				}
+				else {
+					selectionDiv.height(actionHeight);
+				}
+			});
+			// Associate the id of the div to show/hide for each subcategory button.
+			$('#keyword-search-button').data('actionDivId', $('#keyword-search-div'));
+			$('#number-search-button').data('actionDivId', $('#number-search-div'));
+			$('#browse-search-button').data('actionDivId', $('#browse-methods-div'));
+			$('#browse-search-button').data('showCallback', updateMethodCount);
+
+			
+			//Add click handlers for subcategory buttons
+			$('.subcategory-button').click(function() {
+				$(this).removeClass('not-active').addClass('highlight');
+				$(this).siblings().removeClass('highlight').addClass('not-active');
+				
+				var divToShow = $(this).data('actionDivId');
+				divToShow.show(0, $(this).data('showCallback'));
+				divToShow.siblings().hide();
+			});
+		});
+	</script>
 {% endblock %}
+
+{% block page_info %}
+<p>NEMI is a searchable database of environmental methods, protocols, and procedures 
+that allows scientists and managers to find and compare data-collection methods
+and protocols for all stages of the monitoring process.
+</p>
+{% endblock %}
+
+{% block page-content %}
+	<div id="general-search-div" class="section-div">
+		<h2>
+			<button class="show-hide-toggle" title="Hide section" type=button>
+				<img src="{{ STATIC_URL }}images/triangle-down-image36.gif" alt="hide" /> 
+			</button>
+			GENERAL SEARCH
+		</h2>
+		<div id="general-subcategory-div>" class="subcategory-div">
+			<div id="general-selection-div" class="subcategory-selection-div">
+				<ul>
+					<li class="highlight subcategory-button" id="keyword-search-button">KEYWORD</li>
+					<li class="not-active subcategory-button" id="number-search-button">NUMBER</li>
+					<li class="not-active subcategory-button" id="browse-search-button">BROWSE</li>
+				</ul>
+			</div>
+			<div id="general-action-div" class="subcategory-action-div">
+		    	<div id="keyword-search-div">
+                   	<form action="{% url methods-keyword %}" method="get">
+                   		<table class="general-search-form-table">
+							<tr>
+								<th>Search entire NEMI database by keyword:</th>
+                       			<td><input id="keyword-search-field" type="text" name="keyword_search_field" /></td>
+							</tr>
+							<tr>
+								<td colspan="2"><input class="search-button" type="submit" value="Search"/></td>
+							</tr>
+						</table> 
+                	</form>
+            	</div>
+            	<div id="number-search-div" style="display:none;">
+{#                   	<form action="{% url methods-method_number %}" method="get">  #}
+                   		<table class="general-search-form-table">
+							<tr>
+								<th>Search for a method number:</th>
+                       			<td><input id="number-search-field" type="text" name="method_number"/></td>
+							</tr>
+							<tr>
+								<td colspan="2"><input class="search-button" type="submit" value="Search"/></td>
+							</tr>
+						</table> 
+ {#              	</form> #}
+            	</div>		
+            	<div id="browse-methods-div" style="display: none;">
+            		<form action="{% url methods-browse %}" method="get">
+            			<table class="general-search-form-table">
+            				<tr>
+		            			<td><b><span>Browse the entire database:</span></b>
+		            			<span id="browse-count-span"></span></td>
+		            		</tr>
+		            		<tr><td><input class="search-button" type="submit" value="Browse"/></td></tr>
+	            		</table>
+	            	</form>
+            	</div>				
+			</div>
+		</div>
+ 		<div class="section-spacer-div"></div>	
+	</div>
+	<div id="filtered-search-div" class="section-div">
+		<h2>
+			<button class="show-hide-toggle" title="Hide section" type=button>
+				<img src="{{ STATIC_URL }}images/triangle-down-image36.gif" alt="hide" /> 
+			</button>
+			FILTERED SEARCH		
+		</h2>
+		<div id="filtered-subcategory-div>" class="subcategory-div">
+			<div id="filtered-selection-div" class="subcategory-selection-div">
+				<ul>
+					<li class="not-active">ANALYTES</li>
+					<li class="not-active">CHEMICAL</li>
+					<li class="not-active">MICROBIOLOGICAL</li>
+					<li class="not-active">BIOLOGICAL</li>
+					<li class="not-active">TOXICITY</li>
+					<li class="not-active">PHYSICAL</li>
+					<li class="not-active">STATISTICAL</li>
+				</ul>
+			</div>
+			<div id="filtered-action-div" class="subcategory-action-div">
+				<p>Temporary filtered content</p>
+			</div>
+		</div>
+		<div class="section-spacer-div"></div>	
+	</div>
+	
+{% endblock %}
+

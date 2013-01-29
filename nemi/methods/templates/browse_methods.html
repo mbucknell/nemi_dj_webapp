@@ -66,9 +66,7 @@
 	</script>
 {% endblock %}
 
-{% block page_title %}Browse All Methods{% endblock %}
-
-{% block content %}
+{% block page-content %}
 	{% load data_format %}
 	<p style="font-size: large;"><h2>NEMI contains {{ object_list|length }} methods.</h2></p>
 	{% regroup object_list by method_category as objects_by_category %}

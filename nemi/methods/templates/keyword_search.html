@@ -18,16 +18,13 @@
 	</style>
 {% endblock %}
 
-{% block page_title %}Methods containing the keyword(s): {{ keyword }}{% endblock %}
-{% block content%}
-	{% if error %}
-		<p class="errorlist"><b>Please enter text in the search box</b>
-	{% else %}
-		<p>If you have any questions or comments, or if you do not get the results you expect, send us feedback, including the search terms
-		you used and what method or methods you expected to see but didn't.
-		</p>
-	{% endif %}
-	
+{% block page_info %}
+	<p>If you have any questions or comments, or if you do not get the results you expect, send us feedback, including the search terms
+    	you used and what method or methods you expected to see but didn't.
+    </p>
+{% endblock %}
+
+{% block page-content%}
 	{% if results.object_list %}
 		<div id="results">
 			{% include "results_nav.html" %}

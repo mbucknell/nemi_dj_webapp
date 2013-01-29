@@ -10,7 +10,6 @@
 			{% block title %}National Environmental Methods Index{% endblock %}
 		</title>
 		
-		<link rel="stylesheet" href="{{ STATIC_URL }}styles/dropdown.css" media="screen" type="text/css"> <!-- General style for jquery.dropdown plugin -->
 		<link rel="stylesheet" href="{{ STATIC_URL }}styles/custom.css" media="screen" type="text/css"> <!-- Project style sheet -->
 		
 		<!-- Adds style for beta marker. This should be removed when the web site is released -->
@@ -25,39 +24,14 @@
 		</style>
 		
 		{% block page_style %}<!-- Put page specific style here -->{% endblock %}	
-		
-	    <script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery-latest.js"></script>
-	    <script src="{{ STATIC_URL }}script/jquery.dropdownPlain.js"></script>
-	    	
-		<script type="text/javascript">
+			  
+		<script src="{{ STATIC_URL }}script/jquery-ui/jquery-1.9.0.js"></script>
+ 		<script type="text/javascript">
 			$(document).ready(function(){
 				// Any link wrapped in an external-link class should have the target attribute set to
 				// open the link in a new browser window or tab.
 				$('.external-link a').attr('target','_blank');
 			});
-			// Open the url in a new tab or window
-			function showOnNewWindow(url) {
-				w = window.open(url);
-				if (w.opener == null) {
-					w.opener = self;
-				}
-				w.focus();
-				return false;
-			}
-			// Open the url in the same browser window or tab
-			function showNewPage(url) {
-				w = window.open(url, '_self');
-				return false;
-			}
-			// Toggle the visibility of the element divID.
-			function show_hide(divID){
-				if ($(divID).is(":hidden")) {
-					$(divID).show();
-				}
-				else {
-					$(divID).hide();
-				}
-			}
 		</script>
 		
 		{% block page_script %}<!-- Put page specific script here -->{% endblock %}
@@ -69,88 +43,42 @@
 			<div id="page-header">
 				<img src="{{ STATIC_URL }}images/bannerv3.7.gif" alt="NEMI Logo"></img>
 				<div id="beta-marker"><p>Provisional - Site in review</p></div> <!--  This should be removed when the web site is released -->
-				<div id="user-login">
-					{% block user_login %}
-					{% endblock %}
-				</div>
+				<div id="right-header">
+					{% block whats_new %}
+						<div id="whats-new-div">
+							<div class="box-header">
+								<span>What's new with NEMI</span>
+							</div>
+							<div id="news-feed">
+								<p>Statistical methods now included in NEMI</p>
+								<p>New mercury collection method available: 104.72(EPA-NERL)</p>
+							</div>
+						</div>
+				    {% endblock %}
+				    {% block header_links %}
+				    	<div id="header-links">
+				    		<ul>
+				    			<li>About NEMI</li>
+				    			<li>Glossary</li>
+				    			<li>FAQ</li>
+				    			<li>MyNEMI</li>
+				    		</ul>
+				    	</div>
+				    {% endblock %} 
+				</div>	    
 			</div>
 		{% endblock %}
-		
-		<div id="page-content">
-			{% block navigation %}
-				<div id="page-navigation">
-					{% block navigation_menu %}	
-						{% load in_group from user_auth %}			
-						<div id="navigation-bar">
-							<ul class="dropdown" id="navigation-menu">
-								<li><a href={% url home %}>Home</a></li>
-								<li><a href={% url methods-browse %}>Browse All Methods</a></li>
-								<li><a href="#">Search</a>
-									<ul class="sub_menu">
-										<li><a href={% url methods-general %}>All by criteria</a></li>
-										<li><a href={% url methods-analyte %}>All by analyte</a></li>
-										<li><a href={% url methods-microbiological %}>Microbiological</a></li>
-										<li><a href={% url methods-biological %}>Biological</a></li>
-										<li><a href={% url methods-toxicity %}>Toxicity</a></li>
-										<li><a href={% url methods-physical %}>Physical</a></li>
-										<li><a href={% url methods-stream_physical %}>Stream Physical</a></li>
-										<li><a href={% url methods-regulatory %}>Regulatory</a></li>
-										<li><a href={% url methods-tabular_reg %}>Tabular Regulatory</a></li>
-									</ul>
-								</li>
-								<li><a href="#">Statistical Methods</a>
-									<ul class="sub_menu">
-										<li><a href={% url sams-statistics %}>Search by criteria</a></li>
-										<li><a href={% url sams-create_method %}>Add methods</a></li>
-										<li><a href={% url sams-update_method_list %}>Update methods</a></li>
-										{% if user|in_group:"nemi_admin" %}
-											<li><a href="{% url sams-method_review_list %}">Review methods</a></li>
-										{% endif %}
-									</ul>
-								</li>	
-								<li><a href="#">MEMO (Sensors)</a>
-									<ul class="sub_menu">
-										<li><a href={% url memo-combined_search %}>Combined Search</a></li>
-										<li><a href={% url memo-sensor_search %}>Sensor Search</a></li>
-										<li><a href={% url memo-analyte_search %}>Search by Analyte</a></li>
-									</ul>
-								</li>
-								<li><a href="#">About NEMI</a>
-									<ul class="sub_menu">
-										<li><a href="mailto:nemi@usgs.gov?Subject=NEMI%20Feedback">Contact us</a></li>
-									</ul>
-								</li>
-							</ul>
-						</div>
-					{% endblock %}
-					
-					{% block keyword_search %}
-						<div id="keyword-search-div">
-							<form action="{% url methods-keyword %}" method="get">
-								Keyword(s): 
-								<input id="keyword-search-field" type="text" name="keyword_search_field" value="{{ keyword }}"/>&nbsp;<input id="search-button" type="submit" value="Search"/>
-							</form>
-						</div>
-					{% endblock %}				
-				</div>
-			{% endblock %}
-			
-			{% block page_title_section %}
-				<h1 id="page-title">
-					{% block page_title %}NEMI{% endblock %} <!-- Put page specific label here -->
-				</h1>
-			{% endblock %}			
-			
-			{% block content %}
-				<!-- Put page specific content here -->
+		<div id="page-info">
+			{% block page_info %}
 			{% endblock %}
 		</div>
+		{% block page-content %}
+		{% endblock %}
 		<div id="page-footer">
 			{% block footer %}
 			<div id="logos" style="padding-top: 10px;">
 				<a href="http://epa.gov" style="position: relative; left: 5%;"><img src={{ STATIC_URL }}images/epa1.gif /></a>
 				<a href="http://usgs.gov" style="position: relative; left: 10%;"><img src={{ STATIC_URL }}images/usgs_id_green.gif /></a>
-				<a href="http://cida.usgs.gov" style="position: relative; left: 20%;"><img src={{ STATIC_URL }}images/cida_logo_4c-150_notext.jpg /></a>
 			</div>
 			{% endblock %}
 		</div>

@@ -1,16 +1,10 @@
 body {
 	font-family: Arial;
 	font-size: 12px;
+	background-color: #E0FFC2;
 }
 table{
 	border-collapse: collapse;
-}
-th{
-	background-color: DarkSeaGreen;	
-	border-bottom: solid #aaaaaa 1px;
-}
-td{
-	border-bottom: solid #aaaaaa 1px;
 }
 a {
 	outline: none;			
@@ -43,36 +37,150 @@ a[class='popup']{
 #page-header{
 	margin-top: 0px;
 	margin-bottom: 0px;
-	margin-left: 5%;
-	margin-right: 5%;
+	margin-left: 5px;
+	margin-right: 5px;
 	border-bottom: solid darkred 2px;
 }
-#user-login {
-	display: inline-block;
-	float: right;
-	margin-top: 90px;
-}
-#page-content {
-	margin-top: 10px;
-	margin-bottom: 10px;
-	margin-left: 5%;
-	margin-right: 5%;
+#page-info {
+	margin-left: 5px;
+	margin-right: 5px;
 }
 #page-footer {
+	clear: both;
 	margin-top: 20px;
 	margin-bottom: 20px;
-	margin-left: 5%;
-	margin-right: 5%;
+	margin-left: 5px;
+	margin-right: 5px;
 	border-top: solid darkred 2px;
 	}
-#page-navigation {
-	background-color: Beige;	
-}
-#keyword-search-div {
+#right-header {
 	float: right;
-	margin : 0.5em;
-	font-size: large;
+	display: inline-block;
 }
+#whats-new-div {
+	display: inline-block;
+	float: left;
+	border: 1px solid black;
+	width: 200px;
+	background-color: Cornsilk;
+}	
+.box-header {
+	background-color: DarkSeaGreen;
+	font-style: italic;
+	font-weight: bold;
+	border-bottom: 1px solid black;
+	padding: 5px;
+}
+.box-header span {
+	padding-top: 5px;
+}
+#news-feed {
+	padding-top: 0px;
+	padding-left: 5px;
+}
+#header-links {
+	display: inline-block;
+	width: 100px;
+	margin-left: 10px;
+	height: 100%;
+}
+#header-links ul {
+	list-style-type: none;
+	margin: 2px;
+	padding: 0px;
+}
+#header-links li {
+	padding-bottom: 4px;
+}
+.section-div {
+	margin: 0px;
+	width: 100%;
+}
+.section-div h2 {
+	color: White;
+	padding: 6px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	background-color: DarkGreen;
+}
+.subcategory-div {
+	width: 100%;
+	margin: 0px;
+	float: left;
+	border: 1px solid black;
+	background-color: Cornsilk;
+	
+}
+.subcategory-selection-div {
+	display: inline-block;
+	float: left;
+	width: 200px;
+	margin: 0px;
+}
+.subcategory-selection-div ul {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+.subcategory-selection-div li {
+	font-size: medium;
+	text-align: center;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	border-left: 1px solid black;
+	padding: 4px;
+	
+}
+.highlight {
+	background-color: White;
+}
+.not-active {
+	background-color: DarkSeaGreen;
+}
+.subcategory-button {
+	cursor: pointer;
+}
+.subcategory-action-div {
+	display: inline-block;
+	float: left;
+}
+.subcategory-action-div div {
+	padding: 10px;
+}
+.section-spacer-div {
+	clear: both;
+	height: 30px;
+	margin: 0px;
+	border-bottom: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+}
+/* Style for show-hide toggle button */
+.show-hide-toggle {
+	border: none;
+	background: transparent;
+	outline: none;
+	cursor: pointer;
+}
+.general-search-form-table th, td {
+	text-align: center;
+	font-size: medium;
+}
+.search-button {
+	border: solid 1px grey;
+	background-color: DarkSeaGreen;
+	color: white;
+	font-weight: bold;
+	font-size: medium;
+	padding-left: 1em;
+	padding-right: 1em;
+	border-radius: 10px;
+}
+.search-button:hover {
+	background-color: lightgrey;
+	color: black;
+}
+/* Below this is stuff used in old NEMI review for whether it's used. */
 /* Used to style form error message */
 .errorlist{
 	color: red;
@@ -123,17 +231,6 @@ a[class='popup']{
 	padding-right: 0.5em;
 	margin-top: 0px;
 	margin-bottom: 20px;
-}
-
-#search-button {
-	border: solid 1px grey;
-	background-color: DarkSeaGreen;
-	color: white;
-	font-weight: bold;
-}
-#search-button:hover {
-	background-color: lightgrey;
-	color: black;
 }
 #search-box {
 	display: inline-block;

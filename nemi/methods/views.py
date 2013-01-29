@@ -105,6 +105,7 @@ def _clean_name(name):
     
     return result
 
+
 class GeneralSearchFormMixin(FilterFormMixin):
     '''Extends the FilterFormMixin to implement the search form used on the General Search page.'''
 
@@ -347,6 +348,15 @@ class AnalyteSelectView(View):
             
         return HttpResponse('{"values_list" : ""}', mimetype="application/json")
         
+class MethodCountView(View):
+    '''
+    Extends the standard view to retrieve and return as a json object the total number of methods in the datastore.
+    '''
+    
+    def get(self, request, *args, **kwargs):
+        ## TODO: Check to see if MethodVW includes statistical methods.
+        response = HttpResponse('{"method_count" : "' + str(MethodVW.objects.count()) + '"}', mimetype="application/json");
+        return response
 
 class MicrobiologicalSearchView(SearchResultView, FilterFormMixin):
     '''Extends the SearchResultView and FilterFormMixin to implement the microbiological search page.'''
