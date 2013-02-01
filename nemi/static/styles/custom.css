@@ -97,7 +97,7 @@ a[class='popup']{
 	padding-bottom: 4px;
 }
 .section-div {
-	position: relative;
+	clear: both;
 	margin: 0px;
 	width: 100%;
 }
@@ -120,6 +120,7 @@ a[class='popup']{
 }
 .subcategory-selection-div {
 	display: inline-block;
+	float: left;
 	width: 200px;
 	margin: 0px;
 	border-left: 1px solid black;
@@ -148,7 +149,7 @@ a[class='popup']{
 }
 .subcategory-action-div {
 	display: inline-block;
-	position: absolute;
+	background-color: Cornsilk;
 	left: 200px;
 	border-left: 1px solid black;
 	padding-left: 10px;
