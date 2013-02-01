@@ -1,12 +1,26 @@
 
 from django.forms import Form
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.views.generic import View
 from django.views.generic.edit import TemplateResponseMixin
 
 from models import DefinitionsDOM
 from utils.view_utils import xls_response, tsv_response
 
+class ChoiceJsonView(View):
+    ''' Extends the standard View to return a JSON object representing a list of choices
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        ''' Returns a list of tuples representing the choices. The first element in the tuple is the value
+        and the second is the display value.
+        '''
+        
+    def get(self, request, *args, **kwargs):
+        choices = ['{"value" : "' + value + '", "display_value" : "' + display_value + '"}' 
+                   for (value, display_value) in self.get_choices(request, *args, **kwargs)]
+        
+        return HttpResponse('{"choices" : [' + ','.join(choices) + ']}', mimetype='application/json')        
+        
 class FilterFormMixin(object):
     '''This mixin class is designed to process a form which sets query filter conditions.
     The method get_qs, should check the form's cleaned data and filter the query as appropriate and

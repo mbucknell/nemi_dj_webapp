@@ -2,6 +2,44 @@
 
 {% block page_script %}
 	<script type="text/javascript">
+		function makeColumnsEqualHeight(col1El, col2El) {
+			/* Find the element with the largest height and set the other element to that height.
+			*/
+			var height1 = col1El.height();
+			var height2 = col2El.height();
+			
+			if (height1 > height2) {
+				col2El.height(height1);
+			}
+			else {
+				col1El.height(height2);
+			}
+		}
+		
+		function setInputSensitive(inputId, sensitive) {
+			var inputEl = $('#' + inputId);
+			var labelEl = $('label[for="' + inputId + '"]');
+			if (sensitive) {
+				if (inputEl.is('[type="checkbox"]') && !inputEl.is(':checked')) {
+					inputEl.prop('checked', true);
+				}
+				inputEl.removeAttr('disabled');
+				labelEl.removeClass('disabled');
+				
+			}
+			else {
+				if (inputEl.is(':checked')) {
+					inputEl.prop('checked', false);
+				}
+				inputEl.attr('disabled', 'disabled');
+				labelEl.addClass('disabled');
+			}
+		}
+				
+		function makeSectionColumnsEqualHeight(sectionEl) {
+			makeColumnsEqualHeight(sectionEl.find('.subcategory-selection-div'), sectionEl.find('.subcategory-action-div'));
+		}
+	
 		function updateMethodCount() {
 			$.ajax({
 				url: '{% url methods-method_count %}',
@@ -10,18 +48,82 @@
 				}
 			});
 		}
+		
+		function createMenuOptions(url /*String */, data /* Object */, selectEl /* jquery element */) {
+			/* Make an ajax call to retrieve the values to be used for the select menu, selectEl.
+			* Ajax response is assumed to be json with the following structure: 
+			* {choices: [{value : x, display_value: X}, ...]"}
+			*/
+			$.ajax({
+				url: url,
+				data: data,
+				success : function(resp) {
+					var options = '';
+					for (var i = 0; i < resp.choices.length; i++) {
+						options += '<option value="' + resp.choices[i].value + '">' + resp.choices[i].display_value + '</option>';
+					}
+					selectEl.append(options);
+				}
+			});
+		}
+		
+		function createCheckboxes(
+				url /*String */, 
+				data /* Object */, 
+				listEl /*jquery element */, 
+				fieldName /* String */, 
+				choiceIdBase /* String */,
+				areChecked /* Boolean */) {
+			/* Make an ajax call to rertrieve the values to be used to create the checkboxes with the list element listEl.
+			 * Use areChecked to set the initial checked state of the buttons.
+			 */
+			$.ajax({
+				url: url,
+				data: data,
+				success: function(resp) {
+					var checkboxes = ''
+					var checkedAttr = '';
+					if (areChecked) {
+						checkedAttr = ' checked="checked" ';
+					}
+					for (var i = 0; i < resp.choices.length; i++) {
+						choice_id = choiceIdBase + resp.choices[i].value;
+						checkboxes += '<li><input id="' + choice_id + '" type="checkbox" name="' + fieldName + '"' + checkedAttr + ' value="' + 
+							resp.choices[i].value + '"/><label for="' + choice_id + 
+							'">' + resp.choices[i].display_value + "</label></li>";
+					}
+					listEl.html(checkboxes);
+					// Need to readjust the height of this section since we have added
+					// visible lines 
+					makeSectionColumnsEqualHeight (listEl.parents('.section-div'));
+				}
+			});			
+		}
+		
+		function isCheckboxInChoices(checkboxEl, choices) {
+			var thisValue = checkboxEl.attr('value');
+			for (var i = 0; i < choices.length; i++){
+				if (thisValue == choices[i].value) {
+					return true;
+				}
+			}
+			return false;
+		}
 	
 		$(document).ready(function() {
-			// Add click handler for the section show/hide button.
+			// Add click handler for the section show/hide buttons.
 			$(".section-div").each(function() {
 				var contentDiv = $(this).find('.subcategory-div');
-				$(this).find('button').click(function() {
+				$(this).find('h2 button').click(function() {
 					var buttonImgEl = $(this).find('img');
 					if (buttonImgEl.attr('alt') == 'show') {
 						$(this).attr('title', 'Hide section');
 						buttonImgEl.attr('alt', 'hide');
 						buttonImgEl.attr('src', '{{ STATIC_URL }}images/triangle-down-image36.gif');
 						contentDiv.show();
+						
+						// Adjust the column size of the section since it may be larger now. 
+						makeColumnsEqualHeight($(this).parents('.section-div'));						
 					}
 					else {
 						$(this).attr('title', 'Show section');
@@ -31,29 +133,66 @@
 					}
 				});
 			});
+			
+			// Add click handler for the subsection show/hide buttons 
+			$('.subcategory-action-div').each(function() {
+				var contentDiv = $(this).find('.subsection-div');
+				$(this).find('h3 button').click(function() {
+					var buttonImgEl = $(this).find('img');
+					if (buttonImgEl.attr('alt') == 'show') {
+						$(this).attr('title', 'Hide subsection');
+						buttonImgEl.attr('alt', 'hide');
+						buttonImgEl.attr('src', '{{ STATIC_URL }}images/triangle-down-image36.gif');
+						contentDiv.show();
+						
+						// Height of columns may need to be increased 
+						makeSectionColumnsEqualHeight($(this).parents('.section-div'));
+					}
+					else {
+						$(this).attr('title', 'Show subsection');
+						buttonImgEl.attr('alt', 'show');
+						buttonImgEl.attr('src', '{{ STATIC_URL }}images/triangle-right-image36.gif');
+						contentDiv.hide();
+					}
+				});
+			});
+			
 			// Make section columns equal height 
 			$('.section-div').each(function() {
-				var selectionDiv = $(this).find('.subcategory-selection-div');
-				var actionDiv = $(this).find('.subcategory-action-div');
-				
-				var selectionHeight = selectionDiv.height();
-				var actionHeight = actionDiv.height();
-				
-				if (selectionHeight > actionHeight) {
-					actionDiv.height(selectionHeight);
-				}
-				else {
-					selectionDiv.height(actionHeight);
-				}
+				makeSectionColumnsEqualHeight($(this));
 			});
-			// Associate the id of the div to show/hide for each subcategory button.
+			
+			// Associate the id of the div to show/hide for each subcategory button and set show callback if necessary 
 			$('#keyword-search-button').data('actionDivId', $('#keyword-search-div'));
 			$('#number-search-button').data('actionDivId', $('#number-search-div'));
 			$('#browse-search-button').data('actionDivId', $('#browse-methods-div'));
 			$('#browse-search-button').data('showCallback', updateMethodCount);
-
 			
-			//Add click handlers for subcategory buttons
+			// In addition to actionDivId and showCallback (as needed), the filtered search buttons should set headerId to the
+			// correct header and set category to the button's category.
+			$('#analytes-search-button').data('actionDivId', $('#analyte-search-div'));
+			$('#analytes-search-button').data('headerId', $('#analytes-header'));
+			$('#analytes-search-button').data('category', 'analytes');
+			$('#chemical-search-button').data('actionDivId', $('#chemical-search-div'));
+			$('#chemical-search-button').data('headerId', $('#chemical-header'));
+			$('#chemical-search-button').data('category', 'chemical');
+			$('#microbiological-search-button').data('actionDivId', $('#analyte-search-div'));
+			$('#microbiological-search-button').data('headerId', $('#microbiological-header'));
+			$('#microbiological-search-button').data('category', 'biological');
+			$('#biological-search-button').data('actionDivId', $('#biological-search-div'));
+			$('#biological-search-button').data('headerId', $('#biological-header'));
+			$('#biological-search-button').data('category', 'biological');
+			$('#toxicity-search-button').data('actionDivId', $('#toxicity-search-div'));
+			$('#toxicity-search-button').data('headerId', $('#toxicity-header'));
+			$('#toxicity-search-button').data('category', 'toxicity assay');
+			$('#physical-search-button').data('actionDivId', $('#analyte-search-div'));
+			$('#physical-search-button').data('headerId', $('#physical-header'));
+			$('#physical-search-button').data('category', 'physical');
+			$('#statistical-search-button').data('actionDivId', $('#statistical-search-div'));
+			$('#statistical-search-button').data('headerId', $('#statistical-header'));
+			$('#statistical-search-button').data('category', 'statistical');
+			
+			//Add click handlers for subcategory buttons 
 			$('.subcategory-button').click(function() {
 				$(this).removeClass('not-active').addClass('highlight');
 				$(this).siblings().removeClass('highlight').addClass('not-active');
@@ -61,7 +200,66 @@
 				var divToShow = $(this).data('actionDivId');
 				divToShow.show(0, $(this).data('showCallback'));
 				divToShow.siblings().hide();
+				
+				var headerToShow = $(this).data('headerId');
+				if (headerToShow) {
+					headerToShow.show();
+					headerToShow.siblings().hide();
+				}
+				
+				// Update height of columns.
+				makeSectionColumnsEqualHeight($(this).parents('.section-div'));
 			});
+			
+			// For filtered subcategory buttons, add a separate click handler to set the 
+			// state of the "Limit by" section. 
+			$('#filtered-selection-div .subcategory-button').click(function() {
+				var category = $(this).data('category');
+				if (category == 'analytes'){
+					// Set all method types valid 
+					$('#method-type-selections input').each(function() {
+						setInputSensitive($(this).attr('id'), true);
+					});
+				}
+				else {
+					// Retrieve valid method types for this category and set sensitivity 
+					// based on this list.
+					$.ajax({
+						url : '{% url methods-method_types %}',
+						data: {'category' : category},
+						success : function(resp) {
+							$('#method-type-selections input').each(function() {
+								setInputSensitive($(this).attr('id'), isCheckboxInChoices($(this), resp.choices));
+							});
+						}
+					});
+				}
+				
+				// Set Sensitive of option menus 
+				setInputSensitive('media-name-field', $.inArray(category, ['analyte', 'chemical']) != -1);
+				setInputSensitive('source-field', $.inArray(category, ['analyte', 'chemical', 'statistical']) != -1);
+				setInputSensitive('instrumentation-field', $.inArray(category, ['analyte', 'chemical']) != -1);
+			});
+			
+			// Create option menus 
+			createMenuOptions('{% url methods-media_name %}', {}, $('#media-name-field'));
+			createMenuOptions('{% url methods-source %}', {}, $('#source-field'));
+			createMenuOptions('{% url methods-instrumentation %}', {}, $('#instrumentation-field'));
+			createMenuOptions('{% url methods-regulations %}', {}, $('#regulations-field'));
+			createMenuOptions('{% url methods-gear_types %}', {}, $('#gear-type-field'));
+			createMenuOptions('{% url methods-stat_objectives %}', {}, $('#study_objective'));
+			createMenuOptions('{% url methods-stat_item_types %}', {}, $('#item_type'));
+			createMenuOptions('{% url methods-stat_analysis_types %}', {}, $('#analysis_type'));
+			createMenuOptions('{% url methods-stat_publication_source %}', {}, $('#publication_source_type'));
+			createMenuOptions('{% url methods-stat_media_emphasized %}', {}, $('#media_emphasized'));
+			createMenuOptions('{% url methods-stat_special_topics %}', {}, $('#special_topic'));
+			
+			// Create checkboxes 
+			createCheckboxes('{% url methods-method_types %}', {}, $('#method-type-selections'), 'method_type', 'method_type-', true);
+			createCheckboxes('{% url methods-subcategories %}', {'category' : 'Chemical'}, $('#chemical-subcategory-selections'), 'subcategory', 'chemical-subcategory-', true);
+			createCheckboxes('{% url methods-subcategories %}', {'category' : 'Biological'}, $('#biological-subcategory-selections'), 'subcategory', 'biological-subcategory-', true);
+			createCheckboxes('{% url methods-subcategories %}', {'category' : 'Toxicity assay'}, $('#toxicity-subcategory-selections'), 'subcategory', 'toxicity-subcategory-', true);
+			createCheckboxes('{% url methods-subcategories %}', {'category' : 'Statistical'}, $('#statistical-subcategory-selections'), 'subcategory', 'statistical-subcategory-', true);
 		});
 	</script>
 {% endblock %}
@@ -90,41 +288,43 @@ and protocols for all stages of the monitoring process.
 				</ul>
 			</div>
 			<div id="general-action-div" class="subcategory-action-div">
-		    	<div id="keyword-search-div">
+		    	<div id="keyword-search-div" class="input-section-div">
                    	<form action="{% url methods-keyword %}" method="get">
                    		<table class="general-search-form-table">
-							<tr>
-								<th>Search entire NEMI database by keyword:</th>
+                   			<tr>
+                   				<th><label for="keyword-search-field">Search entire NEMI database by keyword:</label></th>
                        			<td><input id="keyword-search-field" type="text" name="keyword_search_field" /></td>
 							</tr>
-							<tr>
-								<td colspan="2"><input class="search-button" type="submit" value="Search"/></td>
-							</tr>
-						</table> 
+						</table>
+						<div class="button-div">
+							<input class="search-button" type="submit" value="Search"/>
+						</div>
                 	</form>
             	</div>
-            	<div id="number-search-div" style="display:none;">
-{#                   	<form action="{% url methods-method_number %}" method="get">  #}
+            	<div id="number-search-div" class="input-section-div" style="display:none;">
+                   	<form>  
                    		<table class="general-search-form-table">
 							<tr>
-								<th>Search for a method number:</th>
+								<th><label for="number-search-field">Search for a method number:</label></th>
                        			<td><input id="number-search-field" type="text" name="method_number"/></td>
 							</tr>
-							<tr>
-								<td colspan="2"><input class="search-button" type="submit" value="Search"/></td>
-							</tr>
 						</table> 
- {#              	</form> #}
+						<div class="button-div">
+							<input class="search-button" type="submit" value="Search"/>
+						</div>
+               		</form>
             	</div>		
-            	<div id="browse-methods-div" style="display: none;">
+            	<div id="browse-methods-div" class="input-section-div" style="display: none;">
             		<form action="{% url methods-browse %}" method="get">
             			<table class="general-search-form-table">
             				<tr>
 		            			<td><b><span>Browse the entire database:</span></b>
 		            			<span id="browse-count-span"></span></td>
 		            		</tr>
-		            		<tr><td><input class="search-button" type="submit" value="Browse"/></td></tr>
 	            		</table>
+	            		<div class="button-div">
+	            			<input class="search-button" type="submit" value="Browse"/>
+	            		</div>
 	            	</form>
             	</div>				
 			</div>
@@ -141,17 +341,288 @@ and protocols for all stages of the monitoring process.
 		<div id="filtered-subcategory-div>" class="subcategory-div">
 			<div id="filtered-selection-div" class="subcategory-selection-div">
 				<ul>
-					<li class="not-active">ANALYTES</li>
-					<li class="not-active">CHEMICAL</li>
-					<li class="not-active">MICROBIOLOGICAL</li>
-					<li class="not-active">BIOLOGICAL</li>
-					<li class="not-active">TOXICITY</li>
-					<li class="not-active">PHYSICAL</li>
-					<li class="not-active">STATISTICAL</li>
+					<li class="highlight subcategory-button" id="analytes-search-button">ANALYTES</li>
+					<li class="not-active subcategory-button" id="chemical-search-button">CHEMICAL</li>
+					<li class="not-active subcategory-button" id="microbiological-search-button">MICROBIOLOGICAL</li>
+					<li class="not-active subcategory-button" id="biological-search-button">BIOLOGICAL</li>
+					<li class="not-active subcategory-button" id="toxicity-search-button">TOXICITY</li>
+					<li class="not-active subcategory-button" id="physical-search-button">PHYSICAL</li>
+					<li class="not-active subcategory-button" id="statistical-search-button">STATISTICAL</li>
 				</ul>
 			</div>
 			<div id="filtered-action-div" class="subcategory-action-div">
-				<p>Temporary filtered content</p>
+				<div id="filter-specific-div">
+					<div id="filter-header">
+						<div id="analytes-header">
+							<p>Search for ANALYTES</p>
+							<hr/>
+						</div>
+						<div id="chemical-header" style="display: none;">
+							<p>Limit search to CHEMICAL methods</p>
+							<hr/>
+						</div>
+						<div id="microbiological-header" style="display: none;">
+							<p>Limit search to MICROBIOLOGICAL methods</p>
+							<hr />
+						</div>
+						<div id="biological-header" style="display: none;">
+							<p>Limit search to BIOLOGICAL methods</p>
+							<hr/>
+						</div>
+						<div id="toxicity-header" style="display: none;">
+							<p>Limit search to TOXICITY methods</p>
+							<hr />
+						</div>
+						<div id="physical-header" style="display: none;">
+							<p>Limit search to PHYSICAL methods</p>
+							<hr />
+						</div>
+						<div id="statistical-header" style="display: none;">
+							<p>Limit search to STATISTICAL methods</p>
+							<hr />
+						</div>
+					</div>
+					<div id="filter-action">
+						<div id="analyte-search-div" class="input-section-div">
+							<form>
+								<div style="display: inline-block;">
+									<table class="general-search-form-table">
+										<tr>
+											<th><label for="analyte-name-field">Analyte name:</label></th>
+											<td><input id="analyte-name-field" type="text" name="analyteName" size=40/></td>
+										</tr>
+										<tr>
+											<th><label for="analyte-code-field">Analyte code:</label></th>
+											<td><input id="analyte-code-field" type="text" name="analyteCode" size=40/></td>
+										</tr>
+									</table>
+									<div class="button-div">
+										<input class="search-button" type="button" value="Search"/>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div id="chemical-search-div" class="input-section-div" style="display: none;">
+							<form>
+								<div style="display: inline-block;">
+									<div class="no-style-list">
+										<span class="header">Chemical subcategories:</span><br />
+										<ul id="chemical-subcategory-selections" >
+										</ul>
+									</div>
+									<div class="button-div">
+										<input class="search-button" type="button" value="Search"/>
+									</div>
+								</div>
+							</form>					
+						</div>
+						<div id="biological-search-div" class="input-section-div" style="display: none;">
+							<form>
+								<div style="display: inline-block;">
+									<div class="no-style-list">
+										<span class="header">Biological subcategories:</span><br />
+										<ul id="biological-subcategory-selections">
+										</ul>
+									</div>
+									<br />
+									<table class="general-search-form-table">
+										<tr>
+											<th><label for="analyte-type-field">Analyte type:</label></th>
+											<td>
+												<select id="analyte-type-field" name="analyte_type">
+													<option value="all">Any</option>
+													<option value="Algae">Algae</option>
+													<option value="Fish">Fish</option>
+													<option value="Macroinvertebrate">Macroinvertebrate</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+										<th><label for="waterbody-type-field">Waterbody type:</label></th>
+											<td>
+												<select id="waterbody-type-field" name="waterbody_type">
+													<option value="all">Any</option>
+													<option value="Estuary">Estuary</option>
+													<option value="Lake">Lake</option>
+													<option value="Ocean">Ocean</option>
+													<option value="River">River</option>
+													<option value="Non-wadeable stream">Non-wadeable stream</option>
+													<option value="Wadeable stream">Wadeable stream</option>
+													<option value="Wetland">Wetland</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+										<th><label for="gear-type-field">Gear type:</label></th>
+											<td>
+												<select id="gear-type-field" name="gear_type">
+													<option value="all">Any</option>
+												</select>
+											</td>
+										</tr>
+									</table>
+									<div class="button-div">
+										<input class="search-button" type="button" value="Search"/>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div id="toxicity-search-div" class="input-section-div" style="display: none;">
+							<form>
+								<div style="display: inline-block;">
+									<div class="no-style-list">
+										<span class="header">Toxicity subcategories</span><br />
+										<ul id="toxicity-subcategory-selections"></ul>
+									</div>
+									<table class="general-search-form-table">
+										<tr>
+											<th><label for="matrix-field">Matrix:</label></th>
+											<td>
+												<select id="matrix-field" name="matrix">
+													<option value="all">Any</option>
+													<option value="Freshwater">Freshwater</option>
+													<option value="Saltwater">Saltwater</option>
+													<option value="Both">Both</option>
+												</select>
+											</td>
+										</tr>
+									</table>
+									<div class="button-div">
+										<input class="search-button" type="button" value="Search"/>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div id="statistical-search-div" class="input-section-div" style="display: none;">
+							<form>
+								<div style="display: inline-block;">
+									<div class="no-style-list">
+										<span class="header">Statistical subcategories:</span><br />
+										<ul id="statistical-subcategory-selections"></ul> 
+									</div>
+									<table class="general-search-form-table">
+										<tr>
+											<th><label for="study_objective">What are you interested in:</label></th>
+											<td>
+												<select id="study_objective" name="study_objective">
+													<option value="all">Any</option>
+												</select>
+											</td>
+										<tr>
+										<tr>
+											<th><label for="item_type">Item type:</label></th>
+											<td>
+												<select id="item_type" name="item_type">
+													<option value="all">Any</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<th><label for="complexity">Complexity:</label></th>
+											<td>
+												<select id="complexity" name="complexity">
+													<option value="all">Any</option>
+													<option value="Low">Low</option>
+													<option value="Medium">Medium</option>
+													<option value="High">High</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<th><label for="analysis_type">Analysis type:</label></th>
+											<td>
+												<select id="analysis_type" name="analysis_type">
+													<option value="all">Any</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<th><label for="publication_source_type">Publication source type:</label></th>
+											<td>
+												<select id="publication_source_type" name="publication_source_type">
+													<option value="all">Any</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<th><label for="media_emphasized">Media emphasized:</label></th>
+											<td>
+												<select id="media_emphasized" name="media_emphasized">
+													<option value="all">Any</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<th><label for="special_topic">Special topic:</label></th>
+											<td>
+												<select id="special_topic" name="special_topic">
+													<option value="all">Any</option>
+												</select>
+											</td>
+										</tr>
+									</table>
+									<div class="button-div">
+										<input class="search-button" type="button" value="Search"/>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<h3>
+					<button class="show-hide-toggle" title="Hide subsection" type=button>
+						<img src="{{ STATIC_URL }}images/triangle-down-image36.gif" alt="hide" /> 
+					</button>
+					Limit by: (optional)		
+				</h3>
+				<div id=filtered-search-limits class="input-section-div subsection-div">
+					<table class="general-search-form-table">
+						<tr>
+							<th><label for="media-name-field">Media name:</label></th>
+							<td>
+								<select id="media-name-field" name="mediaName">
+									<option value="all">Any</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th><label for="source-field">Source:</label></th>
+							<td>
+								<select id="source-field" name="source">
+									<option value="all">Any</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th><label for="instrumentation-field">Instrumentation:</label></th>
+							<td>
+								<select id="instrumentation-field" name="instrumentation">
+									<option value="all">Any</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+					<div class="no-style-list">
+						<span class="header">Method type:</span><br />
+						<ul id="method-type-selections" >
+						</ul>
+					</div>
+					<hr />
+					<br />
+					<table class="general-search-form-table">
+					<tr>
+						<th><label for="regulations-field">Regulation:</label></th>
+						<td>
+							<select id="regulations-field" name="regulation">
+								<option value="all">Any</option>
+							</select>
+						</td>
+					</tr>
+					</table>
+					<div class="button-div">
+						<input class="search-button" type="button" value="Search"/>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="section-spacer-div"></div>	

@@ -34,6 +34,9 @@ a[class='popup']{
 .abbrev{
 	cursor: help;
 }
+.disabled {
+	color: grey;
+}
 #page-header{
 	margin-top: 0px;
 	margin-bottom: 0px;
@@ -54,7 +57,8 @@ a[class='popup']{
 	border-top: solid darkred 2px;
 	}
 #right-header {
-	float: right;
+	position: absolute;
+	right: 10px;
 	display: inline-block;
 }
 #whats-new-div {
@@ -93,29 +97,33 @@ a[class='popup']{
 	padding-bottom: 4px;
 }
 .section-div {
+	position: relative;
 	margin: 0px;
 	width: 100%;
 }
-.section-div h2 {
+.section-div h2, .subcategory-action-div h3 {
 	color: White;
 	padding: 6px;
 	margin-top: 0px;
 	margin-bottom: 0px;
 	background-color: DarkGreen;
 }
-.subcategory-div {
+.subcategory-action-div h3 {
+	position: relative;
+	left: -10px;
 	width: 100%;
+}
+.subcategory-div {
 	margin: 0px;
-	float: left;
-	border: 1px solid black;
 	background-color: Cornsilk;
 	
 }
 .subcategory-selection-div {
 	display: inline-block;
-	float: left;
 	width: 200px;
 	margin: 0px;
+	border-left: 1px solid black;
+	background-color: DarkSeaGreen;
 }
 .subcategory-selection-div ul {
 	list-style-type: none;
@@ -125,9 +133,7 @@ a[class='popup']{
 .subcategory-selection-div li {
 	font-size: medium;
 	text-align: center;
-	border-right: 1px solid black;
 	border-bottom: 1px solid black;
-	border-left: 1px solid black;
 	padding: 4px;
 	
 }
@@ -142,18 +148,24 @@ a[class='popup']{
 }
 .subcategory-action-div {
 	display: inline-block;
-	float: left;
+	position: absolute;
+	left: 200px;
+	border-left: 1px solid black;
+	padding-left: 10px;
 }
-.subcategory-action-div div {
-	padding: 10px;
+.subcategory-action-div>div {
+	padding-top: 10px;
+	padding-left: 10px;
+}
+.input-section-div .button-div {
+	text-align: center;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 .section-spacer-div {
 	clear: both;
 	height: 30px;
 	margin: 0px;
-	border-bottom: 1px solid black;
-	border-left: 1px solid black;
-	border-right: 1px solid black;
 }
 /* Style for show-hide toggle button */
 .show-hide-toggle {
@@ -163,8 +175,23 @@ a[class='popup']{
 	cursor: pointer;
 }
 .general-search-form-table th, td {
-	text-align: center;
+	text-align: left;
 	font-size: medium;
+	padding-right: 10px;
+}
+.no-style-list {
+	font-size: medium;
+	text-align: left;
+	padding-top: 4px;
+	}
+.no-style-list .header {
+	font-weight: bold;
+}
+.no-style-list ul{
+	list-style-type: none;
+	font-size: small;
+	padding-top: 4px;
+	margin: 0px;	
 }
 .search-button {
 	border: solid 1px grey;
@@ -179,6 +206,14 @@ a[class='popup']{
 .search-button:hover {
 	background-color: lightgrey;
 	color: black;
+}
+#filtered-action-div p {
+	font-size: medium;
+	font-weight: bold;
+}
+#analyte-search {
+	display: inline-block;
+	padding-bottom: 5px;
 }
 /* Below this is stuff used in old NEMI review for whether it's used. */
 /* Used to style form error message */

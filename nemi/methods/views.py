@@ -14,14 +14,15 @@ from django.views.generic import View, ListView
 from django.views.generic.edit import TemplateResponseMixin
 
 # project specific packages
-from common.models import DefinitionsDOM, MethodAnalyteVW
+from common.models import DefinitionsDOM, MethodAnalyteVW, InstrumentationRef, StatisticalDesignObjective, StatisticalItemType
+from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics
 from common.utils.forms import get_criteria, get_multi_choice
 from common.utils.view_utils import dictfetchall
-from common.views import FilterFormMixin, SearchResultView, ExportSearchView
+from common.views import FilterFormMixin, SearchResultView, ExportSearchView, ChoiceJsonView
 from forms import GeneralSearchForm, AnalyteSearchForm, MicrobiologicalSearchForm, RegulatorySearchForm
 from forms import BiologicalSearchForm, ToxicitySearchForm, PhysicalSearchForm, TabularSearchForm
 from models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw, AnalyteCodeVW
-from models import RegQueryVW,  RegulatoryMethodReport
+from models import RegQueryVW,  RegulatoryMethodReport, RegulationRef
 
 def _greenness_profile(d):
     '''Returns a dictionary with five keywords. The first keyword is profile whose is 
@@ -347,16 +348,156 @@ class AnalyteSelectView(View):
                     return HttpResponse('{"values_list" : ' +  qs_str+ "}", mimetype="application/json")
             
         return HttpResponse('{"values_list" : ""}', mimetype="application/json")
+ 
         
-class MethodCountView(View):
+class MethodCountView(ChoiceJsonView):
     '''
     Extends the standard view to retrieve and return as a json object the total number of methods in the datastore.
     '''
     
     def get(self, request, *args, **kwargs):
         ## TODO: Check to see if MethodVW includes statistical methods.
-        response = HttpResponse('{"method_count" : "' + str(MethodVW.objects.count()) + '"}', mimetype="application/json");
-        return response
+        return HttpResponse('{"method_count" : "' + str(MethodVW.objects.count()) + '"}', mimetype="application/json");
+
+  
+class MediaNameView(ChoiceJsonView):
+    '''
+    Extends the ChoiceJsonView to retrieve the media names as a json object
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        return [(m[0], m[0].capitalize()) for m in MethodVW.objects.values_list('media_name').distinct().order_by('media_name')]
+    
+class SourceView(ChoiceJsonView):
+    '''
+    Extends the standard view to retrieve the sources as a json object.
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        
+        def _choice_cmp(a,b):
+            ''' Returns -1, 1, or 0 by comparing the 2nd element in a with b.
+            This function is meant to be used on choice tuples
+            and is used to sort choice sets.
+            '''
+            if a[1] < b[1]:
+                return -1
+            elif a[1] > b[1]:
+                return 1
+            else:
+                return 0
+            
+        qs = MethodVW.objects.all()
+    
+        sc_qs = qs.values_list('method_source', 'method_source_name').distinct().exclude(method_source__contains='EPA').exclude(method_source__contains='USGS').exclude(method_source__startswith='DOE')
+        ## Need to do the next step because sc_qs is a ValuesListQuerySet and does not have an append method.
+        source_choices = [(source, name) for (source, name) in sc_qs] 
+        if qs.filter(method_source__contains='EPA').exists():
+            source_choices.append((u'EPA', u'US Environmental Protection Agency'))
+        if qs.filter(method_source__contains='USGS').exists():
+            source_choices.append((u'USGS', u'US Geological Survey'))
+        if qs.filter(method_source__startswith=u'DOE').exists():
+            source_choices.append((u'DOE', u'US Department of Energy'))
+        
+        source_choices.sort(cmp=_choice_cmp)
+        return source_choices
+    
+class InstrumentationView(ChoiceJsonView):
+    '''
+    Extends the ChoiceJsonView to retrieve the instrumentation choices as a json object.
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        qs = MethodVW.objects.values_list('instrumentation_id', 'instrumentation_description').distinct().order_by('instrumentation_description')
+        return [(str(i_id), descr) for (i_id, descr) in qs]
+     
+class RegulationView(ChoiceJsonView):
+    '''
+    Extends the ChoiceJsonView to retrieve the regulation choices as a json object.
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        return RegulationRef.objects.values_list('regulation', 'regulation_name').order_by('regulation_name').distinct()
+
+class MethodTypeView(ChoiceJsonView):
+    '''
+    Extends the ChoiceJsonView to retrieve the method type choices as a json object.
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        qs = MethodVW.objects.all();
+        if 'category' in request.GET:
+            qs = qs.filter(method_category__iexact=request.GET['category'])
+        qs = qs.values_list('method_type_id', 'method_type_desc').distinct().order_by('method_type_desc')
+        return [(str(t_id), descr) for (t_id, descr) in qs]
+    
+class SubcategoryView(ChoiceJsonView):
+    '''
+    Extends the ChoiceJsonView to retrieve the subcategory choices as a json object.
+    The subcategory choices can be filtered by specifying a get parameter, 'category'.
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        qs = MethodVW.objects.all()
+        if 'category' in request.GET:
+            qs = qs.filter(method_category__iexact=request.GET["category"])
+
+        qs = qs.values_list('method_subcategory_id', 'method_subcategory').distinct().order_by('method_subcategory')
+        return [(str(s_id), s_descr) for (s_id, s_descr) in qs]
+        
+class GearTypeView(ChoiceJsonView):
+    '''
+    Extends the ChoiceJsonView to retrieve the gear type choices as a json object
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        qs = InstrumentationRef.objects.filter(instrumentation_id__range=(112, 121)).order_by('instrumentation_description').values_list('instrumentation_id', 'instrumentation_description')       
+        return [(str(i_id), i_descr) for (i_id, i_descr) in qs]
+    
+class StatObjectiveView(ChoiceJsonView):
+    '''
+    Extends the ChoiceJsonView to retrieve the statistical design objects as a json object.
+    '''
+    
+    def get_choices(self, request, *args, **kwargs):
+        return [(str(m.stat_design_index), m.objective) for m in StatisticalDesignObjective.objects.exclude(objective='Revisit')]
+    
+class StatItemTypeView(ChoiceJsonView):
+    '''
+    Extends the ChoiceJsonView to retrieve the statistical item type choices as a json object.
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        return [(str(m.stat_item_index), m.item) for m in StatisticalItemType.objects.all()]
+class StatAnalysisTypeView(ChoiceJsonView):
+    '''
+    Extends the ChoiceJsonView to retrieve the statistical analysistype choices as a json object.
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        return [(str(m.stat_analysis_index), m.analysis_type) for m in StatisticalAnalysisType.objects.all()]
+        
+class ItemTypeView(ChoiceJsonView):
+    '''
+    Extends the ChoiceJsonView to retrieve the statistical item type choices as a json object.
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        return [(str(m.stat_item_index), m.item) for m in StatisticalItemType.objects.all()]
+        
+class StatSourceTypeView(ChoiceJsonView):
+    '''
+    Extends the ChoiceJsonView to retrieve the statistical source type choices as a json object.
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        return [(str(m.stat_source_index), m.source) for m in StatisticalSourceType.objects.all()]
+        
+class StatMediaNameView(ChoiceJsonView):
+    '''
+    Extends the ChoiceJsonView to retrieve the media name choices for statistical methodsas a json object.
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        return [(str(m.media_id), m.media_name.lower().title()) for m in MediaNameDOM.stat_media.all()]
+        
+
+class StatSpecialTopicseView(ChoiceJsonView):
+    '''
+    Extends the ChoiceJsonView to retrieve the statistical special topic choices as a json object.
+    '''
+    def get_choices(self, request, *args, **kwargs):
+        return [(str(m.stat_topic_index), m.stat_special_topic) for m in StatisticalTopics.objects.all()]
+        
+    
 
 class MicrobiologicalSearchView(SearchResultView, FilterFormMixin):
     '''Extends the SearchResultView and FilterFormMixin to implement the microbiological search page.'''
