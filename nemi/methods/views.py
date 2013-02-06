@@ -8,14 +8,14 @@ import re
 
 from django.db import connection
 from django.db.models import Q
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.views.generic import View, ListView
+from django.views.generic import View, ListView, TemplateView
 from django.views.generic.edit import TemplateResponseMixin
 
 # project specific packages
 from common.models import DefinitionsDOM, MethodAnalyteVW, InstrumentationRef, StatisticalDesignObjective, StatisticalItemType
-from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics
+from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics, Method
 from common.utils.forms import get_criteria, get_multi_choice
 from common.utils.view_utils import dictfetchall
 from common.views import FilterFormMixin, SearchResultView, ExportSearchView, ChoiceJsonView
@@ -436,8 +436,8 @@ class SubcategoryView(ChoiceJsonView):
         if 'category' in request.GET:
             qs = qs.filter(method_category__iexact=request.GET["category"])
 
-        qs = qs.values_list('method_subcategory_id', 'method_subcategory').distinct().order_by('method_subcategory')
-        return [(str(s_id), s_descr) for (s_id, s_descr) in qs]
+        qs = qs.values_list('method_subcategory').distinct().order_by('method_subcategory')
+        return [(s_descr, s_descr) for (s_descr,) in qs]
         
 class GearTypeView(ChoiceJsonView):
     '''
@@ -487,10 +487,10 @@ class StatMediaNameView(ChoiceJsonView):
     Extends the ChoiceJsonView to retrieve the media name choices for statistical methodsas a json object.
     '''
     def get_choices(self, request, *args, **kwargs):
-        return [(str(m.media_id), m.media_name.lower().title()) for m in MediaNameDOM.stat_media.all()]
+        return [(m.media_name, m.media_name.lower().title()) for m in MediaNameDOM.stat_media.all()]
         
 
-class StatSpecialTopicseView(ChoiceJsonView):
+class StatSpecialTopicsView(ChoiceJsonView):
     '''
     Extends the ChoiceJsonView to retrieve the statistical special topic choices as a json object.
     '''
@@ -911,6 +911,85 @@ class TabularRegulatorySearchView(SearchResultView, FilterFormMixin):
             r_context['results'].append({'r' : r, 'analyte_code' : analyte_code, 'syn' : syn})
             
         return r_context
+    
+class ResultsView(View, TemplateResponseMixin):
+    '''Extends the standard View to implement the results page.
+    '''
+    
+    template_name = 'results.html'
+    
+    def get(self, request, *args, **kwargs):
+        #Determine search kind
+        if 'method_number' in request.GET:
+            data = MethodVW.objects.filter(source_method_identifier__contains=request.GET.get('method_number'))
+           
+        else:
+            if 'analyte_name' in request.GET or 'analyte_code' in request.GET:
+                data = MethodAnalyteAllVW.objects.all()
+                if request.GET.get('subcategory'):
+                    data = data.filter(method_subcategory__iexact=request.GET.get('subcategory'))
+                elif request.GET['category']:
+                    data = data.filter(method_category__iexact=request.GET.get('category'))
+                    
+                if request.GET.get('analyte_name'):
+                    data =  data.filter(analyte_name__iexact=request.GET.get('analyte_name')) 
+                else:
+                    data = data.filter(analyte_code__iexact=request.GET.get('analyte_value'))
+    
+            elif 'category' in request.GET:
+                category = request.GET.get('category')
+                if category == 'statistical':
+                    ## statistical is very different from others so process separately.
+                    data = Method.stat_methods.all();
+                    item_type = request.GET.get('item_type', 'all')
+                    complexity = request.GET.get('complexity', 'all')
+                    analysis_type = request.GET.get('analysis_type', 'all')
+                    publication_source_type = request.GET.get('publication_source_type', 'all')
+                    study_objective = request.GET.get('study_objective', 'all')
+                    media_emphasized = request.GET.get('media_emphasized', 'all')
+                    special_topic = request.GET.get('special_topic', 'all')
+                    
+                    if item_type != 'all':
+                        data = data.filter(source_citation__item_type__exact=item_type)
+                    if complexity != 'all':
+                        data = data.filter(sam_complexity__exact=complexity)
+                    if analysis_type != 'all':
+                        data = data.filter(statanalysisrel__analysis_type__exact=analysis_type)
+                    if publication_source_type != 'all':
+                        data = data.filter(source_citation__publicationsourcerel__source__exact=publication_source_type)
+                    if study_objective != 'all':
+                        data = data.filter(statdesignrel__design_objective__exact=study_objective)
+                    if media_emphasized != 'all':   
+                        data = data.filter(statmediarel__media_name__exact=media_emphasized)
+                    if special_topic != 'all':
+                        data = data.filter(stattopicrel__topic__exact=special_topic)
+                    
+                else:   
+                    data = MethodVW.objects.filter(method_category__iexact=category);                        
+                    if 'subcategory' in request.GET:
+                        data = data.filter(method_subcategory__in=request.GET.getlist('subcategory'))
+                    else:
+                        return self.render_to_response({'data' : []});
+                    
+                    analyte_type = request.GET.get('analyte_type', 'all')
+                    waterbody_type = request.GET.get('waterbody_type', 'all')
+                    gear_type = request.GET.get('gear_type', 'all')
+                    matrix = request.GET.get('matrix', 'all')
+                    if analyte_type != 'all':
+                        data = data.filter(analyte_type__exact=analyte_type)
+                        
+                    if waterbody_type != 'all':
+                        data = data.filter(waterbody_type__exact=waterbody_type)
+    
+                    if gear_type != 'all':
+                        data = data.filter(instrumentation_id__exact=gear_type)
+                        
+                    if matrix != 'all':
+                        data = data.filter(matrix__exact=matrix)
+            
+        length = 'data length is ' + str(len(data))
+        print length            
+        return self.render_to_response({"data" : data})            
                    
 class KeywordSearchView(View, TemplateResponseMixin):
     '''Extends the standard View to implement the keyword search view. This form only

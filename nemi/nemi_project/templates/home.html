@@ -172,13 +172,13 @@
 			// correct header and set category to the button's category.
 			$('#analytes-search-button').data('actionDivId', $('#analyte-search-div'));
 			$('#analytes-search-button').data('headerId', $('#analytes-header'));
-			$('#analytes-search-button').data('category', 'analytes');
 			$('#chemical-search-button').data('actionDivId', $('#chemical-search-div'));
 			$('#chemical-search-button').data('headerId', $('#chemical-header'));
 			$('#chemical-search-button').data('category', 'chemical');
 			$('#microbiological-search-button').data('actionDivId', $('#analyte-search-div'));
 			$('#microbiological-search-button').data('headerId', $('#microbiological-header'));
 			$('#microbiological-search-button').data('category', 'biological');
+			$('#microbiological-search-button').data('subcategory', 'microbiological');
 			$('#biological-search-button').data('actionDivId', $('#biological-search-div'));
 			$('#biological-search-button').data('headerId', $('#biological-header'));
 			$('#biological-search-button').data('category', 'biological');
@@ -212,9 +212,15 @@
 			});
 			
 			// For filtered subcategory buttons, add a separate click handler to set the 
-			// state of the "Limit by" section. 
+			// state of the "Limit by" section and to set the hidden inputs. 
 			$('#filtered-selection-div .subcategory-button').click(function() {
 				var category = $(this).data('category');
+				var subcategory = $(this).data('subcategory');
+				var actionDiv = $(this).data('actionDivId');
+				
+				actionDiv.find('input:hidden[name="category"]').val(category);
+				actionDiv.find('input:hidden[name="subcategory"]').val(subcategory);
+				
 				if (category == 'analytes'){
 					// Set all method types valid 
 					$('#method-type-selections input').each(function() {
@@ -302,7 +308,7 @@ and protocols for all stages of the monitoring process.
                 	</form>
             	</div>
             	<div id="number-search-div" class="input-section-div" style="display:none;">
-                   	<form>  
+                   	<form action="{%url methods-results %}" method=get>  
                    		<table class="general-search-form-table">
 							<tr>
 								<th><label for="number-search-field">Search for a method number:</label></th>
@@ -384,26 +390,28 @@ and protocols for all stages of the monitoring process.
 					</div>
 					<div id="filter-action">
 						<div id="analyte-search-div" class="input-section-div">
-							<form>
+							<form action="{%url methods-results %}" method=get>
 								<div style="display: inline-block;">
 									<table class="general-search-form-table">
 										<tr>
 											<th><label for="analyte-name-field">Analyte name:</label></th>
-											<td><input id="analyte-name-field" type="text" name="analyteName" size=40/></td>
+											<td><input id="analyte-name-field" type="text" name="analyte_name" size=40/></td>
 										</tr>
 										<tr>
 											<th><label for="analyte-code-field">Analyte code:</label></th>
-											<td><input id="analyte-code-field" type="text" name="analyteCode" size=40/></td>
+											<td><input id="analyte-code-field" type="text" name="analyte_code" size=40/></td>
 										</tr>
 									</table>
+									<input type="hidden" name="category" value=""/>
+									<input type="hidden" name="subcategory" value="" />
 									<div class="button-div">
-										<input class="search-button" type="button" value="Search"/>
+										<input class="search-button" type="submit" value="Search"/>
 									</div>
 								</div>
 							</form>
 						</div>
 						<div id="chemical-search-div" class="input-section-div" style="display: none;">
-							<form>
+							<form action="{%url methods-results %}" method=get>
 								<div style="display: inline-block;">
 									<div class="no-style-list">
 										<span class="header">Chemical subcategories:</span><br />
@@ -411,13 +419,14 @@ and protocols for all stages of the monitoring process.
 										</ul>
 									</div>
 									<div class="button-div">
-										<input class="search-button" type="button" value="Search"/>
+										<input class="search-button" type="submit" value="Search"/>
 									</div>
+									<input type="hidden" name="category" value="Chemical"/>
 								</div>
 							</form>					
 						</div>
 						<div id="biological-search-div" class="input-section-div" style="display: none;">
-							<form>
+							<form action="{%url methods-results %}" method=get>
 								<div style="display: inline-block;">
 									<div class="no-style-list">
 										<span class="header">Biological subcategories:</span><br />
@@ -427,9 +436,9 @@ and protocols for all stages of the monitoring process.
 									<br />
 									<table class="general-search-form-table">
 										<tr>
-											<th><label for="analyte-type-field">Analyte type:</label></th>
+											<th><label class="disabled" for="analyte-type-field">Analyte type:</label></th>
 											<td>
-												<select id="analyte-type-field" name="analyte_type">
+												<select id="analyte-type-field" name="analyte_type" disabled="disabled">
 													<option value="all">Any</option>
 													<option value="Algae">Algae</option>
 													<option value="Fish">Fish</option>
@@ -461,14 +470,15 @@ and protocols for all stages of the monitoring process.
 											</td>
 										</tr>
 									</table>
+									<input type="hidden" name="category" value="Biological"/>
 									<div class="button-div">
-										<input class="search-button" type="button" value="Search"/>
+										<input class="search-button" type="submit" value="Search"/>
 									</div>
 								</div>
 							</form>
 						</div>
 						<div id="toxicity-search-div" class="input-section-div" style="display: none;">
-							<form>
+							<form action="{%url methods-results %}" method=get>
 								<div style="display: inline-block;">
 									<div class="no-style-list">
 										<span class="header">Toxicity subcategories</span><br />
@@ -487,14 +497,15 @@ and protocols for all stages of the monitoring process.
 											</td>
 										</tr>
 									</table>
+									<input type="hidden" name="category" value="Toxicity Assay"/>
 									<div class="button-div">
-										<input class="search-button" type="button" value="Search"/>
+										<input class="search-button" type="submit" value="Search"/>
 									</div>
 								</div>
 							</form>
 						</div>
 						<div id="statistical-search-div" class="input-section-div" style="display: none;">
-							<form>
+							<form action="{%url methods-results %}" method=get>
 								<div style="display: inline-block;">
 									<div class="no-style-list">
 										<span class="header">Statistical subcategories:</span><br />
@@ -508,7 +519,7 @@ and protocols for all stages of the monitoring process.
 													<option value="all">Any</option>
 												</select>
 											</td>
-										<tr>
+										</tr>
 										<tr>
 											<th><label for="item_type">Item type:</label></th>
 											<td>
@@ -561,8 +572,9 @@ and protocols for all stages of the monitoring process.
 											</td>
 										</tr>
 									</table>
+									<input type="hidden" name="category" value="Statistical"/>
 									<div class="button-div">
-										<input class="search-button" type="button" value="Search"/>
+										<input class="search-button" type="submit" value="Search"/>
 									</div>
 								</div>
 							</form>

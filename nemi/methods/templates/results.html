@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}NEMI Results{% endblock %}
+
+{% block page_style %}
+	<link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesort/theme.nemi.css" media="screen" type="text/css" />
+{% endblock %}
+
+{% block page_script %}
+	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.js"></script>
+	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.widgets.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#back-button').click(function() {
+				history.back();
+			});
+			
+			// Column headers with class nosort should be disabled. The code below collects them in 
+			// an array which will be used when registering the table.
+			var noSort = {};
+			$("#results-table").find("th.nosort").each(function(){
+				var i = $(this).index();
+				noSort[i] = { sorter: false }
+			});
+			// This sets the first sortable column to be the initial sortList.
+			var lastItemIndex = $("#results-table thead th:last").index();
+			var sortList = [];
+			for (var i=0; i <= lastItemIndex; i++){
+				if (!noSort[i]) {
+					sortList = [[i, 0]]
+					break;
+				}
+			}
+			// Sets up the tablesorter plugin 
+			$("#results-table").tablesorter({
+				theme: 'nemi',
+				headers: noSort,
+				sortList: sortList,
+				widgets : ["zebra"],
+			});
+			
+		});
+	</script>
+{% endblock %}
+
+{% block page_info %}
+<p>Your search returned: {{ data|length }} methods, protocols, or procedures.
+	<input id="back-button" type="button" value="Back to search">
+</p>
+{% endblock %}
+
+{% block page-content %}
+	{% load data_format %} <!-- Imports decimal_format tag -->
+	<div id="results-div" class="section-div">
+		<h2>RESULTS</h2>
+		<table id="results-table">
+			<thead>
+				<tr>
+					<th class="nosort"></th>
+					<th>Method Number</th>
+					<th>Source</th>
+					<th>Method Name</th>
+					<th>Detection Level</th>
+					<th>Detection Level Type</th>
+					<th>Bias</th>
+					<th>Precision</th>
+					<th>Spiking Level</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for d in data %}
+					<tr>
+						<td><input type="checkbox" /></td>
+						<td>{{ d.source_method_identifier|safe }}</td>
+						<td>{{ d.method_source }}</td>
+						<td>{{ d.method_descriptive_name }}</td>
+						<td>
+							{% if d.dl_value.normalize == 999 %}
+								N/A
+							{% else %}
+					 			{{ d.dl_value|decimal_format }} <span class="abbrev" title="{{ d.dl_units_description }}">{{ d.dl_units }}</span>
+							{% endif %}
+						</td>
+						<td><span class="abbrev" title="{{ d.dl_type_description }}">{{ d.dl_type }}</span></td>
+						<td>
+							{% if d.accuracy.normalize == -999 %}
+								N/A
+							{% else %}
+								{{ d.accuracy|decimal_format }} <span class="abbrev" title="{{ d.accuracy_units_description }}">{{ d.accuracy_units }}</span>
+							{% endif %}
+						</td>
+						<td>
+							{% if d.precision.normalize == 999 %}
+								N/A
+							{% else %}
+								{{ d.precision|decimal_format }} <span class="abbrev" title="{{ d.precision_units_description }}">{{ d.precision_units }}</span>
+							{% endif %}
+						</td>
+						<td>
+							{% if d.prec_acc_conc_used %}
+								{{ d.prec_acc_conc_used|floatformat:2 }} <span class="abbrev" title="{{ a.r.dl_units_description }}">{{ a.r.dl_units }}</span>
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
+

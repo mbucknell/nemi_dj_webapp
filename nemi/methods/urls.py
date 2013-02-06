@@ -6,6 +6,9 @@ from django.conf.urls import patterns, url
 import views
 
 urlpatterns = patterns("", 
+        url(r'^results/$',
+            views.ResultsView.as_view(),
+            name='methods-results'),
         url(r'^general/$',
             views.GeneralSearchView.as_view(),
             name='methods-general'),
@@ -129,6 +132,6 @@ urlpatterns = patterns("",
             views.StatMediaNameView.as_view(),
             name='methods-stat_media_emphasized'),
         url(r'^stat_special_topics/$',
-            views.StatSpecialTopicseView.as_view(),
+            views.StatSpecialTopicsView.as_view(),
             name='methods-stat_special_topics'),
         )
