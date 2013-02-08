@@ -87,7 +87,7 @@
 						checkedAttr = ' checked="checked" ';
 					}
 					for (var i = 0; i < resp.choices.length; i++) {
-						choice_id = choiceIdBase + resp.choices[i].value;
+						choice_id = choiceIdBase + i;
 						checkboxes += '<li><input id="' + choice_id + '" type="checkbox" name="' + fieldName + '"' + checkedAttr + ' value="' + 
 							resp.choices[i].value + '"/><label for="' + choice_id + 
 							'">' + resp.choices[i].display_value + "</label></li>";
@@ -179,9 +179,10 @@
 			$('#microbiological-search-button').data('headerId', $('#microbiological-header'));
 			$('#microbiological-search-button').data('category', 'biological');
 			$('#microbiological-search-button').data('subcategory', 'microbiological');
-			$('#biological-search-button').data('actionDivId', $('#biological-search-div'));
-			$('#biological-search-button').data('headerId', $('#biological-header'));
-			$('#biological-search-button').data('category', 'biological');
+			$('#community-search-button').data('actionDivId', $('#community-search-div'));
+			$('#community-search-button').data('headerId', $('#community-header'));
+			$('#community-search-button').data('category', 'biological');
+			$('#community-search-button').data('subcategory', 'population/community');
 			$('#toxicity-search-button').data('actionDivId', $('#toxicity-search-div'));
 			$('#toxicity-search-button').data('headerId', $('#toxicity-header'));
 			$('#toxicity-search-button').data('category', 'toxicity assay');
@@ -266,6 +267,26 @@
 			createCheckboxes('{% url methods-subcategories %}', {'category' : 'Biological'}, $('#biological-subcategory-selections'), 'subcategory', 'biological-subcategory-', true);
 			createCheckboxes('{% url methods-subcategories %}', {'category' : 'Toxicity assay'}, $('#toxicity-subcategory-selections'), 'subcategory', 'toxicity-subcategory-', true);
 			createCheckboxes('{% url methods-subcategories %}', {'category' : 'Statistical'}, $('#statistical-subcategory-selections'), 'subcategory', 'statistical-subcategory-', true);
+
+			// Add submit handler for the filtered search limit form to add the 
+			// form parameters from the filtered subcategory form prior to submitting.
+			$('#filtered-search-limits form').submit(function(){
+				// Remove any hidden inputs from the last submit.
+				$(this).find('input:hidden').remove();
+				
+				// Get parameters from filtered subcategory form. Create hidden inputs
+				// for each parameter.
+				var actionDiv = $('#filter-action>div:visible');
+				var hiddenInputHtml = '';
+				actionDiv.find(':input').each(function() {
+					if (!$(this).is(':submit') && $(this).is(':enabled')){
+						hiddenInputHtml +='<input type="hidden" name="' + $(this).attr('name') + '" value="' + $(this).val() + '" />';
+					}
+				});
+				$(this).append(hiddenInputHtml);
+				return true;
+			});
+		
 		});
 	</script>
 {% endblock %}
@@ -350,7 +371,7 @@ and protocols for all stages of the monitoring process.
 					<li class="highlight subcategory-button" id="analytes-search-button">ANALYTES</li>
 					<li class="not-active subcategory-button" id="chemical-search-button">CHEMICAL</li>
 					<li class="not-active subcategory-button" id="microbiological-search-button">MICROBIOLOGICAL</li>
-					<li class="not-active subcategory-button" id="biological-search-button">BIOLOGICAL</li>
+					<li class="not-active subcategory-button" id="community-search-button">COMMUNITY</li>
 					<li class="not-active subcategory-button" id="toxicity-search-button">TOXICITY</li>
 					<li class="not-active subcategory-button" id="physical-search-button">PHYSICAL</li>
 					<li class="not-active subcategory-button" id="statistical-search-button">STATISTICAL</li>
@@ -371,8 +392,8 @@ and protocols for all stages of the monitoring process.
 							<p>Limit search to MICROBIOLOGICAL methods</p>
 							<hr />
 						</div>
-						<div id="biological-header" style="display: none;">
-							<p>Limit search to BIOLOGICAL methods</p>
+						<div id="community-header" style="display: none;">
+							<p>Limit search to POPULATION/COMMUNITY methods</p>
 							<hr/>
 						</div>
 						<div id="toxicity-header" style="display: none;">
@@ -425,20 +446,14 @@ and protocols for all stages of the monitoring process.
 								</div>
 							</form>					
 						</div>
-						<div id="biological-search-div" class="input-section-div" style="display: none;">
+						<div id="community-search-div" class="input-section-div" style="display: none;">
 							<form action="{%url methods-results %}" method=get>
 								<div style="display: inline-block;">
-									<div class="no-style-list">
-										<span class="header">Biological subcategories:</span><br />
-										<ul id="biological-subcategory-selections">
-										</ul>
-									</div>
-									<br />
 									<table class="general-search-form-table">
 										<tr>
-											<th><label class="disabled" for="analyte-type-field">Analyte type:</label></th>
+											<th><label for="analyte-type-field">Analyte type:</label></th>
 											<td>
-												<select id="analyte-type-field" name="analyte_type" disabled="disabled">
+												<select id="analyte-type-field" name="analyte_type">
 													<option value="all">Any</option>
 													<option value="Algae">Algae</option>
 													<option value="Fish">Fish</option>
@@ -471,6 +486,7 @@ and protocols for all stages of the monitoring process.
 										</tr>
 									</table>
 									<input type="hidden" name="category" value="Biological"/>
+									<input type="hidden" name="subcategory" value="population/community" />
 									<div class="button-div">
 										<input class="search-button" type="submit" value="Search"/>
 									</div>
@@ -582,58 +598,48 @@ and protocols for all stages of the monitoring process.
 					</div>
 				</div>
 				<h3>
-					<button class="show-hide-toggle" title="Hide subsection" type=button>
-						<img src="{{ STATIC_URL }}images/triangle-down-image36.gif" alt="hide" /> 
+					<button class="show-hide-toggle" title="Show subsection" type=button>
+						<img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" /> 
 					</button>
 					Limit by: (optional)		
 				</h3>
 				<div id=filtered-search-limits class="input-section-div subsection-div">
-					<table class="general-search-form-table">
-						<tr>
-							<th><label for="media-name-field">Media name:</label></th>
-							<td>
-								<select id="media-name-field" name="mediaName">
-									<option value="all">Any</option>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<th><label for="source-field">Source:</label></th>
-							<td>
-								<select id="source-field" name="source">
-									<option value="all">Any</option>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<th><label for="instrumentation-field">Instrumentation:</label></th>
-							<td>
-								<select id="instrumentation-field" name="instrumentation">
-									<option value="all">Any</option>
-								</select>
-							</td>
-						</tr>
-					</table>
-					<div class="no-style-list">
-						<span class="header">Method type:</span><br />
-						<ul id="method-type-selections" >
-						</ul>
-					</div>
-					<hr />
-					<br />
-					<table class="general-search-form-table">
-					<tr>
-						<th><label for="regulations-field">Regulation:</label></th>
-						<td>
-							<select id="regulations-field" name="regulation">
-								<option value="all">Any</option>
-							</select>
-						</td>
-					</tr>
-					</table>
-					<div class="button-div">
-						<input class="search-button" type="button" value="Search"/>
-					</div>
+					<form action="{% url methods-results %}" method="get">
+						<table class="general-search-form-table">
+							<tr>
+								<th><label for="media-name-field">Media name:</label></th>
+								<td>
+									<select id="media-name-field" name="media_name">
+										<option value="all">Any</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<th><label for="source-field">Source:</label></th>
+								<td>
+									<select id="source-field" name="source">
+										<option value="all">Any</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<th><label for="instrumentation-field">Instrumentation:</label></th>
+								<td>
+									<select id="instrumentation-field" name="instrumentation">
+										<option value="all">Any</option>
+									</select>
+								</td>
+							</tr>
+						</table>
+						<div class="no-style-list">
+							<span class="header">Method type:</span><br />
+							<ul id="method-type-selections" >
+							</ul>
+						</div>
+						<div class="button-div">
+							<input class="search-button" type="submit" value="Search"/>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>

@@ -1,8 +1,9 @@
-{% extends "base.html" %}
+{% extends "base_results.html" %}
 
-{% block title %}NEMI Keyword Search {% endblock %}
+{% block title %}NEMI Keyword Search Results{% endblock %}
 
 {% block page_style %}
+	{{ block.super }}
 	<style>
 		.empty-div {
 			font-size: medium;
@@ -18,13 +19,15 @@
 	</style>
 {% endblock %}
 
-{% block page_info %}
-	<p>If you have any questions or comments, or if you do not get the results you expect, send us feedback, including the search terms
+{% block page_specific_info %}
+	If you have any questions or comments, or if you do not get the results you expect, send us feedback, including the search terms
     	you used and what method or methods you expected to see but didn't.
-    </p>
 {% endblock %}
 
-{% block page-content%}
+{% block page_content_title %}
+	KEYWORD RESULTS for {{ keyword }}
+{% endblock %}
+{% block results_content %}
 	{% if results.object_list %}
 		<div id="results">
 			{% include "results_nav.html" %}
@@ -32,13 +35,13 @@
 			<table class="data-table" style="width: 100%">
 				<thead>
 					<tr>
-						<th></th>
-						<th>Score</th>
-						<th>Method Number</th>
-						<th>Descriptive Method Name</th>
-						<th>Method Source</th>
-						<th>Official Name</th>
-						<th>Link to Method</th>
+						<th class="nosort"></th>
+						<th class="nosort">Score</th>
+						<th class="nosort">Method Number</th>
+						<th class="nosort">Descriptive Method Name</th>
+						<th class="nosort">Method Source</th>
+						<th class="nosort">Official Name</th>
+						<th class="nosort">Link to Method</th>
 					</tr>
 				</thead>
 				</tbody>
@@ -49,7 +52,7 @@
 							<td>{{ r.METHOD_NUMBER|safe }}</td>
 							<td>{{ r.METHOD_DESCRIPTIVE_NAME }}</td>
 							<td>{{ r.METHOD_SOURCE}}</td>
-							<td>{{ r.METHOD_OFFICIAL_NAME }}</td>
+							<td>{{ r.METHOD_OFFICIAL_NAME|safe }}</td>
 							<td>
 								{% if r.MIMETYPE %}
 									<a href="{% url methods-pdf method_id=r.METHOD_ID %}" 
@@ -74,5 +77,5 @@
 		</div>
 	{% else %}
 		<p>No data found.</p>
-	{% endif %}	
+	{% endif %}
 {% endblock %}

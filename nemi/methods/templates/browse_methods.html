@@ -1,8 +1,13 @@
-{% extends "base.html" %}
+{% extends "base_results.html" %}
 
 {% block title %}NEMI Browse Methods{% endblock %}
 
 {% block page_script %}
+	{{ block.super }}
+	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.js"></script>
+	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.widgets.js"></script>
+	<script src="{{ STATIC_URL }}script/DataTable.js"></script>
+
 	<script type="text/javascript">
 		$(document).ready(function(){
 			// Set up the show/hide button for method categories 
@@ -66,9 +71,14 @@
 	</script>
 {% endblock %}
 
-{% block page-content %}
+{% block page_specific_info %}
+	<span style="font-size: medium">NEMI contains {{ object_list|length }} methods</span>
+{% endblock %}
+
+{% block page_content_title %}BROWSE{% endblock %}
+
+{% block results_content %}
 	{% load data_format %}
-	<p style="font-size: large;"><h2>NEMI contains {{ object_list|length }} methods.</h2></p>
 	{% regroup object_list by method_category as objects_by_category %}
 	{% for by_category in objects_by_category %}
 		<div class="method-category-div">
@@ -77,40 +87,49 @@
 			{% for by_subcategory in objects_by_subcategory %}
 				<div class="method-subcategory-div" style="display: none;">
 					<h4><button class="show-hide-toggle subcategory-button" title="Show methods" type="button"><img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" /></button>&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>				
-					<table class="data-table" style="display:none;">
-						<tr><th></th><th>Method Number</th><th>Method Descriptive Name</th><th>Method Source</th></tr>
-						{% for object in by_subcategory.list %}
+					<table id="browse-results-table" class="data-table" style="display:none;">
+						<thead>
 							<tr>
-								<td class="view-button"><a title="View method details" href="{% url methods-method_summary object.method_id %}">View</a></td>
-								<td>{{ object.source_method_identifier|safe }}</td>
-								<td>{{ object.method_descriptive_name }}</td>
-								<td>{% include "method_source_details.html" with r=object %}
-								<!-- every where else we just show the method_source so I commented this out.
-	<!--								<a title="Click to show/hide details" 
-									href="javascript:show_hide('#{{ object.method_id }}-method-source-detail')">
-									{% if "EPA" in object.method_source %}
-										EPA
-									{% else %}
-									   {% if "USGS" in object.method_source %}
-											USGS
-										{% else %}
-											{{ object.method_source }}
-										{% endif %}
-									{% endif %}
-									</a>
-									<div id="{{ object.method_id }}-method-source-detail" style="display: none;">
-										<table class="inside-table">
-											<tr><th>Contact Information:</th><td>{{ object.method_source_contact|safe }}</td></tr>
-											<tr>
-												<th>URL:</th>
-												<td><span class="external-link">{{ object.method_source_url|clickable_links }}</span></td>
-											</tr>
-										</table>
-									</div>
-									-->
-								</td>
+								<th class="nosort"></th>
+								<th class="nosort">Method Number</th>
+								<th class="nosort">Method Descriptive Name</th>
+								<th class="nosort">Method Source</th>
 							</tr>
-						{% endfor %}
+						</thead>
+						<tbody>
+							{% for object in by_subcategory.list %}
+								<tr>
+									<td class="view-button"><a title="View method details" href="{% url methods-method_summary object.method_id %}">View</a></td>
+									<td>{{ object.source_method_identifier|safe }}</td>
+									<td>{{ object.method_descriptive_name }}</td>
+									<td>{% include "method_source_details.html" with r=object %}
+									<!-- every where else we just show the method_source so I commented this out.
+		<!--								<a title="Click to show/hide details" 
+										href="javascript:show_hide('#{{ object.method_id }}-method-source-detail')">
+										{% if "EPA" in object.method_source %}
+											EPA
+										{% else %}
+										   {% if "USGS" in object.method_source %}
+												USGS
+											{% else %}
+												{{ object.method_source }}
+											{% endif %}
+										{% endif %}
+										</a>
+										<div id="{{ object.method_id }}-method-source-detail" style="display: none;">
+											<table class="inside-table">
+												<tr><th>Contact Information:</th><td>{{ object.method_source_contact|safe }}</td></tr>
+												<tr>
+													<th>URL:</th>
+													<td><span class="external-link">{{ object.method_source_url|clickable_links }}</span></td>
+												</tr>
+											</table>
+										</div>
+										-->
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
 					</table>
 				</div>
 			{% endfor %}

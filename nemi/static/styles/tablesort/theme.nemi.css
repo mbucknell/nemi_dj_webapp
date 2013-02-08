@@ -61,6 +61,11 @@
 .tablesorter-nemi td.tablesorter-header .tablesorter-header-inner {
 	padding-left: 23px;
 }
+.tablesorter-nemi th.tablesorter-header.sorter-false .tablesorter-header-inner,
+.tablesorter-nemi td.tablesorter-header.sorter-false .tablesorter-header-inner {
+	padding-left: 2px;
+	padding-right: 2px;
+}
 .tablesorter-nemi thead .tablesorter-header.sorter-false {
 	background-image: none;
 	padding: 4px;

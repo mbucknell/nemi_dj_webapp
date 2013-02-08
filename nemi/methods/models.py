@@ -5,10 +5,7 @@ only and therefore have managed set to Fasle in each model's Meta data.
 
 from django.db import models
 
-class MethodVWManager(models.Manager):
-    
-    def get_query_set(self):
-        return super(MethodVWManager, self).get_query_set().exclude(method_subcategory_id=16)
+
     
 class MethodVW(models.Model):
     
@@ -73,8 +70,6 @@ class MethodVW(models.Model):
     corrosive = models.CharField(max_length=1, blank=True)
     waste = models.CharField(max_length=1, blank=True)
     assumptions_comments = models.CharField(max_length=2000, blank=True)
-    
-    objects = MethodVWManager()
     
     class Meta:
         db_table = u'method_vw'

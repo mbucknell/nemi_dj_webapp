@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}NEMI Results{% endblock %}
+
+{% block page_style %}
+	<link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesort/theme.nemi.css" media="screen" type="text/css" />
+{% endblock %}
+
+{% block page_script %}
+	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.js"></script>
+	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.widgets.js"></script>
+	<script src="{{ STATIC_URL }}script/DataTable.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#back-button').click(function() {
+				window.location.assign("{% url home %}");
+			});
+			
+			DataTable.initialize($('.data-table'))
+		});
+	</script>
+{% endblock %}
+
+{% block page_info %}
+	<p>
+		{% block page_specific_info %}{% endblock %}
+		<input id="back-button" type="button" value="Back to search">
+	</p>
+{% endblock %}
+
+{% block page-content %}
+	<div id="results-div" class="section-div">
+		<h2>
+			{% block page_content_title%}
+				RESULTS
+			{% endblock %}
+		</h2>
+		{% block results_content %}
+		{% endblock %}
+
+{% endblock %}	
+	

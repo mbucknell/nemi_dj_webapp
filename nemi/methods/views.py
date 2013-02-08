@@ -423,8 +423,8 @@ class MethodTypeView(ChoiceJsonView):
         qs = MethodVW.objects.all();
         if 'category' in request.GET:
             qs = qs.filter(method_category__iexact=request.GET['category'])
-        qs = qs.values_list('method_type_id', 'method_type_desc').distinct().order_by('method_type_desc')
-        return [(str(t_id), descr) for (t_id, descr) in qs]
+        qs = qs.values_list('method_type_desc').distinct().order_by('method_type_desc')
+        return [(descr, descr) for (descr,) in qs]
     
 class SubcategoryView(ChoiceJsonView):
     '''
@@ -569,7 +569,6 @@ class BiologicalSearchView(SearchResultView, FilterFormMixin):
                          'RELATIVE_COST')
     def get_qs(self, form):
         qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id=7)
-        
         if form.cleaned_data['analyte_type'] != 'all':
             qs = qs.filter(analyte_type__exact=form.cleaned_data['analyte_type'])
             
@@ -964,6 +963,19 @@ class ResultsView(View, TemplateResponseMixin):
                     if special_topic != 'all':
                         data = data.filter(stattopicrel__topic__exact=special_topic)
                     
+                elif category == 'biological' and request.GET.get('subcategory', '') == 'population/community':
+                    data = MethodAnalyteVW.objects.filter(method_category__iexact=category).filter(method_subcategory__iexact='population/community')
+                    analyte_type = request.GET.get('analyte_type', 'all')
+                    waterbody_type = request.GET.get('waterbody_type', 'all')
+                    gear_type = request.GET.get('gear_type', 'all')
+
+                    if analyte_type != 'all':
+                        data = data.filter(analyte_type__exact=analyte_type)                        
+                    if waterbody_type != 'all':
+                        data = data.filter(waterbody_type__exact=waterbody_type)   
+                    if gear_type != 'all':
+                        data = data.filter(instrumentation_id__exact=gear_type)
+                        
                 else:   
                     data = MethodVW.objects.filter(method_category__iexact=category);                        
                     if 'subcategory' in request.GET:
@@ -971,24 +983,28 @@ class ResultsView(View, TemplateResponseMixin):
                     else:
                         return self.render_to_response({'data' : []});
                     
-                    analyte_type = request.GET.get('analyte_type', 'all')
-                    waterbody_type = request.GET.get('waterbody_type', 'all')
-                    gear_type = request.GET.get('gear_type', 'all')
                     matrix = request.GET.get('matrix', 'all')
-                    if analyte_type != 'all':
-                        data = data.filter(analyte_type__exact=analyte_type)
-                        
-                    if waterbody_type != 'all':
-                        data = data.filter(waterbody_type__exact=waterbody_type)
-    
-                    if gear_type != 'all':
-                        data = data.filter(instrumentation_id__exact=gear_type)
-                        
                     if matrix != 'all':
                         data = data.filter(matrix__exact=matrix)
             
+            else:
+                data = MethodVW.objects.all()
+            
+            # Add limit by parameters if specified.
+            media_name = request.GET.get('media_name', 'all')
+            source = request.GET.get('source', 'all')
+            instrumentation = request.GET.get('instrumentation', 'all')
+            if media_name != 'all':
+                data = data.filter(media_name__exact=media_name)
+            if source != 'all':
+                data = data.filter(method_source__contains=source)
+            if instrumentation != 'all':
+                data = data.filter(instrumentation_id__exact=instrumentation)
+                
+            if 'method_type' in request.GET:
+                data = data.filter(method_type_desc__in=request.GET.getlist('method_type'))
+            
         length = 'data length is ' + str(len(data))
-        print length            
         return self.render_to_response({"data" : data})            
                    
 class KeywordSearchView(View, TemplateResponseMixin):

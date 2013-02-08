@@ -216,6 +216,9 @@ a[class='popup']{
 	display: inline-block;
 	padding-bottom: 5px;
 }
+.nosort {
+	padding-left: 5px;
+}
 /* Below this is stuff used in old NEMI review for whether it's used. */
 /* Used to style form error message */
 .errorlist{
