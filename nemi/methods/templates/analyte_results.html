@@ -1,11 +1,5 @@
 {% extends "base_results.html" %}
 
-{% block page_specific_info %}
-	Your search returned: {{ data|length }} methods, protocols, or procedures.
-{% endblock %}
-
-{% block page_content_title %}RESULTS{% endblock %}
-
 {% block results_content %}
 	{% load data_format %} <!-- Imports decimal_format tag -->
 	<table id="results-table" class="data-table">

@@ -1,0 +1,30 @@
+{% extends "base_results.html" %}
+
+{% block results_content %}
+	<table id="results-table" class="data-table">
+		<thead>
+			<tr>
+				<th class="nosort"></th>
+				<th>Method Number</th>
+				<th>Source</th>
+				<th>Method Name</th>
+				<th>Subcategory</th>
+				<th>Instrumentation</th>
+				<th>Media</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for d in data %}
+				<tr>
+					<td><input type="checkbox" /></td>
+					<td>{{ d.source_method_identifier|safe }}</td>
+					<td>{{ d.method_source }}</td>
+					<td>{{ d.method_descriptive_name }}</td>
+					<td>{{ d.method_subcategory }}</td>
+					<td>{{ d.instrumentation_description }}</td>
+					<td>{{ d.media_name|lower|capfirst }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base_results.html" %}
+
+{% block results_content %}
+	<table id="results-table" class="data-table">
+		<thead>
+			<tr>
+				<th class="nosort"></th>
+				<th>Method Number</th>
+				<th>Source</th>
+				<th>Method Name</th>
+				<th>Author</th>
+				<th>Publication Year</th>
+				<th>Link</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for d in data %}
+				<tr>
+					<td><input type="checkbox" /></td>
+					<td>{{ d.source_method_identifier|safe }}</td>
+					<td>{{ d.method_source }}
+					<td>{{ d.method_descriptive_name }}</td>
+					<td>{{ d.author }}</td>
+					<td>{{ d.publication_year }}</td>
+					<td><a href={{ d.link_to_full_method }} target="_blank">{{ d.link_to_full_method }}</a></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

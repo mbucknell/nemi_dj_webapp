@@ -23,7 +23,9 @@
 
 {% block page_info %}
 	<p>
-		{% block page_specific_info %}{% endblock %}
+		{% block page_specific_info %}
+			Your search returned: {{ data|length }} methods, protocols, or procedures.
+		{% endblock %}
 		<input id="back-button" type="button" value="Back to search">
 	</p>
 {% endblock %}

@@ -4,6 +4,7 @@ only and therefore have managed set to Fasle in each model's Meta data.
 '''
 
 from django.db import models
+from common.models import SourceCitationRef
 
 
     
@@ -14,6 +15,7 @@ class MethodVW(models.Model):
     method_descriptive_name = models.CharField(max_length=250)
     method_official_name = models.CharField(max_length=250)
     method_source_id = models.IntegerField()
+    sam_complexity = models.CharField(max_length=10)
     source_citation_id = models.IntegerField()
     brief_method_summary = models.CharField(max_length=4000)
     scope_and_application = models.CharField(max_length=2000, blank=True)
@@ -57,6 +59,8 @@ class MethodVW(models.Model):
     method_type_desc = models.CharField(max_length=100, blank=True)
     method_type_id = models.IntegerField()
     date_loaded = models.DateField(null=True)
+    publication_year = models.IntegerField()
+    author = models.CharField(max_length=450)
     collected_sample_amt_ml = models.CharField(max_length=10, blank=True)
     collected_sample_amt_g = models.CharField(max_length=10, blank=True)
     liquid_sample_flag = models.CharField(max_length=1, blank=True)

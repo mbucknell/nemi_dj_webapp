@@ -16,6 +16,7 @@ from django.views.generic.edit import TemplateResponseMixin
 # project specific packages
 from common.models import DefinitionsDOM, MethodAnalyteVW, InstrumentationRef, StatisticalDesignObjective, StatisticalItemType
 from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics, Method
+from common.models import StatAnalysisRel, SourceCitationRef, StatDesignRel, StatMediaRel, StatTopicRel
 from common.utils.forms import get_criteria, get_multi_choice
 from common.utils.view_utils import dictfetchall
 from common.views import FilterFormMixin, SearchResultView, ExportSearchView, ChoiceJsonView
@@ -910,102 +911,113 @@ class TabularRegulatorySearchView(SearchResultView, FilterFormMixin):
             r_context['results'].append({'r' : r, 'analyte_code' : analyte_code, 'syn' : syn})
             
         return r_context
+
+class ResultsView(ListView):
+    ''' Extend the ListView to implement the ResultsView for basic query parameters
+    Can be extended to specify different base queryset and to add additional query filters
+    '''
+    context_object_name = 'data'
     
-class ResultsView(View, TemplateResponseMixin):
+    def get_queryset (self):
+        data = super(ResultsView, self).get_queryset()
+        
+        if 'category' in self.request.GET and self.request.GET.get('category'):
+            data = data.filter(method_category__iexact=self.request.GET.get('category'))
+        if 'subcategory' in self.request.GET and self.request.GET.get('subcategory'):
+            data = data.filter(method_subcategory__in=self.request.GET.getlist('subcategory'))
+
+        media_name = self.request.GET.get('media_name', 'all')
+        source = self.request.GET.get('source', 'all')
+        instrumentation = self.request.GET.get('instrumentation', 'all')
+        if media_name != 'all':
+            data = data.filter(media_name__exact=media_name)
+        if source != 'all':
+            data = data.filter(method_source__contains=source)
+        if instrumentation != 'all':
+            data = data.filter(instrumentation_id__exact=instrumentation)
+            
+        if 'method_type' in self.request.GET:
+            data = data.filter(method_type_desc__in=self.request.GET.getlist('method_type'))
+        
+        return data
+    
+class MethodResultsView(ResultsView):
+    
+    template_name = 'method_results.html'    
+    queryset = MethodVW.objects.all()
+    
+    def get_queryset(self):
+        data = super(MethodResultsView, self).get_queryset()
+        
+        if 'method_number' in self.request.GET:
+            data = data.filter(source_method_identifier__contains=self.request.GET.get('method_number'))
+        
+        matrix = self.request.GET.get('matrix', 'all')
+        if matrix != 'all':
+            data = data.filter(matrix__exact=matrix)
+        return data
+
+class AnalyteResultsView(ResultsView):
     '''Extends the standard View to implement the results page.
     '''
     
-    template_name = 'results.html'
+    template_name = 'analyte_results.html'
+    queryset = MethodAnalyteAllVW.objects.all()
     
-    def get(self, request, *args, **kwargs):
-        #Determine search kind
-        if 'method_number' in request.GET:
-            data = MethodVW.objects.filter(source_method_identifier__contains=request.GET.get('method_number'))
-           
+    def get_queryset(self):
+        data = super(AnalyteResultsView, self).get_queryset()
+        
+        if 'analyte_name' in self.request.GET and self.request.GET.get('analyte_name'):
+            data =  data.filter(analyte_name__iexact=self.request.GET.get('analyte_name')) 
+        elif 'analyte_code' in self.request.GET and self.request.GET.get('analyte_code'):
+            data = data.filter(analyte_code__iexact=self.request.GET.get('analyte_code'))
         else:
-            if 'analyte_name' in request.GET or 'analyte_code' in request.GET:
-                data = MethodAnalyteAllVW.objects.all()
-                if request.GET.get('subcategory'):
-                    data = data.filter(method_subcategory__iexact=request.GET.get('subcategory'))
-                elif request.GET['category']:
-                    data = data.filter(method_category__iexact=request.GET.get('category'))
-                    
-                if request.GET.get('analyte_name'):
-                    data =  data.filter(analyte_name__iexact=request.GET.get('analyte_name')) 
-                else:
-                    data = data.filter(analyte_code__iexact=request.GET.get('analyte_value'))
-    
-            elif 'category' in request.GET:
-                category = request.GET.get('category')
-                if category == 'statistical':
-                    ## statistical is very different from others so process separately.
-                    data = Method.stat_methods.all();
-                    item_type = request.GET.get('item_type', 'all')
-                    complexity = request.GET.get('complexity', 'all')
-                    analysis_type = request.GET.get('analysis_type', 'all')
-                    publication_source_type = request.GET.get('publication_source_type', 'all')
-                    study_objective = request.GET.get('study_objective', 'all')
-                    media_emphasized = request.GET.get('media_emphasized', 'all')
-                    special_topic = request.GET.get('special_topic', 'all')
-                    
-                    if item_type != 'all':
-                        data = data.filter(source_citation__item_type__exact=item_type)
-                    if complexity != 'all':
-                        data = data.filter(sam_complexity__exact=complexity)
-                    if analysis_type != 'all':
-                        data = data.filter(statanalysisrel__analysis_type__exact=analysis_type)
-                    if publication_source_type != 'all':
-                        data = data.filter(source_citation__publicationsourcerel__source__exact=publication_source_type)
-                    if study_objective != 'all':
-                        data = data.filter(statdesignrel__design_objective__exact=study_objective)
-                    if media_emphasized != 'all':   
-                        data = data.filter(statmediarel__media_name__exact=media_emphasized)
-                    if special_topic != 'all':
-                        data = data.filter(stattopicrel__topic__exact=special_topic)
-                    
-                elif category == 'biological' and request.GET.get('subcategory', '') == 'population/community':
-                    data = MethodAnalyteVW.objects.filter(method_category__iexact=category).filter(method_subcategory__iexact='population/community')
-                    analyte_type = request.GET.get('analyte_type', 'all')
-                    waterbody_type = request.GET.get('waterbody_type', 'all')
-                    gear_type = request.GET.get('gear_type', 'all')
+            analyte_type = self.request.GET.get('analyte_type', 'all')
+            waterbody_type = self.request.GET.get('waterbody_type', 'all')
+            gear_type = self.request.GET.get('gear_type', 'all')
 
-                    if analyte_type != 'all':
-                        data = data.filter(analyte_type__exact=analyte_type)                        
-                    if waterbody_type != 'all':
-                        data = data.filter(waterbody_type__exact=waterbody_type)   
-                    if gear_type != 'all':
-                        data = data.filter(instrumentation_id__exact=gear_type)
-                        
-                else:   
-                    data = MethodVW.objects.filter(method_category__iexact=category);                        
-                    if 'subcategory' in request.GET:
-                        data = data.filter(method_subcategory__in=request.GET.getlist('subcategory'))
-                    else:
-                        return self.render_to_response({'data' : []});
-                    
-                    matrix = request.GET.get('matrix', 'all')
-                    if matrix != 'all':
-                        data = data.filter(matrix__exact=matrix)
+            if analyte_type != 'all':
+                data = data.filter(analyte_type__exact=analyte_type)                        
+            if waterbody_type != 'all':
+                data = data.filter(waterbody_type__exact=waterbody_type)   
+            if gear_type != 'all':
+                data = data.filter(instrumentation_id__exact=gear_type)
+         
+        return data               
             
-            else:
-                data = MethodVW.objects.all()
+class StatisticalResultsView(ResultsView):
+    
+    template_name = 'statistical_results.html'
+    queryset = MethodVW.objects.all()
+    
+    def get_queryset(self):
+        data = super(StatisticalResultsView, self).get_queryset()
+        
+        item_type = self.request.GET.get('item_type', 'all')
+        complexity = self.request.GET.get('complexity', 'all')
+        analysis_type = self.request.GET.get('analysis_type', 'all')
+        publication_source_type = self.request.GET.get('publication_source_type', 'all')
+        study_objective = self.request.GET.get('study_objective', 'all')
+        media_emphasized = self.request.GET.get('media_emphasized', 'all')
+        special_topic = self.request.GET.get('special_topic', 'all')
+        
+        if item_type != 'all':
+            data = data.filter(source_citation_id__in=SourceCitationRef.objects.filter(item_type__exact=item_type).values('source_citation_id'))
+        if complexity != 'all':
+            data = data.filter(sam_complexity__exact=complexity)
+        if analysis_type != 'all':
+            data = data.filter(method_id__in=StatAnalysisRel.objects.filter(analysis_type__exact=analysis_type).values('method_id'))
+        if publication_source_type != 'all':
+            data = data.filter(source_citation_id__in=SourceCitationRef.objects.filter(publicationsourcerel__source__exact=publication_source_type).values('source_citation_id'))
+        if study_objective != 'all':
+            data = data.filter(method_id__in=StatDesignRel.objects.filter(design_objective__exact=study_objective).values('method_id'))
+        if media_emphasized != 'all':   
+            data = data.filter(method_id__in=StatMediaRel.objects.filter(media_name__exact=media_emphasized).values('method_id'))
+        if special_topic != 'all':
+            data = data.filter(method_id__in=StatTopicRel.objects.filter(topic__exact=special_topic).values('method_id'))
+        
+        return data
             
-            # Add limit by parameters if specified.
-            media_name = request.GET.get('media_name', 'all')
-            source = request.GET.get('source', 'all')
-            instrumentation = request.GET.get('instrumentation', 'all')
-            if media_name != 'all':
-                data = data.filter(media_name__exact=media_name)
-            if source != 'all':
-                data = data.filter(method_source__contains=source)
-            if instrumentation != 'all':
-                data = data.filter(instrumentation_id__exact=instrumentation)
-                
-            if 'method_type' in request.GET:
-                data = data.filter(method_type_desc__in=request.GET.getlist('method_type'))
-            
-        length = 'data length is ' + str(len(data))
-        return self.render_to_response({"data" : data})            
                    
 class KeywordSearchView(View, TemplateResponseMixin):
     '''Extends the standard View to implement the keyword search view. This form only

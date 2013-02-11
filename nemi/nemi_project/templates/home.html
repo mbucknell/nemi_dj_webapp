@@ -172,17 +172,18 @@
 			// correct header and set category to the button's category.
 			$('#analytes-search-button').data('actionDivId', $('#analyte-search-div'));
 			$('#analytes-search-button').data('headerId', $('#analytes-header'));
+			$('#analytes-search-button').data('category', '');
 			$('#chemical-search-button').data('actionDivId', $('#chemical-search-div'));
 			$('#chemical-search-button').data('headerId', $('#chemical-header'));
 			$('#chemical-search-button').data('category', 'chemical');
 			$('#microbiological-search-button').data('actionDivId', $('#analyte-search-div'));
 			$('#microbiological-search-button').data('headerId', $('#microbiological-header'));
 			$('#microbiological-search-button').data('category', 'biological');
-			$('#microbiological-search-button').data('subcategory', 'microbiological');
+			$('#microbiological-search-button').data('subcategory', 'Microbiological');
 			$('#community-search-button').data('actionDivId', $('#community-search-div'));
 			$('#community-search-button').data('headerId', $('#community-header'));
 			$('#community-search-button').data('category', 'biological');
-			$('#community-search-button').data('subcategory', 'population/community');
+			$('#community-search-button').data('subcategory', 'Population/Community');
 			$('#toxicity-search-button').data('actionDivId', $('#toxicity-search-div'));
 			$('#toxicity-search-button').data('headerId', $('#toxicity-header'));
 			$('#toxicity-search-button').data('category', 'toxicity assay');
@@ -222,7 +223,7 @@
 				actionDiv.find('input:hidden[name="category"]').val(category);
 				actionDiv.find('input:hidden[name="subcategory"]').val(subcategory);
 				
-				if (category == 'analytes'){
+				if (category == ''){
 					// Set all method types valid 
 					$('#method-type-selections input').each(function() {
 						setInputSensitive($(this).attr('id'), true);
@@ -243,9 +244,9 @@
 				}
 				
 				// Set Sensitive of option menus 
-				setInputSensitive('media-name-field', $.inArray(category, ['analyte', 'chemical']) != -1);
-				setInputSensitive('source-field', $.inArray(category, ['analyte', 'chemical', 'statistical']) != -1);
-				setInputSensitive('instrumentation-field', $.inArray(category, ['analyte', 'chemical']) != -1);
+				setInputSensitive('media-name-field', $.inArray(category, ['', 'chemical']) != -1);
+				setInputSensitive('source-field', $.inArray(category, ['', 'chemical', 'statistical']) != -1);
+				setInputSensitive('instrumentation-field', $.inArray(category, ['', 'chemical']) != -1);
 			});
 			
 			// Create option menus 
@@ -274,7 +275,7 @@
 				// Remove any hidden inputs from the last submit.
 				$(this).find('input:hidden').remove();
 				
-				// Get parameters from filtered subcategory form. Create hidden inputs
+				// Get parameters from filtered subcategory form. Create hidden inputs 
 				// for each parameter.
 				var actionDiv = $('#filter-action>div:visible');
 				var hiddenInputHtml = '';
@@ -284,6 +285,9 @@
 					}
 				});
 				$(this).append(hiddenInputHtml);
+				
+				// Update action to match the actionDiv's action attribute
+				$(this).attr('action', actionDiv.find('form').attr('action'))
 				return true;
 			});
 		
@@ -411,7 +415,7 @@ and protocols for all stages of the monitoring process.
 					</div>
 					<div id="filter-action">
 						<div id="analyte-search-div" class="input-section-div">
-							<form action="{%url methods-results %}" method=get>
+							<form action="{%url methods-analyte_results %}" method=get>
 								<div style="display: inline-block;">
 									<table class="general-search-form-table">
 										<tr>
@@ -447,7 +451,7 @@ and protocols for all stages of the monitoring process.
 							</form>					
 						</div>
 						<div id="community-search-div" class="input-section-div" style="display: none;">
-							<form action="{%url methods-results %}" method=get>
+							<form action="{%url methods-analyte_results %}" method=get>
 								<div style="display: inline-block;">
 									<table class="general-search-form-table">
 										<tr>
@@ -521,7 +525,7 @@ and protocols for all stages of the monitoring process.
 							</form>
 						</div>
 						<div id="statistical-search-div" class="input-section-div" style="display: none;">
-							<form action="{%url methods-results %}" method=get>
+							<form action="{%url methods-statistical_results %}" method=get>
 								<div style="display: inline-block;">
 									<div class="no-style-list">
 										<span class="header">Statistical subcategories:</span><br />
