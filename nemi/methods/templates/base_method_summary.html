@@ -64,9 +64,9 @@
 	</script>
 {% endblock %}
 
-{% block page_title %}Summary of Method {{ data.source_method_identifier|safe }}{% endblock %}
+{% block page_info %}<b style="font-size:large;">Summary of Method{{ data.source_method_identifier|safe }}</b>{% endblock %}
 
-{% block content %}
+{% block page-content %}
 	<div id="method-summary-content"
 		{% block header_info %}
 			<!--  Place holder for the field information dialog  -->

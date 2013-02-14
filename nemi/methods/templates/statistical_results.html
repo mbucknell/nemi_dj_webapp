@@ -5,11 +5,10 @@
 		<thead>
 			<tr>
 				<th class="nosort"></th>
-				<th>Method Number</th>
-				<th>Source</th>
-				<th>Method Name</th>
 				<th>Author</th>
+				<th>Title</th>
 				<th>Publication Year</th>
+				<th>Source Organization</th>
 				<th>Link</th>
 			</tr>
 		</thead>
@@ -17,11 +16,10 @@
 			{% for d in data %}
 				<tr>
 					<td><input type="checkbox" /></td>
-					<td>{{ d.source_method_identifier|safe }}</td>
-					<td>{{ d.method_source }}
-					<td>{{ d.method_descriptive_name }}</td>
 					<td>{{ d.author }}</td>
+					<td>{{ d.method_official_name }}
 					<td>{{ d.publication_year }}</td>
+					<td>{{ d.method_source|default_if_none:"Not assigned" }}</td>
 					<td><a href={{ d.link_to_full_method }} target="_blank">{{ d.link_to_full_method }}</a></td>
 				</tr>
 			{% endfor %}

@@ -219,6 +219,85 @@ a[class='popup']{
 .nosort {
 	padding-left: 5px;
 }
+/* info-tables use the table format to list information
+about an object. The headers are meant to be the left most
+column in the table */
+.info-table {
+	text-align: left;
+	border-top: solid #aaaaaa 1px;
+	
+}
+.info-table th {
+	background-color: DarkSeaGreen;
+	vertical-align: center;
+	text-align: left;
+	padding: 4px;	
+	white-space: nowrap;
+	border-bottom: 1px solid grey;
+}
+.info-table td {
+	padding: 4px;
+	border-bottom: 1px solid grey;
+}
+/* inside-table is used to format table data without colored headers or borders */
+.inside-table th{
+	background-color: inherit;
+	border: none;
+	vertical-align: top;
+	padding-top: 2px;
+	padding-bottom: 0px;
+}
+.inside-table td {
+	background-color: inherit;
+	border: none;
+	padding-top: 2px;
+	padding-bottom: 0px;
+}
+.inside-list {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}
+/* styles the subcategory list on the Browse Methods page */
+.method-subcategory-div {
+	position: relative;
+	left: 4em;
+	margin-right: 4em;
+}
+/* styles for the button which shows/hides details */
+.show-hide-toggle {
+	border: none;
+	background: transparent;
+	outline: none;
+}
+.show-hide-detail-div table {
+	position: relative;
+	left: 2em;
+}
+.show-hide-detail-div ul {
+	list-style-type: none;
+	margin: 0px;
+}
+td.view-button {
+	padding-top: 6px;
+	padding-bottom: 6px;
+	text-align: center;
+}
+.view-button a:link, .view-button a:visited {
+	text-decoration: none;
+	background: #F0F0F0;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 8px;
+	padding-right: 8px;
+	border: 1px solid darkgrey;
+	border-radius: 8px;
+}
+.view-button a:hover {
+	color: black;
+	background: #E0E0E0;
+}
+
 /* Below this is stuff used in old NEMI review for whether it's used. */
 /* Used to style form error message */
 .errorlist{
@@ -330,42 +409,7 @@ a[class='popup']{
 	display: inline;
 }
 
-/* info-tables use the table format to list information
-about an object. The headers are meant to be the left most
-column in the table */
-.info-table {
-	text-align: left;
-	border-top: solid #aaaaaa 1px;
-	
-}
-.info-table th {
-	vertical-align: center;
-	text-align: left;
-	padding: 4px;	
-	white-space: nowrap
-}
-.info-table td {
-	padding: 4px;
-}
-/* inside-table is used to format table data without colored headers or borders */
-.inside-table th{
-	background-color: inherit;
-	border: none;
-	vertical-align: top;
-	padding-top: 2px;
-	padding-bottom: 0px;
-}
-.inside-table td {
-	background-color: inherit;
-	border: none;
-	padding-top: 2px;
-	padding-bottom: 0px;
-}
-.inside-list {
-	margin: 0px;
-	padding: 0px;
-	list-style: none;
-}
+
 #data-entry-table th {
 	background-color: white;
 	text-align: left;
@@ -379,42 +423,4 @@ column in the table */
 }
 #data-entry-table ul {
 	list-style-type: none;
-}
-/* styles the subcategory list on the Browse Methods page */
-.method-subcategory-div {
-	position: relative;
-	left: 4em;
-}
-/* styles for the button which shows/hides details */
-.show-hide-toggle {
-	border: none;
-	background: transparent;
-	outline: none;
-}
-.show-hide-detail-div table {
-	position: relative;
-	left: 2em;
-}
-.show-hide-detail-div ul {
-	list-style-type: none;
-	margin: 0px;
-}
-td.view-button {
-	padding-top: 6px;
-	padding-bottom: 6px;
-	text-align: center;
-}
-.view-button a:link, .view-button a:visited {
-	text-decoration: none;
-	background: #F0F0F0;
-	padding-top: 2px;
-	padding-bottom: 2px;
-	padding-left: 8px;
-	padding-right: 8px;
-	border: 1px solid darkgrey;
-	border-radius: 8px;
-}
-.view-button a:hover {
-	color: black;
-	background: #E0E0E0;
 }
