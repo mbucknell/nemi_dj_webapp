@@ -223,6 +223,11 @@
 				actionDiv.find('input:hidden[name="category"]').val(category);
 				actionDiv.find('input:hidden[name="subcategory"]').val(subcategory);
 				
+				//Set all limit by options to first option
+				$('#filtered-search-limits select').each(function() {
+					$(this).val($(this).find('option:first-child').val());
+				});
+				
 				if (category == ''){
 					// Set all method types valid 
 					$('#method-type-selections input').each(function() {
