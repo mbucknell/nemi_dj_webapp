@@ -9,14 +9,28 @@
 {% block page_script %}
 	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.js"></script>
 	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.widgets.js"></script>
-	<script src="{{ STATIC_URL }}script/DataTable.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#back-button').click(function() {
 				window.location.assign("{% url home %}");
 			});
 			
-			DataTable.initialize($('.data-table'))
+			// Initialize any data tables to use the nemi them and zebra widgets.
+			// The tables can be customized using meta data and class definitions
+			// See the jquery tablesorter documentation.
+			$('.data-table').tablesorter({
+				theme: 'nemi',
+				widgets: ['zebra']
+			});
+
+			// Add code to limit visible results to selected items if there 
+			// is a compare button.
+			$('#compare-button').click(function() {
+				var c = $('input[type=checkbox]').not(':checked');
+				$('input[type=checkbox]').not(':checked').parents('tr').hide();
+				var resort = true;
+				$('.data-table').trigger('update', [resort])
+			});
 		});
 	</script>
 {% endblock %}
@@ -38,6 +52,12 @@
 			{% endblock %}
 		</h2>
 		{% block results_content %}
+		{% endblock %}
+		
+		{% block results_actions %}
+			<div id="results-actions">
+				<input type="button" id="compare-button" class="search-button" value="COMPARE SELECTED RESULTS" />
+			</div>
 		{% endblock %}
 
 {% endblock %}	

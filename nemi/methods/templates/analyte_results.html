@@ -2,11 +2,11 @@
 
 {% block results_content %}
 	{% load data_format %} <!-- Imports decimal_format tag -->
-	<table id="results-table" class="data-table">
+	<table id="results-table" class="data-table" data-sortlist="[[1,0]]">
 		<thead>
 			<tr>
-				<th class="nosort"></th>
-				<th>Method Number</th>
+				<th class="sorter-false"></th>
+				<th class="sorter-text">Method Number</th>
 				<th>Source</th>
 				<th>Method Name</th>
 				<th>Detection Level</th>

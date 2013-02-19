@@ -81,15 +81,15 @@
 			<h3><button class="show-hide-toggle category-button" title="Show subcategories" type="button"><img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" /></button>&nbsp;{{ by_category.grouper|lower|capfirst }} - {{ by_category.list|length}} methods</h3>
 			{% regroup by_category.list by method_subcategory as objects_by_subcategory %}
 			{% for by_subcategory in objects_by_subcategory %}
-				<div class="method-subcategory-div" style="display:none;">
+				<div class="method-subcategory-div" style="display: none;">
 					<h4><button class="show-hide-toggle subcategory-button" title="Show methods" type="button"><img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" /></button>&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>				
-					<table id="browse-results-table" class="data-table" style="display:none;">
+					<table id="browse-results-table" class="data-table" data-sortlist="[[1,0]]" style="display: none;">
 						<thead>
 							<tr>
-								<th class="nosort"></th>
-								<th class="nosort">Method Number</th>
-								<th class="nosort">Method Descriptive Name</th>
-								<th class="nosort">Method Source</th>
+								<th class="sorter-false"></th>
+								<th class="sorter-text">Method Number</th>
+								<th>Method Descriptive Name</th>
+								<th>Method Source</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -98,31 +98,7 @@
 									<td class="view-button"><a title="View method details" href="{% url methods-method_summary object.method_id %}">View</a></td>
 									<td>{{ object.source_method_identifier|safe }}</td>
 									<td>{{ object.method_descriptive_name }}</td>
-									<td>{% include "method_source_details.html" with r=object %}
-									<!-- every where else we just show the method_source so I commented this out.
-		<!--								<a title="Click to show/hide details" 
-										href="javascript:show_hide('#{{ object.method_id }}-method-source-detail')">
-										{% if "EPA" in object.method_source %}
-											EPA
-										{% else %}
-										   {% if "USGS" in object.method_source %}
-												USGS
-											{% else %}
-												{{ object.method_source }}
-											{% endif %}
-										{% endif %}
-										</a>
-										<div id="{{ object.method_id }}-method-source-detail" style="display: none;">
-											<table class="inside-table">
-												<tr><th>Contact Information:</th><td>{{ object.method_source_contact|safe }}</td></tr>
-												<tr>
-													<th>URL:</th>
-													<td><span class="external-link">{{ object.method_source_url|clickable_links }}</span></td>
-												</tr>
-											</table>
-										</div>
-										-->
-									</td>
+									<td>{% include "method_source_details.html" with r=object %}</td>
 								</tr>
 							{% endfor %}
 						</tbody>
@@ -132,3 +108,5 @@
 		</div>
 	{% endfor %}
 {% endblock %}
+
+{% block results_actions %}{% endblock %}
