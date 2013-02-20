@@ -4,6 +4,7 @@
 
 {% block page_style %}
 	{{ block.super }}
+	<!-- Styles for the page navigation links -->
 	<style>
 		.empty-div {
 			font-size: medium;
@@ -27,6 +28,9 @@
 {% block page_content_title %}
 	KEYWORD RESULTS for {{ keyword }}
 {% endblock %}
+
+{% block customize_dialog %}{% endblock %}
+
 {% block results_content %}
 	{% if results.object_list %}
 		<div id="results">

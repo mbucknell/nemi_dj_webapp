@@ -4,33 +4,57 @@
 
 {% block page_style %}
 	<link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesort/theme.nemi.css" media="screen" type="text/css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}styles/jquery-ui-1.10.0.custom/smoothness/jquery-ui-1.10.0.custom.css" media="screen" type="text/css" />
 {% endblock %}
 
 {% block page_script %}
 	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.js"></script>
 	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.widgets.js"></script>
+	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
+	<script src="{{ STATIC_URL }}script/CustomHeaderDialog.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#back-button').click(function() {
 				window.location.assign("{% url home %}");
 			});
 			
-			// Initialize any data tables to use the nemi them and zebra widgets.
+			// Find column headers with class hide-column and then hide those columns 
+			$('.hide-column').each(function() {
+				var colIndex = $(this).index() + 1;
+				var tableEl = $(this).parents('table');
+				
+				$(this).hide();
+				tableEl.find('tr td:nth-child(' + colIndex + ')').hide();
+			});
+
+			// Add code to limit visible results to selected rows if there 
+			// is a compare button.
+			$('#compare-button').click(function() {
+				var c = $('input[type=checkbox]').not(':checked');
+				$('input[type=checkbox]').not(':checked').parents('tr').hide();
+				var resort = true;
+				$('.data-table').trigger('update', [resort]);
+			});
+			
+			// Tried to use the stickyHeaders widget but when columns where added or remove
+			// the header did not adjust as it should. Also tried to use 'resizable' which 
+			// kept throwing errors down in the jquery tablesorter code.
+			
 			// The tables can be customized using meta data and class definitions
 			// See the jquery tablesorter documentation.
 			$('.data-table').tablesorter({
 				theme: 'nemi',
 				widgets: ['zebra']
 			});
-
-			// Add code to limit visible results to selected items if there 
-			// is a compare button.
-			$('#compare-button').click(function() {
-				var c = $('input[type=checkbox]').not(':checked');
-				$('input[type=checkbox]').not(':checked').parents('tr').hide();
-				var resort = true;
-				$('.data-table').trigger('update', [resort])
-			});
+			
+			// Initialize customize headers dialog and add click handler for button
+			if ($('#customize_dialog')){
+				CustomHeaderDialog.initialize($('#customize-dialog'), $('#results-table'));
+				
+				$('#customize-button').click(function() {
+					CustomHeaderDialog.show();
+				});
+			}
 		});
 	</script>
 {% endblock %}
@@ -50,7 +74,18 @@
 			{% block page_content_title%}
 				RESULTS
 			{% endblock %}
-		</h2>
+			
+			{% block customize_dialog %}
+				<div style="display: inline-block; float:right;">
+					<input id="customize-button" type="button" class="search-button" style="font-size:small;position: relative; top: -3px;" value="CUSTOMIZE HEADER" />
+				</div>
+				<div id="customize-dialog" style="display: none;">
+					<p>Select the fields you want to see in your results table:</p>
+					<ul></ul>
+				</div>
+			{% endblock %}
+		</h2>	
+		
 		{% block results_content %}
 		{% endblock %}
 		

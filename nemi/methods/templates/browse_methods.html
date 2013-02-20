@@ -34,7 +34,11 @@
 						imgEl.attr('src', "{{ STATIC_URL }}/images/triangle-down-image36.gif");
 						imgEl.attr('alt', 'hide');
 						imgEl.attr('title', 'Hide methods');
+						
+						// After showing the table trigger and update to force the styling for zebra rows to activate.
+						// This styling doesn't show when the table is not initially visible. 
 						tableEl.show();
+						tableEl.trigger('update', [true]);
 					}
 					else{
 						imgEl.attr('src', "{{ STATIC_URL }}/images/triangle-right-image36.gif");
@@ -72,6 +76,8 @@
 {% endblock %}
 
 {% block page_content_title %}BROWSE{% endblock %}
+
+{% block customize_dialog %}{% endblock %}
 
 {% block results_content %}
 	{% load data_format %}

@@ -14,6 +14,11 @@
 				<th>Bias</th>
 				<th>Precision</th>
 				<th>Spiking Level</th>
+				<th class='hide-column'>Instrumentation</th>
+				<th class='hide-column'>Relative Cost</th>
+				<th class='hide-column'>Media</th>
+				<th class='hide-column'>Method Type</th>
+				<th class='hide-column'>Waterbody Type</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -50,6 +55,13 @@
 							{{ d.prec_acc_conc_used|floatformat:2 }} <span class="abbrev" title="{{ a.r.dl_units_description }}">{{ a.r.dl_units }}</span>
 						{% endif %}
 					</td>
+					<td><span class="abbrev" title="{{ d.instrumentation_description }}">{{ d.instrumentation }}</span>
+					<td><span class="abbrev" title="{{ d.relative_cost }}">{{ d.relative_cost_symbol }}
+					<td>{{ d.media_name }}</td>
+					<td>{{ d.method_type_desc }}</td>
+					<td>{{ d.waterbody_type }}</td>
+					
+					
 				</tr>
 			{% endfor %}
 		</tbody>
