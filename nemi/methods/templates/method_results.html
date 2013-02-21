@@ -4,15 +4,14 @@
 	<table id="results-table" class="data-table" data-sortlist="[[1,0]]">
 		<thead>
 			<tr>
-				<th class="sorter-false"></th>
-				<th class="sorter-text">Method Number</th>
+				<th class="sorter-false col-always-visible"></th>
+				<th class="sorter-text col-always-visible">Method Number</th>
 				<th>Source</th>
 				<th>Method Name</th>
 				<th>Subcategory</th>
 				<th>Instrumentation</th>
 				<th>Media</th>
 				<th class='hide-column'>Category</th>
-				<th class='hide-column'>Subcategory</th>
 				<th class='hide-column'>Method Type</th>
 				<th class='hide-column'>Matrix</th>
 				<th class='hide-column'>Relative Cost</th>
@@ -26,10 +25,9 @@
 					<td>{{ d.method_source }}</td>
 					<td>{{ d.method_descriptive_name }}</td>
 					<td>{{ d.method_subcategory }}</td>
-					<td><span class="abbrev" title="{{ r.m.instrumentation_description }}">{{ r.m.instrumentation }}</span></td>
+					<td><span class="abbrev" title="{{ d.instrumentation_description }}">{{ d.instrumentation }}</span></td>
 					<td>{{ d.media_name|lower|capfirst }}</td>
 					<td>{{ d.method_category|lower|capfirst}}</td>
-					<td>{{ d.method_subcategory }}</td>
 					<td>{{ d.method_type_desc }}</td>
 					<td>{{ d.matrix }}</td>
 					<td><span class="abbrev" title="{{ d.relative_cost }}">{{ d.relative_cost_symbol }}</span></td>

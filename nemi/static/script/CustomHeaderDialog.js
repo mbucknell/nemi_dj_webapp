@@ -10,7 +10,7 @@ CustomHeaderDialog = {
 		// Those that are visible should be checked.
 		var checkboxHtml = '';
 		
-		resultsTableEl.find($('thead th').slice(1)).each(function() {
+		resultsTableEl.find($('thead th')).not('.col-always-visible').each(function() {
 			var colName = $(this).find('div').html();
 			var colIndex = $(this).index();
 			var colId = 'col-' + colIndex;
