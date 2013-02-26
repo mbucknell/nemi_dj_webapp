@@ -983,7 +983,44 @@ class AnalyteResultsView(ResultsView):
             if gear_type != 'all':
                 data = data.filter(instrumentation_id__exact=gear_type)
          
-        return data               
+        return data.values('method_source_id',
+                     'method_id',
+                     'source_method_identifier',
+                     'method_source',
+                     'method_descriptive_name',
+                     'method_subcategory',
+                     'method_source_id',
+                     'analyte_type',
+                     'method_source_contact',
+                     'method_source_url',
+                     'method_type_desc',
+                     'method_descriptive_name',
+                     'media_name',
+                     'waterbody_type',
+                     'dl_value',
+                     'dl_units_description',
+                     'dl_type_description',
+                     'dl_type',
+                     'accuracy',
+                     'accuracy_units_description',
+                     'accuracy_units',
+                     'precision',
+                     'precision_units_description',
+                     'precision_units',
+                     'prec_acc_conc_used',
+                     'dl_units',
+                     'instrumentation_description',
+                     'instrumentation',
+                     'relative_cost',
+                     'relative_cost_symbol',
+                     'cost_effort_key',
+                     'matrix',
+                     'pbt',
+                     'toxic',
+                     'corrosive',
+                     'waste',
+                     'assumptions_comments'
+                     ).distinct()           
             
 class StatisticalResultsView(ResultsView):
     
