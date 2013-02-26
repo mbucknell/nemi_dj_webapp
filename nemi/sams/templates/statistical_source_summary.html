@@ -2,13 +2,13 @@
 
 {% block title %}NEMI Statistical Source Summary{% endblock %}
 
-{% block user_login %}
-	{% include "sams_user_login.html" %}
+{% block page_info %}
+	<br />
+	<b style="font-size:large;">Statistical Source Summary - {{ data.source_citation }}</b>
+	<br />
 {% endblock %}
 
-{% block page_title %}Statistical Source Summary - {{ data.source_citation }}{% endblock %}
-
-{% block content %}
+{% block page-content %}
 	{% if data %}
 		<br />
 		<table class="info-table">

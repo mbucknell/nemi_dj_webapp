@@ -16,7 +16,7 @@
 			{% for d in data %}
 				<tr>
 					<td><input type="checkbox" /></td>
-					<td>{{ d.author }}</td>
+					<td><a href="{% url sams-method_summary d.method_id %}">{{ d.author }}</a></td>
 					<td>{{ d.method_official_name }}
 					<td>{{ d.publication_year }}</td>
 					<td>{{ d.method_source|default_if_none:"Not assigned" }}</td>

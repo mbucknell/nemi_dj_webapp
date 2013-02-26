@@ -8,14 +8,14 @@ import re
 
 from django.db import connection
 from django.db.models import Q
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.http import HttpResponse, Http404
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.views.generic import View, ListView, TemplateView
+from django.views.generic import View, ListView
 from django.views.generic.edit import TemplateResponseMixin
 
 # project specific packages
 from common.models import DefinitionsDOM, MethodAnalyteVW, InstrumentationRef, StatisticalDesignObjective, StatisticalItemType
-from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics, Method
+from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics
 from common.models import StatAnalysisRel, SourceCitationRef, StatDesignRel, StatMediaRel, StatTopicRel
 from common.utils.forms import get_criteria, get_multi_choice
 from common.utils.view_utils import dictfetchall

@@ -175,7 +175,7 @@ a[class='popup']{
 	outline: none;
 	cursor: pointer;
 }
-.general-search-form-table th, td {
+.general-search-form-table th, .general-search-form-table td {
 	text-align: left;
 	font-size: medium;
 	padding-right: 10px;
@@ -235,7 +235,6 @@ column in the table */
 }
 .info-table th {
 	background-color: DarkSeaGreen;
-	vertical-align: center;
 	text-align: left;
 	padding: 4px;	
 	white-space: nowrap;
