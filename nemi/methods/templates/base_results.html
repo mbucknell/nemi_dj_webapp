@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load url from future %}
+
 {% block title %}NEMI Results{% endblock %}
 
 {% block page_style %}
@@ -15,7 +17,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#back-button').click(function() {
-				window.location.assign("{% url home %}");
+				window.location.assign("{% url 'home' %}");
 			});
 			
 			// Find column headers with class hide-column and then hide those columns 
@@ -35,6 +37,26 @@
 				var resort = true;
 				$('.data-table').trigger('update', [resort]);
 			});
+			
+			// Hook up download-button. Make it invisible if no export_url was
+			// passed to the template. 
+			if ('{{ export_url }}' == ''){
+				$('#download-button').hide();
+			}
+			else {
+				$('#download-button').click(function() {
+					// Get all visible method ids and put into a query parameter 
+					var params = '{{ request.GET.urlencode }}';
+					$('#results-table tbody tr:visible').each(function() {
+						if (params != '') {
+							params += '&';
+						}
+						params += 'method_id=' + $(this).attr('id')
+					});
+					window.open("{{ export_url }}?" + params);
+					return false;
+				});
+			}
 			
 			// Tried to use the stickyHeaders widget but when columns where added or remove
 			// the header did not adjust as it should. Also tried to use 'resizable' which 
@@ -92,6 +114,7 @@
 		{% block results_actions %}
 			<div id="results-actions">
 				<input type="button" id="compare-button" class="search-button" value="COMPARE SELECTED RESULTS" />
+				<input type="button" id="download-button" class="search-button" value="DOWNLOAD RESULTS" />
 			</div>
 		{% endblock %}
 

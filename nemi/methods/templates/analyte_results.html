@@ -23,7 +23,7 @@
 		</thead>
 		<tbody>
 			{% for d in data %}
-				<tr>
+				<tr id="{{ d.method_id }}">
 					<td><input type="checkbox" /></td>
 					<td><a href="{% url methods-method_summary d.method_id  %}">{{ d.source_method_identifier|safe }}</a></td>
 					<td>{{ d.method_source }}</td>

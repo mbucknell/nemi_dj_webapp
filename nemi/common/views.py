@@ -104,7 +104,8 @@ class SearchResultView(View, TemplateResponseMixin):
             return self.render_to_response({'search_form' : self.form_class(),
                                             'hide_search' : False,
                                             'show_results' : False})
-                
+            
+
 class ExportSearchView(View):
     ''' Extends the standard View to implement the view which exports the search results
     table. This should be extended along with the FilterFormMixin.

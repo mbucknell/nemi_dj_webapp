@@ -10,7 +10,9 @@ from django.db import connection
 from django.db.models import Q
 from django.http import HttpResponse, Http404
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.core.urlresolvers import reverse_lazy
 from django.views.generic import View, ListView
+from django.views.generic.list import MultipleObjectMixin
 from django.views.generic.edit import TemplateResponseMixin
 
 # project specific packages
@@ -18,7 +20,7 @@ from common.models import DefinitionsDOM, MethodAnalyteVW, InstrumentationRef, S
 from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics
 from common.models import StatAnalysisRel, SourceCitationRef, StatDesignRel, StatMediaRel, StatTopicRel
 from common.utils.forms import get_criteria, get_multi_choice
-from common.utils.view_utils import dictfetchall
+from common.utils.view_utils import dictfetchall, xls_response, tsv_response
 from common.views import FilterFormMixin, SearchResultView, ExportSearchView, ChoiceJsonView
 from forms import GeneralSearchForm, AnalyteSearchForm, MicrobiologicalSearchForm, RegulatorySearchForm
 from forms import BiologicalSearchForm, ToxicitySearchForm, PhysicalSearchForm, TabularSearchForm
@@ -351,13 +353,12 @@ class AnalyteSelectView(View):
         return HttpResponse('{"values_list" : ""}', mimetype="application/json")
  
         
-class MethodCountView(ChoiceJsonView):
+class MethodCountView(View):
     '''
-    Extends the standard view to retrieve and return as a json object the total number of methods in the datastore.
+    Extends the standard View to retrieve and return as a json object the total number of methods in the datastore.
     '''
     
     def get(self, request, *args, **kwargs):
-        ## TODO: Check to see if MethodVW includes statistical methods.
         return HttpResponse('{"method_count" : "' + str(MethodVW.objects.count()) + '"}', mimetype="application/json");
 
   
@@ -366,7 +367,7 @@ class MediaNameView(ChoiceJsonView):
     Extends the ChoiceJsonView to retrieve the media names as a json object
     '''
     def get_choices(self, request, *args, **kwargs):
-        return [(m[0], m[0].capitalize()) for m in MethodVW.objects.values_list('media_name').distinct().order_by('media_name')]
+        return [(m[0], m[0].capitalize()) for m in MethodVW.objects.filter(media_name__isnull=False).values_list('media_name').distinct().order_by('media_name')]
     
 class SourceView(ChoiceJsonView):
     '''
@@ -388,7 +389,7 @@ class SourceView(ChoiceJsonView):
             
         qs = MethodVW.objects.all()
     
-        sc_qs = qs.values_list('method_source', 'method_source_name').distinct().exclude(method_source__contains='EPA').exclude(method_source__contains='USGS').exclude(method_source__startswith='DOE')
+        sc_qs = qs.values_list('method_source', 'method_source_name').distinct().filter(method_source_name__isnull=False).exclude(method_source__contains='EPA').exclude(method_source__contains='USGS').exclude(method_source__startswith='DOE')
         ## Need to do the next step because sc_qs is a ValuesListQuerySet and does not have an append method.
         source_choices = [(source, name) for (source, name) in sc_qs] 
         if qs.filter(method_source__contains='EPA').exists():
@@ -911,21 +912,25 @@ class TabularRegulatorySearchView(SearchResultView, FilterFormMixin):
             r_context['results'].append({'r' : r, 'analyte_code' : analyte_code, 'syn' : syn})
             
         return r_context
-
-class ResultsView(ListView):
-    ''' Extend the ListView to implement the ResultsView for basic query parameters
-    Can be extended to specify different base queryset and to add additional query filters
+    
+    
+class ResultsMixin(MultipleObjectMixin):
     '''
+    Extends the MultipleObjectMixin to implement the standard filters for method result searches. 
+    This can be mixed with other classes which provide the response handling. The queryset attribute 
+    should be specified when extending this class.
+    '''
+    
     context_object_name = 'data'
     
     def get_queryset (self):
-        data = super(ResultsView, self).get_queryset()
+        data = self.queryset
         
         if 'category' in self.request.GET and self.request.GET.get('category'):
             data = data.filter(method_category__iexact=self.request.GET.get('category'))
         if 'subcategory' in self.request.GET and self.request.GET.get('subcategory'):
             data = data.filter(method_subcategory__in=self.request.GET.getlist('subcategory'))
-
+    
         media_name = self.request.GET.get('media_name', 'all')
         source = self.request.GET.get('source', 'all')
         instrumentation = self.request.GET.get('instrumentation', 'all')
@@ -941,13 +946,63 @@ class ResultsView(ListView):
         
         return data
     
-class MethodResultsView(ResultsView):
     
-    template_name = 'method_results.html'    
+class BaseResultsView(View, TemplateResponseMixin):
+    '''
+    Extends the standard View and TemplateResponse to implement the view which will return method
+    results while adding a context variable to be used to specify the page's export_url.
+    The view can be mixed with a child of ResultsMixin to implement method result page views or any
+    mixin containing a get_queryset method and a get_context_data method.
+    ''' 
+    
+    export_url = None ## Optional - url which will be used to download the contents of the results page. 
+    
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        context = self.get_context_data(object_list=self.object_list)
+        if self.export_url:
+            context['export_url'] = self.export_url
+        return self.render_to_response(context)
+    
+    
+class ExportBaseResultsView(View):
+    '''
+    Extends the standard View to implement a view which returns downloads method results. The view
+    can be mixed with a child of ResultsMixin to implement method result page download results or any
+    mixin containing a get_queryset method.
+    '''
+    
+    export_fields = () #Define fields to be written to the download field. Tuple of strings.
+    filename = None #Download field name string.
+    
+    def get(self, request, *args, **kwargs):
+        if request.GET:
+            HEADINGS = [name.replace('_', ' ').title() for name in self.export_fields]
+            export_type = kwargs.get('export', 'xls')
+            
+            vl_qs = self.get_queryset().filter(method_id__in=self.request.GET.getlist('method_id', [])).values_list(*self.export_fields)
+         
+            if export_type == 'tsv':
+                return tsv_response(HEADINGS, vl_qs, self.filename)
+                    
+            elif export_type == 'xls':
+                return xls_response(HEADINGS, vl_qs, self.filename)
+            
+            else:
+                raise Http404
+        else:
+            raise Http404   
+
+
+class MethodResultsMixin(ResultsMixin):
+    '''
+    Extend ResultsMixin to implement the querying part of the results view for methods.
+    '''
+    
     queryset = MethodVW.objects.all()
     
     def get_queryset(self):
-        data = super(MethodResultsView, self).get_queryset()
+        data = super(MethodResultsMixin, self).get_queryset()
         
         if 'method_number' in self.request.GET:
             data = data.filter(source_method_identifier__contains=self.request.GET.get('method_number'))
@@ -957,78 +1012,158 @@ class MethodResultsView(ResultsView):
             data = data.filter(matrix__exact=matrix)
         return data
 
-class AnalyteResultsView(ResultsView):
-    '''Extends the standard View to implement the results page.
+    
+class MethodResultsView(MethodResultsMixin, BaseResultsView):
+    '''
+    Extends MethodResultsMixin and BaseResultsView to implement the method results page.
     '''
     
-    template_name = 'analyte_results.html'
+    template_name = 'method_results.html'    
+    export_url = reverse_lazy('methods-export_results')
+
+    
+class ExportMethodResultsView(MethodResultsMixin, ExportBaseResultsView):
+    '''
+    Extend MethodResultsMixin and ExportBaseResultsView to implement the download method results view.
+    '''
+    
+    export_fields = ('method_id', 
+                     'source_method_identifier',
+                     'method_descriptive_name', 
+                     'media_name', 
+                     'method_source',
+                     'instrumentation_description',
+                     'instrumentation',
+                     'method_subcategory',
+                     'method_category',
+                     'method_type_desc',
+                     'matrix',
+                     'relative_cost',
+                     'relative_cost_symbol')
+       
+    filename = 'method_results'
+       
+
+class AnalyteResultsMixin(ResultsMixin):
+    '''
+    Extend ResultsMixin to implement the querying part of the analyte results for methods.
+    '''
+ 
     queryset = MethodAnalyteAllVW.objects.all()
     
     def get_queryset(self):
-        data = super(AnalyteResultsView, self).get_queryset()
-        
-        if 'analyte_name' in self.request.GET and self.request.GET.get('analyte_name'):
-            data =  data.filter(analyte_name__iexact=self.request.GET.get('analyte_name')) 
-        elif 'analyte_code' in self.request.GET and self.request.GET.get('analyte_code'):
-            data = data.filter(analyte_code__iexact=self.request.GET.get('analyte_code'))
-        else:
-            analyte_type = self.request.GET.get('analyte_type', 'all')
-            waterbody_type = self.request.GET.get('waterbody_type', 'all')
-            gear_type = self.request.GET.get('gear_type', 'all')
+            data = super(AnalyteResultsMixin, self).get_queryset()
+            
+            if 'analyte_name' in self.request.GET and self.request.GET.get('analyte_name'):
+                data =  data.filter(analyte_name__iexact=self.request.GET.get('analyte_name')) 
+            elif 'analyte_code' in self.request.GET and self.request.GET.get('analyte_code'):
+                data = data.filter(analyte_code__iexact=self.request.GET.get('analyte_code'))
+            else:
+                analyte_type = self.request.GET.get('analyte_type', 'all')
+                waterbody_type = self.request.GET.get('waterbody_type', 'all')
+                gear_type = self.request.GET.get('gear_type', 'all')
+    
+                if analyte_type != 'all':
+                    data = data.filter(analyte_type__exact=analyte_type)                        
+                if waterbody_type != 'all':
+                    data = data.filter(waterbody_type__exact=waterbody_type)   
+                if gear_type != 'all':
+                    data = data.filter(instrumentation_id__exact=gear_type)
+             
+            return data.values('method_source_id',
+                         'method_id',
+                         'source_method_identifier',
+                         'method_source',
+                         'method_descriptive_name',
+                         'method_subcategory',
+                         'method_source_id',
+                         'analyte_type',
+                         'method_source_contact',
+                         'method_source_url',
+                         'method_type_desc',
+                         'method_descriptive_name',
+                         'media_name',
+                         'waterbody_type',
+                         'dl_value',
+                         'dl_units_description',
+                         'dl_type_description',
+                         'dl_type',
+                         'accuracy',
+                         'accuracy_units_description',
+                         'accuracy_units',
+                         'precision',
+                         'precision_units_description',
+                         'precision_units',
+                         'prec_acc_conc_used',
+                         'dl_units',
+                         'instrumentation_description',
+                         'instrumentation',
+                         'relative_cost',
+                         'relative_cost_symbol',
+                         'cost_effort_key',
+                         'matrix',
+                         'pbt',
+                         'toxic',
+                         'corrosive',
+                         'waste',
+                         'assumptions_comments'
+                         ).distinct()    
+       
+class AnalyteResultsView(AnalyteResultsMixin, BaseResultsView):
+    '''
+    Extends AnalyteResultsMixin and BaseResultsView to implement the method results by analyte page.
+    '''
+    
+    template_name = 'analyte_results.html'
+    export_url = reverse_lazy('methods-export_analyte_results')
+    
 
-            if analyte_type != 'all':
-                data = data.filter(analyte_type__exact=analyte_type)                        
-            if waterbody_type != 'all':
-                data = data.filter(waterbody_type__exact=waterbody_type)   
-            if gear_type != 'all':
-                data = data.filter(instrumentation_id__exact=gear_type)
-         
-        return data.values('method_source_id',
-                     'method_id',
-                     'source_method_identifier',
-                     'method_source',
+class ExportAnalyteResultsView(AnalyteResultsMixin, ExportBaseResultsView):
+    '''
+    Extend AnalyteResultsMixin and ExportBaseResultsView to implement the download method results by analyte.
+    '''
+
+    export_fields = ('method_id',
                      'method_descriptive_name',
                      'method_subcategory',
+                     'method_category',
                      'method_source_id',
-                     'analyte_type',
-                     'method_source_contact',
-                     'method_source_url',
-                     'method_type_desc',
-                     'method_descriptive_name',
+                     'method_source',
+                     'source_method_identifier',
+                     'analyte_name',
+                     'analyte_code',
                      'media_name',
-                     'waterbody_type',
-                     'dl_value',
-                     'dl_units_description',
-                     'dl_type_description',
-                     'dl_type',
-                     'accuracy',
-                     'accuracy_units_description',
-                     'accuracy_units',
-                     'precision',
-                     'precision_units_description',
-                     'precision_units',
-                     'prec_acc_conc_used',
-                     'dl_units',
-                     'instrumentation_description',
                      'instrumentation',
+                     'instrumentation_description',
+                     'sub_dl_value',
+                     'dl_units',
+                     'dl_type',
+                     'dl_type_description',
+                     'dl_units_description',
+                     'sub_accuracy',
+                     'accuracy_units',
+                     'accuracy_units_description',
+                     'sub_precision',
+                     'precision_units',
+                     'precision_units_description',
+                     'false_negative_value',
+                     'false_positive_value',
+                     'prec_acc_conc_used',
+                     'precision_descriptor_notes',
                      'relative_cost',
-                     'relative_cost_symbol',
-                     'cost_effort_key',
-                     'matrix',
-                     'pbt',
-                     'toxic',
-                     'corrosive',
-                     'waste',
-                     'assumptions_comments'
-                     ).distinct()           
-            
-class StatisticalResultsView(ResultsView):
+                     'relative_cost_symbol')
     
-    template_name = 'statistical_results.html'
+    filename = 'analyte_results'    
+               
+class StatisticalResultsMixin(ResultsMixin):
+    '''
+    Extend ResultsMixin to implement the querying part of the results for statistical methods.
+    '''
+    
     queryset = MethodVW.objects.all()
     
     def get_queryset(self):
-        data = super(StatisticalResultsView, self).get_queryset()
+        data = super(StatisticalResultsMixin, self).get_queryset()
         
         item_type = self.request.GET.get('item_type', 'all')
         complexity = self.request.GET.get('complexity', 'all')
@@ -1054,8 +1189,36 @@ class StatisticalResultsView(ResultsView):
             data = data.filter(method_id__in=StatTopicRel.objects.filter(topic__exact=special_topic).values('method_id'))
         
         return data
+    
+class StatisticalResultsView(StatisticalResultsMixin, BaseResultsView):
+    '''
+    Extends StatisticalResultsMixin and BaseResultsView to implement the statistical method results page.
+    '''
+        
+    template_name = 'statistical_results.html' 
+    export_url = reverse_lazy('methods-export_statistical_results')
+    
+class ExportStatisticalResultsView(StatisticalResultsMixin, ExportBaseResultsView):           
+    '''
+    Extend StatisticalResultsMixin and ExportBaseResultsView to implement the download statistical method results.
+    '''
+
+    export_fields = ('method_id',
+                     'method_descriptive_name',
+                     'method_subcategory',
+                     'method_category',
+                     'method_source',
+                     'source_method_identifier',
+                     'method_official_name',
+                     'author',
+                     'publication_year',
+                     'sam_complexity',
+                     )
             
-                   
+    filename = 'statistical_method_results'
+    
+    
+
 class KeywordSearchView(View, TemplateResponseMixin):
     '''Extends the standard View to implement the keyword search view. This form only
     processes get requests.

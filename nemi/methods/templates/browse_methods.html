@@ -101,7 +101,11 @@
 						<tbody>
 							{% for object in by_subcategory.list %}
 								<tr>
-									<td class="view-button"><a title="View method details" href="{% url methods-method_summary object.method_id %}">View</a></td>
+									{% if by_category.grouper == "STATISTICAL" %}
+										<td class="view-button"><a title="View method details" href="{% url sams-method_summary object.method_id %}">View</a></td>
+									{% else %}
+										<td class="view-button"><a title="View method details" href="{% url methods-method_summary object.method_id %}">View</a></td>
+									{% endif %}
 									<td>{{ object.source_method_identifier|safe }}</td>
 									<td>{{ object.method_descriptive_name }}</td>
 									<td>{% include "method_source_details.html" with r=object %}</td>
