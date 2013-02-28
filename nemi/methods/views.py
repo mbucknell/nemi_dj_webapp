@@ -2,7 +2,6 @@
 NEMI methods pages.
 '''
 
-# django packages
 
 import re
 
@@ -19,12 +18,11 @@ from django.views.generic.edit import TemplateResponseMixin
 from common.models import DefinitionsDOM, MethodAnalyteVW, InstrumentationRef, StatisticalDesignObjective, StatisticalItemType
 from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics
 from common.models import StatAnalysisRel, SourceCitationRef, StatDesignRel, StatMediaRel, StatTopicRel
-from common.utils.forms import get_criteria, get_multi_choice
+from common.utils.forms import get_criteria
 from common.utils.view_utils import dictfetchall, xls_response, tsv_response
 from common.views import FilterFormMixin, SearchResultView, ExportSearchView, ChoiceJsonView
-from forms import GeneralSearchForm, AnalyteSearchForm, MicrobiologicalSearchForm, RegulatorySearchForm
-from forms import BiologicalSearchForm, ToxicitySearchForm, PhysicalSearchForm, TabularSearchForm
-from models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, MethodAnalyteJnStgVW, MethodStgSummaryVw, AnalyteCodeVW
+from forms import RegulatorySearchForm, TabularSearchForm
+from models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, MethodStgSummaryVw, AnalyteCodeVW
 from models import RegQueryVW,  RegulatoryMethodReport, RegulationRef
 
 def _greenness_profile(d):
@@ -110,227 +108,6 @@ def _clean_name(name):
     return result
 
 
-class GeneralSearchFormMixin(FilterFormMixin):
-    '''Extends the FilterFormMixin to implement the search form used on the General Search page.'''
-
-    form_class = GeneralSearchForm
-    
-    def get_qs(self, form):
-        qs = MethodVW.objects.all()
-
-        if form.cleaned_data['media_name'] != 'all':
-            qs = qs.filter(media_name__exact=form.cleaned_data['media_name'])
-
-        if form.cleaned_data['source'] != 'all':
-            qs = qs.filter(method_source__contains=form.cleaned_data['source'])
-
-        if form.cleaned_data['method_number'] != 'all':
-            qs = qs.filter(method_id__exact=int(form.cleaned_data['method_number']))
-            
-        if form.cleaned_data['instrumentation'] != 'all':
-            qs = qs.filter(instrumentation_id__exact=int(form.cleaned_data['instrumentation']))  
-        
-        if form.cleaned_data['method_subcategory'] != 'all':
-            qs = qs.filter(method_subcategory_id__exact=int(form.cleaned_data['method_subcategory']))
-        
-        qs = qs.filter(method_type_id__in=form.cleaned_data['method_types'])
-        
-        return qs
-        
-    def get_context_data(self, form):
-        criteria = []
-        criteria.append(get_criteria(form['media_name']))
-        criteria.append(get_criteria(form['source']))
-        criteria.append(get_criteria(form['method_number']))
-        criteria.append(get_criteria(form['instrumentation']))
-        criteria.append(get_criteria(form['method_subcategory']))
-        
-        return {'criteria' : criteria,
-                'selected_method_types' : get_multi_choice(form, 'method_types')}
-        
-        
-class ExportGeneralSearchView(ExportSearchView, GeneralSearchFormMixin):
-    '''Extends the ExportSearchView and GeneralSearchFormMixin to implement the
-    general search export file generation.
-    '''
-    export_fields = ('method_id', 
-                     'source_method_identifier',
-                     'method_descriptive_name', 
-                     'media_name', 
-                     'method_source',
-                     'instrumentation_description',
-                     'method_subcategory',
-                     'method_category',
-                     'method_type_desc')
-    export_field_order_by = 'source_method_identifier'
-    filename = 'general_search'
-               
-class GeneralSearchView(GeneralSearchFormMixin, SearchResultView):
-    '''Extends the SearchResultView and GeneralSearchFormMixin to implement the
-    general search page.
-    '''
-    result_fields = ('source_method_identifier',
-                     'method_source',
-                     'instrumentation_description',
-                     'method_descriptive_name',
-                     'media_name',
-                     'method_category',
-                     'method_subcategory',
-                     'method_type_desc',
-                     'method_id',
-                     'assumptions_comments',
-                     'pbt',
-                     'toxic',
-                     'corrosive',
-                     'waste')
-    
-    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
-                         'METHOD_DESCRIPTIVE_NAME',
-                         'MEDIA_NAME',
-                         'METHOD_SOURCE',
-                         'INSTRUMENTATION',
-                         'METHOD_CATEGORY',
-                         'METHOD_SUBCATEGORY',
-                         'METHOD_TYPE',
-                         'GREENNESS')
-    
-    template_name = 'general_search.html'
-    
-    def get_results_context(self, qs):
-        '''Returns a list of dictionaries where each element in the list contains two keywords.
-        The keyword m contains a model object in self.get_values_qs. The keyword, greenness,
-        contains the greenness profile information for that object.
-        '''
-        return {'results' : [{'m' : r, 'greenness': _greenness_profile(r)} for r in self.get_values_qs(qs)]} 
-                    
-class AnalyteSearchFormMixin(FilterFormMixin):
-    '''Extends the FilterFormMixin to implement the Analyte search form used on the analyte search pages.'''
-    
-    form_class = AnalyteSearchForm
-    
-    def get_qs(self, form):
-        qs = MethodAnalyteAllVW.objects.all()
-    
-        if form.cleaned_data['analyte_kind'] == 'code':
-            qs = qs.filter(analyte_code__iexact=form.cleaned_data['analyte_value'])
-        else: # assume analyte kind is name
-            qs = qs.filter(analyte_name__iexact=form.cleaned_data['analyte_value'])
-            
-        if form.cleaned_data['media_name'] != 'all':
-            qs = qs.filter(media_name__exact=form.cleaned_data['media_name'])
-        
-        if form.cleaned_data['source'] != 'all':
-            qs = qs.filter(method_source__contains=form.cleaned_data['source'])
-            
-        if form.cleaned_data['instrumentation'] != 'all':
-            qs = qs.filter(instrumentation_id__exact=form.cleaned_data['instrumentation'])
-            
-        if form.cleaned_data['method_subcategory'] != 'all':
-            qs = qs.filter(method_subcategory_id__exact=form.cleaned_data['method_subcategory'])
-
-        qs = qs.filter(method_type_desc__in=form.cleaned_data['method_types'])
-        return qs
-        
-    def get_context_data(self, form):
-        criteria = []
-        if form.cleaned_data['analyte_kind'] == 'code':
-            criteria.append(('Analyte code', form.cleaned_data['analyte_value']))
-        else:
-            criteria.append(('Analyte name', form.cleaned_data['analyte_value']))
-        criteria.append(get_criteria(form['media_name']))
-        criteria.append(get_criteria(form['source']))
-        criteria.append(get_criteria(form['instrumentation']))
-        criteria.append(get_criteria(form['method_subcategory']))
-
-        return {'criteria' : criteria,
-                'selected_method_types' : get_multi_choice(form, 'method_types')}
-
-class ExportAnalyteSearchView(ExportSearchView, AnalyteSearchFormMixin):
-    '''Extends the ExportSearchView and AnalyteSearchFormMixin to implement the export analyte search feature.'''
-    
-    export_fields = ('method_id',
-                     'method_descriptive_name',
-                     'method_subcategory',
-                     'method_category',
-                     'method_source_id',
-                     'method_source',
-                     'source_method_identifier',
-                     'analyte_name',
-                     'analyte_code',
-                     'media_name',
-                     'instrumentation',
-                     'instrumentation_description',
-                     'sub_dl_value',
-                     'dl_units',
-                     'dl_type',
-                     'dl_type_description',
-                     'dl_units_description',
-                     'sub_accuracy',
-                     'accuracy_units',
-                     'accuracy_units_description',
-                     'sub_precision',
-                     'precision_units',
-                     'precision_units_description',
-                     'false_negative_value',
-                     'false_positive_value',
-                     'prec_acc_conc_used',
-                     'precision_descriptor_notes',
-                     'relative_cost',
-                     'relative_cost_symbol')
-    export_field_order_by = 'method_id'
-    filename = 'analyte_search'
-    
-class AnalyteSearchView(SearchResultView, AnalyteSearchFormMixin):
-    '''Extends the SearchResultsView and AnalyteSearchFormMixin to implement the analyte search page.'''
-    
-    template_name = 'analyte_search.html'
-    
-    result_fields = ('method_source_id',
-                     'method_id',
-                     'source_method_identifier',
-                     'method_source',
-                     'method_descriptive_name',
-                     'dl_value',
-                     'dl_units_description',
-                     'dl_type_description',
-                     'dl_type',
-                     'accuracy',
-                     'accuracy_units_description',
-                     'accuracy_units',
-                     'precision',
-                     'precision_units_description',
-                     'precision_units',
-                     'prec_acc_conc_used',
-                     'dl_units',
-                     'instrumentation_description',
-                     'instrumentation',
-                     'relative_cost',
-                     'relative_cost_symbol',
-                     'pbt',
-                     'toxic',
-                     'corrosive',
-                     'waste',
-                     'assumptions_comments')
-    
-    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
-                      'METHOD_SOURCE',
-                      'METHOD_DESCRIPTIVE_NAME',
-                      'DL_VALUE',
-                      'DL_TYPE',
-                      'ACCURACY',
-                      'PRECISION',
-                      'PREC_ACC_CONC_USED',
-                      'INSTRUMENTATION',
-                      'RELATIVE_COST',
-                      'GREENNESS')
-    
-    def get_results_context(self, qs):
-        '''Returns a list of dictionaries where each element in the list contains two keywords.
-        The keyword m contains a model object in self.get_values_qs. The keyword, greenness,
-        contains the greenness profile information for that object.
-        '''
-        return {'results' : [{'m' : r, 'greenness' : _greenness_profile(r)} for r in self.get_values_qs(qs)]}
-
 class AnalyteSelectView(View):
     ''' Extends the standard view to implement a view which returns json data containing
     a list of the matching analyte values in values_list key.
@@ -368,6 +145,7 @@ class MediaNameView(ChoiceJsonView):
     '''
     def get_choices(self, request, *args, **kwargs):
         return [(m[0], m[0].capitalize()) for m in MethodVW.objects.filter(media_name__isnull=False).values_list('media_name').distinct().order_by('media_name')]
+
     
 class SourceView(ChoiceJsonView):
     '''
@@ -401,6 +179,7 @@ class SourceView(ChoiceJsonView):
         
         source_choices.sort(cmp=_choice_cmp)
         return source_choices
+
     
 class InstrumentationView(ChoiceJsonView):
     '''
@@ -409,6 +188,7 @@ class InstrumentationView(ChoiceJsonView):
     def get_choices(self, request, *args, **kwargs):
         qs = MethodVW.objects.values_list('instrumentation_id', 'instrumentation_description').distinct().order_by('instrumentation_description')
         return [(str(i_id), descr) for (i_id, descr) in qs]
+
      
 class RegulationView(ChoiceJsonView):
     '''
@@ -416,6 +196,7 @@ class RegulationView(ChoiceJsonView):
     '''
     def get_choices(self, request, *args, **kwargs):
         return RegulationRef.objects.values_list('regulation', 'regulation_name').order_by('regulation_name').distinct()
+
 
 class MethodTypeView(ChoiceJsonView):
     '''
@@ -427,6 +208,7 @@ class MethodTypeView(ChoiceJsonView):
             qs = qs.filter(method_category__iexact=request.GET['category'])
         qs = qs.values_list('method_type_desc').distinct().order_by('method_type_desc')
         return [(descr, descr) for (descr,) in qs]
+
     
 class SubcategoryView(ChoiceJsonView):
     '''
@@ -440,6 +222,7 @@ class SubcategoryView(ChoiceJsonView):
 
         qs = qs.values_list('method_subcategory').distinct().order_by('method_subcategory')
         return [(s_descr, s_descr) for (s_descr,) in qs]
+
         
 class GearTypeView(ChoiceJsonView):
     '''
@@ -448,6 +231,7 @@ class GearTypeView(ChoiceJsonView):
     def get_choices(self, request, *args, **kwargs):
         qs = InstrumentationRef.objects.filter(instrumentation_id__range=(112, 121)).order_by('instrumentation_description').values_list('instrumentation_id', 'instrumentation_description')       
         return [(str(i_id), i_descr) for (i_id, i_descr) in qs]
+
     
 class StatObjectiveView(ChoiceJsonView):
     '''
@@ -456,6 +240,7 @@ class StatObjectiveView(ChoiceJsonView):
     
     def get_choices(self, request, *args, **kwargs):
         return [(str(m.stat_design_index), m.objective) for m in StatisticalDesignObjective.objects.exclude(objective='Revisit')]
+
     
 class StatItemTypeView(ChoiceJsonView):
     '''
@@ -463,12 +248,15 @@ class StatItemTypeView(ChoiceJsonView):
     '''
     def get_choices(self, request, *args, **kwargs):
         return [(str(m.stat_item_index), m.item) for m in StatisticalItemType.objects.all()]
+
+
 class StatAnalysisTypeView(ChoiceJsonView):
     '''
     Extends the ChoiceJsonView to retrieve the statistical analysistype choices as a json object.
     '''
     def get_choices(self, request, *args, **kwargs):
         return [(str(m.stat_analysis_index), m.analysis_type) for m in StatisticalAnalysisType.objects.all()]
+
         
 class ItemTypeView(ChoiceJsonView):
     '''
@@ -476,6 +264,7 @@ class ItemTypeView(ChoiceJsonView):
     '''
     def get_choices(self, request, *args, **kwargs):
         return [(str(m.stat_item_index), m.item) for m in StatisticalItemType.objects.all()]
+
         
 class StatSourceTypeView(ChoiceJsonView):
     '''
@@ -483,6 +272,7 @@ class StatSourceTypeView(ChoiceJsonView):
     '''
     def get_choices(self, request, *args, **kwargs):
         return [(str(m.stat_source_index), m.source) for m in StatisticalSourceType.objects.all()]
+ 
         
 class StatMediaNameView(ChoiceJsonView):
     '''
@@ -501,216 +291,6 @@ class StatSpecialTopicsView(ChoiceJsonView):
         
     
 
-class MicrobiologicalSearchView(SearchResultView, FilterFormMixin):
-    '''Extends the SearchResultView and FilterFormMixin to implement the microbiological search page.'''
-    
-    template_name = 'microbiological_search.html'
-    form_class = MicrobiologicalSearchForm
-    
-    result_fields = ('method_id',
-                     'source_method_identifier',
-                     'method_descriptive_name',
-                     'method_source',
-                     'method_source_contact',
-                     'method_source_url',
-                     'media_name',
-                     'instrumentation_description',
-                     'relative_cost_symbol',
-                     'cost_effort_key')
-    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
-                         'METHOD_DESCRIPTIVE_NAME',
-                         'METHOD_SOURCE',
-                         'MEDIA_NAME',
-                         'GEAR_TYPE',
-                         'RELATIVE_COST')
-    
-    def get_qs(self, form):
-        qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id__exact=5)
-        
-        if form.cleaned_data['analyte'] != 'all':
-            qs = qs.filter(analyte_id__exact=form.cleaned_data['analyte'])
-            
-        qs = qs.filter(method_type_desc__in=form.cleaned_data['method_types'])
-        return qs
-    
-    def get_context_data(self, form):
-        criteria = []
-        criteria.append(get_criteria(form['analyte']))
-    
-        return {'criteria' : criteria,
-                'selected_method_types' : get_multi_choice(form, 'method_types')}
-        
-class BiologicalSearchView(SearchResultView, FilterFormMixin):
-    '''Extends the SearchResultView and FilterFormMixin to implement the biological search page.'''
-    
-    template_name = 'biological_search.html'
-    form_class = BiologicalSearchForm
-    
-    result_fields = ('method_id',
-                     'source_method_identifier',
-                     'method_descriptive_name',
-                     'analyte_type',
-                     'method_source',
-                     'method_source_contact',
-                     'method_source_url',
-                     'method_type_desc',
-                     'media_name',
-                     'waterbody_type',
-                     'instrumentation_description',
-                     'relative_cost_symbol',
-                     'cost_effort_key')
-    
-    header_abbrev_set = ('ANALYTE_TYPE',
-                         'SOURCE_METHOD_IDENTIFIER',
-                         'METHOD_DESCRIPTIVE_NAME',
-                         'METHOD_SOURCE',
-                         'METHOD_TYPE',
-                         'MEDIA_NAME',
-                         'WATERBODY_TYPE',
-                         'GEAR_TYPE',
-                         'RELATIVE_COST')
-    def get_qs(self, form):
-        qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id=7)
-        if form.cleaned_data['analyte_type'] != 'all':
-            qs = qs.filter(analyte_type__exact=form.cleaned_data['analyte_type'])
-            
-        if form.cleaned_data['waterbody_type'] != 'all':
-            qs = qs.filter(waterbody_type__exact=form.cleaned_data['waterbody_type'])
-            
-        if form.cleaned_data['gear_type'] != 'all':
-            qs = qs.filter(instrumentation_id__exact=form.cleaned_data['gear_type'])
-        
-        qs = qs.filter(method_type_desc__in=form.cleaned_data['method_types']) 
-        
-        return qs
-    
-    def get_context_data(self, form):
-        criteria = []
-        criteria.append(get_criteria(form['analyte_type']))
-        criteria.append(get_criteria(form['waterbody_type']))
-        criteria.append(get_criteria(form['gear_type']))
-        
-        return {'criteria' : criteria,
-                'selected_method_types' : get_multi_choice(form, 'method_types')}
-                  
-class ToxicitySearchView(SearchResultView, FilterFormMixin):
-    '''Extends the SearchResultsView and FilterFormMixin to implements the toxicity search page.'''
-    
-    template_name = 'toxicity_search.html'
-    form_class = ToxicitySearchForm
-    
-    result_fields = ('method_id', 
-                    'source_method_identifier',
-                    'method_descriptive_name',
-                    'method_subcategory',
-                    'method_source',
-                    'method_source_contact',
-                    'method_source_url',
-                    'media_name',
-                    'matrix',
-                    'relative_cost_symbol',
-                    'cost_effort_key')
-    
-    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
-                         'METHOD_DESCRIPTIVE_NAME',
-                         'METHOD_SUBCATEGORY',
-                         'METHOD_SOURCE',
-                         'MEDIA_NAME',
-                         'MATRIX',
-                         'RELATIVE_COST')
-    
-    def get_qs(self, form):
-        qs = MethodAnalyteAllVW.objects.filter(method_category__exact='TOXICITY ASSAY').exclude(source_method_identifier__exact='ORNL-UDLP-01')
-        
-        if form.cleaned_data['subcategory'] != 'all':
-            qs = qs.filter(method_subcategory__exact=form.cleaned_data['subcategory'])
-            
-        if form.cleaned_data['media'] != 'all':
-            qs = qs.filter(media_name__exact=form.cleaned_data['media'])
-            
-        if form.cleaned_data['matrix'] != 'all':
-            qs = qs.filter(matrix__exact=form.cleaned_data['matrix'])
-            
-        qs = qs.filter(method_type_desc__in=form.cleaned_data['method_types'])
-        
-        return qs
-        
-    def get_context_data(self, form):
-        criteria = []
-        criteria.append(get_criteria(form['subcategory']))
-        criteria.append(get_criteria(form['media']))
-        criteria.append(get_criteria(form['matrix']))
-        
-        return {'criteria' : criteria,
-                'selected_method_types' : get_multi_choice(form, 'method_types')}
-        
-class PhysicalSearchView(SearchResultView, FilterFormMixin):
-    
-    template_name = 'physical_search.html'
-    form_class = PhysicalSearchForm
-    
-    result_fields = ('method_id',
-                     'source_method_identifier',
-                     'method_descriptive_name',
-                     'method_source',
-                     'method_source_contact',
-                     'method_source_url',
-                     'media_name',
-                     'instrumentation_description')
-    
-    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
-                         'METHOD_DESCRIPTIVE_NAME',
-                         'METHOD_SOURCE',
-                         'MEDIA_NAME',
-                         'GEAR_TYPE')
-    def get_qs(self, form):
-        qs = MethodAnalyteAllVW.objects.filter(method_subcategory_id__exact=9)        
-        if form.cleaned_data['analyte'] != 'all':
-            qs = qs.filter(analyte_id__exact=form.cleaned_data['analyte'])
-
-        qs = qs.filter(method_type_desc__in=form.cleaned_data['method_types']) 
-        
-        return qs
-    
-    def get_context_data(self, form):
-        criteria = []
-        criteria.append(get_criteria(form['analyte']))
-        
-        return {'criteria' : criteria,
-                'selected_method_types' : get_multi_choice(form, 'method_types')}
-            
-    
-class StreamPhysicalSearchView(SearchResultView):
-    ''' Extends the SearchResultsView to implement the stream physical search page which has no user controlled filtering.
-    '''
-    
-    template_name="stream_physical_search.html"
-    
-    result_fields = ('method_id',
-                     'source_method_identifier',
-                     'method_descriptive_name',
-                     'method_source',
-                     'method_source_contact',
-                     'method_source_url',
-                     'media_name',
-                     'relative_cost_symbol',
-                     'cost_effort_key')
-    
-    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
-                       'METHOD_DESCRIPTIVE_NAME',
-                       'METHOD_SOURCE',
-                       'MEDIA_NAME',
-                       'RELATIVE_COST'
-                       )
-    
-    qs = MethodAnalyteJnStgVW.objects.filter(source_method_identifier__startswith='WRIR')
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_results_context(self.qs)
-        context['header_defs'] = self.get_header_defs()
-        context['show_results'] = True
-        return self.render_to_response(context) 
-        
 class RegulatorySearchFormMixin(FilterFormMixin):
     ''' Extends the FilterFormMixin to implement the query filtering part of the Regulatory Search page.
     '''
@@ -1077,7 +657,6 @@ class AnalyteResultsMixin(ResultsMixin):
                          'method_descriptive_name',
                          'method_subcategory',
                          'method_source_id',
-                         'analyte_type',
                          'method_source_contact',
                          'method_source_url',
                          'method_type_desc',
