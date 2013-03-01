@@ -31,7 +31,7 @@ When you want to show the Find Analyte dialog, call showAnalyteDialog.
 		The returned values are shown if non zero, otherwise show the no analytes section..
 		*/
 		$.ajax({
-			url: '{% url methods-analyte_select %}',
+			url: '{% url "methods-analyte_select" %}',
 			data: {
 				kind : kind,
 				selection: value

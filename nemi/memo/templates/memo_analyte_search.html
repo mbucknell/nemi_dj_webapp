@@ -6,7 +6,7 @@
 
 {% block search_box_body %}
 	<p>Select an analyte from the menu below and press "Search MEMO" to search for sensors which measure that analyte.</p>
-	<form action="{% url memo-analyte_search %}" method="get">
+	<form action="{% url 'memo-analyte_search' %}" method="get">
 		<h4> {{ search_form.non_field_errors }} </h4>
 		<table id="search-table">
 			{% for f in search_form %}
@@ -42,7 +42,7 @@
 {% block results_table_data %}
 	{% for r in results %}
 		<tr>
-			<td class="view-button"><a title="View sensor details" href="{% url memo-sensor_details r.fm_pk_sensorid %}">View</a></td>
+			<td class="view-button"><a title="View sensor details" href="{% url 'memo-sensor_details' r.fm_pk_sensorid %}">View</a></td>
 			<td>{{ r.name }}</td>
 			<td>{{ r.model_name }}</td>
 			<td>{{ r.analyte }}</td>

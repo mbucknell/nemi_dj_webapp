@@ -2,7 +2,7 @@
 Template can be included to display the links to full method downloads
  -->
 {% if data.mimetype %}
-	<a href="{% url methods-pdf method_id=data.method_id %}"
+	<a href="{% url 'methods-pdf' method_id=data.method_id %}"
 		title="Click to download Adobe Acrobat PDF version of this method's documentation">
 		<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat(pdf) icon">Download full method now (PDF file)
 	</a>

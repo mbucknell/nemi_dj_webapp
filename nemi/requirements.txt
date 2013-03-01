@@ -1,4 +1,4 @@
-Django==1.4.5
+https://www.djangoproject.com/m/releases/1.5/Django-1.5.tar.gz
 coverage==3.5.2
 cx-Oracle==5.1.2
 django-debug-toolbar==0.9.4

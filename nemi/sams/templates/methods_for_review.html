@@ -43,7 +43,7 @@
 			<tbody>
 			{% for method in methods %}
 				<tr>
-					<td><input type="button" value="Review" onclick="location.href='{% url sams-method_detail_for_approval method.method_id %}';"></td>
+					<td><input type="button" value="Review" onclick="location.href='{% url 'sams-method_detail_for_approval' method.method_id %}';"></td>
 					<td>{{ method.source_method_identifier }}</td>
 					<td>{{ method.approved }}</td>
 					<td>{{ method.method_official_name }}</td>

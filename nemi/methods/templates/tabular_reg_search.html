@@ -5,7 +5,7 @@
 {% block page_title %}Search Tabular Regulatory Method Report {% endblock %}
 
 {% block search_box %}
-	<form action={% url methods-tabular_reg %} method="get">
+	<form action={% url 'methods-tabular_reg' %} method="get">
 		<p>{{ search_form.analyte.label }}:&nbsp;{{ search_form.analyte }}&nbsp;<input id="search-button" type="submit" value="Search NEMI"/></p>
 	</form>
 {% endblock %}
@@ -30,27 +30,27 @@
 							<td>{% include "analyte_synonyms.html" with analyte_name=r.r.analyte_name analyte_code=r.analyte_code syn=r.syn %}</td>
 							<td class="view-button" style="text-align: left;">
 								{% if r.r.epa_rev_id %}
-									<a title="View EPA method details" href="{% url methods-method_summary_reg r.r.epa_rev_id %}">View</a><br /><br />{{ r.r.epa|safe }}
+									<a title="View EPA method details" href="{% url 'methods-method_summary_reg' r.r.epa_rev_id %}">View</a><br /><br />{{ r.r.epa|safe }}
 								{% endif %}
 							</td>	
 							<td class="view-button" style="text-align: left;">
 								{% if r.r.usgs_rev_id %}
-									<a title="View USGS method details" href="{% url methods-method_summary_reg r.r.usgs_rev_id %}">View</a><br /><br />{{ r.r.usgs|safe }}
+									<a title="View USGS method details" href="{% url 'methods-method_summary_reg' r.r.usgs_rev_id %}">View</a><br /><br />{{ r.r.usgs|safe }}
 								{% endif %}
 							</td>
 							<td class="view-button" style="text-align: left;">
 								{% if r.r.standard_methods_rev_id %}
-									<a title="View standard method details" href="{% url methods-method_summary_reg r.r.standard_methods_rev_id %}">View</a><br /><br />{{ r.r.standard_methods|safe }}
+									<a title="View standard method details" href="{% url 'methods-method_summary_reg' r.r.standard_methods_rev_id %}">View</a><br /><br />{{ r.r.standard_methods|safe }}
 								{% endif %}
 							</td>
 							<td class="view-button" style="text-align: left;">
 								{% if r.r.astm_rev_id %}
-									<a title="View ASTM method details" href="{% url methods-method_summary_reg r.r.astm_rev_id %}">View</a><br /><br />{{ r.r.astm|safe }}
+									<a title="View ASTM method details" href="{% url 'methods-method_summary_reg' r.r.astm_rev_id %}">View</a><br /><br />{{ r.r.astm|safe }}
 								{% endif %}
 							</td>
 							<td class="view-button" style="text-align: left;">
 								{% if r.r.other_rev_id %}
-									<a title="View other method details" href="{% url methods-method_summary_reg r.r.other_rev_id %}">View</a><br /><br />{{ r.r.other|safe }}
+									<a title="View other method details" href="{% url 'methods-method_summary_reg' r.r.other_rev_id %}">View</a><br /><br />{{ r.r.other|safe }}
 								{% endif %}
 							</td>
 						</tr>

@@ -79,7 +79,7 @@
 		<h2>NEMI Method Analytes - Performance Information</h2>
 		
 		<table class="info-table">
-			<tr><th>NEMI Method</th><td><a href="{% url methods-method_summary method.method_id %}">{{ method.method_number }}</a></td></tr>
+			<tr><th>NEMI Method</th><td><a href="{% url 'methods-method_summary' method.method_id %}">{{ method.method_number }}</a></td></tr>
 			<tr><th>Analyte</th><td>{{ method.analyte_name }}</td></tr>
 			<tr><th>Accuracy</th><td>{{ method.accuracy }}</td></tr>
 			<tr><th>Precision</th><td>{{ method.precision }}</td></tr>

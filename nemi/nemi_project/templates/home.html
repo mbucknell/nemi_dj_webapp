@@ -42,7 +42,7 @@
 	
 		function updateMethodCount() {
 			$.ajax({
-				url: '{% url methods-method_count %}',
+				url: '{% url "methods-method_count" %}',
 				success : function(resp) {
 					$('#browse-count-span').html('NEMI current contains ' + resp.method_count + ' methods, protocols and procedures.');	
 				}
@@ -238,7 +238,7 @@
 					// Retrieve valid method types for this category and set sensitivity 
 					// based on this list.
 					$.ajax({
-						url : '{% url methods-method_types %}',
+						url : '{% url "methods-method_types" %}',
 						data: {'category' : category},
 						success : function(resp) {
 							$('#method-type-selections input').each(function() {
@@ -255,24 +255,24 @@
 			});
 			
 			// Create option menus 
-			createMenuOptions('{% url methods-media_name %}', {}, $('#media-name-field'));
-			createMenuOptions('{% url methods-source %}', {}, $('#source-field'));
-			createMenuOptions('{% url methods-instrumentation %}', {}, $('#instrumentation-field'));
-			createMenuOptions('{% url methods-regulations %}', {}, $('#regulations-field'));
-			createMenuOptions('{% url methods-gear_types %}', {}, $('#gear-type-field'));
-			createMenuOptions('{% url methods-stat_objectives %}', {}, $('#study_objective'));
-			createMenuOptions('{% url methods-stat_item_types %}', {}, $('#item_type'));
-			createMenuOptions('{% url methods-stat_analysis_types %}', {}, $('#analysis_type'));
-			createMenuOptions('{% url methods-stat_publication_source %}', {}, $('#publication_source_type'));
-			createMenuOptions('{% url methods-stat_media_emphasized %}', {}, $('#media_emphasized'));
-			createMenuOptions('{% url methods-stat_special_topics %}', {}, $('#special_topic'));
+			createMenuOptions('{% url "methods-media_name" %}', {}, $('#media-name-field'));
+			createMenuOptions('{% url "methods-source" %}', {}, $('#source-field'));
+			createMenuOptions('{% url "methods-instrumentation" %}', {}, $('#instrumentation-field'));
+			createMenuOptions('{% url "methods-regulations" %}', {}, $('#regulations-field'));
+			createMenuOptions('{% url "methods-gear_types" %}', {}, $('#gear-type-field'));
+			createMenuOptions('{% url "methods-stat_objectives" %}', {}, $('#study_objective'));
+			createMenuOptions('{% url "methods-stat_item_types" %}', {}, $('#item_type'));
+			createMenuOptions('{% url "methods-stat_analysis_types" %}', {}, $('#analysis_type'));
+			createMenuOptions('{% url "methods-stat_publication_source" %}', {}, $('#publication_source_type'));
+			createMenuOptions('{% url "methods-stat_media_emphasized" %}', {}, $('#media_emphasized'));
+			createMenuOptions('{% url "methods-stat_special_topics" %}', {}, $('#special_topic'));
 			
 			// Create checkboxes 
-			createCheckboxes('{% url methods-method_types %}', {}, $('#method-type-selections'), 'method_type', 'method_type-', true);
-			createCheckboxes('{% url methods-subcategories %}', {'category' : 'Chemical'}, $('#chemical-subcategory-selections'), 'subcategory', 'chemical-subcategory-', true);
-			createCheckboxes('{% url methods-subcategories %}', {'category' : 'Biological'}, $('#biological-subcategory-selections'), 'subcategory', 'biological-subcategory-', true);
-			createCheckboxes('{% url methods-subcategories %}', {'category' : 'Toxicity assay'}, $('#toxicity-subcategory-selections'), 'subcategory', 'toxicity-subcategory-', true);
-			createCheckboxes('{% url methods-subcategories %}', {'category' : 'Statistical'}, $('#statistical-subcategory-selections'), 'subcategory', 'statistical-subcategory-', true);
+			createCheckboxes('{% url "methods-method_types" %}', {}, $('#method-type-selections'), 'method_type', 'method_type-', true);
+			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Chemical'}, $('#chemical-subcategory-selections'), 'subcategory', 'chemical-subcategory-', true);
+			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Biological'}, $('#biological-subcategory-selections'), 'subcategory', 'biological-subcategory-', true);
+			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Toxicity assay'}, $('#toxicity-subcategory-selections'), 'subcategory', 'toxicity-subcategory-', true);
+			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Statistical'}, $('#statistical-subcategory-selections'), 'subcategory', 'statistical-subcategory-', true);
 
 			// Add submit handler for the filtered search limit form to add the 
 			// form parameters from the filtered subcategory form prior to submitting.
@@ -325,7 +325,7 @@ and protocols for all stages of the monitoring process.
 			</div>
 			<div id="general-action-div" class="subcategory-action-div">
 		    	<div id="keyword-search-div" class="input-section-div">
-                   	<form action="{% url methods-keyword %}" method="get">
+                   	<form action="{% url 'methods-keyword' %}" method="get">
                    		<table class="general-search-form-table">
                    			<tr>
                    				<th><label for="keyword-search-field">Search entire NEMI database by keyword:</label></th>
@@ -338,7 +338,7 @@ and protocols for all stages of the monitoring process.
                 	</form>
             	</div>
             	<div id="number-search-div" class="input-section-div" style="display:none;">
-                   	<form action="{%url methods-results %}" method=get>  
+                   	<form action="{%url 'methods-results' %}" method=get>  
                    		<table class="general-search-form-table">
 							<tr>
 								<th><label for="number-search-field">Search for a method number:</label></th>
@@ -351,7 +351,7 @@ and protocols for all stages of the monitoring process.
                		</form>
             	</div>		
             	<div id="browse-methods-div" class="input-section-div" style="display: none;">
-            		<form action="{% url methods-browse %}" method="get">
+            		<form action="{% url 'methods-browse' %}" method="get">
             			<table class="general-search-form-table">
             				<tr>
 		            			<td><b><span>Browse the entire database:</span></b>
@@ -420,7 +420,7 @@ and protocols for all stages of the monitoring process.
 					</div>
 					<div id="filter-action">
 						<div id="analyte-search-div" class="input-section-div">
-							<form action="{%url methods-analyte_results %}" method=get>
+							<form action="{%url 'methods-analyte_results' %}" method=get>
 								<div style="display: inline-block;">
 									<table class="general-search-form-table">
 										<tr>
@@ -441,7 +441,7 @@ and protocols for all stages of the monitoring process.
 							</form>
 						</div>
 						<div id="chemical-search-div" class="input-section-div" style="display: none;">
-							<form action="{%url methods-results %}" method=get>
+							<form action="{% url 'methods-results' %}" method=get>
 								<div style="display: inline-block;">
 									<div class="no-style-list">
 										<span class="header">Chemical subcategories:</span><br />
@@ -456,7 +456,7 @@ and protocols for all stages of the monitoring process.
 							</form>					
 						</div>
 						<div id="community-search-div" class="input-section-div" style="display: none;">
-							<form action="{%url methods-analyte_results %}" method=get>
+							<form action="{% url 'methods-analyte_results' %}" method=get>
 								<div style="display: inline-block;">
 									<table class="general-search-form-table">
 										<tr>
@@ -503,7 +503,7 @@ and protocols for all stages of the monitoring process.
 							</form>
 						</div>
 						<div id="toxicity-search-div" class="input-section-div" style="display: none;">
-							<form action="{%url methods-results %}" method=get>
+							<form action="{% url 'methods-results' %}" method=get>
 								<div style="display: inline-block;">
 									<div class="no-style-list">
 										<span class="header">Toxicity subcategories</span><br />
@@ -530,7 +530,7 @@ and protocols for all stages of the monitoring process.
 							</form>
 						</div>
 						<div id="statistical-search-div" class="input-section-div" style="display: none;">
-							<form action="{%url methods-statistical_results %}" method=get>
+							<form action="{% url 'methods-statistical_results' %}" method=get>
 								<div style="display: inline-block;">
 									<div class="no-style-list">
 										<span class="header">Statistical subcategories:</span><br />
@@ -613,7 +613,7 @@ and protocols for all stages of the monitoring process.
 					Limit by: (optional)		
 				</h3>
 				<div id=filtered-search-limits class="input-section-div subsection-div">
-					<form action="{% url methods-results %}" method="get">
+					<form action="{% url 'methods-results' %}" method="get">
 						<table class="general-search-form-table">
 							<tr>
 								<th><label for="media-name-field">Media name:</label></th>
