@@ -21,8 +21,7 @@
 {% endblock %}
 
 {% block page_specific_info %}
-	If you have any questions or comments, or if you do not get the results you expect, send us feedback, including the search terms
-    	you used and what method or methods you expected to see but didn't.
+	Your search returned: {{ total_found }} methods, protocols, or procedures.
 {% endblock %}
 
 {% block page_content_title %}
@@ -42,8 +41,8 @@
 					<tr>
 						<th class="sorter-false"></th>
 						<th class="sorter-false">Method Number</th>
-						<th class="sorter-false">Descriptive Method Name</th>
 						<th class="sorter-false">Method Source</th>
+						<th class="sorter-false">Descriptive Method Name</th>
 						<th class="sorter-false">Link to Method</th>
 						<th class="sorter-false">Search Ranking</th>
 						
@@ -54,8 +53,8 @@
 						<tr>
 							<td class="view-button"><a class="view-button" title="View method details" href="{% url 'methods-method_summary' r.METHOD_ID %}">View</a></td>
 							<td>{{ r.METHOD_NUMBER|safe }}</td>
-							<td>{{ r.METHOD_DESCRIPTIVE_NAME }}</td>
 							<td>{{ r.METHOD_SOURCE}}</td>
+							<td>{{ r.METHOD_DESCRIPTIVE_NAME }}</td>
 							<td>
 								{% if r.MIMETYPE %}
 									<a href="{% url 'methods-pdf' method_id=r.METHOD_ID %}" 

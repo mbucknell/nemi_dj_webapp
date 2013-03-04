@@ -858,7 +858,8 @@ ORDER BY score(1) desc;')
                 current_url = path.rsplit('&page=')[0]
                 return self.render_to_response({'keyword': keyword,
                                                 'current_url' : current_url,
-                                                'results' : results})
+                                                'results' : results,
+                                                'total_found' : len(results_list)})
             
         else:
             #Render a blank form
