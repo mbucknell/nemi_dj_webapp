@@ -40,7 +40,7 @@
 			// Add code to limit visible results to selected rows if there 
 			// is a compare button.
 			$('.compare-button').click(function() {
-				$('input[type=checkbox]').not(':checked').parents('tr').hide();
+				$('#results-table input[type=checkbox]').not(':checked').parents('tr').hide();
 				var resort = true;
 				$('.data-table').trigger('update', [resort]);
 				setEnabled($('.full-results-button'), true);
@@ -48,21 +48,22 @@
 			
 			// Add click handler for full results button.
 			$('.full-results-button').click(function() {
-				$('tr:hidden').show();
-				$('input[type=checkbox]:checked').removeAttr('checked');
+				$('#results-table tr:hidden').show();
+				$('#results-table input[type=checkbox]:checked').removeAttr('checked');
 				setEnabled($('.full-results-button'), false);
+				setEnabled($('.compare-button'), false);
 				
 			});
 			
 			// Add click handler for selecting methods to set the state of the operations buttons .
-			$('input[type=checkbox]').click(function() {
+			$('#results-table input[type=checkbox]').click(function() {
 				var compareBtn = $('.compare-button');
 				if ($(this).is(':checked')) {
 					setEnabled(compareBtn, true);
 				}
 				else {
 					// Have to look at all visible checkboxes to see if any are set.
-					if (!$('input[type=checkbox]:visible').is(':checked')) {
+					if (!$('#results-table input[type=checkbox]:visible').is(':checked')) {
 						setEnabled(compareBtn, false);
 					}
 				}
