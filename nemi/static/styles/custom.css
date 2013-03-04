@@ -107,6 +107,7 @@ a[class='popup']{
 	margin-top: 0px;
 	margin-bottom: 0px;
 	background-color: DarkGreen;
+	outline: none;
 }
 .subcategory-action-div h3 {
 	position: relative;
