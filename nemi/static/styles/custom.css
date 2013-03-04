@@ -27,6 +27,9 @@ a[class='popup']{
    padding-left: 18px;
    background: transparent url(Icon-Extlink.png) no-repeat center left;
 }
+input[button]:focus {
+	outline: none;
+}
 .external-link a {
 	padding-left: 18px;
 	background: transparent url(Icon-Extlink.png) no-repeat center left;
@@ -107,7 +110,6 @@ a[class='popup']{
 	margin-top: 0px;
 	margin-bottom: 0px;
 	background-color: DarkGreen;
-	outline: none;
 }
 .subcategory-action-div h3 {
 	position: relative;
