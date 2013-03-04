@@ -674,6 +674,8 @@ class AnalyteResultsMixin(ResultsMixin):
                          'precision_units_description',
                          'precision_units',
                          'prec_acc_conc_used',
+                         'false_positive_value',
+                         'false_negative_value',
                          'dl_units',
                          'instrumentation_description',
                          'instrumentation',

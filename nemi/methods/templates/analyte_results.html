@@ -14,6 +14,8 @@
 				<th>Bias</th>
 				<th>Precision</th>
 				<th>Spiking Level</th>
+				<th class='hide-column'>False Positive</th>
+				<th class='hide-column'>False Negative</th>
 				<th class='hide-column'>Instrumentation</th>
 				<th class='hide-column'>Relative Cost</th>
 				<th class='hide-column'>Media</th>
@@ -55,6 +57,15 @@
 							{{ d.prec_acc_conc_used|floatformat:2 }}<span class="abbrev" title="{{ a.r.dl_units_description }}">{{ a.r.dl_units }}</span>
 						{% endif %}
 					</td>
+					<td>
+						{% if d.false_positive_value %}
+							{{ d.false_positive_value }}%
+						{% endif %}
+					</td>
+					<td>
+						{% if d.false_negative_value %}
+							{{ d.false_negative_value }}%
+						{% endif %}
 					<td><span class="abbrev" title="{{ d.instrumentation_description }}">{{ d.instrumentation }}</span>
 					<td><span class="abbrev" title="{{ d.relative_cost }}">{{ d.relative_cost_symbol }}
 					<td>{{ d.media_name }}</td>
