@@ -27,7 +27,7 @@ a[class='popup']{
    padding-left: 18px;
    background: transparent url(Icon-Extlink.png) no-repeat center left;
 }
-input[button]:focus {
+input[type="button"] {
 	outline: none;
 }
 .external-link a {
