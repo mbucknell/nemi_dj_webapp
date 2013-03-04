@@ -75,6 +75,8 @@
 	<span style="font-size: medium">NEMI contains {{ object_list|length }} methods</span>
 {% endblock %}
 
+{% block top_results_actions %}{% endblock %}
+
 {% block page_content_title %}BROWSE{% endblock %}
 
 {% block customize_dialog %}{% endblock %}
@@ -119,4 +121,4 @@
 	{% endfor %}
 {% endblock %}
 
-{% block results_actions %}{% endblock %}
+{% block bottom_results_actions %}{% endblock %}

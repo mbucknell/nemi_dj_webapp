@@ -39,33 +39,31 @@
 
 			// Add code to limit visible results to selected rows if there 
 			// is a compare button.
-			$('#compare-button').click(function() {
+			$('.compare-button').click(function() {
 				$('input[type=checkbox]').not(':checked').parents('tr').hide();
 				var resort = true;
 				$('.data-table').trigger('update', [resort]);
-				setEnabled($('#full-results-button'), true);
+				setEnabled($('.full-results-button'), true);
 			});
 			
 			// Add click handler for full results button.
-			$('#full-results-button').click(function() {
+			$('.full-results-button').click(function() {
 				$('tr:hidden').show();
 				$('input[type=checkbox]:checked').removeAttr('checked');
-				setEnabled($(this), false);
+				setEnabled($('.full-results-button'), false);
+				
 			});
 			
 			// Add click handler for selecting methods to set the state of the operations buttons .
 			$('input[type=checkbox]').click(function() {
-				var compareBtn = $('#compare-button');
-				var downloadBtn = $('#download-button');
+				var compareBtn = $('.compare-button');
 				if ($(this).is(':checked')) {
 					setEnabled(compareBtn, true);
-					setEnabled(downloadBtn, true);
 				}
 				else {
 					// Have to look at all visible checkboxes to see if any are set.
 					if (!$('input[type=checkbox]:visible').is(':checked')) {
 						setEnabled(compareBtn, false);
-						setEnabled(downloadBtn, false);
 					}
 				}
 			});
@@ -73,10 +71,10 @@
 			// Hook up download-button. Make it invisible if no export_url was 
 			// passed to the template. 
 			if ('{{ export_url }}' == ''){
-				$('#download-button').hide();
+				$('.download-button').hide();
 			}
 			else {
-				$('#download-button').click(function() {
+				$('.download-button').click(function() {
 					// Get all visible method ids and put into a query parameter 
 					var params = '{{ request.GET.urlencode }}';
 					$('#results-table tbody tr:visible').each(function() {
@@ -105,7 +103,7 @@
 			if ($('#customize_dialog')){
 				CustomHeaderDialog.initialize($('#customize-dialog'), $('#results-table'));
 				
-				$('#customize-button').click(function() {
+				$('.customize-button').click(function() {
 					CustomHeaderDialog.show();
 				});
 			}
@@ -120,6 +118,13 @@
 		{% endblock %}
 		<input id="back-button" class="search-button" type="button" style="font-size: small;" value="Back to search">
 	</p>
+	{% block top_results_actions %}
+		<div id="top-results-actions" class="results-actions">
+			<input type="button" class="compare-button search-button disabled" value="COMPARE SELECTED RESULTS" />
+			<input type="button" class="full-results-button search-button disabled" value="SHOW FULL RESULTS" />
+			<input type="button" class="download-button search-button" value="DOWNLOAD RESULTS" disabled="disabled"/>
+		</div>
+	{% endblock %}
 {% endblock %}
 
 {% block page-content %}
@@ -143,11 +148,11 @@
 		{% block results_content %}
 		{% endblock %}
 		
-		{% block results_actions %}
-			<div id="results-actions">
-				<input type="button" id="compare-button" class="search-button disabled" value="COMPARE SELECTED RESULTS" />
-				<input type="button" id="full-results-button" class="search-button disabled" value="SHOW FULL RESULTS" />
-				<input type="button" id="download-button" class="search-button" value="DOWNLOAD RESULTS" disabled="disabled"/>
+		{% block bottom_results_actions %}
+			<div id="bottom-results-actions" class="results-actions">
+				<input type="button" class="compare-button search-button disabled" value="COMPARE SELECTED RESULTS" />
+				<input type="button" class="full-results-button search-button disabled" value="SHOW FULL RESULTS" />
+				<input type="button" class="download-button search-button" value="DOWNLOAD RESULTS" disabled="disabled"/>
 			</div>
 		{% endblock %}
 
