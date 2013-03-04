@@ -4,8 +4,6 @@ only and therefore have managed set to Fasle in each model's Meta data.
 '''
 
 from django.db import models
-from common.models import SourceCitationRef
-
 
     
 class MethodVW(models.Model):

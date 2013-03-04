@@ -208,6 +208,10 @@ a[class='popup']{
 	background-color: lightgrey;
 	color: black;
 }
+.search-button.disabled {
+	background-color: darkgrey;
+	color: lightgrey;
+}
 #filtered-action-div p {
 	font-size: medium;
 	font-weight: bold;

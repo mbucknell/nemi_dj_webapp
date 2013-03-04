@@ -13,6 +13,16 @@
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
 	<script src="{{ STATIC_URL }}script/CustomHeaderDialog.js"></script>
 	<script type="text/javascript">
+		// Set the disabled state and appearance of the jquery elements in els 
+		function setEnabled(els /* jquery elements */, isEnabled /* Boolean */) {
+			if (isEnabled) {
+				els.removeAttr('disabled').removeClass('disabled');
+			}
+			else {
+				els.attr('disabled', 'disabled').addClass('disabled');
+			}
+		}
+		
 		$(document).ready(function() {
 			$('#back-button').click(function() {
 				window.location.assign("{% url 'home' %}");
@@ -30,10 +40,34 @@
 			// Add code to limit visible results to selected rows if there 
 			// is a compare button.
 			$('#compare-button').click(function() {
-				var c = $('input[type=checkbox]').not(':checked');
 				$('input[type=checkbox]').not(':checked').parents('tr').hide();
 				var resort = true;
 				$('.data-table').trigger('update', [resort]);
+				setEnabled($('#full-results-button'), true);
+			});
+			
+			// Add click handler for full results button.
+			$('#full-results-button').click(function() {
+				$('tr:hidden').show();
+				$('input[type=checkbox]:checked').removeAttr('checked');
+				setEnabled($(this), false);
+			});
+			
+			// Add click handler for selecting methods to set the state of the operations buttons .
+			$('input[type=checkbox]').click(function() {
+				var compareBtn = $('#compare-button');
+				var downloadBtn = $('#download-button');
+				if ($(this).is(':checked')) {
+					setEnabled(compareBtn, true);
+					setEnabled(downloadBtn, true);
+				}
+				else {
+					// Have to look at all visible checkboxes to see if any are set.
+					if (!$('input[type=checkbox]:visible').is(':checked')) {
+						setEnabled(compareBtn, false);
+						setEnabled(downloadBtn, false);
+					}
+				}
 			});
 			
 			// Hook up download-button. Make it invisible if no export_url was 
@@ -111,8 +145,9 @@
 		
 		{% block results_actions %}
 			<div id="results-actions">
-				<input type="button" id="compare-button" class="search-button" value="COMPARE SELECTED RESULTS" />
-				<input type="button" id="download-button" class="search-button" value="DOWNLOAD RESULTS" />
+				<input type="button" id="compare-button" class="search-button disabled" value="COMPARE SELECTED RESULTS" />
+				<input type="button" id="full-results-button" class="search-button disabled" value="SHOW FULL RESULTS" />
+				<input type="button" id="download-button" class="search-button" value="DOWNLOAD RESULTS" disabled="disabled"/>
 			</div>
 		{% endblock %}
 
