@@ -42,19 +42,19 @@
 						{% if d.accuracy.normalize == -999 %}
 							N/A
 						{% else %}
-							{{ d.accuracy|decimal_format }}<span class="abbrev" title="{{ d.accuracy_units_description }}">{{ d.accuracy_units }}</span>
+							{{ d.accuracy|decimal_format }}<span class="abbrev" title="{{ d.accuracy_units_description }}"> {{ d.accuracy_units }}</span>
 						{% endif %}
 					</td>
 					<td>
 						{% if d.precision.normalize == 999 %}
 							N/A
 						{% else %}
-							{{ d.precision|decimal_format }}<span class="abbrev" title="{{ d.precision_units_description }}">{{ d.precision_units }}</span>
+							{{ d.precision|decimal_format }}<span class="abbrev" title="{{ d.precision_units_description }}"> {{ d.precision_units }}</span>
 						{% endif %}
 					</td>
 					<td>
 						{% if d.prec_acc_conc_used %}
-							{{ d.prec_acc_conc_used|floatformat:2 }}<span class="abbrev" title="{{ a.r.dl_units_description }}">{{ a.r.dl_units }}</span>
+							{{ d.prec_acc_conc_used|floatformat:2 }}<span class="abbrev" title="{{ d.dl_units_description }}"> {{ d.dl_units }}</span>
 						{% endif %}
 					</td>
 					<td>
