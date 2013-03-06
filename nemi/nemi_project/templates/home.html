@@ -310,7 +310,23 @@
 			});
 			$('#find-analyte-code-button').click(function() {
 				return AnalyteDialog.show('code', $('#analyte-code-field'));
-			});		
+			});	
+			
+			// Add blur event handler to analyte name and code field to limit to three analytes 
+			$('#analyte-name-field').blur(function() {
+				var values = $(this).val().split('\n');
+				if (values.length > 3) {
+					alert('You can only enter three analyte names. \n Removing the extra names.');
+					$(this).val(values.slice(0,3).join('\n'));
+				}
+			});
+			$('#analyte-code-field').blur(function() {
+				var values = $(this).val().split('\n');
+				if (values.length > 3) {
+					alert('You can only enter three analyte codes. \n Removing the extra codes.');
+					$(this).val(values.slice(0,3).join('\n'));
+				}
+			});
 		}); 
 	</script>
 {% endblock %}
