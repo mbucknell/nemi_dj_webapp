@@ -635,9 +635,13 @@ class AnalyteResultsMixin(ResultsMixin):
             data = super(AnalyteResultsMixin, self).get_queryset()
             
             if 'analyte_name' in self.request.GET and self.request.GET.get('analyte_name'):
-                data =  data.filter(analyte_name__iexact=self.request.GET.get('analyte_name')) 
+                names = self.request.GET.get('analyte_name').splitlines()
+                data = data.filter(analyte_name__iregex=r'(' + '|'.join(['^' + re.escape(n) + '$' for n in names]) + ')')
+                
             elif 'analyte_code' in self.request.GET and self.request.GET.get('analyte_code'):
-                data = data.filter(analyte_code__iexact=self.request.GET.get('analyte_code'))
+                codes = self.request.GET.get('analyte_code').splitlines()
+                data = data.filter(analyte_code__iregex=r'(' + '|'.join(['^' + re.escape(c) + '$' for c in codes]) + '$)')
+                
             else:
                 analyte_type = self.request.GET.get('analyte_type', 'all')
                 waterbody_type = self.request.GET.get('waterbody_type', 'all')
@@ -687,7 +691,7 @@ class AnalyteResultsMixin(ResultsMixin):
                          'toxic',
                          'corrosive',
                          'waste',
-                         'assumptions_comments'
+                         'assumptions_comments',
                          ).distinct()    
        
 class AnalyteResultsView(AnalyteResultsMixin, BaseResultsView):

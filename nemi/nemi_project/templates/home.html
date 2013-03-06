@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 
+{% block page_style %}
+	<link rel="stylesheet" href="{{ STATIC_URL }}styles/jquery-ui-1.10.0.custom/smoothness/jquery-ui-1.10.0.custom.css" media="screen" type="text/css" />
+{% endblock %}
+
 {% block page_script %}
+	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
+	<script src="{{ STATIC_URL }}script/AnalyteDialog.js"></script>
+	 
 	<script type="text/javascript">
 		function makeColumnsEqualHeight(col1El, col2El) {
 			/* Find the element with the largest height and set the other element to that height.
@@ -295,8 +302,16 @@
 				$(this).attr('action', actionDiv.find('form').attr('action'))
 				return true;
 			});
-		
-		});
+			
+			// Initialize Find analyte dialog and set up click handler for find analyte buttons. 
+			AnalyteDialog.initialize($('#find-analyte-dialog'), '{% url "methods-analyte_select" %}');
+			$('#find-analyte-name-button').click(function() {
+				return AnalyteDialog.show('name', $('#analyte-name-field'));
+			});
+			$('#find-analyte-code-button').click(function() {
+				return AnalyteDialog.show('code', $('#analyte-code-field'));
+			});		
+		}); 
 	</script>
 {% endblock %}
 
@@ -425,11 +440,16 @@ and protocols for all stages of the monitoring process.
 									<table class="general-search-form-table">
 										<tr>
 											<th><label for="analyte-name-field">Analyte name:</label></th>
-											<td><input id="analyte-name-field" type="text" name="analyte_name" size=40/></td>
+											<td><textarea id="analyte-name-field" name="analyte_name" cols=50 rows=3></textarea></td>
+											<td><input type="button" id="find-analyte-name-button" class="find-button" value="Find Analyte Names"></td>
 										</tr>
+									</table>
+									<span style="font-size: large; font-weight: bold; font-style: italic;">OR</span>
+									<table class="general-search-form-table">
 										<tr>
 											<th><label for="analyte-code-field">Analyte code:</label></th>
-											<td><input id="analyte-code-field" type="text" name="analyte_code" size=40/></td>
+											<td><textarea id="analyte-code-field" name="analyte_code" cols=50 rows=3></textarea></td>
+											<td><input type="button" id="find-analyte-code-button" class="find-button" value="Find Analyte Codes"></td>
 										</tr>
 									</table>
 									<input type="hidden" name="category" value=""/>
@@ -439,6 +459,33 @@ and protocols for all stages of the monitoring process.
 									</div>
 								</div>
 							</form>
+							<div id="find-analyte-dialog" style="display: none;">
+								<p>Enter a few characters of the 
+									<span style="font-weight" id="analyte-id-kind">analyte name:</span>
+								</p>
+								<form>
+									<input type="text" id="find-analyte-text" size=30 />
+									<button id="find-analyte-button">Find</button>
+								</form>
+								<div id="analyte-match-div">
+									<div id="analyte-search-list-div" style="float: left; display:inline-block">
+										<p>Matching analytes:</p>
+										<select style="width:20em;" multiple="multiple" id="analyte-search-list" size=15>
+										</select>
+										<span id="no-analyte-values" style="display:none;">No matches</span>
+									</div>
+									<div id="find-analyte-button-div" style="display:inline-block; margin-top: 4em; padding-left: 10px;">
+										<button id="add-to-select" style="width: 100%;">Add&nbsp;&gt;&gt;</button>
+										<br />
+										<button id="remove-from-select" style="width: 100%;">&lt;&lt;&nbsp;Remove</button>
+									</div>
+									<div id="find-analyte-match-div" style="float: right; display:inline-block;">
+										<p><span style="font-weight: bold">Select for search</span>(up to three):</p>
+										<select style="width:20em;" multiple="multiple" id="analyte-select-list" size=3>
+										</select>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div id="chemical-search-div" class="input-section-div" style="display: none;">
 							<form action="{% url 'methods-results' %}" method=get>

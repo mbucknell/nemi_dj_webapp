@@ -1,5 +1,5 @@
 body {
-	font-family: Arial;
+	font-family:  Arial;
 	font-size: 12px;
 	background-color: #E6FFCC;
 }
@@ -198,7 +198,6 @@ input[type="button"] {
 	margin: 0px;	
 }
 .search-button {
-	border: solid 1px grey;
 	background-color: DarkSeaGreen;
 	color: white;
 	font-weight: bold;
@@ -214,6 +213,15 @@ input[type="button"] {
 .search-button.disabled {
 	background-color: darkgrey;
 	color: lightgrey;
+}
+.find-button {
+	background-color: DarkSeaGreen;
+	color: white;
+	font-size: small;
+}
+.find-button:hover {
+	background-color: lightgrey;
+	color: black;
 }
 #filtered-action-div p {
 	font-size: medium;
