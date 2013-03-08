@@ -9,29 +9,25 @@
 	<script src="{{ STATIC_URL }}script/AnalyteDialog.js"></script>
 	 
 	<script type="text/javascript">
-		function webStorageSupported() {
-			return (typeof(Storage) !== "undefined")
-		}
-
-		function setInputSensitive(inputEls, sensitive) {
+		function setInputSensitive(inputEls /* jquery object */, sensitive /* Boolean */) {
 			// Set sensitivity of inputEls and associated labels.
 			if (sensitive) {
 				inputEls.removeAttr('disabled');
 				inputEls.each(function() {
-					labelEl = $('label[for="' + $(this).attr('id') + '"]');
+					var labelEl = $('label[for="' + $(this).attr('id') + '"]');
 					labelEl.removeClass('disabled');
 				});
 			}
 			else {
 				inputEls.attr('disabled', 'disabled');
 				inputEls.each(function() {
-					labelEl = $('label[for="' + $(this).attr('id') + '"]');
+					var labelEl = $('label[for="' + $(this).attr('id') + '"]');
 					labelEl.addClass('disabled');
 				});
 			}
 		}
 		
-		function updateMethodCount() {
+		function updateBrowseMethodCount() {
 			$.ajax({
 				url: '{% url "methods-method_count" %}',
 				success : function(resp) {
@@ -43,7 +39,7 @@
 		function createMenuOptions(url /*String */, data /* Object */, selectEl /* jquery element */) {
 			/* Make an ajax call to retrieve the values to be used for the select menu, selectEl.
 			* Ajax response is assumed to be json with the following structure: 
-			* {choices: [{value : x, display_value: X}, ...]"}
+			* {choices: [{'value' : 'x', 'display_value': 'X'}, ...]"}
 			*/
 			$.ajax({
 				url: url,
@@ -56,11 +52,11 @@
 					}
 					selectEl.append(options);
 					
-					// Set state of menu from storage
+					// Set state of menu from web storage 
 					if (sessionStorage[selectElId]) {
 						selectEl.val(sessionStorage[selectElId]);
 					}
-					// Add change handler to save state
+					// Add change handler to save state to web storage
 					selectEl.change(function() {
 						sessionStorage[selectElId] = $(this).val();
 					});
@@ -68,7 +64,12 @@
 			});
 		}
 		
-		function createCheckboxHtml(choices /* array of objects with two properties, value and display_value */, fieldName /* String */, choiceIdBase /* String */) {
+		function getCheckboxListHtml(choices /* array [Objects] */, fieldName /* String */, choiceIdBase /* String */) {
+			/*
+			Return a string representing a list of checkboxes. The values and display values are defined in choices
+			which is an array of Object with the properties, value and display_value. All checkboxes will have the same
+			name attribute, fieldName. Each checkbox's id will be choiceIdBase-i with i being the index.
+			*/
 			var checkboxes = '';
 			for (var i = 0; i < choices.length; i++) {
 				choiceId = choiceIdBase + i;
@@ -78,8 +79,14 @@
 			return checkboxes;
 		}
 		
-		function setInitialCheckedState(checkboxes, setToDefault) {
-			checkboxes.filter(':disabled').prop('checked', false);
+		function setInitialCheckedState(checkboxes /* jquery elements */, setToDefault /* Boolean */) {
+			/*
+			Set the checked property of the checkboxes. All disabled checkboxes are set to false.
+			Enabled checkboxes are set to true if setToDefault is true and the sessionStorage is updated
+			by forcing a change event. Otherwise, sessionStorage is checked
+			for each checkbox and it's property is set accordingly, with the default being true.
+			*/
+			checkboxes.filter(':disabled').prop('checked', false).change();
 			if (setToDefault) {
 				checkboxes.filter(':enabled').prop('checked', true).change();
 			}
@@ -92,12 +99,17 @@
 					else {
 						$(this).prop('checked', true);
 					}
-				})
+				});
 			}
 		}
 
 		
-		function setMethodTypeState(checkboxes, setToDefault) {
+		function setMethodTypeState(checkboxes /* jquery elements */, setToDefault /* Boolean */) {
+			/*
+			Retrieve the category from the visible divs hidden input. Retreive the valid method types
+			for that category and disable checkboxes that are not valid for that category.
+			Then set the state of the checkboxes.
+			*/
 			if (checkboxes.length > 0) {
 				var category = $('#filter-action .input-section-div:visible input:hidden[name="category"]').val();
 
@@ -129,14 +141,17 @@
 				listEl, /*jquery element */
 				fieldName, /* String */ 
 				choiceIdBase /* String */) {
-			/* Make an ajax call to retrieve the values to be used to create the checkboxes with the list element listEl.
-			 * Use areChecked to set the initial checked state of the buttons.
+			/* 
+			Make an ajax call to retrieve the values to be used to create the checkboxes within the list element listEl.
+			The checkboxes will be created with a name attribute set to fieldName and their id attribute
+			set to choiceIdBase-i. After the checkboxes are created and a change handler added to save state, setState if
+			specified is called to set the state of the checkboxes.
 			 */
 			$.ajax({
 				url: url,
 				data: data,
 				success: function(resp) {
-					listEl.html(createCheckboxHtml(resp.choices, fieldName, choiceIdBase))
+					listEl.html(getCheckboxListHtml(resp.choices, fieldName, choiceIdBase))
 					
 					var checkboxes = listEl.find('input[type="checkbox"]');
 
@@ -158,7 +173,11 @@
 			});			
 		}
 		
-		function isCheckboxInChoices(checkboxEl, choices) {
+		function isCheckboxInChoices(checkboxEl /* jquery element */, choices /* array[Object]*/) {
+			/*
+			Return true if checkboxEl's value is in choices. This function assumes that
+			each object in choices as a "value" property.
+			*/
 			var thisValue = checkboxEl.attr('value');
 			for (var i = 0; i < choices.length; i++){
 				if (thisValue == choices[i].value) {
@@ -169,7 +188,15 @@
 		}
 		
 		function showSearchSubcategory(buttonEl /* jquery element */, setToDefault /* Boolean */) {
-			// Update buttonEl and the currently active sibiling button's visual state. 
+			/*
+			Make buttonEl the currently active element and make the corresponding divs visible.
+			All others should be hidden. If setToDefault is true, set all input values on the visible div to their 
+			default state.
+			Note: that this does not include setting the state of the Limit By section of the filtered
+			search.
+			*/
+			
+			// Update buttonEl and the currently active sibling button's visual state. 
 			buttonEl.removeClass('not-active').addClass('highlight');
 			buttonEl.siblings('.highlight').removeClass('highlight').addClass('not-active');
 			
@@ -185,6 +212,7 @@
 				headerToShow.siblings(':visible').hide();
 			}
 			
+			// Set default state if requested. 
 			if (setToDefault) {
 				divToShow.find('input[type="text"]').val('').change();
 				divToShow.find('textarea').val('').change();
@@ -193,7 +221,11 @@
 			setInitialCheckedState(divToShow.find('input[type="checkbox"]'), setToDefault)
 		}
 		
-		function setFilterSearchState(buttonEl) {
+		function setLimitBySelectSensitivity(buttonEl) {
+			/*
+			Set the sensitivity of the select elements in the limit by filtered search section for the section
+			represented by buttonEl.
+			*/
 			var category = buttonEl.data('category');
 			var subcategory = buttonEl.data('subcategory');
 			var actionDiv = buttonEl.data('actionDivId');
@@ -208,7 +240,25 @@
 		}
 	
 		$(document).ready(function() {
-			var IS_WEB_STORE = webStorageSupported();
+			// Dynamically create option menus 
+			createMenuOptions('{% url "methods-media_name" %}', {}, $('#media-name-field'));
+			createMenuOptions('{% url "methods-source" %}', {}, $('#source-field'));
+			createMenuOptions('{% url "methods-instrumentation" %}', {}, $('#instrumentation-field'));
+			createMenuOptions('{% url "methods-regulations" %}', {}, $('#regulations-field'));
+			createMenuOptions('{% url "methods-gear_types" %}', {}, $('#gear-type-field'));
+			createMenuOptions('{% url "methods-stat_objectives" %}', {}, $('#study_objective'));
+			createMenuOptions('{% url "methods-stat_item_types" %}', {}, $('#item_type'));
+			createMenuOptions('{% url "methods-stat_analysis_types" %}', {}, $('#analysis_type'));
+			createMenuOptions('{% url "methods-stat_publication_source" %}', {}, $('#publication_source_type'));
+			createMenuOptions('{% url "methods-stat_media_emphasized" %}', {}, $('#media_emphasized'));
+			createMenuOptions('{% url "methods-stat_special_topics" %}', {}, $('#special_topic'));
+			
+			// Dynamically create checkboxes 
+			createCheckboxes('{% url "methods-method_types" %}', {}, setMethodTypeState, $('#method-type-selections'), 'method_type', 'method_type-');
+			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Chemical'}, setInitialCheckedState, $('#chemical-subcategory-selections'), 'subcategory', 'chemical-subcategory-');
+			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Toxicity assay'}, setInitialCheckedState, $('#toxicity-subcategory-selections'), 'subcategory', 'toxicity-subcategory-');
+			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Statistical'}, setInitialCheckedState, $('#statistical-subcategory-selections'), 'subcategory', 'statistical-subcategory-');
+
 			// Add change handler to save state of inputs with class local-store 
 			$('.local-store').change(function() {
 				sessionStorage[$(this).attr('id')] = $(this).val();
@@ -258,7 +308,7 @@
 			$('#keyword-search-button').data('actionDivId', $('#keyword-search-div'));
 			$('#number-search-button').data('actionDivId', $('#number-search-div'));
 			$('#browse-search-button').data('actionDivId', $('#browse-methods-div'));
-			$('#browse-search-button').data('showCallback', updateMethodCount);
+			$('#browse-search-button').data('showCallback', updateBrowseMethodCount);
 			
 			// In addition to actionDivId and showCallback (as needed), the filtered search buttons should set headerId to the
 			// correct header and set category to the button's category.
@@ -286,44 +336,32 @@
 			$('#statistical-search-button').data('headerId', $('#statistical-header'));
 			$('#statistical-search-button').data('category', 'statistical');
 			
-			//Add click handlers for subcategory buttons 
+			// Add click handlers for subcategory buttons 
 			$('.subcategory-button').click(function() {
+				// Save currently active subcategory button's id for the subcategory div.
 				sessionStorage[$(this).parents('.subcategory-selection-div').attr('id')] = $(this).attr('id');
-				showSearchSubcategory($(this));
 				
-				// set elements invisible div to default and update session storage by forcing change event.
+				showSearchSubcategory($(this), true);
+				
+				// Set div's elements to default and update session storage by forcing change event.
 				var divToShow = $(this).data('actionDivId');
 				divToShow.find('input[type="text"]').val('').change();
 				divToShow.find('textarea').val('').change();
 				divToShow.find('select').val('all').change();
 				setInitialCheckedState(divToShow.find('input[type="checkbox"]', true));
 				
+				// If this is a filtered search subcategory then we also need to update the Limit by section.
 				if ($(this).parents('#filtered-selection-div')) {
-					setFilterSearchState($(this));
+					setLimitBySelectSensitivity($(this));
+					
+					// Default selects to 'all' selection.
 					$('#filtered-search-limits select').val('all').change();
+					
+					// Set method type checkbox state. Default all enabled inputs to true.
 					setMethodTypeState($('#method-type-selections input'), true);
 				}
 			});
 			
-			// Create option menus 
-			createMenuOptions('{% url "methods-media_name" %}', {}, $('#media-name-field'));
-			createMenuOptions('{% url "methods-source" %}', {}, $('#source-field'));
-			createMenuOptions('{% url "methods-instrumentation" %}', {}, $('#instrumentation-field'));
-			createMenuOptions('{% url "methods-regulations" %}', {}, $('#regulations-field'));
-			createMenuOptions('{% url "methods-gear_types" %}', {}, $('#gear-type-field'));
-			createMenuOptions('{% url "methods-stat_objectives" %}', {}, $('#study_objective'));
-			createMenuOptions('{% url "methods-stat_item_types" %}', {}, $('#item_type'));
-			createMenuOptions('{% url "methods-stat_analysis_types" %}', {}, $('#analysis_type'));
-			createMenuOptions('{% url "methods-stat_publication_source" %}', {}, $('#publication_source_type'));
-			createMenuOptions('{% url "methods-stat_media_emphasized" %}', {}, $('#media_emphasized'));
-			createMenuOptions('{% url "methods-stat_special_topics" %}', {}, $('#special_topic'));
-			
-			// Create checkboxes 
-			createCheckboxes('{% url "methods-method_types" %}', {}, setMethodTypeState, $('#method-type-selections'), 'method_type', 'method_type-');
-			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Chemical'}, setInitialCheckedState, $('#chemical-subcategory-selections'), 'subcategory', 'chemical-subcategory-');
-			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Toxicity assay'}, setInitialCheckedState, $('#toxicity-subcategory-selections'), 'subcategory', 'toxicity-subcategory-');
-			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Statistical'}, setInitialCheckedState, $('#statistical-subcategory-selections'), 'subcategory', 'statistical-subcategory-');
-
 			// Add submit handler for the filtered search limit form to add the 
 			// form parameters from the filtered subcategory form prior to submitting.
 			$('#filtered-search-limits form').submit(function(){
@@ -371,14 +409,14 @@
 				}
 			});
 			
-			//Initialize data from sessionStorage 
+			// Initialize data from sessionStorage 
 			if (sessionStorage['general-selection-div']) {
 				showSearchSubcategory($('#' + sessionStorage['general-selection-div']), false);
 			}
 			if (sessionStorage['filtered-selection-div']) {
 				var buttonEl = $('#' + sessionStorage['filtered-selection-div']);
-				showSearchSubcategory(buttonEl);
-				setFilterSearchState(buttonEl);
+				showSearchSubcategory(buttonEl, false);
+				setLimitBySelectSensitivity(buttonEl);
 			}
 			$('.local-store').each(function() {
 				$(this).val(sessionStorage[$(this).attr('id')]);
