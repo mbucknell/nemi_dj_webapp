@@ -9,44 +9,28 @@
 	<script src="{{ STATIC_URL }}script/AnalyteDialog.js"></script>
 	 
 	<script type="text/javascript">
-		function makeColumnsEqualHeight(col1El, col2El) {
-			/* Find the element with the largest height and set the other element to that height.
-			*/
-			var height1 = col1El.height();
-			var height2 = col2El.height();
-			
-			if (height1 > height2) {
-				col2El.height(height1);
+		function webStorageSupported() {
+			return (typeof(Storage) !== "undefined")
+		}
+
+		function setInputSensitive(inputEls, sensitive) {
+			// Set sensitivity of inputEls and associated labels.
+			if (sensitive) {
+				inputEls.removeAttr('disabled');
+				inputEls.each(function() {
+					labelEl = $('label[for="' + $(this).attr('id') + '"]');
+					labelEl.removeClass('disabled');
+				});
 			}
 			else {
-				col1El.height(height2);
+				inputEls.attr('disabled', 'disabled');
+				inputEls.each(function() {
+					labelEl = $('label[for="' + $(this).attr('id') + '"]');
+					labelEl.addClass('disabled');
+				});
 			}
 		}
 		
-		function setInputSensitive(inputId, sensitive) {
-			var inputEl = $('#' + inputId);
-			var labelEl = $('label[for="' + inputId + '"]');
-			if (sensitive) {
-				if (inputEl.is('[type="checkbox"]') && !inputEl.is(':checked')) {
-					inputEl.prop('checked', true);
-				}
-				inputEl.removeAttr('disabled');
-				labelEl.removeClass('disabled');
-				
-			}
-			else {
-				if (inputEl.is(':checked')) {
-					inputEl.prop('checked', false);
-				}
-				inputEl.attr('disabled', 'disabled');
-				labelEl.addClass('disabled');
-			}
-		}
-				
-		function makeSectionColumnsEqualHeight(sectionEl) {
-			makeColumnsEqualHeight(sectionEl.find('.subcategory-selection-div'), sectionEl.find('.subcategory-action-div'));
-		}
-	
 		function updateMethodCount() {
 			$.ajax({
 				url: '{% url "methods-method_count" %}',
@@ -65,44 +49,111 @@
 				url: url,
 				data: data,
 				success : function(resp) {
+					var selectElId = selectEl.attr('id');
 					var options = '';
 					for (var i = 0; i < resp.choices.length; i++) {
 						options += '<option value="' + resp.choices[i].value + '">' + resp.choices[i].display_value + '</option>';
 					}
 					selectEl.append(options);
+					
+					// Set state of menu from storage
+					if (sessionStorage[selectElId]) {
+						selectEl.val(sessionStorage[selectElId]);
+					}
+					// Add change handler to save state
+					selectEl.change(function() {
+						sessionStorage[selectElId] = $(this).val();
+					});
 				}
 			});
 		}
 		
+		function createCheckboxHtml(choices /* array of objects with two properties, value and display_value */, fieldName /* String */, choiceIdBase /* String */) {
+			var checkboxes = '';
+			for (var i = 0; i < choices.length; i++) {
+				choiceId = choiceIdBase + i;
+				checkboxes +='<li><input type="checkbox" name="' + fieldName + '" id="' + choiceId + 
+					'" value="' + choices[i].value + '"/><label for="' + choiceId + '">' + choices[i].display_value + '</label></li>';
+			}
+			return checkboxes;
+		}
+		
+		function setInitialCheckedState(checkboxes, setToDefault) {
+			checkboxes.filter(':disabled').prop('checked', false);
+			if (setToDefault) {
+				checkboxes.filter(':enabled').prop('checked', true).change();
+			}
+			else {
+				checkboxes.filter(':enabled').each(function() {
+					var elId = $(this).attr('id');
+					if (sessionStorage[elId] == 'off') {
+						$(this).prop('checked', false);
+					}
+					else {
+						$(this).prop('checked', true);
+					}
+				})
+			}
+		}
+
+		
+		function setMethodTypeState(checkboxes, setToDefault) {
+			if (checkboxes.length > 0) {
+				var category = $('#filter-action .input-section-div:visible input:hidden[name="category"]').val();
+
+				if (category == '') {
+					setInputSensitive(checkboxes, true);
+					setInitialCheckedState(checkboxes, setToDefault);
+					
+				}
+				else {
+					// Retrieve valid method types for this category and set sensitivity
+					$.ajax({
+						url: '{% url "methods-method_types" %}',
+						data : {'category' : category},
+						success: function(resp) {
+							checkboxes.each(function() {
+								setInputSensitive($(this), isCheckboxInChoices($(this), resp.choices));
+							});
+							setInitialCheckedState(checkboxes, setToDefault);
+						}
+					});
+				}
+			}
+		}
+		
 		function createCheckboxes(
-				url /*String */, 
-				data /* Object */, 
-				listEl /*jquery element */, 
-				fieldName /* String */, 
-				choiceIdBase /* String */,
-				areChecked /* Boolean */) {
-			/* Make an ajax call to rertrieve the values to be used to create the checkboxes with the list element listEl.
+				url, /*String */ 
+				data, /* Object */
+				setState, /* optional function which sets the state of the checkboxes */
+				listEl, /*jquery element */
+				fieldName, /* String */ 
+				choiceIdBase /* String */) {
+			/* Make an ajax call to retrieve the values to be used to create the checkboxes with the list element listEl.
 			 * Use areChecked to set the initial checked state of the buttons.
 			 */
 			$.ajax({
 				url: url,
 				data: data,
 				success: function(resp) {
-					var checkboxes = ''
-					var checkedAttr = '';
-					if (areChecked) {
-						checkedAttr = ' checked="checked" ';
+					listEl.html(createCheckboxHtml(resp.choices, fieldName, choiceIdBase))
+					
+					var checkboxes = listEl.find('input[type="checkbox"]');
+
+					// Add change handler to save the state of the checkbox
+					checkboxes.change(function() {
+						var elId = $(this).attr('id')
+						if ($(this).is(':checked')) {
+							sessionStorage[elId] = 'on';
+						}
+						else {
+							sessionStorage[elId] = 'off';
+						}
+					});
+					
+					if (setState) {
+						setState(checkboxes, false);
 					}
-					for (var i = 0; i < resp.choices.length; i++) {
-						choice_id = choiceIdBase + i;
-						checkboxes += '<li><input id="' + choice_id + '" type="checkbox" name="' + fieldName + '"' + checkedAttr + ' value="' + 
-							resp.choices[i].value + '"/><label for="' + choice_id + 
-							'">' + resp.choices[i].display_value + "</label></li>";
-					}
-					listEl.html(checkboxes);
-					// Need to readjust the height of this section since we have added
-					// visible lines 
-					makeSectionColumnsEqualHeight (listEl.parents('.section-div'));
 				}
 			});			
 		}
@@ -116,8 +167,53 @@
 			}
 			return false;
 		}
+		
+		function showSearchSubcategory(buttonEl /* jquery element */, setToDefault /* Boolean */) {
+			// Update buttonEl and the currently active sibiling button's visual state. 
+			buttonEl.removeClass('not-active').addClass('highlight');
+			buttonEl.siblings('.highlight').removeClass('highlight').addClass('not-active');
+			
+			// Show the associated div and hide the currently visible sibling div (if any)
+			var divToShow = buttonEl.data('actionDivId');
+			divToShow.show(0, buttonEl.data('showCallback'))
+			divToShow.siblings(':visible').hide();
+			
+			// Show the associated header div (if any) and hide the currently visibling sibling div.
+			var headerToShow = buttonEl.data('headerId');
+			if (headerToShow) {
+				headerToShow.show();
+				headerToShow.siblings(':visible').hide();
+			}
+			
+			if (setToDefault) {
+				divToShow.find('input[type="text"]').val('').change();
+				divToShow.find('textarea').val('').change();
+				divToShow.find('select').val('all').change();				
+			}
+			setInitialCheckedState(divToShow.find('input[type="checkbox"]'), setToDefault)
+		}
+		
+		function setFilterSearchState(buttonEl) {
+			var category = buttonEl.data('category');
+			var subcategory = buttonEl.data('subcategory');
+			var actionDiv = buttonEl.data('actionDivId');
+			
+			actionDiv.find('input:hidden[name="category"]').val(category);
+			actionDiv.find('input:hidden[name="subcategory"]').val(subcategory);
+			
+			// Set sensitivity of option menus 
+			setInputSensitive($('#media-name-field'), $.inArray(category, ['', 'chemical']) != -1);
+			setInputSensitive($('#source-field'), $.inArray(category, ['', 'chemical', 'statistical']) != -1);
+			setInputSensitive($('#instrumentation-field'), $.inArray(category, ['', 'chemical']) != -1);
+		}
 	
 		$(document).ready(function() {
+			var IS_WEB_STORE = webStorageSupported();
+			// Add change handler to save state of inputs with class local-store 
+			$('.local-store').change(function() {
+				sessionStorage[$(this).attr('id')] = $(this).val();
+			});
+			
 			// Add click handler for the section show/hide buttons.
 			$(".section-div").each(function() {
 				var contentDiv = $(this).find('.subcategory-div');
@@ -127,10 +223,7 @@
 						$(this).attr('title', 'Hide section');
 						buttonImgEl.attr('alt', 'hide');
 						buttonImgEl.attr('src', '{{ STATIC_URL }}images/triangle-down-image36.gif');
-						contentDiv.show();
-						
-						// Adjust the column size of the section since it may be larger now. 
-						makeColumnsEqualHeight($(this).parents('.section-div'));						
+						contentDiv.show();					
 					}
 					else {
 						$(this).attr('title', 'Show section');
@@ -151,9 +244,6 @@
 						buttonImgEl.attr('alt', 'hide');
 						buttonImgEl.attr('src', '{{ STATIC_URL }}images/triangle-down-image36.gif');
 						contentDiv.show();
-						
-						// Height of columns may need to be increased 
-						makeSectionColumnsEqualHeight($(this).parents('.section-div'));
 					}
 					else {
 						$(this).attr('title', 'Show subsection');
@@ -162,11 +252,6 @@
 						contentDiv.hide();
 					}
 				});
-			});
-			
-			// Make section columns equal height 
-			$('.section-div').each(function() {
-				makeSectionColumnsEqualHeight($(this));
 			});
 			
 			// Associate the id of the div to show/hide for each subcategory button and set show callback if necessary 
@@ -203,62 +288,21 @@
 			
 			//Add click handlers for subcategory buttons 
 			$('.subcategory-button').click(function() {
-				$(this).removeClass('not-active').addClass('highlight');
-				$(this).siblings().removeClass('highlight').addClass('not-active');
+				sessionStorage[$(this).parents('.subcategory-selection-div').attr('id')] = $(this).attr('id');
+				showSearchSubcategory($(this));
 				
+				// set elements invisible div to default and update session storage by forcing change event.
 				var divToShow = $(this).data('actionDivId');
-				divToShow.show(0, $(this).data('showCallback'));
-				divToShow.siblings().hide();
+				divToShow.find('input[type="text"]').val('').change();
+				divToShow.find('textarea').val('').change();
+				divToShow.find('select').val('all').change();
+				setInitialCheckedState(divToShow.find('input[type="checkbox"]', true));
 				
-				var headerToShow = $(this).data('headerId');
-				if (headerToShow) {
-					headerToShow.show();
-					headerToShow.siblings().hide();
+				if ($(this).parents('#filtered-selection-div')) {
+					setFilterSearchState($(this));
+					$('#filtered-search-limits select').val('all').change();
+					setMethodTypeState($('#method-type-selections input'), true);
 				}
-				
-				// Update height of columns.
-				makeSectionColumnsEqualHeight($(this).parents('.section-div'));
-			});
-			
-			// For filtered subcategory buttons, add a separate click handler to set the 
-			// state of the "Limit by" section and to set the hidden inputs. 
-			$('#filtered-selection-div .subcategory-button').click(function() {
-				var category = $(this).data('category');
-				var subcategory = $(this).data('subcategory');
-				var actionDiv = $(this).data('actionDivId');
-				
-				actionDiv.find('input:hidden[name="category"]').val(category);
-				actionDiv.find('input:hidden[name="subcategory"]').val(subcategory);
-				
-				//Set all limit by options to first option
-				$('#filtered-search-limits select').each(function() {
-					$(this).val($(this).find('option:first-child').val());
-				});
-				
-				if (category == ''){
-					// Set all method types valid 
-					$('#method-type-selections input').each(function() {
-						setInputSensitive($(this).attr('id'), true);
-					});
-				}
-				else {
-					// Retrieve valid method types for this category and set sensitivity 
-					// based on this list.
-					$.ajax({
-						url : '{% url "methods-method_types" %}',
-						data: {'category' : category},
-						success : function(resp) {
-							$('#method-type-selections input').each(function() {
-								setInputSensitive($(this).attr('id'), isCheckboxInChoices($(this), resp.choices));
-							});
-						}
-					});
-				}
-				
-				// Set Sensitive of option menus 
-				setInputSensitive('media-name-field', $.inArray(category, ['', 'chemical']) != -1);
-				setInputSensitive('source-field', $.inArray(category, ['', 'chemical', 'statistical']) != -1);
-				setInputSensitive('instrumentation-field', $.inArray(category, ['', 'chemical']) != -1);
 			});
 			
 			// Create option menus 
@@ -275,11 +319,10 @@
 			createMenuOptions('{% url "methods-stat_special_topics" %}', {}, $('#special_topic'));
 			
 			// Create checkboxes 
-			createCheckboxes('{% url "methods-method_types" %}', {}, $('#method-type-selections'), 'method_type', 'method_type-', true);
-			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Chemical'}, $('#chemical-subcategory-selections'), 'subcategory', 'chemical-subcategory-', true);
-			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Biological'}, $('#biological-subcategory-selections'), 'subcategory', 'biological-subcategory-', true);
-			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Toxicity assay'}, $('#toxicity-subcategory-selections'), 'subcategory', 'toxicity-subcategory-', true);
-			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Statistical'}, $('#statistical-subcategory-selections'), 'subcategory', 'statistical-subcategory-', true);
+			createCheckboxes('{% url "methods-method_types" %}', {}, setMethodTypeState, $('#method-type-selections'), 'method_type', 'method_type-');
+			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Chemical'}, setInitialCheckedState, $('#chemical-subcategory-selections'), 'subcategory', 'chemical-subcategory-');
+			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Toxicity assay'}, setInitialCheckedState, $('#toxicity-subcategory-selections'), 'subcategory', 'toxicity-subcategory-');
+			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Statistical'}, setInitialCheckedState, $('#statistical-subcategory-selections'), 'subcategory', 'statistical-subcategory-');
 
 			// Add submit handler for the filtered search limit form to add the 
 			// form parameters from the filtered subcategory form prior to submitting.
@@ -327,6 +370,19 @@
 					$(this).val(values.slice(0,3).join('\n'));
 				}
 			});
+			
+			//Initialize data from sessionStorage 
+			if (sessionStorage['general-selection-div']) {
+				showSearchSubcategory($('#' + sessionStorage['general-selection-div']), false);
+			}
+			if (sessionStorage['filtered-selection-div']) {
+				var buttonEl = $('#' + sessionStorage['filtered-selection-div']);
+				showSearchSubcategory(buttonEl);
+				setFilterSearchState(buttonEl);
+			}
+			$('.local-store').each(function() {
+				$(this).val(sessionStorage[$(this).attr('id')]);
+			});
 		}); 
 	</script>
 {% endblock %}
@@ -360,7 +416,7 @@ and protocols for all stages of the monitoring process.
                    		<table class="general-search-form-table">
                    			<tr>
                    				<th><label for="keyword-search-field">Search entire NEMI database by keyword:</label></th>
-                       			<td><input id="keyword-search-field" type="text" name="keyword_search_field" /></td>
+                       			<td><input type="text" id="keyword-search-field" name="keyword_search_field" class="local-store"/></td>
 							</tr>
 						</table>
 						<div class="button-div">
@@ -373,7 +429,7 @@ and protocols for all stages of the monitoring process.
                    		<table class="general-search-form-table">
 							<tr>
 								<th><label for="number-search-field">Search for a method number:</label></th>
-                       			<td><input id="number-search-field" type="text" name="method_number"/></td>
+                       			<td><input id="number-search-field" type="text" name="method_number" class="local-store"/></td>
 							</tr>
 						</table> 
 						<div class="button-div">
@@ -456,7 +512,7 @@ and protocols for all stages of the monitoring process.
 									<table class="general-search-form-table">
 										<tr>
 											<th><label for="analyte-name-field">Analyte name:</label></th>
-											<td><textarea id="analyte-name-field" name="analyte_name" cols=50 rows=3></textarea></td>
+											<td><textarea id="analyte-name-field" name="analyte_name"  class="local-store"cols=50 rows=3></textarea></td>
 											<td><input type="button" id="find-analyte-name-button" class="find-button" value="Find Analyte Names"></td>
 										</tr>
 									</table>
@@ -464,7 +520,7 @@ and protocols for all stages of the monitoring process.
 									<table class="general-search-form-table">
 										<tr>
 											<th><label for="analyte-code-field">Analyte code:</label></th>
-											<td><textarea id="analyte-code-field" name="analyte_code" cols=50 rows=3></textarea></td>
+											<td><textarea id="analyte-code-field" name="analyte_code" cols=50 rows=3 class="local-store"></textarea></td>
 											<td><input type="button" id="find-analyte-code-button" class="find-button" value="Find Analyte Codes"></td>
 										</tr>
 									</table>
@@ -525,7 +581,7 @@ and protocols for all stages of the monitoring process.
 										<tr>
 											<th><label for="analyte-type-field">Analyte type:</label></th>
 											<td>
-												<select id="analyte-type-field" name="analyte_type">
+												<select id="analyte-type-field" name="analyte_type" class="local-store">
 													<option value="all">Any</option>
 													<option value="Algae">Algae</option>
 													<option value="Fish">Fish</option>
@@ -536,7 +592,7 @@ and protocols for all stages of the monitoring process.
 										<tr>
 										<th><label for="waterbody-type-field">Waterbody type:</label></th>
 											<td>
-												<select id="waterbody-type-field" name="waterbody_type">
+												<select id="waterbody-type-field" name="waterbody_type" class="local-store">
 													<option value="all">Any</option>
 													<option value="Estuary">Estuary</option>
 													<option value="Lake">Lake</option>
@@ -576,7 +632,7 @@ and protocols for all stages of the monitoring process.
 										<tr>
 											<th><label for="matrix-field">Matrix:</label></th>
 											<td>
-												<select id="matrix-field" name="matrix">
+												<select id="matrix-field" name="matrix" class="local-store">
 													<option value="all">Any</option>
 													<option value="Freshwater">Freshwater</option>
 													<option value="Saltwater">Saltwater</option>
@@ -619,7 +675,7 @@ and protocols for all stages of the monitoring process.
 										<tr>
 											<th><label for="complexity">Complexity:</label></th>
 											<td>
-												<select id="complexity" name="complexity">
+												<select id="complexity" name="complexity" class="local-store">
 													<option value="all">Any</option>
 													<option value="Low">Low</option>
 													<option value="Medium">Medium</option>
@@ -670,8 +726,8 @@ and protocols for all stages of the monitoring process.
 					</div>
 				</div>
 				<h3>
-					<button class="show-hide-toggle" title="Show subsection" type=button>
-						<img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" /> 
+					<button class="show-hide-toggle" title="Hide subsection" type=button>
+						<img src="{{ STATIC_URL }}images/triangle-down-image36.gif" alt="hide" /> 
 					</button>
 					Limit by: (optional)		
 				</h3>

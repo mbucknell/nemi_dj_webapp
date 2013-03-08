@@ -84,6 +84,7 @@ AnalyteDialog = {
 						value += $(this).html();
 					});
 					AnalyteDialog.parentTextEl.val(value);
+					AnalyteDialog.parentTextEl.change();
 				}
 			}]
 		});
