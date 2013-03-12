@@ -272,8 +272,6 @@ column in the table */
 }
 .data-table {
 	background-color: #F7EFE5;
-	margin-left: 15px;
-	margin-right: 15px;
 }
 .data-table th {
 	text-align: center;

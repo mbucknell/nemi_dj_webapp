@@ -36,8 +36,12 @@ AnalyteDialog = {
 					}
 					else {
 						valuesEl.hide();
-						$('#no-analyte-values').show();
+						$('#no-analyte-values').html('No matches').show();
 					}
+				},
+				error: function(jqxhr, textStatus, errorThrown) {
+					$('#analyte-search-list').hide();
+					$('#no-analyte-values').html('Server error: try a more specific search').show();
 				}
 			});
 			return false;

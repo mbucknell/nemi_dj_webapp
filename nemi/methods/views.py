@@ -2,7 +2,7 @@
 NEMI methods pages.
 '''
 
-
+import json
 import re
 
 from django.db import connection
@@ -125,7 +125,7 @@ class AnalyteSelectView(View):
                 
                 if qs.count() > 0:
                     qs_str = '[' + ', '.join('"%s"' % v for v in qs) + ']'
-                    return HttpResponse('{"values_list" : ' +  qs_str+ "}", mimetype="application/json")
+                    return HttpResponse('{"values_list" : ' +  qs_str+ '}', mimetype="application/json")
             
         return HttpResponse('{"values_list" : ""}', mimetype="application/json")
  
@@ -343,7 +343,7 @@ class RegulatorySearchFormMixin(FilterFormMixin):
                 'analyte_code' : analyte_code,
                 'syn' : syn}
     
-class ExportRegulatorySearchView(ExportSearchView, RegulatorySearchFormMixin):
+class ExportRegulatorySearchView(RegulatorySearchFormMixin, ExportSearchView):
     '''Extends the ExportSearchView and RegulatorySearchFormMixin to implement the
     view which will export the table data.
     '''
@@ -384,7 +384,7 @@ class ExportRegulatorySearchView(ExportSearchView, RegulatorySearchFormMixin):
     export_field_order_by = 'method_id'
     filename = 'regulatory_search'
     
-class RegulatorySearchView(SearchResultView, RegulatorySearchFormMixin):
+class RegulatorySearchView(RegulatorySearchFormMixin, SearchResultView):
     ''' Extends the SearchResultsView and RegulatorySearchFormMixin to implement
     the regulatory search page.
     '''
@@ -442,7 +442,7 @@ class RegulatorySearchView(SearchResultView, RegulatorySearchFormMixin):
         return {'results' : results,
                 'method_count' : method_count}
         
-class TabularRegulatorySearchView(SearchResultView, FilterFormMixin):
+class TabularRegulatorySearchView(FilterFormMixin, SearchResultView):
     ''' Extends the SearchResultsForm and FilterFormMixin to implement the Tabular
     Regulatory Search page. 
     We do not provide and header definitions so the template must create the table headers.
@@ -527,7 +527,7 @@ class ResultsMixin(MultipleObjectMixin):
         return data
     
     
-class BaseResultsView(View, TemplateResponseMixin):
+class BaseResultsView(TemplateResponseMixin, View):
     '''
     Extends the standard View and TemplateResponse to implement the view which will return method
     results while adding a context variable to be used to specify the page's export_url.
@@ -692,7 +692,7 @@ class AnalyteResultsMixin(ResultsMixin):
                          'corrosive',
                          'waste',
                          'assumptions_comments',
-                         'analyte_name'
+                         'analyte_name',
                          ).distinct()    
        
 class AnalyteResultsView(AnalyteResultsMixin, BaseResultsView):
@@ -805,7 +805,7 @@ class ExportStatisticalResultsView(StatisticalResultsMixin, ExportBaseResultsVie
     
     
 
-class KeywordSearchView(View, TemplateResponseMixin):
+class KeywordSearchView(TemplateResponseMixin, View):
     '''Extends the standard View to implement the keyword search view. This form only
     processes get requests.
     '''  
@@ -828,7 +828,7 @@ class KeywordSearchView(View, TemplateResponseMixin):
                 # Execute as raw query since  it uses a CONTAINS clause and context grammer.
                 cursor = connection.cursor() #@UndefinedVariable
                 cursor.execute('SELECT DISTINCT score(1) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
-mf.link_to_full_method, mf.mimetype, mf.revision_id, mf.method_official_name, mf.method_descriptive_name, mf.method_source, mf.method_category\
+mf.link_to_full_method, mf.mimetype, mf.revision_id, mf.method_official_name, mf.method_descriptive_name, mf.method_source, mf.method_category \
 FROM nemi_data.method_fact mf, nemi_data.revision_join rj \
 WHERE mf.revision_id = rj.revision_id AND \
 (CONTAINS(mf.source_method_identifier, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + keyword + '.<progression> \
@@ -880,7 +880,7 @@ class BrowseMethodsView(ListView):
     queryset = MethodVW.objects.order_by('method_category', 'method_subcategory', 'source_method_identifier')
     
         
-class BaseMethodSummaryView(View, TemplateResponseMixin):
+class BaseMethodSummaryView(TemplateResponseMixin, View):
     '''Extends the basic view to implement a method summary page. This class
     should be extended to implement specific pages by at least providing
     a template_name parameter.
