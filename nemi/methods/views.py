@@ -693,6 +693,7 @@ class AnalyteResultsMixin(ResultsMixin):
                          'waste',
                          'assumptions_comments',
                          'analyte_name',
+                         'analyte_code',
                          ).distinct()    
        
 class AnalyteResultsView(AnalyteResultsMixin, BaseResultsView):

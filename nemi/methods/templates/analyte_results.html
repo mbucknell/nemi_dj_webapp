@@ -31,7 +31,7 @@
 					<td><a href="{% url 'methods-method_summary' d.method_id  %}">{{ d.source_method_identifier|safe }}</a></td>
 					<td>{{ d.method_source }}</td>
 					<td>{{ d.method_descriptive_name }}</td>
-					<td>{{ d.analyte_name }}</td>
+					<td>{{ d.analyte_name }}({{ d.analyte_code }})</td>
 					
 					<td>
 						{% if d.dl_value.normalize == 999 %}
