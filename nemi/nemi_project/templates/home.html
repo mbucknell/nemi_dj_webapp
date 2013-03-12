@@ -409,6 +409,12 @@
 				}
 			});
 			
+			// Preprocess the Browse submit to set sessionStorage to clear any visible divs on browse results page.
+			$('#browse-methods-div form').submit(function() {
+				sessionStorage.clearBrowsePage = 'true';
+				return true;
+			});
+			
 			// Initialize data from sessionStorage 
 			if (sessionStorage['general-selection-div']) {
 				showSearchSubcategory($('#' + sessionStorage['general-selection-div']), false);

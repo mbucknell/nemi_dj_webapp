@@ -23,7 +23,9 @@
 						catImgEl.attr('title', 'Show subcategories');
 						subcatDiv.hide();
 					}
+					sessionStorage[$(this).attr('id')] = catImgEl.attr('alt');
 				});
+				
 			});
 			// Set up the show/hide/ button for method subcategories 
 			$(".method-subcategory-div").each(function(){
@@ -46,6 +48,7 @@
 						imgEl.attr('title', 'Show methods');
 						tableEl.hide();
 					}
+					sessionStorage[$(this).attr('id')] = imgEl.attr('alt');
 				});
 			});
 			// Set show/hide button for method details 
@@ -67,6 +70,32 @@
 					}						
 				});
 			});
+			
+			// Initialize state of visible elements.
+			if (sessionStorage.clearBrowsePage == 'true') {
+				//All divs will remain hidden but set the storage variables to 'show'
+				$('.category-button').each(function() {
+					sessionStorage[$(this).attr('id')] = 'show';
+				});
+				$('.subcategory-button').each(function() {
+					sessionStorage[$(this).attr('id')] = 'show';
+				});
+			}
+			else {
+				$('.category-button').each(function() {
+					if (sessionStorage[$(this).attr('id')] == 'hide') {
+						// Need to make the category visible so send a click event
+						$(this).click();
+					}
+				});
+				$('.subcategory-button').each(function() {
+					if (sessionStorage[$(this).attr('id')] == 'hide') {
+						// Need to make the category visible so send a click event 
+						$(this).click();
+					}
+				});
+			}
+			sessionStorage.clearBrowsePage = 'false';
 		});
 	</script>
 {% endblock %}
@@ -86,15 +115,14 @@
 	{% regroup object_list by method_category as objects_by_category %}
 	{% for by_category in objects_by_category %}
 		<div class="method-category-div">
-			<h3><button class="show-hide-toggle category-button" title="Show subcategories" type="button"><img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" /></button>&nbsp;{{ by_category.grouper|lower|capfirst }} - {{ by_category.list|length}} methods</h3>
+			<h3><button id="category-{{ by_category.grouper }}" class="show-hide-toggle category-button" title="Show subcategories" type="button"><img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" /></button>&nbsp;{{ by_category.grouper|lower|capfirst }} - {{ by_category.list|length}} methods</h3>
 			{% regroup by_category.list by method_subcategory as objects_by_subcategory %}
 			{% for by_subcategory in objects_by_subcategory %}
 				<div class="method-subcategory-div" style="display: none;">
-					<h4><button class="show-hide-toggle subcategory-button" title="Show methods" type="button"><img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" /></button>&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>				
-					<table id="browse-results-table" class="data-table" data-sortlist="[[1,0]]" style="display: none;">
+					<h4><button id="subcategory-{{ by_subcategory.grouper }}" class="show-hide-toggle subcategory-button" title="Show methods" type="button"><img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show" /></button>&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>				
+					<table id="browse-results-table" class="data-table" data-sortlist="[[0,0]]" style="display: none;">
 						<thead>
 							<tr>
-								<th class="sorter-false"></th>
 								<th class="sorter-text">Method Number</th>
 								<th>Method Descriptive Name</th>
 								<th>Method Source</th>
@@ -103,12 +131,13 @@
 						<tbody>
 							{% for object in by_subcategory.list %}
 								<tr>
-									{% if by_category.grouper == "STATISTICAL" %}
-										<td class="view-button"><a title="View method details" href="{% url 'sams-method_summary' object.method_id %}">View</a></td>
-									{% else %}
-										<td class="view-button"><a title="View method details" href="{% url 'methods-method_summary' object.method_id %}">View</a></td>
-									{% endif %}
-									<td>{{ object.source_method_identifier|safe }}</td>
+									<td><a title="View method details"
+										{% if by_category.grouper == 'STATISTICAL' %}
+											href="{% url 'sams-method_summary' object.method_id %}"
+										{% else %}
+											href="{% url 'methods-method_summary' object.method_id %}"
+										{% endif %}
+									>{{ object.source_method_identifier|safe }}</a></td>
 									<td>{{ object.method_descriptive_name }}</td>
 									<td>{% include "method_source_details.html" with r=object %}</td>
 								</tr>

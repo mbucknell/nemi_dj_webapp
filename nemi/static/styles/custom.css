@@ -8,16 +8,17 @@ table{
 }
 a {
 	outline: none;
-	text-decoration: none;			
+	text-decoration: none;
+	color: #8E6434;			
+}
+a:visted{
+	color: #8E6434;	
 }
 a:link{
-	color: black;
-}
-a:visited {
-	color: black;
+	color: #8E6434;	
 }
 a:hover{
-	color: white;
+	color: #21495A;
 }
 a img{
 	border: none;
@@ -252,19 +253,38 @@ about an object. The headers are meant to be the left most
 column in the table */
 .info-table {
 	text-align: left;
+	background-color: #F7EFE5;
 	border-top: solid #aaaaaa 1px;
+	margin-right: 15px;
+	margin-left: 15px;
 	
 }
 .info-table th {
-	background-color: #556268;
+	background-color: #69818B;
 	text-align: left;
-	padding: 4px;	
+	padding: 8px;	
 	white-space: nowrap;
 	border-bottom: 1px solid grey;
 }
 .info-table td {
-	padding: 4px;
+	padding: 8px;
 	border-bottom: 1px solid grey;
+}
+.data-table {
+	background-color: #F7EFE5;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+.data-table th {
+	text-align: center;
+	background-color: #69818B;
+	padding: 8px;
+	border: 1px solid darkgrey;
+}
+.data-table td {
+	text-align: left;
+	padding: 8px;
+	border: 1px solid grey;
 }
 /* inside-table is used to format table data without colored headers or borders */
 .inside-table th{
@@ -304,25 +324,6 @@ column in the table */
 .show-hide-detail-div ul {
 	list-style-type: none;
 	margin: 0px;
-}
-td.view-button {
-	padding-top: 6px;
-	padding-bottom: 6px;
-	text-align: center;
-}
-.view-button a:link, .view-button a:visited {
-	text-decoration: none;
-	background: #F0F0F0;
-	padding-top: 2px;
-	padding-bottom: 2px;
-	padding-left: 8px;
-	padding-right: 8px;
-	border: 1px solid #556268;
-	border-radius: 8px;
-}
-.view-button a:hover {
-	color: black;
-	background: #D5E0E5;
 }
 
 /* Below this is stuff used in old NEMI review for whether it's used. */

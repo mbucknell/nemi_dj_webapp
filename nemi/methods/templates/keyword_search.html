@@ -14,7 +14,6 @@
 			float: right;
 		}
  		.results-nav, .results-nav>a{
-			color: #556268;
 			font-size: medium;
 		}
 	</style>
@@ -41,7 +40,6 @@
 			<table class="data-table" style="width: 100%">
 				<thead>
 					<tr>
-						<th class="sorter-false"></th>
 						<th class="sorter-false">Method Number</th>
 						<th class="sorter-false">Method Source</th>
 						<th class="sorter-false">Descriptive Method Name</th>
@@ -53,8 +51,13 @@
 				</tbody>
 					{% for r in results.object_list %}
 						<tr>
-							<td class="view-button"><a class="view-button" title="View method details" href="{% url 'methods-method_summary' r.METHOD_ID %}">View</a></td>
-							<td>{{ r.METHOD_NUMBER|safe }}</td>
+							<td> <a title="View method details"
+								{% if r.METHOD_CATEGORY == 'STATISTICAL' %}
+									href="{% url 'sams-method_summary' r.METHOD_ID %}"
+								{% else %}
+									href="{% url 'methods-method_summary' r.METHOD_ID %}"
+								{% end if %}	
+							>{{ r.METHOD_NUMBER|safe}}</a></td>
 							<td>{{ r.METHOD_SOURCE}}</td>
 							<td>{{ r.METHOD_DESCRIPTIVE_NAME }}</td>
 							<td>

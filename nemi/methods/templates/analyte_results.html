@@ -9,6 +9,7 @@
 				<th class="sorter-text col-always-visible">Method Number</th>
 				<th>Source</th>
 				<th>Method Name</th>
+				<th>Analyte Name</th>
 				<th>Detection Level</th>
 				<th>Detection Level Type</th>
 				<th>Bias</th>
@@ -30,6 +31,8 @@
 					<td><a href="{% url 'methods-method_summary' d.method_id  %}">{{ d.source_method_identifier|safe }}</a></td>
 					<td>{{ d.method_source }}</td>
 					<td>{{ d.method_descriptive_name }}</td>
+					<td>{{ d.analyte_name }}</td>
+					
 					<td>
 						{% if d.dl_value.normalize == 999 %}
 							N/A

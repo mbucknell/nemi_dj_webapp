@@ -1,136 +1,223 @@
-{% extends "base_method_summary.html" %}
+{% extends "base.html" %}
 
 {% block title %}NEMI Method Summary{% endblock %}
 
-{% block summary_info %}
-	{% if data %}
-		<table class="info-table">
-			<tr>
-				<th>Method Information</th>
-				<td><b>Descriptive Name: </b>{{ data.method_descriptive_name }}<br/>
-					<b>Official Name: </b>{{ data.method_official_name|safe }}<br/>
-					<b>Method Number: </b>{{ data.source_method_identifier|safe }}<br/>
-					<b>Revision: </b>{{ data.revision_information }}
-				</td>
-			</tr>
-			<tr>
-				{% include "field_def.html" with field=field_defs.MEDIA_NAME %}
-				<td>{{ data.media_name }}&nbsp;&nbsp;&nbsp;&nbsp;
-					{% if data.waterbody_type %}
-					   <b>       Waterbody type: </b>{{ data.waterbody_type }}
-					{% endif %}
-				</td>
-			</tr>
-			<tr>
-				{% include "field_def.html" with field=field_defs.METHOD_SUBCATEGORY %}
-				<td>{{ data.method_subcategory }}</td>
-			</tr>
-			<tr>
-				{% include "field_def.html" with field=field_defs.METHOD_SOURCE %}
-				<td>
-					{% include "method_source_details.html" with r=data %}
-				</td>
-			</tr>
-			<tr>
-				{% include "field_def.html" with field=field_defs.CITATION %}
-				<td>
-					{% if data.source_citation_information %}
-						<div class="show-hide-detail-div">
-							<button class="show-hide-toggle" title="Show detail" type="button">
-								<img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show"/>
-							</button>
-							{{ data.source_citation_name|safe }}
-							<div class="hidden-details-div" style="display: none;">				
-								<table class="inside-table">
-									<tr><th>Citation Information:</th><td>{{ data.source_citation_information }}</td></tr>
-								</table>
-							</div>
-						</div>
-					{% else %}
-						{{ data.source_citation_name|safe }}
-					{% endif %}
-				</td>
-			</tr>
-			<tr>{% include "field_def.html" with field=field_defs.BRIEF_METHOD_SUMMARY %}<td>{{ data.brief_method_summary|safe }}</td></tr>
-			<tr>{% include "field_def.html" with field=field_defs.SCOPE_AND_APPLICATION %}<td>{{ data.scope_and_application|safe }}</td></tr>
-			<tr>{% include "field_def.html" with field=field_defs.APPLICABLE_CONC_RANGE %}<td>{{ data.applicable_conc_range|safe }}</td></tr>
-			<tr>{% include "field_def.html" with field=field_defs.METHOD_DOWNLOAD %}<td>{% include "method_download.html" %}</td></tr>
-			<tr>{% include "field_def.html" with field=field_defs.INTERFERENCES %}<td>{{ data.interferences|safe }}</td></tr>
-			<tr>{% include "field_def.html" with field=field_defs.QC_REQUIREMENTS %}<td>{{ data.qc_requirements|safe }}</td></tr>
-			<tr>{% include "field_def.html" with field=field_defs.SAMPLE_HANDLING %}<td>{{ data.sample_handling|safe }}</td></tr>
-			<tr>{% include "field_def.html" with field=field_defs.MAX_HOLDING_TIME %}<td>{{ data.max_holding_time }}</td></tr>
-			<tr>{% include "field_def.html" with field=field_defs.RELATIVE_COST %}<td>{{ data.relative_cost }}</td></tr>
-			<tr>{% include "field_def.html" with field=field_defs.SAMPLE_PREP_METHODS %}<td>{{ data.sample_prep_methods }}</td></tr>
-		</table>
-	{% else %}
-		<p>No data found</p>
-	{% endif %}
-	<hr/>
-	<h4>Method <i>{{data.source_method_identifier|safe }}</i> has {{ analyte_data|length }} analyte{{ analyte_data|pluralize }} associated with it.</h4>
-	{% if analyte_data %}
-		<p>
-		<a class="popup"
-			title="Download the results as a tab-separated values format, which can be opened by any spreadsheet application."
-			href = {% url 'methods-method_analyte_export' data.method_id %}>Export results as a tab separated text file (can be opened in any text editor or spreadsheet)
-		</a>
-		</p>
-		<table class="info-table">
-			<tr>
-				<th>Analyte</th>
-				<th>Detection<br/>Level</th>
-				<th>Bias</th>
-				<th>Precision</th>
-				<th>Pct False<br/>Positive</th>
-				<th>Pct False<br/>Negative</th>
-				<th>Spiking<br/>Level</th>
-			</tr>
-			{% for a in analyte_data %}
-				<tr>
-					<td>{% include "analyte_synonyms.html" with analyte_name=a.r.analyte_name|force_escape analyte_code=a.r.analyte_code syn=a.syn  %}</td>
-
-					<td>
-						{% if a.r.dl_value == 999 %}
-							N/A
-						{% else %}
-							{{ a.r.dl_value|floatformat:2 }} <span class="abbrev" title="{{ a.r.dl_units_description }}">{{ a.r.dl_units }}</span>
-						{% endif %}
-					</td>
-					<td>
-						{% if a.r.accuracy == -999 %}
-							N/A
-						{% else %}
-							{{ a.r.accuracy|floatformat:0}}<span class="abbrev" title="{{ a.r.accuracy_units_description }}">{{ a.r.accuracy_units }}</span>
-						{% endif %}
-					</td>
-					<td>
-						{% if a.r.precision == 999 %}
-							N/A
-						{% else %}
-							{{ a.r.precision|floatformat:2 }} <span class="abbrev" title="{{ a.r.precision_units_description }}">{{ a.r.precision_units }}</span>
-						{% endif %}
-					</td>
-					<td>{{ a.r.false_positive_value|default_if_none:"" }}</td>
-					<td>{{ a.r.false_negative_value|default_if_none:"" }}</td>
-					<td>
-						{% if a.r.prec_acc_conc_used %}
-							{{ a.r.prec_acc_conc_used|floatformat:2 }} <span class="abbrev" title="{{ a.r.dl_units_description }}">{{ a.r.dl_units }}</span>
-						{% endif %}
-					</td>
-				</tr>
-			{% endfor %}
-		</table>
-	{% endif %}	
-	{% if notes %}
-	<div style="position: relative; top: 20px;">
-		<table class="info-table">
-			<tr><th>Precision Descriptor Notes</th><td>{{ notes.0.precision_descriptor_notes|safe }}</td></tr>
-			<tr><th>Detection Level Note</th><td>{{ notes.0.dl_note|safe }}</td></tr>
-		</table>
-		<hr/>
-		<br/>
-	</div>
-	{% else %}
-		<p>No notes found </p>
-	{% endif %}
+{% block page_style %}
+	<!--  Style sheets for ui-dialog plugins -->
+	<link type="text/css" href="{{ STATIC_URL }}styles/jquery-ui-1.10.0.custom/smoothness/jquery-ui-1.10.0.custom.css" rel="stylesheet" media="screen"/>
 {% endblock %}
-	
+
+{% block page_script %}
+	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			// Initialize header information dialogs 
+			$('#header-info').dialog({
+				 autoOpen: false,
+				 title: 'Basic Dialog',
+				 height: 200,
+				 width: 300
+			});
+			// Add click event handler to all show/hide detail buttons 
+			$('.show-hide-detail-div').each(function(){
+					var hiddenDivEl = $(this).find('.hidden-details-div');
+					$(this).find('button').click(function(){
+					var imgEl = $(this).find('img');
+					
+					if (imgEl.attr('alt') == 'show'){
+						imgEl.attr('src', "{{ STATIC_URL }}/images/triangle-down-image36.gif");
+						imgEl.attr('alt', 'hide');
+						imgEl.attr('title', 'Hide details');
+						hiddenDivEl.show();
+					}
+					else{
+						imgEl.attr('src', "{{ STATIC_URL }}/images/triangle-right-image36.gif");
+						imgEl.attr('alt', 'show');
+						imgEl.attr('title', 'Show details');
+						hiddenDivEl.hide();
+					}					
+				});
+			});
+			
+			$('#detail-tabs').tabs();
+		});
+		// Show field information dialogs 
+		function showInfo(header, info) {
+			var dialogEl = $('#header-info');
+			dialogEl.html(info);
+			// This preprends {{ STATIC_URL}} to any img tag in info
+			dialogEl.find('img').each(function(){
+				var src = $(this).attr("src");
+				$(this).attr("src", "{{ STATIC_URL }}" + src);
+			});
+			
+			dialogEl.dialog('option', 'title', header);
+			dialogEl.dialog('option', 'position', 'center');
+			
+			if (!dialogEl.dialog('isOpen')){
+				dialogEl.dialog('option', 'height', 200);
+				dialogEl.dialog('option', 'width', 300);
+				dialogEl.dialog('open');	
+			}
+			
+		};		
+	</script>
+{% endblock %}
+
+{% block page_info %}
+	<br />
+	<b style="font-size:large;">Summary of Method: {{ data.source_method_identifier|safe }}</b>
+	<br />
+	<br />
+{% endblock %}
+
+{% block page-content %}
+	<div id="method-summary-content">
+		<!--  Place holder for the field information dialog  -->
+		<div id="header-info" style="display: none;">
+			<p>Place holder</p>
+		</div>
+		<div id="detail-tabs">
+			<ul>
+				<li><a href="#tabs-1">Details</a></li>
+				<li><a href="#tabs-2">Analytes</a></li>
+				<li><a href="#tabs-3">Measurement details</a></li>
+			</ul>
+			<div id="tabs-1">
+				{% if data %}
+					<table class="info-table">
+						<tr>
+							<th>Method Information</th>
+							<td><b>Descriptive Name: </b>{{ data.method_descriptive_name }}<br/>
+								<b>Official Name: </b>{{ data.method_official_name|safe }}<br/>
+								<b>Method Number: </b>{{ data.source_method_identifier|safe }}<br/>
+								<b>Revision: </b>{{ data.revision_information }}
+							</td>
+						</tr>
+						<tr>
+							{% include "field_def.html" with field=field_defs.MEDIA_NAME %}
+							<td>{{ data.media_name }}&nbsp;&nbsp;&nbsp;&nbsp;
+								{% if data.waterbody_type %}
+								   <b>       Waterbody type: </b>{{ data.waterbody_type }}
+								{% endif %}
+							</td>
+						</tr>
+						<tr>
+							{% include "field_def.html" with field=field_defs.METHOD_SUBCATEGORY %}
+							<td>{{ data.method_subcategory }}</td>
+						</tr>
+						<tr>
+							{% include "field_def.html" with field=field_defs.METHOD_SOURCE %}
+							<td>
+								{% include "method_source_details.html" with r=data %}
+							</td>
+						</tr>
+						<tr>
+							{% include "field_def.html" with field=field_defs.CITATION %}
+							<td>
+								{% if data.source_citation_information %}
+									<div class="show-hide-detail-div">
+										<button class="show-hide-toggle" title="Show detail" type="button">
+											<img src="{{ STATIC_URL }}images/triangle-right-image36.gif" alt="show"/>
+										</button>
+										{{ data.source_citation_name|safe }}
+										<div class="hidden-details-div" style="display: none;">				
+											<table class="inside-table">
+												<tr><th>Citation Information:</th><td>{{ data.source_citation_information }}</td></tr>
+											</table>
+										</div>
+									</div>
+								{% else %}
+									{{ data.source_citation_name|safe }}
+								{% endif %}
+							</td>
+						</tr>
+						<tr>{% include "field_def.html" with field=field_defs.BRIEF_METHOD_SUMMARY %}<td>{{ data.brief_method_summary|safe }}</td></tr>
+						<tr>{% include "field_def.html" with field=field_defs.SCOPE_AND_APPLICATION %}<td>{{ data.scope_and_application|safe }}</td></tr>
+						<tr>{% include "field_def.html" with field=field_defs.APPLICABLE_CONC_RANGE %}<td>{{ data.applicable_conc_range|safe }}</td></tr>
+						<tr>{% include "field_def.html" with field=field_defs.METHOD_DOWNLOAD %}<td>{% include "method_download.html" %}</td></tr>
+						<tr>{% include "field_def.html" with field=field_defs.INTERFERENCES %}<td>{{ data.interferences|safe }}</td></tr>
+						<tr>{% include "field_def.html" with field=field_defs.QC_REQUIREMENTS %}<td>{{ data.qc_requirements|safe }}</td></tr>
+						<tr>{% include "field_def.html" with field=field_defs.SAMPLE_HANDLING %}<td>{{ data.sample_handling|safe }}</td></tr>
+						<tr>{% include "field_def.html" with field=field_defs.MAX_HOLDING_TIME %}<td>{{ data.max_holding_time }}</td></tr>
+						<tr>{% include "field_def.html" with field=field_defs.RELATIVE_COST %}<td>{{ data.relative_cost }}</td></tr>
+						<tr>{% include "field_def.html" with field=field_defs.SAMPLE_PREP_METHODS %}<td>{{ data.sample_prep_methods }}</td></tr>
+					</table>
+				{% else %}
+					<p>No data found</p>
+				{% endif %}
+			</div>
+			<div id="tabs-2">
+				<h4>The method has {{ analyte_data|length }} analyte{{ analyte_data|pluralize }} associated with it.</h4>
+				{% if analyte_data %}
+					<p>
+					<a class="popup"
+						title="Download the results as a tab-separated values format, which can be opened by any spreadsheet application."
+						href = {% url 'methods-method_analyte_export' data.method_id %}>Export results as a tab separated text file (can be opened in any text editor or spreadsheet)
+					</a>
+					</p>
+					<table class="data-table">
+						<tr>
+							<th>Analyte</th>
+							<th>Detection<br/>Level</th>
+							<th>Bias</th>
+							<th>Precision</th>
+							<th>Pct False<br/>Positive</th>
+							<th>Pct False<br/>Negative</th>
+							<th>Spiking<br/>Level</th>
+						</tr>
+						{% for a in analyte_data %}
+							<tr>
+								<td>{% include "analyte_synonyms.html" with analyte_name=a.r.analyte_name|force_escape analyte_code=a.r.analyte_code syn=a.syn  %}</td>
+			
+								<td>
+									{% if a.r.dl_value == 999 %}
+										N/A
+									{% else %}
+										{{ a.r.dl_value|floatformat:2 }} <span class="abbrev" title="{{ a.r.dl_units_description }}">{{ a.r.dl_units }}</span>
+									{% endif %}
+								</td>
+								<td>
+									{% if a.r.accuracy == -999 %}
+										N/A
+									{% else %}
+										{{ a.r.accuracy|floatformat:0}}<span class="abbrev" title="{{ a.r.accuracy_units_description }}">{{ a.r.accuracy_units }}</span>
+									{% endif %}
+								</td>
+								<td>
+									{% if a.r.precision == 999 %}
+										N/A
+									{% else %}
+										{{ a.r.precision|floatformat:2 }} <span class="abbrev" title="{{ a.r.precision_units_description }}">{{ a.r.precision_units }}</span>
+									{% endif %}
+								</td>
+								<td>{{ a.r.false_positive_value|default_if_none:"" }}</td>
+								<td>{{ a.r.false_negative_value|default_if_none:"" }}</td>
+								<td>
+									{% if a.r.prec_acc_conc_used %}
+										{{ a.r.prec_acc_conc_used|floatformat:2 }} <span class="abbrev" title="{{ a.r.dl_units_description }}">{{ a.r.dl_units }}</span>
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</table>
+				{% endif %}	
+			</div>
+			<div id="tabs-3">
+				{% if notes %}
+				<div style="position: relative; top: 20px;">
+					<table class="info-table">
+						<tr><th>Precision Descriptor Notes</th><td>{{ notes.0.precision_descriptor_notes|safe }}</td></tr>
+						<tr><th>Detection Level Note</th><td>{{ notes.0.dl_note|safe }}</td></tr>
+					</table>
+					<hr/>
+					<br/>
+				</div>
+				{% else %}
+					<p>No notes found </p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
