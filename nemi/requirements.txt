@@ -1,11 +1,11 @@
 https://www.djangoproject.com/m/releases/1.5/Django-1.5.tar.gz
-coverage==3.5.2
+coverage==3.6
 cx-Oracle==5.1.2
 django-debug-toolbar==0.9.4
-django-jenkins==0.13.0
-logilab-astng==0.24.0
-logilab-common==0.58.1
-pylint==0.25.2
+django-jenkins==0.14.0
+logilab-astng==0.24.1
+logilab-common==0.59.0
+pylint==0.26.0
 unittest2==0.5.1
 wsgiref==0.1.2
 xlwt==0.7.4
