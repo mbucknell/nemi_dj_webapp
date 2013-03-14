@@ -5,7 +5,7 @@
 		<thead>
 			<tr>
 				<th class="sorter-false col-always-visible"></th>
-				<th class="sorter-text col-always-visible">Method Number</th>
+				<th class="sorter-text col-always-visible">Method Id</th>
 				<th>Source</th>
 				<th>Method Name</th>
 				<th>Subcategory</th>
@@ -25,7 +25,7 @@
 					<td>{{ d.method_source }}</td>
 					<td>{{ d.method_descriptive_name }}</td>
 					<td>{{ d.method_subcategory }}</td>
-					<td><span class="abbrev" title="{{ d.instrumentation_description }}">{{ d.instrumentation }}</span></td>
+					<td>{{ d.instrumentation_description }}</td>
 					<td>{{ d.media_name|lower|capfirst }}</td>
 					<td>{{ d.method_category|lower|capfirst}}</td>
 					<td>{{ d.method_type_desc }}</td>

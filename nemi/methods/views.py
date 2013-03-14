@@ -114,17 +114,35 @@ class AnalyteSelectView(View):
     
     def get(self, request, *args, **kwargs):
         if request.GET:
-            if request.GET['selection']:
-                if request.GET['kind'] == 'code':
+            if request.GET['kind'] == 'code':
+                if request.GET['selection']:
                     qs = AnalyteCodeVW.objects.filter(
                         analyte_analyte_code__icontains=request.GET['selection']).order_by('analyte_analyte_code').values_list('analyte_analyte_code', 
                                                                                                                                flat=True).distinct()
                     qs_str = '[' + ', '.join('"%s"' % v for v in qs) + ']'
                 else:
-                    qs = AnalyteCodeRel.objects.filter(analyte_name__icontains=request.GET['selection']).order_by('analyte_name').values_list('analyte_name', 'analyte_code')                                   
-                    qs_str='[' +', '.join('["%s","%s"]' % (n, c) for (n, c) in qs) + ']'
+                    return HttpResponse('{"values_list" : ""}', mimetype="application/json")
                 
-                return HttpResponse('{"values_list" : ' +  qs_str+ '}', mimetype="application/json")
+            else:
+                category = request.GET.get('category', '')
+                subcategory = request.GET.get('subcategory', '')    
+                if category != '' or subcategory != '':
+                    qs = MethodAnalyteAllVW.objects.all()
+                    if category != '':
+                        qs = qs.filter(method_category__iexact=category)
+                    if subcategory != '':
+                        qs = qs.filter(method_subcategory__iexact=subcategory)
+                                            
+                elif request.GET['selection']:
+                    qs = AnalyteCodeRel.objects.filter(analyte_name__icontains=request.GET['selection'])
+                    
+                else:
+                    return HttpResponse('{"values_list" : ""}', mimetype="application/json")
+                    
+                qs = qs.values_list('analyte_name', 'analyte_code').distinct().order_by('analyte_name');
+                qs_str='[' +', '.join('["%s","%s"]' % (n, c) for (n, c) in qs) + ']'
+            
+            return HttpResponse('{"values_list" : ' +  qs_str+ '}', mimetype="application/json")
             
         return HttpResponse('{"values_list" : ""}', mimetype="application/json")
  

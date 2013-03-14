@@ -6,7 +6,7 @@
 		<thead>
 			<tr>
 				<th class="sorter-false col-always-visible"></th>
-				<th class="sorter-text col-always-visible">Method Number</th>
+				<th class="sorter-text col-always-visible">Method Id</th>
 				<th>Source</th>
 				<th>Method Name</th>
 				<th>Analyte Name</th>
@@ -31,7 +31,7 @@
 					<td><a href="{% url 'methods-method_summary' d.method_id  %}">{{ d.source_method_identifier|safe }}</a></td>
 					<td>{{ d.method_source }}</td>
 					<td>{{ d.method_descriptive_name }}</td>
-					<td>{{ d.analyte_name }}({{ d.analyte_code }})</td>
+					<td>{{ d.analyte_name }} ({{ d.analyte_code }})</td>
 					
 					<td>
 						{% if d.dl_value.normalize == 999 %}
@@ -69,8 +69,9 @@
 						{% if d.false_negative_value %}
 							{{ d.false_negative_value }}%
 						{% endif %}
-					<td><span class="abbrev" title="{{ d.instrumentation_description }}">{{ d.instrumentation }}</span>
-					<td><span class="abbrev" title="{{ d.relative_cost }}">{{ d.relative_cost_symbol }}
+					</td>
+					<td>{{ d.instrumentation_description }}</td>
+					<td><span class="abbrev" title="{{ d.relative_cost }}">{{ d.relative_cost_symbol }}</span></td>
 					<td>{{ d.media_name }}</td>
 					<td>{{ d.method_type_desc }}</td>
 					<td>{{ d.waterbody_type }}</td>

@@ -370,14 +370,19 @@
 			// Initialize Find analyte dialog and set up click handler for find analyte buttons. 
 			AnalyteDialog.initialize($('#find-analyte-dialog'), '{% url "methods-analyte_select" %}');
 			$('#find-analyte-name-button').click(function() {
-				return AnalyteDialog.show('name', $('#analyte-name-field'));
+				return AnalyteDialog.show(
+						'name', 
+						$('#analyte-name-field'), 
+						$('#analyte-search-div input[name="category"]').val(),
+						$('#analyte-search-div input[name="subcategory"]').val()
+				);
 			});
 			$('#find-analyte-code-button').click(function() {
-				return AnalyteDialog.show('code', $('#analyte-code-field'));
+				return AnalyteDialog.show('code', $('#analyte-code-field'), $());
 			});	
 			
-			// Add blur event handler to analyte name and code field to limit to three analytes 
-			$('#analyte-name-field').blur(function() {
+			// Add change event handler to analyte name and code field to limit to three analytes. 
+			$('#analyte-name-field').change(function() {
 				var values = $(this).val().split('\n');
 				if (values.length > 3) {
 					alert('You can only enter three analyte names. \n Removing the extra names.');
@@ -391,6 +396,8 @@
 					$(this).val(values.slice(0,3).join('\n'));
 				}
 			});
+			// Add change handlers for analyte name and code text fields so that if one of the fields has text the other is insensitive
+			
 			
 			// Preprocess the Browse submit to set sessionStorage to clear any visible divs on browse results page.
 			$('#browse-methods-div form').submit(function() {
@@ -542,9 +549,8 @@ and protocols for all stages of the monitoring process.
 											<td><textarea id="analyte-name-field" name="analyte_name"  class="local-store"cols=50 rows=3></textarea></td>
 											<td><input type="button" id="find-analyte-name-button" class="find-button" value="Find Analyte Names"></td>
 										</tr>
-									</table>
-									<span style="font-size: large; font-weight: bold; font-style: italic;">OR</span>
-									<table class="general-search-form-table">
+										<tr>
+											<td colspan="3"><span style="font-size: large; font-weight: bold; font-style: italic;">OR</span></td>
 										<tr>
 											<th><label for="analyte-code-field">Analyte code:</label></th>
 											<td><textarea id="analyte-code-field" name="analyte_code" cols=50 rows=3 class="local-store"></textarea></td>
@@ -559,13 +565,15 @@ and protocols for all stages of the monitoring process.
 								</div>
 							</form>
 							<div id="find-analyte-dialog" style="display: none;">
-								<p>Enter a few characters of the 
-									<span style="font-weight" id="analyte-id-kind">analyte name:</span>
-								</p>
-								<form>
-									<input type="text" id="find-analyte-text" size=30 />
-									<button id="find-analyte-button" class="find-button">Find</button>
-								</form>
+								<div id="find-analyte-text-entry-div">
+									<p>Enter a few characters of the 
+										<span style="font-weight" id="analyte-id-kind">analyte name:</span>
+									</p>
+									<form>
+										<input type="text" id="find-analyte-text" size=30 />
+										<button id="find-analyte-button" class="find-button">Find</button>
+									</form>
+								</div>
 								<div id="analyte-match-div">
 									<div id="analyte-search-list-div" style="float: left; display:inline-block">
 										<p>Matching analytes:</p>
