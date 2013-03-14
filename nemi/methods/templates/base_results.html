@@ -11,18 +11,9 @@
 	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.js"></script>
 	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.widgets.js"></script>
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
+	<script src="{{ STATIC_URL }}script/Utils.js"></script>
 	<script src="{{ STATIC_URL }}script/CustomHeaderDialog.js"></script>
 	<script type="text/javascript">
-		// Set the disabled state and appearance of the jquery elements in els 
-		function setEnabled(els /* jquery elements */, isEnabled /* Boolean */) {
-			if (isEnabled) {
-				els.removeAttr('disabled').removeClass('disabled');
-			}
-			else {
-				els.attr('disabled', 'disabled').addClass('disabled');
-			}
-		}
-		
 		$(document).ready(function() {
 			$('#back-button').click(function() {
 				window.location.assign("{% url 'home' %}");
@@ -43,15 +34,15 @@
 				$('#results-table input[type=checkbox]').not(':checked').parents('tr').hide();
 				var resort = true;
 				$('.data-table').trigger('update', [resort]);
-				setEnabled($('.full-results-button'), true);
+				Utils.setEnabled($('.full-results-button'), true);
 			});
 			
 			// Add click handler for full results button.
 			$('.full-results-button').click(function() {
 				$('#results-table tr:hidden').show();
 				$('#results-table input[type=checkbox]:checked').removeAttr('checked');
-				setEnabled($('.full-results-button'), false);
-				setEnabled($('.compare-button'), false);
+				Utils.setEnabled($('.full-results-button'), false);
+				Utils.setEnabled($('.compare-button'), false);
 				
 			});
 			
@@ -59,12 +50,12 @@
 			$('#results-table input[type=checkbox]').click(function() {
 				var compareBtn = $('.compare-button');
 				if ($(this).is(':checked')) {
-					setEnabled(compareBtn, true);
+					Utils.setEnabled(compareBtn, true);
 				}
 				else {
 					// Have to look at all visible checkboxes to see if any are set.
 					if (!$('#results-table input[type=checkbox]:visible').is(':checked')) {
-						setEnabled(compareBtn, false);
+						Utils.setEnabled(compareBtn, false);
 					}
 				}
 			});

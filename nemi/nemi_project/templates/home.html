@@ -6,27 +6,10 @@
 
 {% block page_script %}
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
+	<script src="{{ STATIC_URL }}script/Utils.js"></script>
 	<script src="{{ STATIC_URL }}script/AnalyteDialog.js"></script>
 	 
 	<script type="text/javascript">
-		function setInputSensitive(inputEls /* jquery object */, sensitive /* Boolean */) {
-			// Set sensitivity of inputEls and associated labels.
-			if (sensitive) {
-				inputEls.removeAttr('disabled');
-				inputEls.each(function() {
-					var labelEl = $('label[for="' + $(this).attr('id') + '"]');
-					labelEl.removeClass('disabled');
-				});
-			}
-			else {
-				inputEls.attr('disabled', 'disabled');
-				inputEls.each(function() {
-					var labelEl = $('label[for="' + $(this).attr('id') + '"]');
-					labelEl.addClass('disabled');
-				});
-			}
-		}
-		
 		function updateBrowseMethodCount() {
 			$.ajax({
 				url: '{% url "methods-method_count" %}',
@@ -114,7 +97,7 @@
 				var category = $('#filter-action .input-section-div:visible input:hidden[name="category"]').val();
 
 				if (category == '') {
-					setInputSensitive(checkboxes, true);
+					Utils.setEnabled(checkboxes, true);
 					setInitialCheckedState(checkboxes, setToDefault);
 					
 				}
@@ -125,7 +108,7 @@
 						data : {'category' : category},
 						success: function(resp) {
 							checkboxes.each(function() {
-								setInputSensitive($(this), isCheckboxInChoices($(this), resp.choices));
+								Utils.setEnabled($(this), isCheckboxInChoices($(this), resp.choices));
 							});
 							setInitialCheckedState(checkboxes, setToDefault);
 						}
@@ -234,9 +217,9 @@
 			actionDiv.find('input:hidden[name="subcategory"]').val(subcategory);
 			
 			// Set sensitivity of option menus 
-			setInputSensitive($('#media-name-field'), $.inArray(category, ['', 'chemical']) != -1);
-			setInputSensitive($('#source-field'), $.inArray(category, ['', 'chemical', 'statistical']) != -1);
-			setInputSensitive($('#instrumentation-field'), $.inArray(category, ['', 'chemical']) != -1);
+			Utils.setEnabled($('#media-name-field'), $.inArray(category, ['', 'chemical']) != -1);
+			Utils.setEnabled($('#source-field'), $.inArray(category, ['', 'chemical', 'statistical']) != -1);
+			Utils.setEnabled($('#instrumentation-field'), $.inArray(category, ['', 'chemical']) != -1);
 		}
 	
 		$(document).ready(function() {

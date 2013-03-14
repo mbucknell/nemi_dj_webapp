@@ -890,6 +890,7 @@ class MethodSummaryView(DetailView):
     
     # Field definitions to be used in the method summary view to provide table definitions.
     field_abbrev_set = ['MEDIA_NAME',
+                        'METHOD_OFFICIAL_NAME',
                         'METHOD_SUBCATEGORY',
                         'METHOD_SOURCE',
                         'CITATION',
