@@ -119,12 +119,12 @@ class AnalyteSelectView(View):
                     qs = AnalyteCodeVW.objects.filter(
                         analyte_analyte_code__icontains=request.GET['selection']).order_by('analyte_analyte_code').values_list('analyte_analyte_code', 
                                                                                                                                flat=True).distinct()
-                else:
-                    qs = AnalyteCodeRel.objects.filter(analyte_name__icontains=request.GET['selection']).order_by('analyte_name').values_list('analyte_name', flat=True)                                   
-                
-                if qs.count() > 0:
                     qs_str = '[' + ', '.join('"%s"' % v for v in qs) + ']'
-                    return HttpResponse('{"values_list" : ' +  qs_str+ '}', mimetype="application/json")
+                else:
+                    qs = AnalyteCodeRel.objects.filter(analyte_name__icontains=request.GET['selection']).order_by('analyte_name').values_list('analyte_name', 'analyte_code')                                   
+                    qs_str='[' +', '.join('["%s","%s"]' % (n, c) for (n, c) in qs) + ']'
+                
+                return HttpResponse('{"values_list" : ' +  qs_str+ '}', mimetype="application/json")
             
         return HttpResponse('{"values_list" : ""}', mimetype="application/json")
  

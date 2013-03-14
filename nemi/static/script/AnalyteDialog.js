@@ -25,9 +25,17 @@ AnalyteDialog = {
 					var valuesEl = $('#analyte-search-list');
 					if (resp.values_list.length > 0) {
 						var valueOptions = '';
-
-						for (var i=0; i < resp.values_list.length; i++) {
-							valueOptions += '<option value="' + resp.values_list[i].toLowerCase() + '">' + resp.values_list[i] + '</option>';
+						
+						if (AnalyteDialog.analyteIdKind == 'code') {
+							for (var i=0; i < resp.values_list.length; i++) {
+								valueOptions += '<option value="' + resp.values_list[i].toLowerCase() + '">' + resp.values_list[i] + '</option>';
+							}
+						}
+						else {
+							for (var i=0; i < resp.values_list.length; i++) {
+								valueOptions += '<option value="' + resp.values_list[i][0].toLowerCase() + '">' + 
+									resp.values_list[i][0] + ' (' + resp.values_list[i][1] + ')</option>';
+							}
 						}
 						
 						valuesEl.html(valueOptions);
@@ -85,7 +93,7 @@ AnalyteDialog = {
 						if (value != '') {
 							value += '\n';
 						}
-						value += $(this).html();
+						value += $(this).val();
 					});
 					AnalyteDialog.parentTextEl.val(value);
 					AnalyteDialog.parentTextEl.change();
