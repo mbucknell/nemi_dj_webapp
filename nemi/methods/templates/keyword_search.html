@@ -19,6 +19,19 @@
 	</style>
 {% endblock %}
 
+{% block page_script %}
+ <!-- EASTER EGG FOR DAN AND HIS BANNER  REMOVE!!! -->
+ 	{{ block.super }}
+ 	<script type="text/javascript">
+ 		$(document).ready(function() {
+ 			if ('{{ keyword }}' == 'nitrate') {
+ 				$('#page-header img').attr('src', '{{ STATIC_URL }}images/nemi4.0_awesome.gif');
+ 			}
+ 		});
+ 		$('#page-header img')
+ 	</script>
+ {% endblock %}
+
 {% block page_specific_info %}
 	Your search returned: {{ total_found }} methods, protocols, or procedures.
 {% endblock %}
