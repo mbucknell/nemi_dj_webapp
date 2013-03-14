@@ -13,17 +13,6 @@
 
 		<link rel="stylesheet" href="{{ STATIC_URL }}styles/custom.css" media="screen" type="text/css"> <!-- Project style sheet -->
 		
-		<!-- Adds style for beta marker. This should be removed when the web site is released -->
-		<style>
-			#beta-marker {
-				color: grey;
-				font-size: large;
-				position: absolute;
-				top: 0px;
-				left: 320px;
-		}
-		</style>
-		
 			  
 		<script src="{{ STATIC_URL }}script/jquery-ui/jquery-1.9.0.js"></script>
  		<script type="text/javascript">
@@ -41,8 +30,7 @@
 	<body>
 		{% block header %}
 			<div id="page-header">
-				<img src="{{ STATIC_URL }}images/bannerv3.7.gif" alt="NEMI Logo"></img>
-				<div id="beta-marker"><p>Provisional - Site in review</p></div> <!--  This should be removed when the web site is released -->
+				<img src="{{ STATIC_URL }}images/nemi4.0.gif" alt="NEMI Logo"></img>
 				<div id="right-header">
 					{% block whats_new %}
 						<div id="whats-new-div">
