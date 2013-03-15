@@ -125,6 +125,7 @@ class MethodSummaryVW(models.Model):
     relative_cost = models.CharField(max_length=40, blank=True)
     pdf_name = models.CharField(max_length=34, blank=True)
     pdf_name2 = models.CharField(max_length=44, blank=True)
+    instrumentation_description = models.CharField(max_length=200)
     collected_sample_amt_ml = models.CharField(max_length=10, blank=True)
     collected_sample_amt_g = models.CharField(max_length=10, blank=True)
     liquid_sample_flag = models.CharField(max_length=1, blank=True)

@@ -67,7 +67,7 @@
 
 {% block page_info %}
 	<br />
-	<b style="font-size:large;">{{ method.details.method_source }} {{ method.details.source_method_identifier|safe }}</b>
+	<b style="font-size:large;">{{ method.details.method_source }} {{ method.details.source_method_identifier|safe }}: {{ method.details.method_descriptive_name }}</b>
 	<br />
 	<br />
 {% endblock %}
@@ -99,6 +99,9 @@
 								{% endif %}
 							</td>
 						</tr>
+						<tr>
+							{% include "field_def.html" with field=field_defs.INSTRUMENTATION %}
+							<td>{{ method.details.instrumentation_description }}</td>
 						<tr>
 							{% include "field_def.html" with field=field_defs.METHOD_SUBCATEGORY %}
 							<td>{{ method.details.method_subcategory }}</td>
