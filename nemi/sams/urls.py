@@ -43,6 +43,6 @@ urlpatterns = patterns("",
             views.ApproveStatMethod.as_view(),
             name='sams-approve_method'),
         url(r'^not_allowed/$',
-            TemplateView.as_view(template_name='permissions_problem.html'),
+            TemplateView.as_view(template_name='sams/permissions_problem.html'),
             name='sams-not_allowed'),
 )

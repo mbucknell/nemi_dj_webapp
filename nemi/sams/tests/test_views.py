@@ -39,7 +39,7 @@ class TestAddStatMethodOnlineView(TestCase):
         resp = self.client.get(reverse('sams-create_method'))
         
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'create_statistic_source.html')
+        self.assertTemplateUsed(resp, 'sams/create_statistic_source.html')
         self.assertIn('form', resp.context)
         self.assertIn('action_url', resp.context)
         self.assertEqual(resp.context['action_url'], reverse('sams-create_method'))
@@ -53,7 +53,7 @@ class TestAddStatMethodOnlineView(TestCase):
                                 {'source_method_identifier' : 'SAMS M1'})
         
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'create_statistic_source.html')
+        self.assertTemplateUsed(resp, 'sams/create_statistic_source.html')
         self.assertIn('form', resp.context)
         self.assertIn('action_url', resp.context)
         self.assertEqual(resp.context['action_url'], reverse('sams-create_method'))
@@ -101,7 +101,7 @@ class TestStatisticSearchViewNoMethods(TestCase):
     def test_view_no_query(self):
         resp = self.client.get(reverse('sams-statistics'))
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'statistic_search.html')
+        self.assertTemplateUsed(resp, 'sams/statistic_search.html')
         self.assertIn('search_form', resp.context)
         self.assertEqual(resp.context['hide_search'], False)
         self.assertEqual(resp.context['show_results'], False)
@@ -120,7 +120,7 @@ class TestStatisticSearchViewNoMethods(TestCase):
                                                               'special_topics' : ''})
         
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'statistic_search.html');
+        self.assertTemplateUsed(resp, 'sams/statistic_search.html');
         self.assertIn('search_form',resp.context)
         self.assertEqual(resp.context['hide_search'], True)
         self.assertEqual(resp.context['show_results'], True)
@@ -236,7 +236,7 @@ class TestStatisticSearchView(TestCase):
                                                             'special_topic' : ''})
         
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'statistic_search.html');
+        self.assertTemplateUsed(resp, 'sams/statistic_search.html');
         self.assertIn('search_form',resp.context)
         self.assertEqual(resp.context['hide_search'], True)
         self.assertEqual(resp.context['show_results'], True)
@@ -255,7 +255,7 @@ class TestStatisticSearchView(TestCase):
                                                             'special_topic' : ''})
         
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'statistic_search.html');
+        self.assertTemplateUsed(resp, 'sams/statistic_search.html');
         self.assertIn('search_form',resp.context)
         self.assertEqual(resp.context['hide_search'], True)
         self.assertEqual(resp.context['show_results'], True)
@@ -274,7 +274,7 @@ class TestStatisticSearchView(TestCase):
                                                             'special_topic' : ''})
         
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'statistic_search.html');
+        self.assertTemplateUsed(resp, 'sams/statistic_search.html');
         self.assertIn('search_form',resp.context)
         self.assertEqual(resp.context['hide_search'], True)
         self.assertEqual(resp.context['show_results'], True)
@@ -293,7 +293,7 @@ class TestStatisticSearchView(TestCase):
                                                             'special_topic' : ''})
         
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'statistic_search.html');
+        self.assertTemplateUsed(resp, 'sams/statistic_search.html');
         self.assertIn('search_form',resp.context)
         self.assertEqual(resp.context['hide_search'], True)
         self.assertEqual(resp.context['show_results'], True)
@@ -312,7 +312,7 @@ class TestStatisticSearchView(TestCase):
                                                             'special_topic' : ''})
         
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'statistic_search.html');
+        self.assertTemplateUsed(resp, 'sams/statistic_search.html');
         self.assertIn('search_form',resp.context)
         self.assertEqual(resp.context['hide_search'], True)
         self.assertEqual(resp.context['show_results'], True)
@@ -331,7 +331,7 @@ class TestStatisticSearchView(TestCase):
                                                             'special_topic' : ''})
         
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'statistic_search.html');
+        self.assertTemplateUsed(resp, 'sams/statistic_search.html');
         self.assertIn('search_form',resp.context)
         self.assertEqual(resp.context['hide_search'], True)
         self.assertEqual(resp.context['show_results'], True)
@@ -350,7 +350,7 @@ class TestStatisticSearchView(TestCase):
                                                             'special_topic' : 3})
         
         self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'statistic_search.html');
+        self.assertTemplateUsed(resp, 'sams/statistic_search.html');
         self.assertIn('search_form',resp.context)
         self.assertEqual(resp.context['hide_search'], True)
         self.assertEqual(resp.context['show_results'], True)
