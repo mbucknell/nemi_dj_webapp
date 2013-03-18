@@ -381,23 +381,40 @@
 				return AnalyteDialog.show('code', $('#analyte-code-field'), $());
 			});	
 			
-			// Add change event handler to analyte name and code field to limit to three analytes. 
-			$('#analyte-name-field').change(function() {
-				var values = $(this).val().split('\n');
-				if (values.length > 3) {
-					alert('You can only enter three analyte names. \n Removing the extra names.');
-					$(this).val(values.slice(0,3).join('\n'));
-				}
-			});
-			$('#analyte-code-field').blur(function() {
-				var values = $(this).val().split('\n');
-				if (values.length > 3) {
-					alert('You can only enter three analyte codes. \n Removing the extra codes.');
-					$(this).val(values.slice(0,3).join('\n'));
-				}
-			});
-			// Add change handlers for analyte name and code text fields so that if one of the fields has text the other is insensitive
+			// Add change event handlers to analyte name and code field. The event handler limits to text 
+			// fields to three analytes and it sets the sensitivity of the analyte text and buttons as
+			// appropriate.. 
+			var nameEl = $('#analyte-name-field');
+			var nameFindBtn = $('#find-analyte-name-button');
+			var codeEl = $('#analyte-code-field');
+			var codeFindBtn = $('#find-analyte-code-button');
+			var analyteSearchButton = $('#analyte-search-div .button-div .search-button');
 			
+			nameEl.change(function() {
+				var value = $.trim($(this).val());
+				Utils.setEnabled(codeEl, (value == ''));
+				Utils.setEnabled(codeFindBtn, (value == ''));
+				Utils.setEnabled(analyteSearchButton, value != '');
+				
+				var valuesList = value.split('\n');
+				if (valuesList.length > 3) {
+					alert('You can only enter three analyte names. \n Removing the extra names.');
+					$(this).val(valuesList.slice(0,3).join('\n'));
+				}
+			});
+			
+			codeEl.change(function() {
+				var value = $.trim($(this).val());
+				Utils.setEnabled(nameEl, (value == ''));
+				Utils.setEnabled(nameFindBtn, (value == ''));
+				Utils.setEnabled(analyteSearchButton, value != '');
+				
+				var valuesList = value.split('\n');
+				if (valuesList.length > 3) {
+					alert('You can only enter three analyte codes. \n Removing the extra codes.');
+					$(this).val(valuesList.slice(0,3).join('\n'));
+				}
+			});
 			
 			// Preprocess the Browse submit to set sessionStorage to clear any visible divs on browse results page.
 			$('#browse-methods-div form').submit(function() {
@@ -415,7 +432,7 @@
 				setLimitBySelectSensitivity(buttonEl);
 			}
 			$('.local-store').each(function() {
-				$(this).val(sessionStorage[$(this).attr('id')]);
+				$(this).val(sessionStorage[$(this).attr('id')]).change();
 			});
 		}); 
 	</script>
@@ -560,7 +577,7 @@ and protocols for all stages of the monitoring process.
 									<input type="hidden" name="category" value=""/>
 									<input type="hidden" name="subcategory" value="" />
 									<div class="button-div">
-										<input class="search-button" type="submit" value="Search"/>
+										<input class="search-button" disabled="disabled" class="disabled" type="submit" value="Search"/>
 									</div>
 								</div>
 							</form>

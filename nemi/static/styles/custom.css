@@ -1,3 +1,5 @@
+/* Color scheme was generated from the web site: http://www.colorschemedesigner.com/#3r11T88rGwtMP */
+
 body {
 	font-family:  Arial;
 	font-size: 12px;
@@ -116,6 +118,11 @@ input[type="button"] {
 	background-color: #21495A;
 }
 .subcategory-action-div h3 {
+	color: black;
+	padding: 6px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	background-color: #DDC2A5;
 	position: relative;
 	left: -10px;
 	width: 100%;
@@ -229,6 +236,10 @@ input[type="button"] {
 .find-button:hover {
 	background-color: #C3DBE5;
 	color: black;
+}
+.find-button.disabled {
+	background-color: darkgrey;
+	color: lightgrey;
 }
 #filtered-action-div p {
 	font-size: medium;
