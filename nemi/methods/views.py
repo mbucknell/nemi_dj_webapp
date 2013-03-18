@@ -406,7 +406,7 @@ class RegulatorySearchView(RegulatorySearchFormMixin, SearchResultView):
     the regulatory search page.
     '''
     
-    template_name = 'regulatory_search.html'
+    template_name = 'methods/regulatory_search.html'
     
     result_fields = ('method_source_id',
                      'regulation_name',
@@ -465,7 +465,7 @@ class TabularRegulatorySearchView(FilterFormMixin, SearchResultView):
     We do not provide and header definitions so the template must create the table headers.
     '''
     
-    template_name = 'tabular_reg_search.html'
+    template_name = 'methods/tabular_reg_search.html'
     form_class = TabularSearchForm
     
     result_fields = ('analyte_name',
@@ -615,7 +615,7 @@ class MethodResultsView(MethodResultsMixin, BaseResultsView):
     Extends MethodResultsMixin and BaseResultsView to implement the method results page.
     '''
     
-    template_name = 'method_results.html'    
+    template_name = 'methods/method_results.html'    
     export_url = reverse_lazy('methods-export_results')
 
     
@@ -718,7 +718,7 @@ class AnalyteResultsView(AnalyteResultsMixin, BaseResultsView):
     Extends AnalyteResultsMixin and BaseResultsView to implement the method results by analyte page.
     '''
     
-    template_name = 'analyte_results.html'
+    template_name = 'methods/analyte_results.html'
     export_url = reverse_lazy('methods-export_analyte_results')
     
 
@@ -799,7 +799,7 @@ class StatisticalResultsView(StatisticalResultsMixin, BaseResultsView):
     Extends StatisticalResultsMixin and BaseResultsView to implement the statistical method results page.
     '''
         
-    template_name = 'statistical_results.html' 
+    template_name = 'methods/statistical_results.html' 
     export_url = reverse_lazy('methods-export_statistical_results')
     
 class ExportStatisticalResultsView(StatisticalResultsMixin, ExportBaseResultsView):           
@@ -828,7 +828,7 @@ class KeywordSearchView(TemplateResponseMixin, View):
     processes get requests.
     '''  
     
-    template_name = "keyword_search.html"
+    template_name = "methods/keyword_search.html"
     
     def get(self, request, *args, **kwargs):
         '''Returns the http response for the keyword search form. If the form is bound
@@ -893,7 +893,7 @@ class BrowseMethodsView(ListView):
     Extends ListView to implement the browse all methods page. Methods are sorted by category, subcategory, 
     and identifier.
     '''
-    template_name = 'browse_methods.html'
+    template_name = 'methods/browse_methods.html'
     
     queryset = MethodVW.objects.order_by('method_category', 'method_subcategory', 'source_method_identifier')
     
@@ -903,7 +903,7 @@ class MethodSummaryView(DetailView):
     Extends the DetailView to provide the method summary view. 
     '''
     
-    template_name='method_summary.html'
+    template_name='methods/method_summary.html'
     context_object_name = 'method'
     
     # Field definitions to be used in the method summary view to provide table definitions.

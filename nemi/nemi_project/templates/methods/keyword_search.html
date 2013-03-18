@@ -1,4 +1,4 @@
-{% extends "base_results.html" %}
+{% extends "methods/base_results.html" %}
 
 {% block title %}NEMI Keyword Search Results{% endblock %}
 
@@ -48,7 +48,7 @@
 	{% if results.object_list %}
 		<div id="results">
 		<br />
-			{% include "results_nav.html" %}
+			{% include "methods/_results_nav.html" %}
 			<br />
 			<table class="data-table" style="width: 100%">
 				<thead>
@@ -94,7 +94,7 @@
 				</tbody>
 			</table>
 			<br/>
-			{% include "results_nav.html" %}
+			{% include "methods/_results_nav.html" %}
 		</div>
 	{% else %}
 		<p>No data found.</p>

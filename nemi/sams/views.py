@@ -24,7 +24,7 @@ class AddStatMethodOnlineView(FormView):
     logged in from accessing the view.
     '''
     
-    template_name = 'create_statistic_source.html'
+    template_name = 'sams/create_statistic_source.html'
     form_class = StatMethodEditForm
     
     @method_decorator(login_required)
@@ -166,7 +166,7 @@ class UpdateStatMethodOnlineView(BaseUpdateStatisticalMethodView):
     MethodOnline table. 
     '''
 
-    template_name = 'update_statistic_source.html'
+    template_name = 'sams/update_statistic_source.html'
     method_model_class = MethodOnline
     source_model_class = SourceCitationOnlineRef   
      
@@ -186,7 +186,7 @@ class UpdateStatisticalMethodStgView(BaseUpdateStatisticalMethodView):
     MethodStg table. 
     '''
     
-    template_name = 'update_statistic_source.html'
+    template_name = 'sams/update_statistic_source.html'
     method_model_class = MethodStg
     source_model_class = SourceCitationStgRef
     
@@ -208,7 +208,7 @@ class UpdateStatisticalMethodOnlineListView(ListView):
     will show a list of views that the logged in user can edit.
     '''
     
-    template_name = 'update_stat_source_list.html'
+    template_name = 'sams/update_stat_source_list.html'
     context_object_name = 'methods'
     
     @method_decorator(login_required)
@@ -224,7 +224,7 @@ class SubmitForReviewView(View, TemplateResponseMixin):
     deleting it from MethodOnline.
     '''
     
-    template_name = 'submit_successful.html'
+    template_name = 'sams/submit_successful.html'
     
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -286,7 +286,7 @@ class ReviewStatMethodStgListView(ListView):
     ''' Extends ListView to show all SAM methods in MethodStg that have not been approved.
     '''
     
-    template_name='methods_for_review.html'
+    template_name = 'sams/methods_for_review.html'
     context_object_name = 'methods'
     
     queryset = MethodStg.stat_methods.order_by('source_method_identifier')
@@ -303,7 +303,7 @@ class ApproveStatMethod(View, TemplateResponseMixin):
     Methods are not removed from MethodStg, but it's approved flag is set to 'Y'.
     '''
     
-    template_name="approve_method.html"
+    template_name="sams/approve_method.html"
 
     @method_decorator(login_required)
     @method_decorator(user_passes_test(lambda u: u.groups.filter(name__exact='nemi_admin'),
@@ -397,7 +397,7 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
     This view does not define any headers, therefore the template creates the table headers.
     '''
     
-    template_name = 'statistic_search.html'
+    template_name = 'sams/statistic_search.html'
     form_class = SAMSSearchForm
     
     def get_qs(self, form):
@@ -448,7 +448,7 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
 class StatisticalMethodSummaryView(DetailView):
     ''' Extends DetailView to implement the Statistical Source Summary view'''
     
-    template_name = 'statistical_source_summary.html'
+    template_name = 'sams/statistical_source_summary.html'
     model = Method
     context_object_name = 'data'
     
@@ -483,7 +483,7 @@ class BaseStatMethodStgDetailView(DetailView):
 class StatisticalMethodOnlineDetailView(BaseStatMethodStgDetailView):
     ''' Extends BaseStatMethodStgDetailView to implement the Statistical Source Detail view.'''
     
-    template_name = 'statistical_source_detail.html'
+    template_name = 'sams/statistical_source_detail.html'
     method_model_class = MethodOnline
     source_citation_model_class = SourceCitationOnlineRef
     
@@ -494,7 +494,7 @@ class StatisticalMethodOnlineDetailView(BaseStatMethodStgDetailView):
         
 class StatisticalMethodStgDetailView(BaseStatMethodStgDetailView):
     
-    template_name = 'statistical_method_review_detail.html'
+    template_name = 'sams/statistical_method_review_detail.html'
     method_model_class = MethodStg
     source_citation_model_class = SourceCitationStgRef
     

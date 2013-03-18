@@ -9,7 +9,7 @@
 {% block page_title %}Search Regulatory Methods{% endblock %}
 
 {% block search_box_body %}
-	{% include "find_analyte_dialog.html" with analyte_value_id="analyte-search-value" %}
+	{% include "_find_analyte_dialog.html" with analyte_value_id="analyte-search-value" %}
 	<form id="search-form" action={% url 'methods-regulatory' %} method="get">
 		<table id="search-table">
 			<tr>
@@ -45,7 +45,7 @@
 	{{ block.super }}
 	<p><b>Total number of unique methods:&nbsp;{{ method_count }}</b></p>
 	<br/><br/>
-	<b>Analyte:</b>{% include "analyte_synonyms.html" %}	
+	<b>Analyte:</b>{% include "_analyte_synonyms.html" %}	
 {% endblock %}
 
 {% block results_table_data %}
@@ -59,7 +59,7 @@
 			<td>{{ r.method_source }}</td>
 			<td>{{ r.revision_information }}</td>
 			<td>{{ r.method_descriptive_name }}</td>
-			<td>{% include "method_download.html" with data=r %}</td>
+			<td>{% include "_method_download.html" with data=r %}</td>
 			<td>
 				{% if r.dl_value.normalize == 999 %}
 					N/A

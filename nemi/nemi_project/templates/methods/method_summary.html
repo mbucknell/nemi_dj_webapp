@@ -88,11 +88,11 @@
 				{% if method.details %}
 					<table class="info-table">
 						<tr>
-							{% include "field_def.html" with field=field_defs.METHOD_OFFICIAL_NAME %}
+							{% include "methods/_field_def.html" with field=field_defs.METHOD_OFFICIAL_NAME %}
 							<td>{{ method.details.method_official_name|safe }}</td>
 						</tr>
 						<tr>
-							{% include "field_def.html" with field=field_defs.MEDIA_NAME %}
+							{% include "methods/_field_def.html" with field=field_defs.MEDIA_NAME %}
 							<td>{{ method.details.media_name }}&nbsp;&nbsp;&nbsp;&nbsp;
 								{% if method.details.waterbody_type %}
 								   <b>       Waterbody type: </b>{{ method.details.waterbody_type }}
@@ -100,20 +100,20 @@
 							</td>
 						</tr>
 						<tr>
-							{% include "field_def.html" with field=field_defs.INSTRUMENTATION %}
+							{% include "methods/_field_def.html" with field=field_defs.INSTRUMENTATION %}
 							<td>{{ method.details.instrumentation_description }}</td>
 						<tr>
-							{% include "field_def.html" with field=field_defs.METHOD_SUBCATEGORY %}
+							{% include "methods/_field_def.html" with field=field_defs.METHOD_SUBCATEGORY %}
 							<td>{{ method.details.method_subcategory }}</td>
 						</tr>
 						<tr>
-							{% include "field_def.html" with field=field_defs.METHOD_SOURCE %}
+							{% include "methods/_field_def.html" with field=field_defs.METHOD_SOURCE %}
 							<td>
-								{% include "method_source_details.html" with r=method.details %}
+								{% include "methods/_method_source_details.html" with r=method.details %}
 							</td>
 						</tr>
 						<tr>
-							{% include "field_def.html" with field=field_defs.CITATION %}
+							{% include "methods/_field_def.html" with field=field_defs.CITATION %}
 							<td>
 								{% if method.details.source_citation_information %}
 									<div class="show-hide-detail-div">
@@ -132,16 +132,16 @@
 								{% endif %}
 							</td>
 						</tr>
-						<tr>{% include "field_def.html" with field=field_defs.BRIEF_METHOD_SUMMARY %}<td>{{ method.details.brief_method_summary|safe }}</td></tr>
-						<tr>{% include "field_def.html" with field=field_defs.SCOPE_AND_APPLICATION %}<td>{{ method.details.scope_and_application|safe }}</td></tr>
-						<tr>{% include "field_def.html" with field=field_defs.APPLICABLE_CONC_RANGE %}<td>{{ method.details.applicable_conc_range|safe }}</td></tr>
-						<tr>{% include "field_def.html" with field=field_defs.METHOD_DOWNLOAD %}<td>{% include "method_download.html" with data=method.details %}</td></tr>
-						<tr>{% include "field_def.html" with field=field_defs.INTERFERENCES %}<td>{{ method.details.interferences|safe }}</td></tr>
-						<tr>{% include "field_def.html" with field=field_defs.QC_REQUIREMENTS %}<td>{{ method.details.qc_requirements|safe }}</td></tr>
-						<tr>{% include "field_def.html" with field=field_defs.SAMPLE_HANDLING %}<td>{{ method.details.sample_handling|safe }}</td></tr>
-						<tr>{% include "field_def.html" with field=field_defs.MAX_HOLDING_TIME %}<td>{{ method.details.max_holding_time }}</td></tr>
-						<tr>{% include "field_def.html" with field=field_defs.RELATIVE_COST %}<td>{{ method.details.relative_cost }}</td></tr>
-						<tr>{% include "field_def.html" with field=field_defs.SAMPLE_PREP_METHODS %}<td>{{ method.details.sample_prep_methods }}</td></tr>
+						<tr>{% include "methods/_field_def.html" with field=field_defs.BRIEF_METHOD_SUMMARY %}<td>{{ method.details.brief_method_summary|safe }}</td></tr>
+						<tr>{% include "methods/_field_def.html" with field=field_defs.SCOPE_AND_APPLICATION %}<td>{{ method.details.scope_and_application|safe }}</td></tr>
+						<tr>{% include "methods/_field_def.html" with field=field_defs.APPLICABLE_CONC_RANGE %}<td>{{ method.details.applicable_conc_range|safe }}</td></tr>
+						<tr>{% include "methods/_field_def.html" with field=field_defs.METHOD_DOWNLOAD %}<td>{% include "methods/_method_download.html" with data=method.details %}</td></tr>
+						<tr>{% include "methods/_field_def.html" with field=field_defs.INTERFERENCES %}<td>{{ method.details.interferences|safe }}</td></tr>
+						<tr>{% include "methods/_field_def.html" with field=field_defs.QC_REQUIREMENTS %}<td>{{ method.details.qc_requirements|safe }}</td></tr>
+						<tr>{% include "methods/_field_def.html" with field=field_defs.SAMPLE_HANDLING %}<td>{{ method.details.sample_handling|safe }}</td></tr>
+						<tr>{% include "methods/_field_def.html" with field=field_defs.MAX_HOLDING_TIME %}<td>{{ method.details.max_holding_time }}</td></tr>
+						<tr>{% include "methods/_field_def.html" with field=field_defs.RELATIVE_COST %}<td>{{ method.details.relative_cost }}</td></tr>
+						<tr>{% include "methods/_field_def.html" with field=field_defs.SAMPLE_PREP_METHODS %}<td>{{ method.details.sample_prep_methods }}</td></tr>
 					</table>
 				{% else %}
 					<p>No data found</p>
@@ -168,7 +168,7 @@
 						</tr>
 						{% for a in method.analytes %}
 							<tr>
-								<td>{% include "analyte_synonyms.html" with analyte_name=a.r.analyte_name|force_escape analyte_code=a.r.analyte_code syn=a.syn  %}</td>
+								<td>{% include "methods/_analyte_synonyms.html" with analyte_name=a.r.analyte_name|force_escape analyte_code=a.r.analyte_code syn=a.syn  %}</td>
 			
 								<td>
 									{% if a.r.dl_value == 999 %}

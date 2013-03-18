@@ -27,7 +27,7 @@
 				<tbody>
 					{% for r in results %}
 						<tr>
-							<td>{% include "analyte_synonyms.html" with analyte_name=r.r.analyte_name analyte_code=r.analyte_code syn=r.syn %}</td>
+							<td>{% include "methods/_analyte_synonyms.html" with analyte_name=r.r.analyte_name analyte_code=r.analyte_code syn=r.syn %}</td>
 							<td class="view-button" style="text-align: left;">
 								{% if r.r.epa_rev_id %}
 									<a title="View EPA method details" href="{% url 'methods-method_summary_reg' r.r.epa_rev_id %}">View</a><br /><br />{{ r.r.epa|safe }}

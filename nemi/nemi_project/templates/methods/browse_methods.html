@@ -1,4 +1,4 @@
-{% extends "base_results.html" %}
+{% extends "methods/base_results.html" %}
 
 {% block title %}NEMI Browse Methods{% endblock %}
 
@@ -139,7 +139,7 @@
 										{% endif %}
 									>{{ object.source_method_identifier|safe }}</a></td>
 									<td>{{ object.method_descriptive_name }}</td>
-									<td>{% include "method_source_details.html" with r=object %}</td>
+									<td>{% include "methods/_method_source_details.html" with r=object %}</td>
 								</tr>
 							{% endfor %}
 						</tbody>
