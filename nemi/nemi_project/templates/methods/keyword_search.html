@@ -47,7 +47,14 @@
 {% block results_content %}
 	{% if results.object_list %}
 		<div id="results">
-		<br />
+		 	<br />
+		 	<div id="keyword-search-div" style="display: inline-block;">
+		 		<form action="{% url 'methods-keyword' %}" method="get">
+		 			<label style="font-size: medium;"for="keyword-search-text">Modify your search:</label>
+		 			<input type="text" id="keyword-search-text" name="keyword_search_field" value="{{ keyword }}" />
+		 			<input type="submit" id="keyword-search-button" class="search-button" value="Search" />
+		 		</form>
+		 	</div>
 			{% include "methods/_results_nav.html" %}
 			<br />
 			<table class="data-table" style="width: 100%">

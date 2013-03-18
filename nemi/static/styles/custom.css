@@ -42,7 +42,7 @@ input[type="button"] {
 	cursor: help;
 }
 .disabled {
-	color: grey;
+	color: #B0B0B0;
 }
 #page-header{
 	margin-top: 0px;
@@ -225,8 +225,8 @@ input[type="button"] {
 	color: black;
 }
 .search-button.disabled {
-	background-color: darkgrey;
-	color: lightgrey;
+	background-color: lightgrey;
+	color: #B0B0B0;
 }
 .find-button {
 	background-color: #69818B;
@@ -238,8 +238,8 @@ input[type="button"] {
 	color: black;
 }
 .find-button.disabled {
-	background-color: darkgrey;
-	color: lightgrey;
+	background-color: lightgrey;
+	color: #B0B0B0;
 }
 #filtered-action-div p {
 	font-size: medium;
