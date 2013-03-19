@@ -140,12 +140,20 @@
 
 					// Add change handler to save the state of the checkbox
 					checkboxes.change(function() {
-						var elId = $(this).attr('id')
-						if ($(this).is(':checked')) {
-							sessionStorage[elId] = 'on';
+						// Make sure at least one checkbox is checked
+						var checkedEls = checkboxes.filter(':checked');
+						if (checkboxes.filter(':enabled').filter(':checked').length > 0) {
+							var elId = $(this).attr('id')
+							if ($(this).is(':checked')) {
+								sessionStorage[elId] = 'on';
+							}
+							else {
+								sessionStorage[elId] = 'off';
+							}
 						}
 						else {
-							sessionStorage[elId] = 'off';
+							//Don't allow change operation if element is enabled
+							$(this).filter(':enabled').prop('checked', true);
 						}
 					});
 					
@@ -215,7 +223,7 @@
 			
 			actionDiv.find('input:hidden[name="category"]').val(category);
 			actionDiv.find('input:hidden[name="subcategory"]').val(subcategory);
-			
+						
 			// Set sensitivity of option menus 
 			Utils.setEnabled($('#media-name-field'), $.inArray(category, ['', 'chemical']) != -1);
 			Utils.setEnabled($('#source-field'), $.inArray(category, ['', 'chemical', 'statistical']) != -1);
@@ -336,35 +344,42 @@
 				// If this is a filtered search subcategory then we also need to update the Limit by section.
 				if ($(this).parents('#filtered-selection-div')) {
 					setLimitBySelectSensitivity($(this));
-					
+									
 					// Default selects to 'all' selection.
 					$('#filtered-search-limits select').val('all').change();
 					
 					// Set method type checkbox state. Default all enabled inputs to true.
 					setMethodTypeState($('#method-type-selections input'), true);
+					
+					// Set sensitivity of the search button
+					Utils.setEnabled($('#filtered-action-div .search-button'), divToShow.attr('id') != 'analyte-search-div');
 				}
 			});
 			
-			// Add submit handler for the filtered search limit form to add the 
-			// form parameters from the filtered subcategory form prior to submitting.
-			$('#filtered-search-limits form').submit(function(){
-				// Remove any hidden inputs from the last submit.
-				$(this).find('input:hidden').remove();
-				
-				// Get parameters from filtered subcategory form. Create hidden inputs 
-				// for each parameter.
+			// Add a click handler for the search button in the filter search section.
+			$('#filtered-search-div .search-button').click(function() {
+				var limitByForm = $('#filtered-search-limits form');
 				var actionDiv = $('#filter-action>div:visible');
-				var hiddenInputHtml = '';
-				actionDiv.find(':input').each(function() {
-					if (!$(this).is(':submit') && $(this).is(':enabled')){
-						hiddenInputHtml +='<input type="hidden" name="' + $(this).attr('name') + '" value="' + $(this).val() + '" />';
-					}
-				});
-				$(this).append(hiddenInputHtml);
 				
-				// Update action to match the actionDiv's action attribute
-				$(this).attr('action', actionDiv.find('form').attr('action'))
-				return true;
+				//Remove any hidden inputs from the last search 
+				limitByForm.find('input:hidden').remove();
+				
+				//Add hidden inputs to limitByForm from the currently visible subcategory form. 
+				var hiddenInputHtml = '';
+				actionDiv.find(':input').filter(':enabled').each(function() {
+					if (($(this).is('[type="checkbox"]')) && !($(this).is(':checked'))) {
+						return;
+					}
+					hiddenInputHtml += '<input type="hidden" name="' + $(this).attr('name') + '" value="' + $(this).val() + '" />';					
+				});
+				
+				limitByForm.append(hiddenInputHtml);
+				
+				// update the action to match actionDiv's and submit form
+				limitByForm.attr('action', actionDiv.find('form').attr('action'));
+				limitByForm.submit();
+				
+				return false;
 			});
 			
 			// Initialize Find analyte dialog and set up click handler for find analyte buttons. 
@@ -388,13 +403,13 @@
 			var nameFindBtn = $('#find-analyte-name-button');
 			var codeEl = $('#analyte-code-field');
 			var codeFindBtn = $('#find-analyte-code-button');
-			var analyteSearchButton = $('#analyte-search-div .button-div .search-button');
+			var searchButton = $('#filtered-action-div .search-button');
 			
 			nameEl.change(function() {
 				var value = $.trim($(this).val());
 				Utils.setEnabled(codeEl, (value == ''));
 				Utils.setEnabled(codeFindBtn, (value == ''));
-				Utils.setEnabled(analyteSearchButton, value != '');
+				Utils.setEnabled(searchButton, value != '' || $.trim(codeEl.val())  != '');
 				
 				var valuesList = value.split('\n');
 				if (valuesList.length > 3) {
@@ -407,12 +422,19 @@
 				var value = $.trim($(this).val());
 				Utils.setEnabled(nameEl, (value == ''));
 				Utils.setEnabled(nameFindBtn, (value == ''));
-				Utils.setEnabled(analyteSearchButton, value != '');
+				Utils.setEnabled(searchButton, value != '' || $.trim(nameEl.val()) != '');
 				
 				var valuesList = value.split('\n');
 				if (valuesList.length > 3) {
 					alert('You can only enter three analyte codes. \n Removing the extra codes.');
 					$(this).val(valuesList.slice(0,3).join('\n'));
+				}
+			});
+			
+			//Check to make sure that at least one method type is checked.
+			$('#method-type-selections input[type="checkbox"]').click(function(){
+				if ($(this).is('not(:checked)') && $(this).siblings.is(':not(checked)')) {
+					$(this).prop('checked', true);
 				}
 			});
 			
@@ -422,7 +444,7 @@
 				return true;
 			});
 			
-			// Initialize data from sessionStorage 
+			// Initialize data from sessionStorage
 			if (sessionStorage['general-selection-div']) {
 				showSearchSubcategory($('#' + sessionStorage['general-selection-div']), false);
 			}
@@ -434,6 +456,22 @@
 			$('.local-store').each(function() {
 				$(this).val(sessionStorage[$(this).attr('id')]).change();
 			});
+			
+			// Set sensitivity of Limit by Search button by examining the visible action div
+			var actionDiv = $('#filter-action').children(':visible');
+			var searchBtn = $('#filtered-action-div .search-button');
+			if (actionDiv.attr('id') == 'analyte-search-div') {
+				if (($.trim($('#analyte-name-field').val()) == '') &&
+						($.trim($('#analyte-code-field').val())) == '') {
+					Utils.setEnabled(searchBtn, false);
+				}
+				else {
+					Utils.setEnabled(searchBtn, true);
+				}
+			}
+			else {
+				Utils.setEnabled(searchBtn, true);
+			}
 		}); 
 	</script>
 {% endblock %}
@@ -576,9 +614,6 @@ and protocols for all stages of the monitoring process.
 									</table>
 									<input type="hidden" name="category" value=""/>
 									<input type="hidden" name="subcategory" value="" />
-									<div class="button-div">
-										<input class="search-button" disabled="disabled" class="disabled" type="submit" value="Search"/>
-									</div>
 								</div>
 							</form>
 							<div id="find-analyte-dialog" style="display: none;">
@@ -618,9 +653,6 @@ and protocols for all stages of the monitoring process.
 										<span class="header">Chemical subcategories:</span><br />
 										<ul id="chemical-subcategory-selections" >
 										</ul>
-									</div>
-									<div class="button-div">
-										<input class="search-button" type="submit" value="Search"/>
 									</div>
 									<input type="hidden" name="category" value="Chemical"/>
 								</div>
@@ -667,9 +699,6 @@ and protocols for all stages of the monitoring process.
 									</table>
 									<input type="hidden" name="category" value="Biological"/>
 									<input type="hidden" name="subcategory" value="population/community" />
-									<div class="button-div">
-										<input class="search-button" type="submit" value="Search"/>
-									</div>
 								</div>
 							</form>
 						</div>
@@ -694,9 +723,6 @@ and protocols for all stages of the monitoring process.
 										</tr>
 									</table>
 									<input type="hidden" name="category" value="Toxicity Assay"/>
-									<div class="button-div">
-										<input class="search-button" type="submit" value="Search"/>
-									</div>
 								</div>
 							</form>
 						</div>
@@ -769,57 +795,57 @@ and protocols for all stages of the monitoring process.
 										</tr>
 									</table>
 									<input type="hidden" name="category" value="Statistical"/>
-									<div class="button-div">
-										<input class="search-button" type="submit" value="Search"/>
-									</div>
 								</div>
 							</form>
 						</div>
 					</div>
 				</div>
-				<h3>
-					<button class="show-hide-toggle" title="Hide subsection" type=button>
-						<img src="{{ STATIC_URL }}images/triangle-down-image36.gif" alt="hide" /> 
-					</button>
-					Limit by: (optional)		
-				</h3>
-				<div id=filtered-search-limits class="input-section-div subsection-div">
-					<form action="{% url 'methods-results' %}" method="get">
-						<table class="general-search-form-table">
-							<tr>
-								<th><label for="media-name-field">Media name:</label></th>
-								<td>
-									<select id="media-name-field" name="media_name">
-										<option value="all">All</option>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<th><label for="source-field">Source:</label></th>
-								<td>
-									<select id="source-field" name="source">
-										<option value="all">All</option>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<th><label for="instrumentation-field">Instrumentation:</label></th>
-								<td>
-									<select id="instrumentation-field" name="instrumentation">
-										<option value="all">All</option>
-									</select>
-								</td>
-							</tr>
-						</table>
-						<div class="no-style-list">
-							<span class="header">Method type:</span><br />
-							<ul id="method-type-selections" >
-							</ul>
-						</div>
-						<div class="button-div">
-							<input class="search-button" type="submit" value="Search"/>
-						</div>
-					</form>
+				<div id="limit-by-section">
+					<h3>
+						<button class="show-hide-toggle" title="Hide subsection" type=button>
+							<img src="{{ STATIC_URL }}images/triangle-down-image36.gif" alt="hide" /> 
+						</button>
+						Limit by: (optional)		
+					</h3>
+					<br />
+					<div id=filtered-search-limits class="input-section-div subsection-div">
+						<form>
+							<table class="general-search-form-table">
+								<tr>
+									<th><label for="media-name-field">Media name:</label></th>
+									<td>
+										<select id="media-name-field" name="media_name">
+											<option value="all">All</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th><label for="source-field">Source:</label></th>
+									<td>
+										<select id="source-field" name="source">
+											<option value="all">All</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th><label for="instrumentation-field">Instrumentation:</label></th>
+									<td>
+										<select id="instrumentation-field" name="instrumentation">
+											<option value="all">All</option>
+										</select>
+									</td>
+								</tr>
+							</table>
+							<div class="no-style-list">
+								<span class="header">Method type:</span><br />
+								<ul id="method-type-selections" >
+								</ul>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="button-div">
+					<input class="search-button" type="button" value="Search"/>
 				</div>
 			</div>
 		</div>
