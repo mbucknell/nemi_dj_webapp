@@ -72,8 +72,7 @@
 		Method details:&nbsp;
 		{% if method.details.mimetype %}
 			<a href="{% url 'methods-pdf' method_id=method.details.method_id %}"
-				title="Click to download the method's pdf documentation"
-				<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat(pdf) icon">Download PDF
+				title="Click to download the method's pdf documentation">Download PDF
 			</a>
 		{% elif method.details.link_to_full_method %}
 			<a class="popup" href="{{ method.details.link_to_full_method }}" 
