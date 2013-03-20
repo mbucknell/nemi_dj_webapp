@@ -151,7 +151,6 @@ class AnalyteCodeRel(models.Model):
     preferred = models.IntegerField(null=True)
     changed = models.DateField()
     data_entry = models.CharField(max_length=20, blank=True)
-    analyte_type = models.CharField(max_length=50, blank=True)
     
     class Meta:
         db_table = u'analyte_code_rel'
