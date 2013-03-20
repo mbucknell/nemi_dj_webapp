@@ -229,6 +229,21 @@
 			Utils.setEnabled($('#source-field'), $.inArray(category, ['', 'chemical', 'statistical']) != -1);
 			Utils.setEnabled($('#instrumentation-field'), $.inArray(category, ['', 'chemical']) != -1);
 		}
+		
+		function setFilteredSearchButtonState() {
+			var searchBtn = $('#filtered-action-div .search-button');
+			var activeDiv = $('#filter-action>div:visible');
+			var category = activeDiv.find('input[name="category"]').val();
+			if ((activeDiv.attr('id') == 'analyte-search-div') && (category == '')){
+				// Set state to disabled if the analyte code or name fields are both empty.
+				var nameVal = $.trim($('#analyte-name-field').val());
+				var codeVal = $.trim($('#analyte-code-field').val());
+				Utils.setEnabled (searchBtn, (nameVal != '' || codeVal != ''));
+			}
+			else {
+				Utils.setEnabled(searchBtn, true);
+			}
+		}
 	
 		$(document).ready(function() {
 			// Dynamically create option menus 
@@ -352,7 +367,7 @@
 					setMethodTypeState($('#method-type-selections input'), true);
 					
 					// Set sensitivity of the search button
-					Utils.setEnabled($('#filtered-action-div .search-button'), divToShow.attr('id') != 'analyte-search-div');
+					setFilteredSearchButtonState();
 				}
 			});
 			
@@ -403,13 +418,12 @@
 			var nameFindBtn = $('#find-analyte-name-button');
 			var codeEl = $('#analyte-code-field');
 			var codeFindBtn = $('#find-analyte-code-button');
-			var searchButton = $('#filtered-action-div .search-button');
 			
 			nameEl.change(function() {
 				var value = $.trim($(this).val());
 				Utils.setEnabled(codeEl, (value == ''));
 				Utils.setEnabled(codeFindBtn, (value == ''));
-				Utils.setEnabled(searchButton, value != '' || $.trim(codeEl.val())  != '');
+				setFilteredSearchButtonState();
 				
 				var valuesList = value.split('\n');
 				if (valuesList.length > 3) {
@@ -422,7 +436,7 @@
 				var value = $.trim($(this).val());
 				Utils.setEnabled(nameEl, (value == ''));
 				Utils.setEnabled(nameFindBtn, (value == ''));
-				Utils.setEnabled(searchButton, value != '' || $.trim(nameEl.val()) != '');
+				setFilteredSearchButtonState();
 				
 				var valuesList = value.split('\n');
 				if (valuesList.length > 3) {
@@ -457,21 +471,8 @@
 				$(this).val(sessionStorage[$(this).attr('id')]).change();
 			});
 			
-			// Set sensitivity of Limit by Search button by examining the visible action div
-			var actionDiv = $('#filter-action').children(':visible');
-			var searchBtn = $('#filtered-action-div .search-button');
-			if (actionDiv.attr('id') == 'analyte-search-div') {
-				if (($.trim($('#analyte-name-field').val()) == '') &&
-						($.trim($('#analyte-code-field').val())) == '') {
-					Utils.setEnabled(searchBtn, false);
-				}
-				else {
-					Utils.setEnabled(searchBtn, true);
-				}
-			}
-			else {
-				Utils.setEnabled(searchBtn, true);
-			}
+			// Set sensitivity of Limit by Search button 
+			setFilteredSearchButtonState();
 		}); 
 	</script>
 {% endblock %}
@@ -566,7 +567,7 @@ and protocols for all stages of the monitoring process.
 				<div id="filter-specific-div">
 					<div id="filter-header">
 						<div id="analytes-header">
-							<p>Search for ANALYTES</p>
+							<p>Search by ANALYTES</p>
 							<hr/>
 						</div>
 						<div id="chemical-header" style="display: none;">
