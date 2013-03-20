@@ -97,7 +97,8 @@ TEMPLATE_CONTEXT_PROCESSORS = ("django.contrib.auth.context_processors.auth",
                                "django.core.context_processors.static",
                                "django.core.context_processors.tz",
                                "django.contrib.messages.context_processors.messages",
-                               "django.core.context_processors.request")
+                               "django.core.context_processors.request",
+                               "newsfeed.context_processors.latest_news_items")
 
 
 # List of callables that know how to import templates from various sources.
@@ -137,7 +138,11 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    # third party apps
+    'tinymce',
+    # NEMI/CIDA specific apps
     'common',
+    'newsfeed',
     'methods',
     'sams',
 	'memo',
@@ -197,7 +202,7 @@ if os.getenv('JENKINS_URL', False):
                      )
     JENKINS_TEST_RUNNER = 'nemi_project.test_jenkins_runner.ManagedModelTestRunner'
     INSTALLED_APPS += ('django_jenkins',)
-    PROJECT_APPS = ('common', 'methods', 'sams')
+    PROJECT_APPS = ('common', 'methods', 'sams', 'newsfeed')
     DATABASES['default'].update(dict(
             ENGINE=os.getenv('DBA_SQL_DJANGO_ENGINE'),
             USER=os.getenv('DBA_SQL_ADMIN'),

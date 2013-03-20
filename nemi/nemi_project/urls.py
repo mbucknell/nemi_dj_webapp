@@ -13,6 +13,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^tinymce/', include('tinymce.urls')),
     url(r'^accounts/login/$', 
         'django.contrib.auth.views.login', 
         {}, 
