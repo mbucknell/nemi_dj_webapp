@@ -39,7 +39,7 @@
 							</div>
 							<div id="news-feed">
 								{% for item in news_items %}
-									<p>{{ item.headline|safe }}</p>
+									{{ item.headline|safe }}
 								{% endfor %}
 							</div>
 						</div>

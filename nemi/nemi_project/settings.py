@@ -177,6 +177,7 @@ LOGGING = {
     }
 }
 
+
 SESSION_COOKIE_AGE = 28800 # In seconds, this is eight hours
 
 NEW_ACCOUNT_NOTIFICATIONS = () # List of emails to send new account notifications to.
@@ -195,6 +196,9 @@ if ADDITIONAL_APPS:
     
 if ADDITIONAL_MW_CLASSES:
     MIDDLEWARE_CLASSES += ADDITIONAL_MW_CLASSES
+    
+# Set up TinyMCE configuration
+TINYMCE_JS_URL = STATIC_URL + 'script/tiny_mce/tiny_mce.js'
     
 if os.getenv('JENKINS_URL', False):
     JENKINS_TASKS = (
