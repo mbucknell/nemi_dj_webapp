@@ -336,6 +336,10 @@ column in the table */
 	list-style-type: none;
 	margin: 0px;
 }
+#method-detail-link {
+	font-size: medium;
+	float: right;
+}
 
 /* Below this is stuff used in old NEMI review for whether it's used. */
 /* Used to style form error message */

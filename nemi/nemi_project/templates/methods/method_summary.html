@@ -68,6 +68,23 @@
 {% block page_info %}
 	<br />
 	<b style="font-size:large;">{{ method.details.method_source }} {{ method.details.source_method_identifier|safe }}: {{ method.details.method_descriptive_name }}</b>
+	<span id="method-detail-link">
+		Method details:&nbsp;
+		{% if method.details.mimetype %}
+			<a href="{% url 'methods-pdf' method_id=method.details.method_id %}"
+				title="Click to download the method's pdf documentation"
+				<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat(pdf) icon">Download PDF
+			</a>
+		{% elif method.details.link_to_full_method %}
+			<a class="popup" href="{{ method.details.link_to_full_method }}" 
+				title="Link to method owner's website (will open in a new window)"
+				target="_blank">
+				Method owner's website
+			</a>
+		{% else %}
+			Method .pdf is not available
+		{% endif %}
+	</span>
 	<br />
 	<br />
 {% endblock %}
@@ -123,7 +140,7 @@
 										{{ method.details.source_citation_name|safe }}
 										<div class="hidden-details-div" style="display: none;">				
 											<table class="inside-table">
-												<tr><th>Citation Information:</th><td>{{ method.details.source_citation_information }}</td></tr>
+												<tr><th>Citation Information:</th><td>{{ method.details.source_citation_information|safe }}</td></tr>
 											</table>
 										</div>
 									</div>
@@ -135,7 +152,6 @@
 						<tr>{% include "methods/_field_def.html" with field=field_defs.BRIEF_METHOD_SUMMARY %}<td>{{ method.details.brief_method_summary|safe }}</td></tr>
 						<tr>{% include "methods/_field_def.html" with field=field_defs.SCOPE_AND_APPLICATION %}<td>{{ method.details.scope_and_application|safe }}</td></tr>
 						<tr>{% include "methods/_field_def.html" with field=field_defs.APPLICABLE_CONC_RANGE %}<td>{{ method.details.applicable_conc_range|safe }}</td></tr>
-						<tr>{% include "methods/_field_def.html" with field=field_defs.METHOD_DOWNLOAD %}<td>{% include "methods/_method_download.html" with data=method.details %}</td></tr>
 						<tr>{% include "methods/_field_def.html" with field=field_defs.INTERFERENCES %}<td>{{ method.details.interferences|safe }}</td></tr>
 						<tr>{% include "methods/_field_def.html" with field=field_defs.QC_REQUIREMENTS %}<td>{{ method.details.qc_requirements|safe }}</td></tr>
 						<tr>{% include "methods/_field_def.html" with field=field_defs.SAMPLE_HANDLING %}<td>{{ method.details.sample_handling|safe }}</td></tr>
