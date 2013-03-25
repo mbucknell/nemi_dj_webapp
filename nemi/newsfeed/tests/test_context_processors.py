@@ -8,7 +8,7 @@ from ..context_processors import latest_news_items
 import datetime
 
 
-class TestLatestNewsItems(TestCase):
+class LatestNewsItemsTestCase(TestCase):
     
     def test_no_items(self):
         self.assertQuerysetEqual(latest_news_items(HttpRequest())['news_items'], [])

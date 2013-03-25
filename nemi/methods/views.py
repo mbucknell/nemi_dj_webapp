@@ -20,9 +20,12 @@ from common.models import StatAnalysisRel, SourceCitationRef, StatDesignRel, Sta
 from common.utils.forms import get_criteria
 from common.utils.view_utils import dictfetchall, xls_response, tsv_response
 from common.views import FilterFormMixin, SearchResultView, ExportSearchView, ChoiceJsonView
-from forms import RegulatorySearchForm, TabularSearchForm
-from models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, AnalyteCodeVW
-from models import RegQueryVW,  RegulatoryMethodReport, RegulationRef
+
+from domhelp.views import FieldHelpMixin
+
+from .forms import RegulatorySearchForm, TabularSearchForm
+from .models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, AnalyteCodeVW
+from .models import RegQueryVW,  RegulatoryMethodReport, RegulationRef
 
 def _greenness_profile(d):
     '''Returns a dictionary with five keywords. The first keyword is profile whose is 
@@ -898,7 +901,7 @@ class BrowseMethodsView(ListView):
     queryset = MethodVW.objects.order_by('method_category', 'method_subcategory', 'source_method_identifier')
     
     
-class MethodSummaryView(DetailView):
+class MethodSummaryView(FieldHelpMixin, DetailView):
     '''
     Extends the DetailView to provide the method summary view. 
     '''
@@ -907,23 +910,21 @@ class MethodSummaryView(DetailView):
     context_object_name = 'method'
     
     # Field definitions to be used in the method summary view to provide table definitions.
-    field_abbrev_set = ['MEDIA_NAME',
-                        'INSTRUMENTATION',
-                        'METHOD_OFFICIAL_NAME',
-                        'METHOD_SUBCATEGORY',
-                        'METHOD_SOURCE',
-                        'CITATION',
-                        'BRIEF_METHOD_SUMMARY',
-                        'SCOPE_AND_APPLICATION',
-                        'APPLICABLE_CONC_RANGE',
-                        'METHOD_DOWNLOAD',
-                        'INTERFERENCES',
-                        'QC_REQUIREMENTS',
-                        'SAMPLE_HANDLING',
-                        'MAX_HOLDING_TIME',
-                        'RELATIVE_COST',
-                        'SAMPLE_PREP_METHODS'
-                       ]
+    field_names = ['method_official_name',
+                   'media_name',
+                   'instrumentation_description',
+                   'method_subcategory',
+                   'method_source',
+                   'source_citation_information',
+                   'brief_method_summary',
+                   'scope_and_application',
+                   'applicable_conc_range',
+                   'interferences',
+                   'qc_requirements',
+                   'sample_handling',
+                   'max_holding_time',
+                   'relative_cost',
+                   'sample_prep_methods']
     
     def get_object(self):
         ''' Override get_object to return the method details, method analytes, and method notes.
@@ -959,23 +960,6 @@ class MethodSummaryView(DetailView):
         else:
             raise Http404
                
-    def get_context_data(self, **kwargs):
-        ''' 
-        Extend get_context_data to return additional key of field_defs which will be a dictionary
-        of  field ids which itself is a dictionary containing the field name and help description.
-        '''
-        context = super(MethodSummaryView, self).get_context_data(**kwargs)
-        
-        defs = DefinitionsDOM.objects.filter(definition_abbrev__in=self.field_abbrev_set)
-        context['field_defs'] = {}
-    
-        for d in defs:
-            context['field_defs'][d.definition_abbrev] = {'name': d.definition_name, 
-                                               'description' : d.definition_description,
-                                               }
-        
-        return context;
-            
             
 class ExportMethodAnalyte(View):
     ''' Extends the standard view. This view creates a

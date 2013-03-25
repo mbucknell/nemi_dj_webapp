@@ -5,56 +5,16 @@ Created on Mar 15, 2012
 '''
 
 from django import forms 
-from django.conf import settings
-from django.core.management import call_command
-from django.db.models import loading
 from django.utils import unittest
 
-from common.utils.forms import get_criteria, get_criteria_from_field_data, get_multi_choice
-from common.utils.view_utils import tsv_response, xls_response
+from nemi_project.test_settings_mgr import TestSettingsManager
 
+from ..utils.forms import get_criteria, get_criteria_from_field_data, get_multi_choice
+from ..utils.view_utils import tsv_response, xls_response
 from models import TestModel
 
-NO_SETTING = ('!', None)
 
-class TestSettingsManager(object):
-    """
-    A class which can modify some Django settings temporarily for a
-    test and then revert them to their original values later.
-
-    Automatically handles resyncing the DB if INSTALLED_APPS is
-    modified.
-    
-    This code came from http://djangosnippets.org/snippets/1011/
-
-    """
-    def __init__(self):
-        self._original_settings = {}
-
-    def set(self, **kwargs):
-        for k,v in kwargs.iteritems():
-            self._original_settings.setdefault(k, getattr(settings, k,
-                                                          NO_SETTING))
-            setattr(settings, k, v)
-        if 'INSTALLED_APPS' in kwargs:
-            self.syncdb()
-
-    def syncdb(self):
-        loading.cache.loaded = False
-        call_command('syncdb', verbosity=0)
-
-    def revert(self):
-        for k,v in self._original_settings.iteritems():
-            if v == NO_SETTING:
-                delattr(settings, k)
-            else:
-                setattr(settings, k, v)
-        if 'INSTALLED_APPS' in self._original_settings:
-            self.syncdb()
-        self._original_settings = {}
-
-
-class TestGetCriteria(unittest.TestCase):
+class GetCriteriaTestCase(unittest.TestCase):
     
     def test_choice_select_integer_value(self):
         class MyForm(forms.Form):
@@ -84,7 +44,7 @@ class TestGetCriteria(unittest.TestCase):
         self.assertRaises(AttributeError, get_criteria, (test_form['char_field']))   
                 
         
-class TestGetCriteriaFromFieldData(unittest.TestCase):
+class GetCriteriaFromFieldDataTestCase(unittest.TestCase):
     
     class MyForm(forms.Form):
         choice = forms.ModelChoiceField(queryset=TestModel.objects.all(), required=False)
@@ -92,7 +52,7 @@ class TestGetCriteriaFromFieldData(unittest.TestCase):
         my_int = forms.IntegerField(required=False)
         
     def __init__(self, *args, **kwargs):
-        super(TestGetCriteriaFromFieldData, self).__init__(*args, **kwargs)
+        super(GetCriteriaFromFieldDataTestCase, self).__init__(*args, **kwargs)
         self.settings_manager = TestSettingsManager()    
 
     def setUp(self):
@@ -146,7 +106,7 @@ class TestGetCriteriaFromFieldData(unittest.TestCase):
     def tearDown(self):
         self.settings_manager.revert()
         
-class TestGetMultiChoice(unittest.TestCase):
+class GetMultiChoiceTestCase(unittest.TestCase):
     
     def test_with_string_values(self):
         class MyForm(forms.Form):
@@ -180,7 +140,7 @@ class TestGetMultiChoice(unittest.TestCase):
         my_form.is_valid()
         self.assertRaises(KeyError, get_multi_choice, my_form, 'another_field')
             
-class TestTsvResponse(unittest.TestCase):
+class TsvResponseTestCase(unittest.TestCase):
     
     def test_response(self):
         headings = ['A', 'B', 'C']
@@ -199,7 +159,7 @@ class TestTsvResponse(unittest.TestCase):
         self.assertEqual(response.content, expected_contents)
         self.assertEqual(response.status_code, 200) 
         
-class TestXlsResponse(unittest.TestCase):
+class XlsResponseTestCase(unittest.TestCase):
     
     def test_response(self):
         headings = ['A', 'B', 'C']

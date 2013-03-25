@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     # NEMI/CIDA specific apps
     'common',
     'newsfeed',
+    'domhelp',
     'methods',
     'sams',
 	'memo',
