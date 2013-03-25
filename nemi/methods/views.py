@@ -663,6 +663,7 @@ class AnalyteResultsMixin(ResultsMixin):
                 data = data.filter(analyte_code__iregex=r'(' + '|'.join(['^' + re.escape(c) + '$' for c in codes]) + '$)')
                 
             else:
+                data = data.filter(preferred__exact=-1) # Only get the method for the preferred analyte
                 analyte_type = self.request.GET.get('analyte_type', 'all')
                 waterbody_type = self.request.GET.get('waterbody_type', 'all')
                 gear_type = self.request.GET.get('gear_type', 'all')
