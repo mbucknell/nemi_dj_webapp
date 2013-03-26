@@ -613,13 +613,23 @@ class MethodResultsMixin(ResultsMixin):
         return data
 
     
-class MethodResultsView(MethodResultsMixin, BaseResultsView):
+class MethodResultsView(MethodResultsMixin, FieldHelpMixin, BaseResultsView):
     '''
     Extends MethodResultsMixin and BaseResultsView to implement the method results page.
     '''
     
     template_name = 'methods/method_results.html'    
     export_url = reverse_lazy('methods-export_results')
+    field_names=['source_method_identifier',
+                 'method_source',
+                 'method_descriptive_name',
+                 'method_subcategory',
+                 'instrumentation_description',
+                 'media_name',
+                 'method_category',
+                 'method_type_desc',
+                 'matrix',
+                 'relative_cost_symbol']
 
     
 class ExportMethodResultsView(MethodResultsMixin, ExportBaseResultsView):
@@ -717,13 +727,30 @@ class AnalyteResultsMixin(ResultsMixin):
                          'analyte_code',
                          ).distinct()    
        
-class AnalyteResultsView(AnalyteResultsMixin, BaseResultsView):
+class AnalyteResultsView(AnalyteResultsMixin, FieldHelpMixin, BaseResultsView):
     '''
     Extends AnalyteResultsMixin and BaseResultsView to implement the method results by analyte page.
     '''
     
     template_name = 'methods/analyte_results.html'
     export_url = reverse_lazy('methods-export_analyte_results')
+    
+    field_names = ['source_method_identifier',
+                   'method_source',
+                   'method_descriptive_name',
+                   'analyte_name',
+                   'dl_value',
+                   'dl_type',
+                   'accuracy',
+                   'precision',
+                   'prec_acc_conc_used',
+                   'false_positive_value',
+                   'false_negative_value',
+                   'instrumentation_description',
+                   'relative_cost',
+                   'media_name',
+                   'method_type_desc',
+                   'waterbody_type']
     
 
 class ExportAnalyteResultsView(AnalyteResultsMixin, ExportBaseResultsView):

@@ -11,16 +11,13 @@
 
 {% block page_script %}
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
-
+	<script src="{{ STATIC_URL }}script/HelpDialog.js"></script>
+	
 	<script type="text/javascript">
 		$(document).ready(function(){
 			// Initialize header information dialogs 
-			$('#header-info').dialog({
-				 autoOpen: false,
-				 title: 'Basic Dialog',
-				 height: 200,
-				 width: 300
-			});
+			HelpDialog.initialize($('#header-info'))
+			
 			// Add click event handler to all show/hide detail buttons 
 			$('.show-hide-detail-div').each(function(){
 					var hiddenDivEl = $(this).find('.hidden-details-div');
@@ -43,27 +40,7 @@
 			});
 			
 			$('#detail-tabs').tabs();
-		});
-		// Show field information dialogs 
-		function showInfo(header, info) {
-			var dialogEl = $('#header-info');
-			dialogEl.html(info);
-			// This preprends {{ STATIC_URL}} to any img tag in info
-			dialogEl.find('img').each(function(){
-				var src = $(this).attr("src");
-				$(this).attr("src", "{{ STATIC_URL }}" + src);
-			});
-			
-			dialogEl.dialog('option', 'title', header);
-			dialogEl.dialog('option', 'position', 'center');
-			
-			if (!dialogEl.dialog('isOpen')){
-				dialogEl.dialog('option', 'height', 250);
-				dialogEl.dialog('option', 'width', 350);
-				dialogEl.dialog('open');	
-			}
-			
-		};		
+		});		
 	</script>
 {% endblock %}
 
@@ -105,11 +82,11 @@
 				{% if method.details %}
 					<table class="info-table">
 						<tr>
-							{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_official_name' %}
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_official_name' %}</th>
 							<td>{{ method.details.method_official_name|safe }}</td>
 						</tr>
 						<tr>
-							{% include "methods/_field_def.html" with help=field_help|get_help_content:'media_name' %}
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'media_name' %}</th>
 							<td>{{ method.details.media_name }}&nbsp;&nbsp;&nbsp;&nbsp;
 								{% if method.details.waterbody_type %}
 								   <b>       Waterbody type: </b>{{ method.details.waterbody_type }}
@@ -117,20 +94,20 @@
 							</td>
 						</tr>
 						<tr>
-							{% include "methods/_field_def.html" with help=field_help|get_help_content:'instrumentation_description' %}
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'instrumentation_description' %}</th>
 							<td>{{ method.details.instrumentation_description }}</td>
 						<tr>
-							{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_subcategory' %}
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_subcategory' %}</th>
 							<td>{{ method.details.method_subcategory }}</td>
 						</tr>
 						<tr>
-							{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_source' %}
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_source' %}</th>
 							<td>
 								{% include "methods/_method_source_details.html" with r=method.details %}
 							</td>
 						</tr>
 						<tr>
-							{% include "methods/_field_def.html" with help=field_help|get_help_content:'source_citation_information' %}
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'source_citation_information' %}</th>
 							<td>
 								{% if method.details.source_citation_information %}
 									<div class="show-hide-detail-div">
@@ -149,15 +126,42 @@
 								{% endif %}
 							</td>
 						</tr>
-						<tr>{% include "methods/_field_def.html" with help=field_help|get_help_content:'brief_method_summary' %}<td>{{ method.details.brief_method_summary|safe }}</td></tr>
-						<tr>{% include "methods/_field_def.html" with help=field_help|get_help_content:'scope_and_application' %}<td>{{ method.details.scope_and_application|safe }}</td></tr>
-						<tr>{% include "methods/_field_def.html" with help=field_help|get_help_content:'applicable_conc_range' %}<td>{{ method.details.applicable_conc_range|safe }}</td></tr>
-						<tr>{% include "methods/_field_def.html" with help=field_help|get_help_content:'interferences' %}<td>{{ method.details.interferences|safe }}</td></tr>
-						<tr>{% include "methods/_field_def.html" with help=field_help|get_help_content:'qc_requirements' %}<td>{{ method.details.qc_requirements|safe }}</td></tr>
-						<tr>{% include "methods/_field_def.html" with help=field_help|get_help_content:'sample_handling' %}<td>{{ method.details.sample_handling|safe }}</td></tr>
-						<tr>{% include "methods/_field_def.html" with help=field_help|get_help_content:'max_holding_time' %}<td>{{ method.details.max_holding_time }}</td></tr>
-						<tr>{% include "methods/_field_def.html" with help=field_help|get_help_content:'relative_cost' %}<td>{{ method.details.relative_cost }}</td></tr>
-						<tr>{% include "methods/_field_def.html" with help=field_help|get_help_content:'sample_prep_methods' %}<td>{{ method.details.sample_prep_methods }}</td></tr>
+						<tr>
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'brief_method_summary' %}</th>
+							<td>{{ method.details.brief_method_summary|safe }}</td>
+						</tr>
+						<tr>
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'scope_and_application' %}</th>
+							<td>{{ method.details.scope_and_application|safe }}</td>
+						</tr>
+						<tr>
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'applicable_conc_range' %}</th>
+							<td>{{ method.details.applicable_conc_range|safe }}</td>
+						</tr>
+						<tr>
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'interferences' %}</th>
+							<td>{{ method.details.interferences|safe }}</td>
+						</tr>
+						<tr>
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'qc_requirements' %}</th>
+							<td>{{ method.details.qc_requirements|safe }}</td>
+						</tr>
+						<tr>
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'sample_handling' %}</th>
+							<td>{{ method.details.sample_handling|safe }}</td>
+						</tr>
+						<tr>
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'max_holding_time' %}</th>
+							<td>{{ method.details.max_holding_time }}</td>
+						</tr>
+						<tr>
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'relative_cost' %}</th>
+							<td>{{ method.details.relative_cost }}</td>
+						</tr>
+						<tr>
+							<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'sample_prep_methods' %}</th>
+							<td>{{ method.details.sample_prep_methods }}</td>
+						</tr>
 					</table>
 				{% else %}
 					<p>No data found</p>

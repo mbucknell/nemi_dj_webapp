@@ -1,20 +1,22 @@
 {% extends "methods/base_results.html" %}
 
+{% load helpcontent %}
+
 {% block results_content %}
 	<table id="results-table" class="data-table" data-sortlist="[[1,0]]">
 		<thead>
 			<tr>
 				<th class="sorter-false col-always-visible"></th>
-				<th class="sorter-text col-always-visible">Method Id</th>
-				<th>Source</th>
-				<th>Method Name</th>
-				<th>Subcategory</th>
-				<th>Instrumentation</th>
-				<th>Media</th>
-				<th class='hide-column'>Category</th>
-				<th class='hide-column'>Method Type</th>
-				<th class='hide-column'>Matrix</th>
-				<th class='hide-column'>Relative Cost</th>
+				<th class="sorter-text col-always-visible">{% include "methods/_field_def.html" with help=field_help|get_help_content:'source_method_identifier' %}</th>
+				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_source' %}</th>
+				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_descriptive_name' %}</th>
+				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_subcategory' %}</th>
+				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'instrumentation_description' %}</th>
+				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'media_name' %}</th>
+				<th class='hide-column'>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_category' %}</th>
+				<th class='hide-column'>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_type_desc' %}</th>
+				<th class='hide-column'>{% include "methods/_field_def.html" with help=field_help|get_help_content:'matrix' %}</th>
+				<th class='hide-column'>{% include "methods/_field_def.html" with help=field_help|get_help_content:'relative_cost_symbol' %}</th>
 			</tr>
 		</thead>
 		<tbody>

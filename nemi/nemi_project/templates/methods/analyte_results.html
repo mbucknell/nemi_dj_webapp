@@ -1,27 +1,29 @@
 {% extends "methods/base_results.html" %}
 
+{% load helpcontent %}
+
 {% block results_content %}
 	{% load data_format %} <!-- Imports decimal_format tag -->
 	<table id="results-table" class="data-table" data-sortlist="[[1,0]]">
 		<thead>
 			<tr>
 				<th class="sorter-false col-always-visible"></th>
-				<th class="sorter-text col-always-visible">Method Id</th>
-				<th>Source</th>
-				<th>Method Name</th>
-				<th>Analyte Name</th>
-				<th>Detection Level</th>
-				<th>Detection Level Type</th>
-				<th>Bias</th>
-				<th>Precision</th>
-				<th>Spiking Level</th>
-				<th class='hide-column'>False Positive</th>
-				<th class='hide-column'>False Negative</th>
-				<th class='hide-column'>Instrumentation</th>
-				<th class='hide-column'>Relative Cost</th>
-				<th class='hide-column'>Media</th>
-				<th class='hide-column'>Method Type</th>
-				<th class='hide-column'>Waterbody Type</th>
+				<th class="sorter-text col-always-visible">{% include "methods/_field_def.html" with help=field_help|get_help_content:'source_method_identifier' %}</th>
+				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_source' %}</th>
+				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_descriptive_name' %}</th>
+				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'analyte_name' %}</th>
+				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'dl_value' %}</th>
+				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'dl_type' %}</th>
+				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'accuracy' %}</th>
+				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'precision' %}</th>
+				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'prec_acc_conc_used' %}</th>
+				<th class='hide-column'>{% include "methods/_field_def.html" with help=field_help|get_help_content:'false_positive_value' %}</th>
+				<th class='hide-column'>{% include "methods/_field_def.html" with help=field_help|get_help_content:'false_negative_value' %}</th>
+				<th class='hide-column'>{% include "methods/_field_def.html" with help=field_help|get_help_content:'instrumentation_description' %}</th>
+				<th class='hide-column'>{% include "methods/_field_def.html" with help=field_help|get_help_content:'relative_cost' %}</th>
+				<th class='hide-column'>{% include "methods/_field_def.html" with help=field_help|get_help_content:'media_name' %}</th>
+				<th class='hide-column'>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_type_desc' %}</th>
+				<th class='hide-column'>{% include "methods/_field_def.html" with help=field_help|get_help_content:'waterbody_type' %}</th>
 			</tr>
 		</thead>
 		<tbody>

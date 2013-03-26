@@ -279,6 +279,15 @@ column in the table */
 	white-space: nowrap;
 	border-bottom: 1px solid grey;
 }
+.info-table .header-label {
+	display: inline-block;
+	float: left;
+}
+.info-table .help-button {
+	display: inline-block;
+	float: right;
+	margin-left: 4px;
+}
 .info-table td {
 	padding: 8px;
 	border-bottom: 1px solid grey;
@@ -287,10 +296,16 @@ column in the table */
 	background-color: #F7EFE5;
 }
 .data-table th {
-	text-align: center;
+	text-align: left;
 	background-color: #69818B;
 	padding: 8px;
 	border: 1px solid darkgrey;
+}
+.data-table .header-label {
+	display: block;
+}
+.data-table .help-button {
+	display: block;
 }
 .data-table td {
 	text-align: left;

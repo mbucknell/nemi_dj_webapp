@@ -13,8 +13,21 @@
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
 	<script src="{{ STATIC_URL }}script/Utils.js"></script>
 	<script src="{{ STATIC_URL }}script/CustomHeaderDialog.js"></script>
+	<script src="{{ STATIC_URL }}script/HelpDialog.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			// Tried to use the stickyHeaders widget but when columns where added or remove
+			// the header did not adjust as it should. Also tried to use 'resizable' which 
+			// kept throwing errors down in the jquery tablesorter code.
+			
+			// The tables can be customized using meta data and class definitions
+			// See the jquery tablesorter documentation.
+			$('.data-table').tablesorter({
+				theme: 'nemi',
+				widgets: ['zebra']
+			});
+			
+
 			$('#back-button').click(function() {
 				window.location.assign("{% url 'home' %}");
 			});
@@ -80,15 +93,16 @@
 				});
 			}
 			
-			// Tried to use the stickyHeaders widget but when columns where added or remove
-			// the header did not adjust as it should. Also tried to use 'resizable' which 
-			// kept throwing errors down in the jquery tablesorter code.
+			// Initialize help dialog
+			HelpDialog.initialize($('#header-info'));
 			
-			// The tables can be customized using meta data and class definitions
-			// See the jquery tablesorter documentation.
-			$('.data-table').tablesorter({
-				theme: 'nemi',
-				widgets: ['zebra']
+			// Forces a click on the header information button to call it's link rather than perform 
+			// the sort. We have to use mousedown mouseup because that's the event the tablesorter has bound an
+			// event handler too.
+			$('#results-table th a').bind('mousedown mouseup',function(event){
+				event.stopPropagation();
+				window.location=$(this).attr('href');
+				return false;
 			});
 			
 			// Initialize customize headers dialog and add click handler for button
@@ -120,6 +134,9 @@
 {% endblock %}
 
 {% block page-content %}
+	<!--  Place holder for the field information dialog  -->
+	<div id="header-info" style="display: none;">
+	</div>
 	<div id="results-div" class="section-div">
 		<h2>
 			{% block page_content_title%}

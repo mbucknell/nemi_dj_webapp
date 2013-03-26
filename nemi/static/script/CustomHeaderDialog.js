@@ -11,7 +11,7 @@ CustomHeaderDialog = {
 		var checkboxHtml = '';
 		
 		resultsTableEl.find($('thead th')).not('.col-always-visible').each(function() {
-			var colName = $(this).find('div').html();
+			var colName = $(this).find('.header-label').html();
 			var colIndex = $(this).index();
 			var colId = 'col-' + colIndex;
 			checkboxHtml += '<li><input type="checkbox" id="' + colId + '" value="' + colIndex + '"';
@@ -29,7 +29,7 @@ CustomHeaderDialog = {
             'modal':  true,
             'title': 'Customize Header',
             'width': 250,
-            'height' : 420,
+            'height' : 450,
             'buttons' : [{
                 text: 'Apply',
                 click: function(){
