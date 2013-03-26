@@ -16,9 +16,12 @@ class FieldHelpMixin(ContextMixin):
     def get_context_data(self, **kwargs):
         context = super(FieldHelpMixin, self).get_context_data(**kwargs)
         if self.field_names:
+            qs = HelpContent.objects.filter(field_name__in=self.field_names)
             context['field_help'] = HelpContent.objects.filter(field_name__in=self.field_names)
             
         else:
-            context['field_help'] = HelpContent.objects.all()
-            
+            qs = HelpContent.objects.all()
+           
+        context['field_help'] = dict([(c.field_name, c) for c in qs])
+          
         return context

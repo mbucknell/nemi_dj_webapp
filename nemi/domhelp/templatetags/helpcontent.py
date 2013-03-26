@@ -1,33 +1,30 @@
 
 from django import template
-from django.core.exceptions import ObjectDoesNotExist, FieldError
-from django.db.models.query import QuerySet
 
 from ..models import HelpContent
 
 register = template.Library()
 
 @register.filter(name="get_help_content")
-def get_help_content(help_qs, name):
+def get_help_content(help_dict, name):
     ''' 
-    Return a HelpContent object with the field_name matching name. If
-    the object is in help_qs. If help_qs is not a queryset or if it doesn't
-    contain a field_name attribute return None. If an object matching name doesn't
-    exist in help_qs, create a HelpContent object with field_name equal to name and
-    a label field which is name with underscoreds turned into spaces and words capitalized.
+    Return an object with at least two attributes, field_name and label. 
+    If help_dict is a dictionary containing a key value matching name with a value that has an object with the field_name and label attribute
+    then that object will be returned. If none of those conditions is met,
+    the function will return a HelpContent object with two attributes, field_name and label with field_name matching name and label containing
+    name with underscores replaced by spaces and words capitalized.
     '''
     def _default_help(n):
         l = n.split('_')
         return HelpContent(field_name=name,
-                           label=' '.join([a.capitalize() for a in l]))
+                      label=' '.join([a.capitalize() for a in l]))
     
-    if isinstance(help_qs, QuerySet):
-        try:
-            return help_qs.get(field_name=name)
-        except ObjectDoesNotExist:
-            return _default_help(name)
-        except FieldError:
-            return None
+    if isinstance(help_dict, dict):
+        content = help_dict.get(name, _default_help(name))
+        if hasattr(content, 'label') and hasattr(content, 'field_name'):
+            return content
+        else:
+            return _default_help(name);
         
     else:
-        return None
+        return _default_help(name)
