@@ -207,7 +207,7 @@ if os.getenv('JENKINS_URL', False):
                      )
     JENKINS_TEST_RUNNER = 'nemi_project.test_jenkins_runner.ManagedModelTestRunner'
     INSTALLED_APPS += ('django_jenkins',)
-    PROJECT_APPS = ('common', 'methods', 'sams', 'newsfeed')
+    PROJECT_APPS = ('common', 'methods', 'sams', 'newsfeed', 'domhelp')
     DATABASES['default'].update(dict(
             ENGINE=os.getenv('DBA_SQL_DJANGO_ENGINE'),
             USER=os.getenv('DBA_SQL_ADMIN'),
