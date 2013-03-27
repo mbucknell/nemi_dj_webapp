@@ -825,13 +825,19 @@ class StatisticalResultsMixin(ResultsMixin):
         
         return data
     
-class StatisticalResultsView(StatisticalResultsMixin, BaseResultsView):
+class StatisticalResultsView(StatisticalResultsMixin, FieldHelpMixin, BaseResultsView):
     '''
     Extends StatisticalResultsMixin and BaseResultsView to implement the statistical method results page.
     '''
         
     template_name = 'methods/statistical_results.html' 
     export_url = reverse_lazy('methods-export_statistical_results')
+    
+    field_names = ['author',
+                   'title',
+                   'publication_year',
+                   'method_source',
+                   'link_to_full_method']
     
 class ExportStatisticalResultsView(StatisticalResultsMixin, ExportBaseResultsView):           
     '''

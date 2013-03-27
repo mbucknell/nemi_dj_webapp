@@ -16,7 +16,9 @@ from common.models import StatAnalysisRelStg,  StatDesignRelStg, StatTopicRelStg
 from common.models import StatAnalysisRel, StatDesignRel, StatTopicRel, StatMediaRel
 from common.utils.forms import get_criteria_from_field_data, get_criteria
 from common.views import FilterFormMixin, SearchResultView
-from forms import SAMSSearchForm, StatMethodEditForm
+
+from domhelp.views import FieldHelpMixin
+from .forms import SAMSSearchForm, StatMethodEditForm
 
 
 class AddStatMethodOnlineView(FormView):
@@ -445,12 +447,31 @@ class StatisticSearchView(SearchResultView, FilterFormMixin):
         return {'results' : qs}
             
             
-class StatisticalMethodSummaryView(DetailView):
+class StatisticalMethodSummaryView(FieldHelpMixin, DetailView):
     ''' Extends DetailView to implement the Statistical Source Summary view'''
     
     template_name = 'sams/statistical_source_summary.html'
     model = Method
     context_object_name = 'data'
+    
+    field_names = ['title',
+                   'author',
+                   'abstract_summary',
+                   'table_of_contents',
+                   'source_citation_name',
+                   'method_source',
+                   'citation_country',
+                   'publication_year',
+                   'notes',
+                   'source_citation_item_type',
+                   'publication_source',
+                   'purpose',
+                   'design_objectives',
+                   'sam_complexity',
+                   'media_emphasized',
+                   'media_subcategory',
+                   'special_topics'
+                   ]
     
     
 class BaseStatMethodStgDetailView(DetailView):
