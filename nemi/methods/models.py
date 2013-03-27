@@ -481,3 +481,21 @@ class RegulatoryMethodReport(models.Model):
         db_table = 'regulatory_method_report'
         managed = False
         
+class RevisionJoin(models.Model):
+    revision_id = models.IntegerField(primary_key=True)
+    method_id = models.IntegerField()
+    revision_information = models.CharField(max_length=100)
+#    method_pdf - Can't model this column directly.
+    insert_date = models.DateField()
+    insert_person_name = models.CharField(max_length=50)
+    last_update_date = models.DateField()
+    last_update_person_name = models.CharField(max_length=50)
+    mimetype = models.CharField(max_length=50)
+    pdf_insert_person = models.CharField(max_length=20)
+    pdf_insert_date = models.DateField()
+    revision_flag = models.IntegerField()
+    date_loaded = models.DateField()
+    
+    class Meta:
+        db_table = 'revision_join'
+        managed = False

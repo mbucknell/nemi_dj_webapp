@@ -4,8 +4,8 @@ from django.http import Http404, HttpResponse
 from django.views.generic import View
 from django.views.generic.edit import TemplateResponseMixin
 
-from models import DefinitionsDOM
-from utils.view_utils import xls_response, tsv_response
+from .models import DefinitionsDOM
+from .utils.view_utils import xls_response, tsv_response
 
 class ChoiceJsonView(View):
     ''' Extends the standard View to return a JSON object representing a list of choices
@@ -19,8 +19,43 @@ class ChoiceJsonView(View):
         choices = ['{"value" : "' + value + '", "display_value" : "' + display_value + '"}' 
                    for (value, display_value) in self.get_choices(request, *args, **kwargs)]
         
-        return HttpResponse('{"choices" : [' + ','.join(choices) + ']}', mimetype='application/json')        
+        return HttpResponse('{"choices" : [' + ','.join(choices) + ']}', mimetype='application/json')
+       
+class PdfView(View):
+    '''
+    Extends the standard View to return a response containing a downloadable file, which is assumed to be a pdf file.
+    The mimetype pdf and filename suffix can be specified as attributes or by overriding get_response_info to retrieve
+    the mimetype, pdf, and filename from the request, args, and/or kwargs.
+    '''
+    
+    mimetype = ''
+    pdf = None
+    filename = ''
+    
+    def get_response_info(self):
+        '''This should be overridden if the above parameters are not defined when extending the class
+         The function should retrieve the information. Note that pdf should be a file like object.
+         '''
+        pass
         
+            
+    def get(self, request, *args, **kwargs):
+        self.get_response_info()
+        
+        if self.mimetype and self.pdf:
+            response = HttpResponse(mimetype=self.mimetype)
+            response['Content-Disposition'] = 'attachment;filename=%s.pdf' % self.filename
+            
+            pdf_data = self.pdf.read()
+            response.write(pdf_data)
+            
+            return response
+        else:
+            return Http404
+    
+        
+        
+            
 class FilterFormMixin(object):
     '''This mixin class is designed to process a form which sets query filter conditions.
     The method get_qs, should check the form's cleaned data and filter the query as appropriate and

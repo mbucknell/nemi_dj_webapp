@@ -236,7 +236,46 @@
 				{% endif %}					
 			</div>
 			<div id="tabs-3">
-				TO BE DONE
+				<table class="data-table">
+					<thead>
+						<tr>
+							<th>Revision</th>
+							<th>PDF</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>{{ method.latest_revision.revision_information }}</td>
+							<td>
+								{% if method.latest_revision.mimetype %}
+									<a href="{% url 'revision-pdf' method.latest_revision.revision_id %}"
+										title="Click to download PDF version of this revision's documentation">
+										Download PDF
+									</a>
+								{% endif %}
+							</td>
+						</tr>
+						{% for revision in method.revisions %}
+							{% if revision.revision_id != method.details.revision_id %}
+								<tr>
+									<td>{{ revision.revision_information }}</td>
+									<td>
+										{% if revision.mimetype %}
+											<a href="{% url 'revision-pdf' revision.revision_id %}"
+												title="Click to download PDF version of this revision's documentation">
+												Download PDF
+											</a>
+										{% endif %}
+									</td>
+								</tr>
+							{% endif %}
+						{% endfor %}
+					</tbody>	
+				</table>
+				{% if method.revisions %}
+				{% else %}
+					No revision information found
+				{% endif %}
 			</div>
 		</div>
 	</div>

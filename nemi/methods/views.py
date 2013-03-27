@@ -14,17 +14,17 @@ from django.views.generic.list import MultipleObjectMixin
 from django.views.generic.edit import TemplateResponseMixin
 
 # project specific packages
-from common.models import DefinitionsDOM, MethodAnalyteVW, InstrumentationRef, StatisticalDesignObjective, StatisticalItemType
+from common.models import MethodAnalyteVW, InstrumentationRef, StatisticalDesignObjective, StatisticalItemType
 from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics
 from common.models import StatAnalysisRel, SourceCitationRef, StatDesignRel, StatMediaRel, StatTopicRel
 from common.utils.forms import get_criteria
 from common.utils.view_utils import dictfetchall, xls_response, tsv_response
-from common.views import FilterFormMixin, SearchResultView, ExportSearchView, ChoiceJsonView
+from common.views import FilterFormMixin, PdfView, SearchResultView, ExportSearchView, ChoiceJsonView
 
 from domhelp.views import FieldHelpMixin
 
 from .forms import RegulatorySearchForm, TabularSearchForm
-from .models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, AnalyteCodeVW
+from .models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, AnalyteCodeVW, RevisionJoin
 from .models import RegQueryVW,  RegulatoryMethodReport, RegulationRef
 
 def _greenness_profile(d):
@@ -984,6 +984,10 @@ class MethodSummaryView(FieldHelpMixin, DetailView):
             #Get description notes    
             result['notes'] = MethodAnalyteVW.objects.filter(method_id__exact=self.kwargs['method_id']).values('precision_descriptor_notes', 'dl_note').distinct()
                 
+            #Get revision information
+            result['latest_revision'] = RevisionJoin.objects.get(revision_id=result['details'].revision_id)
+            result['revisions'] = RevisionJoin.objects.filter(method_id__exact=self.kwargs['method_id']).order_by('-revision_id')
+            
             return result         
         else:
             raise Http404
@@ -1057,29 +1061,33 @@ class ExportMethodAnalyte(View):
             return response
         
 
-class MethodPdfView(View):
-    ''' Extends the standard View to serve a method's pdf file if it it exists in the database.
+class MethodPdfView(PdfView):
+    ''' 
+    Extends the PdfView to serve a method's pdf file if it it exists in the database.
     '''
     
-    def get(self, request, *args, **kwargs):        
+    def get_response_info(self):
         cursor = connection.cursor()
         cursor.execute('SELECT mimetype, method_pdf, source_method_identifier from nemi_data.method_summary_vw where method_id=%s',
-                       [kwargs['method_id']])
+                       [self.kwargs['method_id']])
         results_list = dictfetchall(cursor)
-
         if results_list:
-            if results_list[0]['MIMETYPE'] and results_list[0]['METHOD_PDF']:
-                response = HttpResponse(mimetype=results_list[0]['MIMETYPE'])
-                response['Content-Disposition'] = 'attachment;filename=%s.pdf' % _clean_name(results_list[0]['SOURCE_METHOD_IDENTIFIER'])
+            self.mimetype = results_list[0]['MIMETYPE']
+            self.pdf = results_list[0]['METHOD_PDF']
+            self.filename = _clean_name(results_list[0]['SOURCE_METHOD_IDENTIFIER'])
+    
         
-                pdf = results_list[0]['METHOD_PDF'].read()
-                response.write(pdf)
-            
-                return response
-            
-            else:
-                return HttpResponse('No pdf stored for method %s' % results_list[0]['SOURCE_METHOD_IDENTIFIER'])
+
+class RevisionPdfView(PdfView):
+    '''
+    Extends PdfView to serve a revision's pdf file if it exists in the database.
+    '''
+    def get_response_info(self):
+        cursor = connection.cursor()
+        cursor.execute('SELECT mimetype, method_pdf, revision_information from nemi_data.revision_join where revision_id=%s', [self.kwargs['revision_id']])
+        results_list = dictfetchall(cursor)
         
-        else:
-            raise Http404
-        
+        if results_list:
+            self.mimetype = results_list[0]['MIMETYPE'] 
+            self.pdf = results_list[0]['METHOD_PDF']
+            self.filename = self.kwargs['revision_id']

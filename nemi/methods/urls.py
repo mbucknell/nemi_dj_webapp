@@ -53,6 +53,9 @@ urlpatterns = patterns("",
         url(r'^method_pdf/(?P<method_id>\d+)/$',
             views.MethodPdfView.as_view(),
             name='methods-pdf'),
+        url(r'^revision_pdf/(?P<revision_id>\d+)/$',
+            views.RevisionPdfView.as_view(),
+            name='revision-pdf'),
                        
         ## Ajax urls which return json objects
         url(r'^analyte_select/$',
