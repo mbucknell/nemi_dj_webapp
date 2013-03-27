@@ -23,7 +23,15 @@
 			{% for d in data %}
 				<tr id="{{d.method_id}}">
 					<td><input type="checkbox" /></td>
-					<td><a href="{% url 'methods-method_summary' d.method_id %}">{{ d.source_method_identifier|safe }}</a></td>
+					<td>
+						{% if d.method_category == 'STATISTICAL' %}
+							<a href="{% url 'sams-method_summary' d.method_id %}">
+						{% else %}
+							<a href="{% url 'methods-method_summary' d.method_id %}">
+						{% endif %}
+						{{ d.source_method_identifier|safe }}
+						</a>
+					</td>
 					<td>{{ d.method_source }}</td>
 					<td>{{ d.method_descriptive_name }}</td>
 					<td>{{ d.method_subcategory }}</td>
