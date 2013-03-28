@@ -1072,7 +1072,7 @@ class MethodPdfView(PdfView):
     Extends the PdfView to serve a method's pdf file if it it exists in the database.
     '''
     
-    def get_response_info(self):
+    def get_pdf_info(self):
         cursor = connection.cursor()
         cursor.execute('SELECT mimetype, method_pdf, source_method_identifier from nemi_data.method_summary_vw where method_id=%s',
                        [self.kwargs['method_id']])
@@ -1088,7 +1088,7 @@ class RevisionPdfView(PdfView):
     '''
     Extends PdfView to serve a revision's pdf file if it exists in the database.
     '''
-    def get_response_info(self):
+    def get_pdf_info(self):
         cursor = connection.cursor()
         cursor.execute('SELECT mimetype, method_pdf, revision_information from nemi_data.revision_join where revision_id=%s', [self.kwargs['revision_id']])
         results_list = dictfetchall(cursor)

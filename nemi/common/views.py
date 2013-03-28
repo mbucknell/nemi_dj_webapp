@@ -32,7 +32,7 @@ class PdfView(View):
     pdf = None
     filename = ''
     
-    def get_response_info(self):
+    def get_pdf_info(self):
         '''This should be overridden if the above parameters are not defined when extending the class
          The function should retrieve the information. Note that pdf should be a file like object.
          '''
