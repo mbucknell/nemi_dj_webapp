@@ -40,7 +40,7 @@ class PdfView(View):
         
             
     def get(self, request, *args, **kwargs):
-        self.get_response_info()
+        self.get_pdf_info()
         
         if self.mimetype and self.pdf:
             response = HttpResponse(mimetype=self.mimetype)
