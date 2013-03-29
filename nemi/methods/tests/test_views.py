@@ -6,9 +6,9 @@ Created on Mar 13, 2012
 
 from django.utils import unittest
 
-from methods.views import _clean_name
+from methods.views import _clean_name, _clean_keyword
 
-class TestCleanName(unittest.TestCase):
+class CleanNameTestCase(unittest.TestCase):
 
     def test_clean_name(self):
         name = 'a256&B*-_Z'
@@ -39,3 +39,52 @@ class TestCleanName(unittest.TestCase):
         self.assertEqual('a343_ABC', _clean_name(name))
            
 
+class CleanKeywordTestCase(unittest.TestCase):
+    
+    def test_with_no_special_characters(self):
+        keyword='nitrate'
+        self.assertEqual(_clean_keyword(keyword), 'nitrate')
+        
+    def test_with_one_dash(self):
+        keyword = 'ni-trate'
+        self.assertEqual(_clean_keyword(keyword), 'ni\-trate')
+        
+    def test_with_two_dashes(self):
+        keyword = 'ni-tr-ate'
+        self.assertEqual(_clean_keyword(keyword), 'ni\-tr\-ate')
+        
+    def test_with_one_comma(self):
+        keyword = 'ni,trate'
+        self.assertEqual(_clean_keyword(keyword), 'ni\,trate')
+        
+    def test_with_two_commas(self):
+        keyword = 'ni,tr,ate'
+        self.assertEqual(_clean_keyword(keyword), 'ni\,tr\,ate')
+        
+    def test_with_dash_and_comma(self):
+        keyword = 'ni,tr-ate'
+        self.assertEqual(_clean_keyword(keyword), 'ni\,tr\-ate')
+        
+    def test_with_quote(self):
+        keyword = "ni'trate"
+        self.assertEqual(_clean_keyword(keyword), "ni''trate")
+        
+    def test_with_two_quotes(self):
+        keyword = "ni'trate'chloride"
+        self.assertEqual(_clean_keyword(keyword), "ni''trate''chloride")
+        
+    def test_with_double_quotes(self):
+        keyword = 'ni"trate'
+        self.assertEqual(_clean_keyword(keyword), 'ni""trate')
+        
+    def test_with_two_double_quotes(self):
+        keyword = 'ni"trate"chloride'
+        self.assertEqual(_clean_keyword(keyword), 'ni""trate""chloride')
+        
+    def test_with_dash_comma_and_quote(self):
+        keyword = "ni-tr,ate'mer,cury"
+        
+        self.assertEqual(_clean_keyword(keyword), "ni\-tr\,ate''mer\,cury")
+        
+        
+       

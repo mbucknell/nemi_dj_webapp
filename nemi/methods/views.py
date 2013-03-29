@@ -109,6 +109,18 @@ def _clean_name(name):
     
     return result
 
+def _clean_keyword(k):
+    ''' Returns keyword with special characters and quotes properly escaped. These cause the keyword
+    search to fail unless properly escaped
+    '''
+    escape_pattern = re.compile(r'(?P<esc>[-\,])')
+    quote_pattern = re.compile(r'(?P<quote>[\'\"])')
+    
+    result = re.sub(escape_pattern, r'\\\g<esc>', k)
+    result = re.sub(quote_pattern, r'\g<quote>\g<quote>', result)
+    
+    return result
+
 
 class AnalyteSelectView(View):
     ''' Extends the standard view to implement a view which returns json data containing
@@ -880,19 +892,20 @@ class KeywordSearchView(TemplateResponseMixin, View):
                 return self.render_to_response({'error' : True})
             
             else:
+                clean_keyword = _clean_keyword(keyword)
                 # Execute as raw query since  it uses a CONTAINS clause and context grammer.
                 cursor = connection.cursor() #@UndefinedVariable
                 cursor.execute('SELECT DISTINCT score(1) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
 mf.link_to_full_method, mf.mimetype, mf.revision_id, mf.method_official_name, mf.method_descriptive_name, mf.method_source, mf.method_category \
 FROM nemi_data.method_fact mf, nemi_data.revision_join rj \
 WHERE mf.revision_id = rj.revision_id AND \
-(CONTAINS(mf.source_method_identifier, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + keyword + '.<progression> \
+(CONTAINS(mf.source_method_identifier, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + clean_keyword + '<progression> \
 <seq><rewrite>transform((TOKENS, "{", "}", " "))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", " ; "))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", "AND"))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", "ACCUM"))</rewrite></seq>\
 </progression></textquery><score datatype="INTEGER" algorithm="COUNT"/></query>\', 1) > 1 \
-OR CONTAINS(rj.method_pdf, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + keyword + '.<progression> \
+OR CONTAINS(rj.method_pdf, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + clean_keyword + '<progression> \
 <seq><rewrite>transform((TOKENS, "{", "}", " "))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", " ; "))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", "AND"))</rewrite></seq>\
