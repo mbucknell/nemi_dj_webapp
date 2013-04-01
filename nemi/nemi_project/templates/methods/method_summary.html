@@ -48,7 +48,6 @@
 	<br />
 	<b style="font-size:large;">{{ method.details.method_source }} {{ method.details.source_method_identifier|safe }}: {{ method.details.method_descriptive_name }}</b>
 	<span id="method-detail-link">
-		Method details:&nbsp;
 		{% if method.details.mimetype %}
 			<a href="{% url 'methods-pdf' method_id=method.details.method_id %}"
 				title="Click to download the method's pdf documentation">Download PDF
