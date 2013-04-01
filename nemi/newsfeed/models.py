@@ -7,7 +7,7 @@ class NewsItem(models.Model):
     modified = models.DateField(auto_now=True)
     
     def __unicode__(self):
-        return str(self.pk)
+        return str(self.pk) + ':' + str(self.created)
     
     class Meta:
         ordering = ['-created']
