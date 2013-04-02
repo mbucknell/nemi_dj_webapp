@@ -47,10 +47,9 @@
 				    {% block header_links %}
 				    	<div id="header-links">
 				    		<ul>
-				    			<li>About NEMI</li>
-				    			<li>Glossary</li>
-				    			<li>FAQ</li>
-				    			<li>MyNEMI</li>
+				    			<li><a href="{% url 'about' %}">About NEMI</a></li>
+				    			<li><a href="{% url 'glossary' %}">Glossary</a></li>
+				    			<li><a href="{% url 'faqs' %}">FAQ</a></li>
 				    		</ul>
 				    	</div>
 				    {% endblock %} 

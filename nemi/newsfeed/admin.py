@@ -12,9 +12,13 @@ class NewsItemForm(ModelForm):
     
     class Meta:
         model = NewsItem
-        widgets = {'headline' : TinyMCE(attrs={'cols': 40, 'rows': 4})}
-    
-    
+        widgets = {'headline' : TinyMCE(attrs={'cols': 40, 'rows': 4},
+                                        mce_attrs={
+                                            'theme_advanced_buttons1' : "bold, italic,underline,strikethrough,link,unlink,sub,sup",
+                                            'theme_advanced_statusbar_location': "none"
+                                        })}
+
+
 class NewsItemAdmin(admin.ModelAdmin):
     form = NewsItemForm
     

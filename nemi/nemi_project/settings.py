@@ -131,13 +131,14 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-#    'django.contrib.sites',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'django.contrib.flatpages',
     # third party apps
     'tinymce',
     # NEMI/CIDA specific apps
@@ -200,7 +201,11 @@ if ADDITIONAL_MW_CLASSES:
     
 # Set up TinyMCE configuration
 TINYMCE_JS_URL = STATIC_URL + 'script/tiny_mce/tiny_mce.js'
-    
+
+TINYMCE_DEFAULT_CONFIG = {
+    'theme' : "advanced",
+}
+
 if os.getenv('JENKINS_URL', False):
     JENKINS_TASKS = (
                      'django_jenkins.tasks.django_tests',

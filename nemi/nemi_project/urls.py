@@ -13,6 +13,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
+    
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^accounts/login/$', 
         'django.contrib.auth.views.login', 
@@ -38,3 +39,8 @@ urlpatterns = patterns('',
         TemplateView.as_view(template_name='home.html'), 
         name='home'),
 )
+
+urlpatterns += patterns('django.contrib.flatpages.views',
+    url(r'^about/$', 'flatpage', {'url' : '/about/'}, name='about'),
+    url(r'^glossary/$', 'flatpage', {'url' : '/glossary/'}, name='glossary'),
+    url(r'^faqs/$', 'flatpage', {'url' : '/faqs/'}, name='faqs'),)
