@@ -25,6 +25,5 @@ HelpDialog = {
 			HelpDialog.dialogEl.dialog('option', 'width', 350);
 			HelpDialog.dialogEl.dialog('open');	
 		}
-		return false;
 	}		
 }
