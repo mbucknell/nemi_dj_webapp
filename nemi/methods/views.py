@@ -543,14 +543,14 @@ class ResultsMixin(MultipleObjectMixin):
         if 'subcategory' in self.request.GET and self.request.GET.get('subcategory'):
             data = data.filter(method_subcategory__in=self.request.GET.getlist('subcategory'))
     
-        media_name = self.request.GET.get('media_name', 'all')
-        source = self.request.GET.get('source', 'all')
-        instrumentation = self.request.GET.get('instrumentation', 'all')
-        if media_name != 'all':
+        media_name = self.request.GET.get('media_name', '')
+        source = self.request.GET.get('source', '')
+        instrumentation = self.request.GET.get('instrumentation', '')
+        if media_name != '':
             data = data.filter(media_name__exact=media_name)
-        if source != 'all':
+        if source != '':
             data = data.filter(method_source__contains=source)
-        if instrumentation != 'all':
+        if instrumentation != '':
             data = data.filter(instrumentation_id__exact=instrumentation)
             
         if 'method_type' in self.request.GET:
@@ -619,8 +619,8 @@ class MethodResultsMixin(ResultsMixin):
         if 'method_number' in self.request.GET:
             data = data.filter(source_method_identifier__contains=self.request.GET.get('method_number'))
         
-        matrix = self.request.GET.get('matrix', 'all')
-        if matrix != 'all':
+        matrix = self.request.GET.get('matrix', '')
+        if matrix != '':
             data = data.filter(matrix__exact=matrix)
         return data
 
@@ -686,15 +686,15 @@ class AnalyteResultsMixin(ResultsMixin):
                 
             else:
                 data = data.filter(preferred__exact=-1) # Only get the method for the preferred analyte
-                analyte_type = self.request.GET.get('analyte_type', 'all')
-                waterbody_type = self.request.GET.get('waterbody_type', 'all')
-                gear_type = self.request.GET.get('gear_type', 'all')
+                analyte_type = self.request.GET.get('analyte_type', '')
+                waterbody_type = self.request.GET.get('waterbody_type', '')
+                gear_type = self.request.GET.get('gear_type', '')
     
-                if analyte_type != 'all':
+                if analyte_type != '':
                     data = data.filter(analyte_type__exact=analyte_type)                        
-                if waterbody_type != 'all':
+                if waterbody_type != '':
                     data = data.filter(waterbody_type__exact=waterbody_type)   
-                if gear_type != 'all':
+                if gear_type != '':
                     data = data.filter(instrumentation_id__exact=gear_type)
              
             return data.values('method_source_id',
@@ -812,27 +812,27 @@ class StatisticalResultsMixin(ResultsMixin):
     def get_queryset(self):
         data = super(StatisticalResultsMixin, self).get_queryset()
         
-        item_type = self.request.GET.get('item_type', 'all')
-        complexity = self.request.GET.get('complexity', 'all')
-        analysis_type = self.request.GET.get('analysis_type', 'all')
-        publication_source_type = self.request.GET.get('publication_source_type', 'all')
-        study_objective = self.request.GET.get('study_objective', 'all')
-        media_emphasized = self.request.GET.get('media_emphasized', 'all')
-        special_topic = self.request.GET.get('special_topic', 'all')
+        item_type = self.request.GET.get('item_type', '')
+        complexity = self.request.GET.get('complexity', '')
+        analysis_type = self.request.GET.get('analysis_type', '')
+        publication_source_type = self.request.GET.get('publication_source_type', '')
+        study_objective = self.request.GET.get('study_objective', '')
+        media_emphasized = self.request.GET.get('media_emphasized', '')
+        special_topic = self.request.GET.get('special_topic', '')
         
-        if item_type != 'all':
+        if item_type != '':
             data = data.filter(source_citation_id__in=SourceCitationRef.objects.filter(item_type__exact=item_type).values('source_citation_id'))
-        if complexity != 'all':
+        if complexity != '':
             data = data.filter(sam_complexity__exact=complexity)
-        if analysis_type != 'all':
+        if analysis_type != '':
             data = data.filter(method_id__in=StatAnalysisRel.objects.filter(analysis_type__exact=analysis_type).values('method_id'))
-        if publication_source_type != 'all':
+        if publication_source_type != '':
             data = data.filter(source_citation_id__in=SourceCitationRef.objects.filter(publicationsourcerel__source__exact=publication_source_type).values('source_citation_id'))
-        if study_objective != 'all':
+        if study_objective != '':
             data = data.filter(method_id__in=StatDesignRel.objects.filter(design_objective__exact=study_objective).values('method_id'))
-        if media_emphasized != 'all':   
+        if media_emphasized != '':   
             data = data.filter(method_id__in=StatMediaRel.objects.filter(media_name__exact=media_emphasized).values('method_id'))
-        if special_topic != 'all':
+        if special_topic != '':
             data = data.filter(method_id__in=StatTopicRel.objects.filter(topic__exact=special_topic).values('method_id'))
         
         return data

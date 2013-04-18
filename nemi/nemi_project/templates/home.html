@@ -2,9 +2,11 @@
 
 {% block page_style %}
 	<link rel="stylesheet" href="{{ STATIC_URL }}styles/jquery-ui-1.10.0.custom/smoothness/jquery-ui-1.10.0.custom.css" media="screen" type="text/css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}lib/select2-master/select2.css" media="screen" type="text/css" />
 {% endblock %}
 
 {% block page_script %}
+	<script src="{{ STATIC_URL }}lib/select2-master/select2.js"></script>
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
 	<script src="{{ STATIC_URL }}script/Utils.js"></script>
 	<script src="{{ STATIC_URL }}script/AnalyteDialog.js"></script>
@@ -15,34 +17,6 @@
 				url: '{% url "methods-method_count" %}',
 				success : function(resp) {
 					$('#browse-count-span').html('NEMI current contains ' + resp.method_count + ' methods, protocols and procedures.');	
-				}
-			});
-		}
-		
-		function createMenuOptions(url /*String */, data /* Object */, selectEl /* jquery element */) {
-			/* Make an ajax call to retrieve the values to be used for the select menu, selectEl.
-			* Ajax response is assumed to be json with the following structure: 
-			* {choices: [{'value' : 'x', 'display_value': 'X'}, ...]"}
-			*/
-			$.ajax({
-				url: url,
-				data: data,
-				success : function(resp) {
-					var selectElId = selectEl.attr('id');
-					var options = '';
-					for (var i = 0; i < resp.choices.length; i++) {
-						options += '<option value="' + resp.choices[i].value + '">' + resp.choices[i].display_value + '</option>';
-					}
-					selectEl.append(options);
-					
-					// Set state of menu from web storage 
-					if (sessionStorage[selectElId]) {
-						selectEl.val(sessionStorage[selectElId]);
-					}
-					// Add change handler to save state to web storage
-					selectEl.change(function() {
-						sessionStorage[selectElId] = $(this).val();
-					});
 				}
 			});
 		}
@@ -85,7 +59,6 @@
 				});
 			}
 		}
-
 		
 		function setMethodTypeState(checkboxes /* jquery elements */, setToDefault /* Boolean */) {
 			/*
@@ -212,11 +185,22 @@
 			setInitialCheckedState(divToShow.find('input[type="checkbox"]'), setToDefault)
 		}
 		
-		function setLimitBySelectSensitivity(buttonEl) {
-			/*
-			Set the sensitivity of the select elements in the limit by filtered search section for the section
-			represented by buttonEl.
-			*/
+		function activeCategory() {
+			return $('#filter-action>div:visible').find('input[name="category"]').val();
+		}
+		
+		function isMediaNameEnabled() {
+			return $.inArray(activeCategory(), ['', 'chemical']) !== -1;
+		}
+		function isSourceEnabled(category) {
+			return $.inArray(activeCategory(), ['', 'chemical', 'statistical']) !== -1;
+		}
+		function isInstrumentationEnabled(category) {
+			return $.inArray(activeCategory(), ['', 'chemical']) !== -1;
+		}
+		
+		function setActionDivState(buttonEl) {
+			/* Set the category and subcategory inputs in buttonEl's associated actionDiv */
 			var category = buttonEl.data('category');
 			var subcategory = buttonEl.data('subcategory');
 			var actionDiv = buttonEl.data('actionDivId');
@@ -224,10 +208,18 @@
 			actionDiv.find('input:hidden[name="category"]').val(category);
 			actionDiv.find('input:hidden[name="subcategory"]').val(subcategory);
 						
-			// Set sensitivity of option menus 
-			Utils.setEnabled($('#media-name-field'), $.inArray(category, ['', 'chemical']) != -1);
-			Utils.setEnabled($('#source-field'), $.inArray(category, ['', 'chemical', 'statistical']) != -1);
-			Utils.setEnabled($('#instrumentation-field'), $.inArray(category, ['', 'chemical']) != -1);
+		}
+		function setLimitBySelectSensitivity() {
+			/*
+			Set the sensitivity of the select elements in the limit by filtered search section for the section
+			represented by buttonEl.
+			*/
+			$('.limit-by-select-field').filter('input[type="hidden"]').each(function() {
+				var enableFn = $(this).data('enableFn');
+				if (enableFn) {
+					Utils.setSelect2Enabled($(this), enableFn());
+				}
+			});
 		}
 		
 		function setFilteredSearchButtonState() {
@@ -246,18 +238,22 @@
 		}
 	
 		$(document).ready(function() {
-			// Dynamically create option menus 
-			createMenuOptions('{% url "methods-media_name" %}', {}, $('#media-name-field'));
-			createMenuOptions('{% url "methods-source" %}', {}, $('#source-field'));
-			createMenuOptions('{% url "methods-instrumentation" %}', {}, $('#instrumentation-field'));
-			createMenuOptions('{% url "methods-regulations" %}', {}, $('#regulations-field'));
-			createMenuOptions('{% url "methods-gear_types" %}', {}, $('#gear-type-field'));
-			createMenuOptions('{% url "methods-stat_objectives" %}', {}, $('#study_objective'));
-			createMenuOptions('{% url "methods-stat_item_types" %}', {}, $('#item_type'));
-			createMenuOptions('{% url "methods-stat_analysis_types" %}', {}, $('#analysis_type'));
-			createMenuOptions('{% url "methods-stat_publication_source" %}', {}, $('#publication_source_type'));
-			createMenuOptions('{% url "methods-stat_media_emphasized" %}', {}, $('#media_emphasized'));
-			createMenuOptions('{% url "methods-stat_special_topics" %}', {}, $('#special_topic'));
+			// Add data to select2 elements
+			$('#media-name-field').data('enableFn', isMediaNameEnabled);
+			$('#source-field').data('enableFn', isSourceEnabled);
+			$('#instrumentation-field').data('enableFn', isInstrumentationEnabled);
+			
+			// Dynamically create option menus
+			Utils.createSelectMenu('media-name-field','{% url "methods-media_name" %}');
+			Utils.createSelectMenu('source-field', '{% url "methods-source" %}');
+			Utils.createSelectMenu('instrumentation-field', '{% url "methods-instrumentation" %}');
+			Utils.createSelectMenu('gear-type-field', '{% url "methods-gear_types" %}');
+			Utils.createSelectMenu('study_objective',  '{% url "methods-stat_objectives" %}');
+			Utils.createSelectMenu('item_type', '{% url "methods-stat_item_types" %}');
+			Utils.createSelectMenu('analysis_type', '{% url "methods-stat_analysis_types" %}');
+			Utils.createSelectMenu('publication_source_type', '{% url "methods-stat_publication_source" %}');
+			Utils.createSelectMenu('media_emphasized', '{% url "methods-stat_media_emphasized" %}');
+			Utils.createSelectMenu('special_topic', '{% url "methods-stat_special_topics" %}');
 			
 			// Dynamically create checkboxes 
 			createCheckboxes('{% url "methods-method_types" %}', {}, setMethodTypeState, $('#method-type-selections'), 'method_type', 'method_type-');
@@ -265,8 +261,19 @@
 			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Toxicity assay'}, setInitialCheckedState, $('#toxicity-subcategory-selections'), 'subcategory', 'toxicity-subcategory-');
 			createCheckboxes('{% url "methods-subcategories" %}', {'category' : 'Statistical'}, setInitialCheckedState, $('#statistical-subcategory-selections'), 'subcategory', 'statistical-subcategory-');
 
-			// Add change handler to save state of inputs with class local-store 
-			$('.local-store').change(function() {
+			// Make select2 out of static option menus.
+			$('select.static-field').select2({
+				width: 'copy',
+				minimumResultsForSearch: 15,
+				placeholder: 'All',
+				allowClear: true,
+				containerCss: {
+					'font-size' : 'small',
+				}
+			});
+			
+			// Add change handler to save state of inputs with class static-field 
+			$('.static-field').change(function() {
 				sessionStorage[$(this).attr('id')] = $(this).val();
 			});
 			
@@ -317,31 +324,37 @@
 			$('#browse-search-button').data('showCallback', updateBrowseMethodCount);
 			
 			// In addition to actionDivId and showCallback (as needed), the filtered search buttons should set headerId to the
-			// correct header and set category to the button's category.
+			// correct header and set category and subcategory to the button's category/subcategory.
 			$('#analytes-search-button').data('actionDivId', $('#analyte-search-div'));
 			$('#analytes-search-button').data('headerId', $('#analytes-header'));
 			$('#analytes-search-button').data('category', '');
+			
 			$('#chemical-search-button').data('actionDivId', $('#chemical-search-div'));
 			$('#chemical-search-button').data('headerId', $('#chemical-header'));
 			$('#chemical-search-button').data('category', 'chemical');
+			
 			$('#microbiological-search-button').data('actionDivId', $('#analyte-search-div'));
 			$('#microbiological-search-button').data('headerId', $('#microbiological-header'));
 			$('#microbiological-search-button').data('category', 'biological');
 			$('#microbiological-search-button').data('subcategory', 'Microbiological');
+			
 			$('#community-search-button').data('actionDivId', $('#community-search-div'));
 			$('#community-search-button').data('headerId', $('#community-header'));
 			$('#community-search-button').data('category', 'biological');
 			$('#community-search-button').data('subcategory', 'Population/Community');
+			
 			$('#toxicity-search-button').data('actionDivId', $('#toxicity-search-div'));
 			$('#toxicity-search-button').data('headerId', $('#toxicity-header'));
 			$('#toxicity-search-button').data('category', 'toxicity assay');
+			
 			$('#physical-search-button').data('actionDivId', $('#analyte-search-div'));
 			$('#physical-search-button').data('headerId', $('#physical-header'));
 			$('#physical-search-button').data('category', 'physical');
+			
 			$('#statistical-search-button').data('actionDivId', $('#statistical-search-div'));
 			$('#statistical-search-button').data('headerId', $('#statistical-header'));
 			$('#statistical-search-button').data('category', 'statistical');
-			
+						
 			// Add click handlers for subcategory buttons 
 			$('.subcategory-button').click(function() {
 				// Save currently active subcategory button's id for the subcategory div.
@@ -353,15 +366,16 @@
 				var divToShow = $(this).data('actionDivId');
 				divToShow.find('input[type="text"]').val('').change();
 				divToShow.find('textarea').val('').change();
-				divToShow.find('select').val('all').change();
 				setInitialCheckedState(divToShow.find('input[type="checkbox"]', true));
 				
 				// If this is a filtered search subcategory then we also need to update the Limit by section.
 				if ($(this).parents('#filtered-selection-div')) {
-					setLimitBySelectSensitivity($(this));
+					setActionDivState($(this));
+					setLimitBySelectSensitivity();
 									
 					// Default selects to 'all' selection.
-					$('#filtered-search-limits select').val('all').change();
+					$('.limit-by-select-field').select2('val', 'all', true);
+					$('.filter-select').select2('val', 'all', true);
 					
 					// Set method type checkbox state. Default all enabled inputs to true.
 					setMethodTypeState($('#method-type-selections input'), true);
@@ -377,12 +391,13 @@
 				var actionDiv = $('#filter-action>div:visible');
 				
 				//Remove any hidden inputs from the last search 
-				limitByForm.find('input:hidden').remove();
+				limitByForm.find('input:hidden').not('.limit-by-select-field').remove();
 				
 				//Add hidden inputs to limitByForm from the currently visible subcategory form. 
 				var hiddenInputHtml = '';
-				actionDiv.find(':input').filter(':enabled').each(function() {
-					if (($(this).is('[type="checkbox"]')) && !($(this).is(':checked'))) {
+			
+				actionDiv.find(':input').filter('[name]').filter(':enabled').each(function() {
+					if ($(this).is('[type="checkbox"]') && !($(this).is(':checked'))) {
 						return;
 					}
 					hiddenInputHtml += '<input type="hidden" name="' + $(this).attr('name') + '" value="' + $(this).val() + '" />';					
@@ -390,7 +405,7 @@
 				
 				limitByForm.append(hiddenInputHtml);
 				
-				// update the action to match actionDiv's and submit form
+				// update the action to match actionDiv's and submit form 
 				limitByForm.attr('action', actionDiv.find('form').attr('action'));
 				limitByForm.submit();
 				
@@ -465,9 +480,10 @@
 			if (sessionStorage['filtered-selection-div']) {
 				var buttonEl = $('#' + sessionStorage['filtered-selection-div']);
 				showSearchSubcategory(buttonEl, false);
-				setLimitBySelectSensitivity(buttonEl);
+				setActionDivState(buttonEl);
+				setLimitBySelectSensitivity();
 			}
-			$('.local-store').each(function() {
+			$('.static-field').each(function() {
 				$(this).val(sessionStorage[$(this).attr('id')]).change();
 			});
 			
@@ -506,7 +522,7 @@ and protocols for all stages of the monitoring process.
                    		<table class="general-search-form-table">
                    			<tr>
                    				<th><label for="keyword-search-field">Search entire NEMI database by keyword:</label></th>
-                       			<td><input type="text" id="keyword-search-field" name="keyword_search_field" class="local-store"/></td>
+                       			<td><input type="text" id="keyword-search-field" name="keyword_search_field" class="static-field"/></td>
 							</tr>
 						</table>
 						<div class="button-div">
@@ -519,7 +535,7 @@ and protocols for all stages of the monitoring process.
                    		<table class="general-search-form-table">
 							<tr>
 								<th><label for="number-search-field">Search for a method number:</label></th>
-                       			<td><input id="number-search-field" type="text" name="method_number" class="local-store"/></td>
+                       			<td><input id="number-search-field" type="text" name="method_number" class="static-field"/></td>
 							</tr>
 						</table> 
 						<div class="button-div">
@@ -602,14 +618,14 @@ and protocols for all stages of the monitoring process.
 									<table class="general-search-form-table">
 										<tr>
 											<th><label for="analyte-name-field">Analyte name(s):</label></th>
-											<td><textarea id="analyte-name-field" name="analyte_name"  class="local-store"cols=50 rows=3></textarea></td>
+											<td><textarea id="analyte-name-field" name="analyte_name"  class="static-field" cols=50 rows=3></textarea></td>
 											<td><input type="button" id="find-analyte-name-button" class="find-button" value="Find Analyte Names"></td>
 										</tr>
 										<tr>
 											<td colspan="3"><span style="font-size: large; font-weight: bold; font-style: italic;">OR</span></td>
 										<tr>
 											<th><label for="analyte-code-field">Analyte code(s):</label></th>
-											<td><textarea id="analyte-code-field" name="analyte_code" cols=50 rows=3 class="local-store"></textarea></td>
+											<td><textarea id="analyte-code-field" name="analyte_code" cols=50 rows=3 class="static-field"></textarea></td>
 											<td><input type="button" id="find-analyte-code-button" class="find-button" value="Find Analyte Codes"></td>
 										</tr>
 									</table>
@@ -666,9 +682,9 @@ and protocols for all stages of the monitoring process.
 										<tr>
 											<th><label for="analyte-type-field">Analyte type:</label></th>
 											<td>
-												<select id="analyte-type-field" name="analyte_type" class="local-store">
-													<option value="all">All</option>
-													<option value="Algae">Algae</option>
+												<select id="analyte-type-field" name="analyte_type" class="static-field" style="{width: 15em;}">
+ 													<option></option>
+ 													<option value="Algae">Algae</option>
 													<option value="Fish">Fish</option>
 													<option value="Macroinvertebrate">Macroinvertebrate</option>
 												</select>
@@ -677,8 +693,8 @@ and protocols for all stages of the monitoring process.
 										<tr>
 										<th><label for="waterbody-type-field">Waterbody type:</label></th>
 											<td>
-												<select id="waterbody-type-field" name="waterbody_type" class="local-store">
-													<option value="all">All</option>
+												<select id="waterbody-type-field" name="waterbody_type" class="static-field" style="{width: 15em;}">
+													<option ></option>
 													<option value="Estuary">Estuary</option>
 													<option value="Lake">Lake</option>
 													<option value="Ocean">Ocean</option>
@@ -692,9 +708,7 @@ and protocols for all stages of the monitoring process.
 										<tr>
 										<th><label for="gear-type-field">Gear type:</label></th>
 											<td>
-												<select id="gear-type-field" name="gear_type">
-													<option value="all">All</option>
-												</select>
+												<input type="hidden" class="filter-select" id="gear-type-field" name="gear_type" />
 											</td>
 										</tr>
 									</table>
@@ -714,8 +728,8 @@ and protocols for all stages of the monitoring process.
 										<tr>
 											<th><label for="matrix-field">Matrix:</label></th>
 											<td>
-												<select id="matrix-field" name="matrix" class="local-store">
-													<option value="all">All</option>
+												<select id="matrix-field" name="matrix" class="filter-select static-field" style="{width: 10em;}">
+													<option></option>
 													<option value="Freshwater">Freshwater</option>
 													<option value="Saltwater">Saltwater</option>
 													<option value="Both">Both</option>
@@ -738,24 +752,20 @@ and protocols for all stages of the monitoring process.
 										<tr>
 											<th><label for="study_objective">What are you interested in:</label></th>
 											<td>
-												<select id="study_objective" name="study_objective">
-													<option value="all">All</option>
-												</select>
+												<input type="hidden" class="filter-select" id="study_objective" name="study_objective" />
 											</td>
 										</tr>
 										<tr>
 											<th><label for="item_type">Item type:</label></th>
 											<td>
-												<select id="item_type" name="item_type">
-													<option value="all">All</option>
-												</select>
+												<input type="hidden" class="filter-select" id="item_type" name="item_type" />
 											</td>
 										</tr>
 										<tr>
 											<th><label for="complexity">Complexity:</label></th>
 											<td>
-												<select id="complexity" name="complexity" class="local-store">
-													<option value="all">All</option>
+												<select id="complexity" name="complexity" class="filter-select static-field" style="{width: 8em;}">
+													<option ></option>
 													<option value="Low">Low</option>
 													<option value="Medium">Medium</option>
 													<option value="High">High</option>
@@ -765,33 +775,25 @@ and protocols for all stages of the monitoring process.
 										<tr>
 											<th><label for="analysis_type">Analysis type:</label></th>
 											<td>
-												<select id="analysis_type" name="analysis_type">
-													<option value="all">All</option>
-												</select>
+												<input type="hidden" class="filter-select" id="analysis_type" name="analysis_type" />
 											</td>
 										</tr>
 										<tr>
 											<th><label for="publication_source_type">Publication source type:</label></th>
 											<td>
-												<select id="publication_source_type" name="publication_source_type">
-													<option value="all">All</option>
-												</select>
+												<input type="hidden" class="filter-select" id="publication_source_type" name="publication_source_type">
 											</td>
 										</tr>
 										<tr>
 											<th><label for="media_emphasized">Media emphasized:</label></th>
 											<td>
-												<select id="media_emphasized" name="media_emphasized">
-													<option value="all">All</option>
-												</select>
+												<input type="hidden" class="filter-select" id="media_emphasized" name="media_emphasized" />
 											</td>
 										</tr>
 										<tr>
 											<th><label for="special_topic">Special topic:</label></th>
 											<td>
-												<select id="special_topic" name="special_topic">
-													<option value="all">All</option>
-												</select>
+												<input type="hidden" class="filter-select" id="special_topic" name="special_topic" />
 											</td>
 										</tr>
 									</table>
@@ -813,27 +815,21 @@ and protocols for all stages of the monitoring process.
 						<form>
 							<table class="general-search-form-table">
 								<tr>
-									<th><label for="media-name-field">Media name:</label></th>
+									<th><label id="media-name-field-label" for="media-name-field">Media name:</label></th>
 									<td>
-										<select id="media-name-field" name="media_name">
-											<option value="all">All</option>
-										</select>
+										<input type="hidden" class="limit-by-select-field" id="media-name-field" name="media_name"/>
 									</td>
 								</tr>
 								<tr>
-									<th><label for="source-field">Source:</label></th>
+									<th><label id="source-field-label" for="source-field">Source:</label></th>
 									<td>
-										<select id="source-field" name="source">
-											<option value="all">All</option>
-										</select>
+										<input type="hidden" class="limit-by-select-field" id="source-field" name="source" />
 									</td>
 								</tr>
 								<tr>
-									<th><label for="instrumentation-field">Instrumentation:</label></th>
+									<th><label id="instrumentation-field-label" for="instrumentation-field">Instrumentation:</label></th>
 									<td>
-										<select id="instrumentation-field" name="instrumentation">
-											<option value="all">All</option>
-										</select>
+										<input type="hidden" class="limit-by-select-field" id="instrumentation-field" name="instrumentation" />
 									</td>
 								</tr>
 							</table>
