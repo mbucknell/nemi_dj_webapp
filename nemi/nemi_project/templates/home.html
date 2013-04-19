@@ -185,6 +185,25 @@
 			setInitialCheckedState(divToShow.find('input[type="checkbox"]'), setToDefault)
 		}
 		
+		function validateAnalyteField(textEl /* text field */, fieldKind /* String */) {
+			/* Validate the analyte field and return the validated string */
+			var result = $.trim(textEl.val());
+			var valuesList = result.split('\n');
+			if (activeCategory() === 'regulatory') {
+				if (valuesList.length > 1) {
+					alert('You can only enter one analyte ' + fieldKind + '.');
+					result = valuesList[0];
+				}
+			}
+			else {
+				if (valuesList.length > 3) {
+					alert('You can only enter three analyte ' + fieldKind + 's.');
+					result = valuesList.slice(0,3).join('\n');
+				}
+			}
+			return result;
+		}
+		
 		function activeCategory() {
 			return $('#filter-action>div:visible').find('input[name="category"]').val();
 		}
@@ -206,8 +225,7 @@
 			var actionDiv = buttonEl.data('actionDivId');
 			
 			actionDiv.find('input:hidden[name="category"]').val(category);
-			actionDiv.find('input:hidden[name="subcategory"]').val(subcategory);
-						
+			actionDiv.find('input:hidden[name="subcategory"]').val(subcategory);						
 		}
 		function setLimitBySelectSensitivity() {
 			/*
@@ -226,7 +244,7 @@
 			var searchBtn = $('#filtered-action-div .search-button');
 			var activeDiv = $('#filter-action>div:visible');
 			var category = activeDiv.find('input[name="category"]').val();
-			if ((activeDiv.attr('id') == 'analyte-search-div') && (category == '')){
+			if (((activeDiv.attr('id') == 'analyte-search-div') && (category == '')) || (category == 'regulatory')){
 				// Set state to disabled if the analyte code or name fields are both empty.
 				var nameVal = $.trim($('#analyte-name-field').val());
 				var codeVal = $.trim($('#analyte-code-field').val());
@@ -324,36 +342,49 @@
 			$('#browse-search-button').data('showCallback', updateBrowseMethodCount);
 			
 			// In addition to actionDivId and showCallback (as needed), the filtered search buttons should set headerId to the
-			// correct header and set category and subcategory to the button's category/subcategory.
+			// correct header, set the form's action url (actionUrl), and set category and subcategory to the button's category/subcategory.
 			$('#analytes-search-button').data('actionDivId', $('#analyte-search-div'));
 			$('#analytes-search-button').data('headerId', $('#analytes-header'));
+			$('#analytes-search-button').data('actionUrl', '{% url "methods-analyte_results" %}');
 			$('#analytes-search-button').data('category', '');
 			
 			$('#chemical-search-button').data('actionDivId', $('#chemical-search-div'));
 			$('#chemical-search-button').data('headerId', $('#chemical-header'));
+			$('#chemical-search-button').data('actionUrl', '{% url "methods-results" %}');
 			$('#chemical-search-button').data('category', 'chemical');
 			
 			$('#microbiological-search-button').data('actionDivId', $('#analyte-search-div'));
 			$('#microbiological-search-button').data('headerId', $('#microbiological-header'));
+			$('#microbiological-search-button').data('actionUrl', '{% url "methods-analyte_results" %}');
 			$('#microbiological-search-button').data('category', 'biological');
 			$('#microbiological-search-button').data('subcategory', 'Microbiological');
 			
 			$('#community-search-button').data('actionDivId', $('#community-search-div'));
 			$('#community-search-button').data('headerId', $('#community-header'));
+			$('#community-search-button').data('actionUrl', '{% url "methods-analyte_results" %}');
 			$('#community-search-button').data('category', 'biological');
 			$('#community-search-button').data('subcategory', 'Population/Community');
 			
 			$('#toxicity-search-button').data('actionDivId', $('#toxicity-search-div'));
 			$('#toxicity-search-button').data('headerId', $('#toxicity-header'));
+			$('#toxicity-search-button').data('actionUrl', '{% url "methods-results" %}');
 			$('#toxicity-search-button').data('category', 'toxicity assay');
 			
 			$('#physical-search-button').data('actionDivId', $('#analyte-search-div'));
 			$('#physical-search-button').data('headerId', $('#physical-header'));
+			$('#physical-search-button').data('actionUrl', '{% url "methods-analyte_results" %}');
 			$('#physical-search-button').data('category', 'physical');
 			
 			$('#statistical-search-button').data('actionDivId', $('#statistical-search-div'));
 			$('#statistical-search-button').data('headerId', $('#statistical-header'));
+			$('#statistical-search-button').data('actionUrl', '{% url "methods-statistical_results" %}');
 			$('#statistical-search-button').data('category', 'statistical');
+			
+			$('#regulatory-search-button').data('actionDivId', $('#analyte-search-div'));
+			$('#regulatory-search-button').data('headerId', $('#regulatory-header'));
+			$('#regulatory-search-button').data('actionUrl', '{% url "methods-regulatory_results" %}');
+			$('#regulatory-search-button').data('category', 'regulatory');
+			
 						
 			// Add click handlers for subcategory buttons 
 			$('.subcategory-button').click(function() {
@@ -372,6 +403,9 @@
 				if ($(this).parents('#filtered-selection-div')) {
 					setActionDivState($(this));
 					setLimitBySelectSensitivity();
+					
+					// Attach the appropriate action to the limit by form
+					$('#filtered-search-limits form').attr('action', $(this).data('actionUrl'));
 									
 					// Default selects to 'all' selection.
 					$('.limit-by-select-field').select2('val', 'all', true);
@@ -405,8 +439,6 @@
 				
 				limitByForm.append(hiddenInputHtml);
 				
-				// update the action to match actionDiv's and submit form 
-				limitByForm.attr('action', actionDiv.find('form').attr('action'));
 				limitByForm.submit();
 				
 				return false;
@@ -427,37 +459,27 @@
 			});	
 			
 			// Add change event handlers to analyte name and code field. The event handler limits to text 
-			// fields to three analytes and it sets the sensitivity of the analyte text and buttons as
-			// appropriate.. 
+			// fields to three analytes (or  one if regulatory) and it sets the sensitivity of the analyte text and buttons as
+			// appropriate.
 			var nameEl = $('#analyte-name-field');
 			var nameFindBtn = $('#find-analyte-name-button');
 			var codeEl = $('#analyte-code-field');
 			var codeFindBtn = $('#find-analyte-code-button');
 			
 			nameEl.change(function() {
-				var value = $.trim($(this).val());
+				var value = validateAnalyteField($(this), 'name');
+				$(this).val(value);
 				Utils.setEnabled(codeEl, (value == ''));
 				Utils.setEnabled(codeFindBtn, (value == ''));
 				setFilteredSearchButtonState();
-				
-				var valuesList = value.split('\n');
-				if (valuesList.length > 3) {
-					alert('You can only enter three analyte names. \n Removing the extra names.');
-					$(this).val(valuesList.slice(0,3).join('\n'));
-				}
 			});
 			
 			codeEl.change(function() {
-				var value = $.trim($(this).val());
+				var value = validateAnalyteField($(this), 'code');
+				$(this).val(value);
 				Utils.setEnabled(nameEl, (value == ''));
 				Utils.setEnabled(nameFindBtn, (value == ''));
 				setFilteredSearchButtonState();
-				
-				var valuesList = value.split('\n');
-				if (valuesList.length > 3) {
-					alert('You can only enter three analyte codes. \n Removing the extra codes.');
-					$(this).val(valuesList.slice(0,3).join('\n'));
-				}
 			});
 			
 			//Check to make sure that at least one method type is checked.
@@ -481,6 +503,8 @@
 				var buttonEl = $('#' + sessionStorage['filtered-selection-div']);
 				showSearchSubcategory(buttonEl, false);
 				setActionDivState(buttonEl);
+				// Attach the appropriate action to the limit by form
+				$('#filtered-search-limits form').attr('action', buttonEl.data('actionUrl'));
 				setLimitBySelectSensitivity();
 			}
 			$('.static-field').each(function() {
@@ -577,6 +601,7 @@ and protocols for all stages of the monitoring process.
 					<li class="not-active subcategory-button" id="toxicity-search-button">TOXICITY</li>
 					<li class="not-active subcategory-button" id="physical-search-button">PHYSICAL</li>
 					<li class="not-active subcategory-button" id="statistical-search-button">STATISTICAL</li>
+					<li class="not-active subcategory-button" id="regulatory-search-button">REGULATORY</li>
 				</ul>
 			</div>
 			<div id="filtered-action-div" class="subcategory-action-div">
@@ -610,10 +635,14 @@ and protocols for all stages of the monitoring process.
 							<p>Limit search to STATISTICAL methods</p>
 							<hr />
 						</div>
+						<div id="regulatory-header" style="display: none;">
+							<p>Limit search to REGULATORY methods</p>
+							<hr />
+						</div>
 					</div>
 					<div id="filter-action">
 						<div id="analyte-search-div" class="input-section-div">
-							<form action="{%url 'methods-analyte_results' %}" method=get>
+							<form>
 								<div style="display: inline-block;">
 									<table class="general-search-form-table">
 										<tr>
@@ -664,7 +693,7 @@ and protocols for all stages of the monitoring process.
 							</div>
 						</div>
 						<div id="chemical-search-div" class="input-section-div" style="display: none;">
-							<form action="{% url 'methods-results' %}" method=get>
+							<form>
 								<div style="display: inline-block;">
 									<div class="no-style-list">
 										<span class="header">Chemical subcategories:</span><br />
@@ -676,7 +705,7 @@ and protocols for all stages of the monitoring process.
 							</form>					
 						</div>
 						<div id="community-search-div" class="input-section-div" style="display: none;">
-							<form action="{% url 'methods-analyte_results' %}" method=get>
+							<form>
 								<div style="display: inline-block;">
 									<table class="general-search-form-table">
 										<tr>
@@ -718,7 +747,7 @@ and protocols for all stages of the monitoring process.
 							</form>
 						</div>
 						<div id="toxicity-search-div" class="input-section-div" style="display: none;">
-							<form action="{% url 'methods-results' %}" method=get>
+							<form>
 								<div style="display: inline-block;">
 									<div class="no-style-list">
 										<span class="header">Toxicity subcategories</span><br />
@@ -742,7 +771,7 @@ and protocols for all stages of the monitoring process.
 							</form>
 						</div>
 						<div id="statistical-search-div" class="input-section-div" style="display: none;">
-							<form action="{% url 'methods-statistical_results' %}" method=get>
+							<form>
 								<div style="display: inline-block;">
 									<div class="no-style-list">
 										<span class="header">Statistical subcategories:</span><br />
@@ -812,7 +841,7 @@ and protocols for all stages of the monitoring process.
 					</h3>
 					<br />
 					<div id=filtered-search-limits class="input-section-div subsection-div">
-						<form>
+						<form action="{% url 'methods-analyte_results' %}" method="get">
 							<table class="general-search-form-table">
 								<tr>
 									<th><label id="media-name-field-label" for="media-name-field">Media name:</label></th>

@@ -21,7 +21,7 @@
 		</thead>
 		<tbody>
 			{% for d in data %}
-				<tr id="{{d.method_id}}">
+				<tr id="{{ d.method_id }}">
 					<td><input type="checkbox" /></td>
 					<td>
 						{% if d.method_category == 'STATISTICAL' %}

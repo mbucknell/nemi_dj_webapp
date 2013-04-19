@@ -1,0 +1,98 @@
+{% extends "methods/base_results.html" %}
+
+{% load helpcontent %}
+
+{% block page_style %}
+	{{ block.super }}
+	<!--  Overriding the tablesorter's hovering style as it is visually confusing with the childrows -->
+	<style>
+		.tablesorter-nemi tbody > tr:hover > td,
+		.tablesorter-nemi tbody > tr:hover > td table td,
+		.tablesorter-nemi tbody > tr:hover + tr.tablesorter-childRow > td,
+		.tablesorter-nemi tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
+		.tablesorter-nemi tbody > tr.even:hover > td,
+		.tablesorter-nemi tbody > tr.even:hover > td table td,
+		.tablesorter-nemi tbody > tr.even:hover + tr.tablesorter-childRow > td,
+		.tablesorter-nemi tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
+			background: #F7E5D1;
+		}
+		.tablesorter-nemi tbody > tr.odd:hover > td,
+		.tablesorter-nemi tbody > tr.odd:hover > td table td,
+		.tablesorter-nemi tbody > tr.odd:hover + tr.tablesorter-childRow > td,
+		.tablesorter-nemi tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
+			background: #F7EFE5;
+		}
+
+	</style>
+{% endblock %}
+
+{% block top_results_actions %}
+	<div id="top-results-actions" class="results-actions">
+		<input type="button" class="download-button search-button" value="Download results"/>
+	</div>
+{% endblock %}
+
+{% block customize_dialog %}{% endblock %} 
+
+{% load data_format %} <!-- Imports decimal_format tag -->
+
+{% block results_content %}
+	<table id="results-table" class="data-table">
+		<thead>
+			<tr>
+				<th class="sorter-false">{% include "methods/_field_def.html" with help=field_help|get_help_content:'regulation' %}</th>
+				<th class="sorter-false">{% include "methods/_field_def.html" with help=field_help|get_help_content:'reg_location' %}</th>
+				<th class="sorter-false">{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_source' %}</th>
+				<th class="sorter-false">{% include "methods/_field_def.html" with help=field_help|get_help_content:'source_method_identifier' %}</th>
+				<th class="sorter-false">{% include "methods/_field_def.html" with help=field_help|get_help_content:'revision_information' %}</th>
+				<th class="sorter-false">{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_descriptive_name' %}</th>
+				<th class="sorter-false">{% include "methods/_field_def.html" with help=field_help|get_help_content:'dl_value' %}</th>
+				<th class="sorter-false">{% include "methods/_field_def.html" with help=field_help|get_help_content:'dl_type' %}</th>
+				<th class="sorter-false">{% include "methods/_field_def.html" with help=field_help|get_help_content:'instrumentation_description' %}</th>
+				<th class="sorter-false">{% include "methods/_field_def.html" with help=field_help|get_help_content:'relative_cost' %}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% regroup data by regulation as by_reg %}
+			{% for reg in by_reg %}
+				<tr id="{{ reg.list.0.method_id }}">
+					<td rowspan={{ reg.list|length }}>{{ reg.grouper }}</td>
+					<td rowspan={{ reg.list|length }}>{{ reg.list.0.reg_location }}</td>
+					
+					{% regroup reg.list by method_source as by_method_source %}
+					{% for by_source in by_method_source %}
+						{% if not forloop.first %}
+							<tr id="{{ by_source.list.0.method_id }}" class="tablesorter-childRow">
+						{% endif %}
+						<td rowspan="{{ by_source.list|length}}">{{ by_source.grouper }}</td>							
+						{% for method in by_source.list %}
+							{% if not forloop.first %}
+								<tr id="{{ method.method_id }}" class="tablesorter-childRow">
+							{% endif %}
+							<td><a href="{% url 'methods-method_summary' method.method_id %}">{{ method.source_method_identifier|safe }}</a></td>
+							<td>{{ method.revision_information }}</td>
+							<td>{{ method.method_descriptive_name }}</td>
+							<td>
+								{% if method.dl_value.normalize == 999 %}
+									N/A
+								{% else %}
+					 				{{ method.dl_value|decimal_format }} <span class="abbrev" title="{{ method.dl_units_description }}">{{ method.dl_units }}</span>
+								{% endif %}
+							</td>
+							<td><span class="abbrev" title="{{ method.dl_type_description }}">{{ method.dl_type }}</span></td>	
+							<td><span class="abbrev" title="{{ method.instrumentation_description }}">{{ method.instrumentation }}</span></td>
+							<td><span class="abbrev" title="{{ method.relative_cost }}">{{ method.relative_cost_symbol }}</span></td>
+							</tr>
+						{% endfor %}
+					{% endfor %}
+			{% endfor %}					
+		</tbody>
+	</table>
+{% endblock %}
+
+{% block bottom_results_actions %}
+	<div id="bottom-results-actions" class="results-actions">
+		<input type="button" class="download-button search-button" value="Download results"/>
+	</div>
+{% endblock %}
+			

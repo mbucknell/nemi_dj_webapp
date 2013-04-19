@@ -17,66 +17,13 @@ from django.views.generic.edit import TemplateResponseMixin
 from common.models import MethodAnalyteVW, InstrumentationRef, StatisticalDesignObjective, StatisticalItemType
 from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics
 from common.models import StatAnalysisRel, SourceCitationRef, StatDesignRel, StatMediaRel, StatTopicRel
-from common.utils.forms import get_criteria
 from common.utils.view_utils import dictfetchall, xls_response, tsv_response
-from common.views import FilterFormMixin, PdfView, SearchResultView, ExportSearchView, ChoiceJsonView
+from common.views import PdfView, ChoiceJsonView
 
 from domhelp.views import FieldHelpMixin
 
-from .forms import RegulatorySearchForm, TabularSearchForm
-from .models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, AnalyteCodeVW, RevisionJoin
-from .models import RegQueryVW,  RegulatoryMethodReport, RegulationRef
+from .models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, AnalyteCodeVW, RevisionJoin, RegQueryVW
 
-def _greenness_profile(d):
-    '''Returns a dictionary with five keywords. The first keyword is profile whose is 
-    a list of four gifs representing the greenness profile of the dictionary d or an empty list if there is not
-    enough information for a complete profile. The second through 5th keyword represent the verbose greenness value for
-    pbt, toxic, corrisive, and waste_amt
-    '''
-    def _g_value(flag):
-        ''' Returns a string representing the verbose "greenness" of flag.'''
-        if flag == 'N':
-            return 'Green'
-        elif flag == 'Y':
-            return 'Not Green'
-        else:
-            return 'N.S.'
-        
-    pbt = d.get('pbt', '')
-    toxic = d.get('toxic', '')
-    corrosive = d.get('corrosive', '')
-    waste = d.get('waste', '')
-    
-    g = []
-    if pbt == 'N':
-        g.append('ULG2.gif')
-    elif pbt == 'Y':
-        g.append('ULW2.gif')
-        
-    if toxic == 'N':
-        g.append('URG2.gif')
-    elif toxic == 'Y':
-        g.append('URW2.gif')
-        
-    if corrosive == 'N':
-        g.append('LLG2.gif')
-    elif corrosive == 'Y':
-        g.append('LLW2.gif')
-        
-    if waste == 'N':
-        g.append('LRG2.gif')
-    elif waste == 'Y':
-        g.append('LRW2.gif')
-        
-    if len(g) != 4:
-        g = []
-
-    return {'profile' : g, 
-            'pbt' : _g_value(pbt), 
-            'hazardous' : _g_value(toxic),
-            'corrosive' : _g_value(corrosive),
-            'waste_amt' : _g_value(waste)}
-    
 
 def _analyte_value_qs(method_id):
     ''' Returns the analyte data values query set for the method_id.'''
@@ -222,14 +169,6 @@ class InstrumentationView(ChoiceJsonView):
         return [(str(i_id), descr) for (i_id, descr) in qs]
 
      
-class RegulationView(ChoiceJsonView):
-    '''
-    Extends the ChoiceJsonView to retrieve the regulation choices as a json object.
-    '''
-    def get_choices(self, request, *args, **kwargs):
-        return RegulationRef.objects.values_list('regulation', 'regulation_name').order_by('regulation_name').distinct()
-
-
 class MethodTypeView(ChoiceJsonView):
     '''
     Extends the ChoiceJsonView to retrieve the method type choices as a json object.
@@ -323,209 +262,7 @@ class StatSpecialTopicsView(ChoiceJsonView):
         
     
 
-class RegulatorySearchFormMixin(FilterFormMixin):
-    ''' Extends the FilterFormMixin to implement the query filtering part of the Regulatory Search page.
-    '''
-    
-    form_class = RegulatorySearchForm
-    
-    def get_qs(self, form):
-        qs = RegQueryVW.objects.exclude(method_subcategory__in=['SAMPLE/PREPARATION', 'GENERAL'])
-        
-        if form.cleaned_data['analyte_kind'] == 'code':
-            qs = qs.filter(analyte_code__iexact=form.cleaned_data['analyte_value'])
-        else:
-            qs = qs.filter(analyte_name__iexact=form.cleaned_data['analyte_value'])
-            
-        if form.cleaned_data['regulation'] != 'all':
-            qs = qs.filter(regulation__exact=form.cleaned_data['regulation'])
-            
-        return qs
-            
-    def get_context_data(self, form):
-        # Retrieve analyte synonyms for display
-        if form.cleaned_data ['analyte_kind'] == 'code':
-            analyte_code = form.cleaned_data['analyte_value']
-            analyte_qs = AnalyteCodeRel.objects.filter(analyte_code__iexact=analyte_code)
-            if len(analyte_qs) == 0:
-                analyte_name = None
-            else:
-                try:
-                    analyte_name = analyte_qs.filter(preferred__exact=-1)[0].analyte_name
-                except:
-                    analyte_name = analyte_qs[0].analyte_name
-        else:
-            analyte_name = form.cleaned_data['analyte_value']
-            try:
-                analyte_code = AnalyteCodeRel.objects.filter(analyte_name__iexact=analyte_name)[0].analyte_code
-                analyte_qs = AnalyteCodeRel.objects.filter(analyte_code__iexact=analyte_code)
-            except:
-                analyte_code = None
-                analyte_qs = None
-        if analyte_qs:    
-            syn = analyte_qs.values_list('analyte_name', flat=True)
-        else:
-            syn = []
-            
-        criteria = []
-        criteria.append(get_criteria(form['regulation']))
-                                
-        return {'criteria' : criteria,
-                'analyte_name' : analyte_name,
-                'analyte_code' : analyte_code,
-                'syn' : syn}
-    
-class ExportRegulatorySearchView(RegulatorySearchFormMixin, ExportSearchView):
-    '''Extends the ExportSearchView and RegulatorySearchFormMixin to implement the
-    view which will export the table data.
-    '''
-    
-    export_fields = ('method_id',
-                     'method_source',
-                     'method_source_id',
-                     'revision_id',
-                     'analyte_revision_id',
-                     'source_method_identifier',
-                     'regulation',
-                     'regulation_name',
-                     'revision_information',
-                     'method_descriptive_name',
-                     'method_subcategory',
-                     'method_category',
-                     'media_name',
-                     'relative_cost_symbol',
-                     'instrumentation',
-                     'instrumentation_description',
-                     'analyte_name',
-                     'analyte_code',
-                     'sub_dl_value',
-                     'dl_units',
-                     'dl_type',
-                     'dl_type_description',
-                     'dl_units_description',
-                     'sub_accuracy',
-                     'accuracy_units',
-                     'sub_precision',
-                     'precision_units',
-                     'precision_units_description',
-                     'false_negative_value',
-                     'false_positive_value',
-                     'prec_acc_conc_used',
-                     'precision_descriptor_notes',
-                     'link_to_full_method')
-    export_field_order_by = 'method_id'
-    filename = 'regulatory_search'
-    
-class RegulatorySearchView(RegulatorySearchFormMixin, SearchResultView):
-    ''' Extends the SearchResultsView and RegulatorySearchFormMixin to implement
-    the regulatory search page.
-    '''
-    
-    template_name = 'methods/regulatory_search.html'
-    
-    result_fields = ('method_source_id',
-                     'regulation_name',
-                     'regulation',
-                     'reg_location',
-                     'source_method_identifier',
-                     'revision_information',
-                     'revision_id',
-                     'analyte_revision_id',
-                     'method_source',
-                     'method_descriptive_name',
-                     'link_to_full_method',
-                     'mimetype',
-                     'method_id',
-                     'dl_value',
-                     'dl_units_description',
-                     'dl_units',
-                     'dl_type_description',
-                     'dl_type',
-                     'instrumentation_description',
-                     'instrumentation',
-                     'relative_cost',
-                     'relative_cost_symbol')
-    result_field_order_by = 'source_method_identifier'
-    
-    header_abbrev_set = ('SOURCE_METHOD_IDENTIFIER',
-                         'REGULATION',
-                         'REGULATION_LOCATION',
-                         'METHOD_SOURCE',
-                         'REVISION_INFO',
-                         'METHOD_DESCRIPTIVE_NAME',
-                         'METHOD_DOWNLOAD',
-                         'DL_VALUE',
-                         'DL_TYPE',
-                         'INSTRUMENTATION',
-                         'RELATIVE_COST',
-                         )
-    
-    def get_results_context(self, qs):
-        results = self.get_values_qs(qs)
-        
-        # Need to provide a count of unique methods in the results query.
-        method_count = 0
-        last_method = None
-        for r in results:
-            if last_method != r['source_method_identifier']:
-                method_count += 1
-                last_method = r['source_method_identifier']
-        
-        return {'results' : results,
-                'method_count' : method_count}
-        
-class TabularRegulatorySearchView(FilterFormMixin, SearchResultView):
-    ''' Extends the SearchResultsForm and FilterFormMixin to implement the Tabular
-    Regulatory Search page. 
-    We do not provide and header definitions so the template must create the table headers.
-    '''
-    
-    template_name = 'methods/tabular_reg_search.html'
-    form_class = TabularSearchForm
-    
-    result_fields = ('analyte_name',
-                     'epa',
-                     'standard_methods',
-                     'astm',
-                     'usgs',
-                     'other',
-                     'epa_rev_id',
-                     'standard_methods_rev_id',
-                     'usgs_rev_id',
-                     'astm_rev_id',
-                     'other_rev_id')
-    
-    def get_qs(self, form):
-        qs = RegulatoryMethodReport.objects.all()
-        if form.cleaned_data['analyte'] != 'all':
-            qs = qs.filter(analyte_name__exact=form.cleaned_data['analyte'])
-            
-        return qs
-    
-    def get_results_context(self, qs):
-        '''Add analyte synonyms to each result by retrieving analyte code from AnalyteCodeRel
-        and generating the list of synonyms that the analyte name/code pair.
-        '''
-        r_context = {'results': []}
-        
-        v_qs = self.get_values_qs(qs)
-        for r in v_qs:
-            try:
-                a_qs = AnalyteCodeRel.objects.filter(analyte_name__iexact=r['analyte_name'])
-                analyte_code = a_qs[0].analyte_code
-            except:
-                analyte_code = None
-                
-            if analyte_code:
-                syn = AnalyteCodeRel.objects.filter(analyte_code__iexact=analyte_code).values_list('analyte_name', flat=True)
-            else:
-                syn = []
-            
-            r_context['results'].append({'r' : r, 'analyte_code' : analyte_code, 'syn' : syn})
-            
-        return r_context
-    
-    
+
 class ResultsMixin(MultipleObjectMixin):
     '''
     Extends the MultipleObjectMixin to implement the standard filters for method result searches. 
@@ -632,7 +369,7 @@ class MethodResultsView(MethodResultsMixin, FieldHelpMixin, BaseResultsView):
     
     template_name = 'methods/method_results.html'    
     export_url = reverse_lazy('methods-export_results')
-    field_names=['source_method_identifier',
+    field_names = ['source_method_identifier',
                  'method_source',
                  'method_descriptive_name',
                  'method_subcategory',
@@ -871,8 +608,72 @@ class ExportStatisticalResultsView(StatisticalResultsMixin, ExportBaseResultsVie
     filename = 'statistical_method_results'
     
     
+class RegulatoryResultsMixin(ResultsMixin):
+    '''
+    Extends the Results Mixin to implement regulatory method search. 
+    '''
+    
+    queryset = RegQueryVW.objects.exclude(method_subcategory__in=['SAMPLE/PREPARATION', 'GENERAL'])
+    
+    def get_queryset(self):
+        data = self.queryset
+        
+        if 'analyte_name' in self.request.GET and self.request.GET.get('analyte_name'):
+            names = self.request.GET.get('analyte_name').splitlines()
+            data = data.filter(analyte_name__iregex=r'(' + '|'.join(['^' + re.escape(n) + '$' for n in names]) + ')')
+            
+        elif 'analyte_code' in self.request.GET and self.request.GET.get('analyte_code'):
+            codes = self.request.GET.get('analyte_code').splitlines()
+            data = data.filter(analyte_code__iregex=r'(' + '|'.join(['^' + re.escape(c) + '$' for c in codes]) + '$)')
+       
+        return data.order_by('regulation', 'method_source', 'source_method_identifier')           
+        
+class RegulatoryResultsView(RegulatoryResultsMixin, FieldHelpMixin, BaseResultsView):
+    '''Extends the mixins to implement the regulatory results view.
+    '''
+    
+    template_name = 'methods/regulatory_results.html' 
+    export_url = reverse_lazy('methods-export_regulatory_results')
+    
+    field_names = ['regulation',
+                   'reg_location',
+                   'method_source',
+                   'source_method_identifier',
+                   'revision_information',
+                   'method_descriptive_name',
+                   'dl_value',
+                   'dl_type',
+                   'instrumentation_description',
+                   'relative_cost'
+                   ]
 
-class KeywordSearchView(TemplateResponseMixin, View):
+
+class ExportRegulatoryResultsView(RegulatoryResultsMixin, ExportBaseResultsView):
+    '''
+    Extends the ExportBaseResultView with RegulatoryResultsMixin to provide an Excel file for download.
+    '''
+
+    export_fields = ('regulation',
+                     'regulation_name',
+                     'reg_location',
+                     'method_source',
+                     'source_method_identifier',
+                     'method_id',
+                     'method_descriptive_name',
+                     'revision_information',
+                     'dl_value',
+                     'dl_units',
+                     'dl_type',
+                     'instrumentation',
+                     'instrumentation_description',
+                     'relative_cost_symbol',
+                     'relative_cost'
+                     );
+            
+    filename = 'regulatory_method_results'
+    
+
+class KeywordResultsView(TemplateResponseMixin, View):
     '''Extends the standard View to implement the keyword search view. This form only
     processes get requests.
     '''  
