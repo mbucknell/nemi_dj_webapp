@@ -702,15 +702,11 @@ FROM nemi_data.method_fact mf, nemi_data.revision_join rj \
 WHERE mf.revision_id = rj.revision_id AND \
 (CONTAINS(mf.source_method_identifier, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + clean_keyword + '<progression> \
 <seq><rewrite>transform((TOKENS, "{", "}", " "))</rewrite></seq>\
-<seq><rewrite>transform((TOKENS, "{", "}", " ; "))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", "AND"))</rewrite></seq>\
-<seq><rewrite>transform((TOKENS, "{", "}", "ACCUM"))</rewrite></seq>\
 </progression></textquery><score datatype="INTEGER" algorithm="COUNT"/></query>\', 1) > 1 \
 OR CONTAINS(rj.method_pdf, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + clean_keyword + '<progression> \
 <seq><rewrite>transform((TOKENS, "{", "}", " "))</rewrite></seq>\
-<seq><rewrite>transform((TOKENS, "{", "}", " ; "))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", "AND"))</rewrite></seq>\
-<seq><rewrite>transform((TOKENS, "{", "}", "ACCUM"))</rewrite></seq>\
 </progression></textquery><score datatype="INTEGER" algorithm="COUNT"/></query>\', 2) > 1) \
 ORDER BY score(1) desc;')
                 results_list = dictfetchall(cursor)
