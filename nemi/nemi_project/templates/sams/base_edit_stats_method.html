@@ -6,11 +6,11 @@
 {% block title %}<!--  Add page specific title --> {% endblock %}
 
 {% block page_style %}
-	<link type="text/css" href="{{ STATIC_URL }}styles/jquery-ui/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" media="screen"/>
+	<link type="text/css" href="{{ STATIC_URL }}styles/jquery-ui-1.10.0.custom/smoothness/jquery-ui-1.10.0.custom.css" rel="stylesheet" media="screen"/>
 {% endblock %}
 
 {% block page_script %}
-	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.8.16.custom.min.js"></script>
+	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
 	<script>
 		$(document).ready(function(){
 			$('#edit-help')
@@ -39,25 +39,25 @@
 	</script>
 {% endblock %}
 
-{% block header %}
-	{{ block.super }}
-		{% block edit_help_dialog %}
-		<!--  Place holder for the header information dialog  -->
-			<div id="edit-help">
-				<p>Place holder</p>
-			</div>	
-		{% endblock %}
-{% endblock %}
-
-{% block user_login %}
+{% block page_info %}
+	<br />
 	{% include "sams/_sams_user_login.html" %}
+	<br />
+	<hr/>
+	<h3><i>{% block section_header %}{% endblock %}</i></h3>
+	<p> A '*' by a field's label indicates the field is required.</p>
 {% endblock %}
 
-{% block content %}
-	<h3><i>{% block section_header %}SECTION HEADER GOES HERE{% endblock %}</i></h3>
-	<p>A '*' by a field's label indicates the field is required.</p>
-	<br/>
+{% block page-content %}
+	{% block edit_help_dialog %}
+	<!--  Place holder for the header information dialog  -->
+		<div id="edit-help">
+			<p>Place holder</p>
+		</div>	
+	{% endblock %}
 	
+	
+
 	{% block edit_form %} 
 		<form action="{{ action_url }}" method="post">{% csrf_token %}
 		
@@ -101,4 +101,4 @@
 		 </form>
 	{% endblock edit_form%}
 
-{% endblock content %}
+{% endblock %}

@@ -1,10 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}NEMI Create User Account{% endblock %}
+{% block page_info %}<h2>NEMI Create User Account</h2>{% endblock %}
 
-{% block page_title %}NEMI Create User Account {% endblock %}
-
-{% block content %}
+{% block page-content %}
 <p style="font-size: medium;">Please enter the information requested. All fields are required.</p>
 	<form action="{{ request.get_path }}" method="post" autocomplete="off">{% csrf_token %}
 		<table id="data-entry-table">

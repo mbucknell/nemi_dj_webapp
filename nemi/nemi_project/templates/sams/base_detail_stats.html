@@ -2,11 +2,17 @@
 
 {% block title %}NEMI SAMS Method Detail{% endblock %}
 
-{% block user_login %}
-	{% include "sams/_sams_user_login.html" %}
-{% endblock %}
 
-{% block content %}
+{% block page-content %}
+	<br />
+	{% include "sams/_sams_user_login.html" %}	
+	<br />
+	<hr/>
+	<br />
+	<b style="font-size:large;">
+		{% block page_title %}{% endblock %}
+	</b>
+	<br />	
 	{% if data %}
 		<br />
 		<table class="info-table">

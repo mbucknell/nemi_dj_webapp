@@ -630,23 +630,6 @@ class StatMediaRel(StatMediaRelAbstract):
         ordering = ['media_name']
   
 
-class WebFormDefinition(models.Model):
-    
-    field_name = models.CharField(max_length=32, 
-                                  unique=True)
-    label = models.CharField(max_length=64,
-                             blank=True)
-    tooltip = models.CharField(max_length=200,
-                               blank=True)
-    help_text = models.CharField(max_length=1000,
-                                 blank=True)
-    
-    def __unicode__(self):
-        return self.field_name
-    
-    class Meta:
-        db_table = u'web_form_definition'
-        
 class MethodAnalyteVW(models.Model):
 
     sample_handling = models.CharField(max_length=3000, blank=True)

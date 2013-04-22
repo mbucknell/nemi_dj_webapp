@@ -9,9 +9,6 @@ from django.views.generic import TemplateView
 import views
 
 urlpatterns = patterns("", 
-        url(r'^search/$',
-            views.StatisticSearchView.as_view(),
-            name='sams-statistics'),
         url(r'^method_summary/(?P<pk>\d+)/$',
             views.StatisticalMethodSummaryView.as_view(),
             name='sams-method_summary'),

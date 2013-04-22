@@ -14,11 +14,9 @@ from common.models import SourceCitationRef, SourceCitationOnlineRef, SourceCita
 from common.models import Method, MethodOnline, MethodSubcategoryRef, MethodTypeRef, MethodStg, InstrumentationRef
 from common.models import StatAnalysisRelStg,  StatDesignRelStg, StatTopicRelStg, StatMediaRelStg
 from common.models import StatAnalysisRel, StatDesignRel, StatTopicRel, StatMediaRel
-from common.utils.forms import get_criteria_from_field_data, get_criteria
-from common.views import FilterFormMixin, SearchResultView
 
 from domhelp.views import FieldHelpMixin
-from .forms import SAMSSearchForm, StatMethodEditForm
+from .forms import StatMethodEditForm
 
 
 class AddStatMethodOnlineView(FormView):
@@ -92,12 +90,12 @@ class BaseUpdateStatisticalMethodView(FormView):
         source_citation = get_object_or_404(self.source_model_class, source_citation_id=method.source_citation_id)
         result = {}
         
-        result['source_method_identifier'] = method.source_method_identifier
-        result['method_official_name'] = method.method_official_name
-        result['method_source'] = method.method_source
+        result['sam_source_method_identifier'] = method.source_method_identifier
+        result['sam_method_official_name'] = method.method_official_name
+        result['sam_method_source'] = method.method_source
         result['country'] = source_citation.country
         result['author'] = source_citation.author
-        result['brief_method_summary'] = method.brief_method_summary
+        result['sam_brief_method_summary'] = method.brief_method_summary
         result['table_of_contents'] = source_citation.table_of_contents
         result['publication_year'] = source_citation.publication_year
         result['source_citation_name'] = source_citation.source_citation_name
@@ -393,59 +391,7 @@ class ApproveStatMethod(View, TemplateResponseMixin):
         return self.render_to_response({'source_method_id' : method.source_method_identifier})
         
       
-class StatisticSearchView(SearchResultView, FilterFormMixin):
-    '''
-    Extends the SearchResultView and FilterFormMixin to implement the view to display statistical methods.
-    This view does not define any headers, therefore the template creates the table headers.
-    '''
-    
-    template_name = 'sams/statistic_search.html'
-    form_class = SAMSSearchForm
-    
-    def get_qs(self, form):
-        qs = Method.stat_methods.all()
-        
-        if form.cleaned_data['item_type']:
-            qs = qs.filter(source_citation__item_type__exact=form.cleaned_data['item_type'])
-            
-        if form.cleaned_data['complexity'] != 'all':
-            qs = qs.filter(sam_complexity__exact=form.cleaned_data['complexity'])
-            
-        if form.cleaned_data['analysis_type']:
-            qs = qs.filter(statanalysisrel__analysis_type__exact=form.cleaned_data['analysis_type'])
-            
-        if form.cleaned_data['publication_source_type']:
-            qs = qs.filter(source_citation__publicationsourcerel__source__exact=form.cleaned_data['publication_source_type'])
-            
-        if form.cleaned_data['study_objective']:
-            qs = qs.filter(statdesignrel__design_objective__exact=form.cleaned_data['study_objective'])
-            
-        if form.cleaned_data['media_emphasized']:
-            qs = qs.filter(statmediarel__media_name__exact=form.cleaned_data['media_emphasized'])
-            
-        if form.cleaned_data['special_topic']:
-            qs = qs.filter(stattopicrel__topic__exact=form.cleaned_data['special_topic'])
-            
-        return qs
-            
-    def get_context_data(self, form):
-        criteria = []
-        criteria.append(get_criteria_from_field_data(form, 'study_objective', label_override='What you are interested in'))
-        criteria.append(get_criteria_from_field_data(form, 'item_type'))
-        criteria.append(get_criteria(form['complexity']))
-        criteria.append(get_criteria_from_field_data(form, 'analysis_type'))
-        criteria.append(get_criteria_from_field_data(form, 'publication_source_type'))
-        criteria.append(get_criteria_from_field_data(form, 'media_emphasized'))
-        criteria.append(get_criteria_from_field_data(form, 'special_topic'))
-        
-        return {'criteria' : criteria}
-        
-    def get_header_defs(self):
-        return None
-        
-    def get_results_context(self, qs):
-        return {'results' : qs}
-            
+
             
 class StatisticalMethodSummaryView(FieldHelpMixin, DetailView):
     ''' Extends DetailView to implement the Statistical Source Summary view'''

@@ -469,11 +469,10 @@ column in the table */
 
 
 #data-entry-table th {
-	background-color: #F7EFE5;
 	text-align: left;
 	vertical-align: top;
 	padding: 4px;
-	width: 1px;
+	width: 150px;
 	border: none;
 }
 #data-entry-table td {

@@ -2,13 +2,16 @@
 
 {% block title %}Update Statistical Methods{% endblock %}
 
-{% block user_login %}
+{% page_info %}
+	<br />
 	{% include "sams/_sams_user_login.html" %}
+	<br />
+	<hr />
+	<h2>Update Statistical Method</h2>
 {% endblock %}
 
-{% block page_title %}Update Statistical Methods{% endblock %}
 
-{% block content %}
+{% block page-content %}
 	{% if methods %}
 		<h3>List of statistical methods that can be edited</h3>
 		<table class="data-table" style="width: 100%">

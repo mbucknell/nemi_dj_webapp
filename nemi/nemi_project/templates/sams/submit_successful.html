@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 
 {% block title %}NEMI SAMS Submit for Review{% endblock %}
-
-{% block user_login %}
+{% block page_info %}
+	<br />
 	{% include "sams/_sams_user_login.html" %}
+	<br />
+	<hr/>
+	<h2>NEMI SAMS Submit for Review</h2>
 {% endblock %}
 
-{% block page_title %}NEMI SAMS Submit for Review{% endblock %}
-
-{% block content %}
+{% block page-content %}
 	<h4>Your method, {{ source_method_id }}, has been submitted for review.</h4>
 {% endblock %}

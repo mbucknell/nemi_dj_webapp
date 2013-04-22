@@ -1,62 +1,28 @@
-'''
-Created on Jul 25, 2012
 
-@author: mbucknel
-'''
 
-from django.forms import Form, ModelChoiceField, ChoiceField, ModelMultipleChoiceField, CheckboxSelectMultiple, TextInput, Textarea
+from django.forms import ModelChoiceField, ChoiceField, ModelMultipleChoiceField, CheckboxSelectMultiple, TextInput, Textarea
 from django.forms import CharField, IntegerField, URLField
 
-from common.forms import BaseDefinitionsForm
 from common.models import StatisticalDesignObjective, StatisticalItemType, COMPLEXITY_CHOICES, LEVEL_OF_TRAINING_CHOICES, StatisticalAnalysisType, StatisticalSourceType
 from common.models import MediaNameDOM, StatisticalTopics, MethodSourceRef, StatAnalysisRelStg, StatDesignRelStg, StatTopicRelStg, StatMediaRelStg
 from common.models import PublicationSourceRelStg
 
-class SAMSSearchForm(Form):
-    '''Extends the standard form to implement the query filtering form for the Statistical Methods'''
-    
-    study_objective = ModelChoiceField(queryset=StatisticalDesignObjective.objects.exclude(objective='Revisit'),
-                                       label='What are you interested in',
-                                       empty_label='Any', 
-                                       required=False,
-                                       help_text='What water resources information need are you addressing, e.g., time trends, standards, evaluation, etc?')
-    item_type = ModelChoiceField(queryset=StatisticalItemType.objects.all(), 
-                                 empty_label='Any', 
-                                 required=False, 
-                                 help_text='The form of the item, e.g., book, journal article, web site, etc.')
-    complexity = ChoiceField(choices=[(u'all', u'Any')] + COMPLEXITY_CHOICES, 
-                             required=False,
-                             help_text='Relatively speaking...')
-    analysis_type = ModelChoiceField(queryset=StatisticalAnalysisType.objects.all(), 
-                                     empty_label='Any', 
-                                     required=False,
-                                     help_text='Do you already have the data or are you designing a monitoring program?')
-    publication_source_type = ModelChoiceField(queryset=StatisticalSourceType.objects.all(), 
-                                               empty_label='Any', 
-                                               required=False,
-                                               help_text='What type of organization produced this item?')
-    media_emphasized = ModelChoiceField(queryset=MediaNameDOM.stat_media.all(), 
-                                        empty_label='Any', 
-                                        required=False,
-                                        help_text='Water, air, biological tissue, other?')
-    special_topic = ModelChoiceField(queryset=StatisticalTopics.objects.all(), 
-                                     empty_label='Any', 
-                                     required=False,
-                                     help_text='Looking for help with nondetects, autocorrelation, data collected using sensors, etc?')
-    
+from domhelp.forms import BaseDefinitionsForm
+
+ 
 class StatMethodEditForm(BaseDefinitionsForm):
     
-    source_method_identifier = CharField(max_length=30,
+    sam_source_method_identifier = CharField(max_length=30,
                                          widget=TextInput(attrs={'size' : 30}))
-    method_official_name = CharField(max_length=250,
+    sam_method_official_name = CharField(max_length=250,
                                      widget=Textarea(attrs={'rows' : 3, 'cols' : 50}))
-    method_source = ModelChoiceField(queryset=MethodSourceRef.objects.all(),
+    sam_method_source = ModelChoiceField(queryset=MethodSourceRef.objects.all(),
                                      required=False)
     country = CharField(max_length=100, 
                         required=False)
     author = CharField(max_length=450, 
                        widget=Textarea(attrs={'rows': 3, 'cols' : 50}))
-    brief_method_summary = CharField(max_length=4000, 
+    sam_brief_method_summary = CharField(max_length=4000, 
                                      widget=Textarea(attrs={'rows' : 10, 'cols' : 50}))
     table_of_contents = CharField(max_length=1000, 
                                   required=False, 
@@ -105,8 +71,8 @@ class StatMethodEditForm(BaseDefinitionsForm):
         obj should be a SourceCitationRef object.
         '''
         data = self.cleaned_data
-        obj.source_citation = data['source_method_identifier']
-        obj.title = data['method_official_name']
+        obj.source_citation = data['sam_source_method_identifier']
+        obj.title = data['sam_method_official_name']
         obj.country = data['country']
         obj.author = data['author']
         obj.table_of_contents = data['table_of_contents']
@@ -131,11 +97,11 @@ class StatMethodEditForm(BaseDefinitionsForm):
         '''
         data = self.cleaned_data
         
-        obj.method_source = data['method_source']
-        obj.source_method_identifier = data['source_method_identifier']
+        obj.method_source = data['sam_method_source']
+        obj.source_method_identifier = data['sam_source_method_identifier']
         obj.method_descriptive_name = data['source_citation_name']
-        obj.method_official_name = data['method_official_name']
-        obj.brief_method_summary = data['brief_method_summary']
+        obj.method_official_name = data['sam_method_official_name']
+        obj.brief_method_summary = data['sam_brief_method_summary']
         obj.link_to_full_method = data['link_to_full_method']
         obj.notes = data['notes']
         obj.sam_complexity = data['sam_complexity']

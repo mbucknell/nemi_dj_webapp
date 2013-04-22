@@ -2,12 +2,14 @@
 
 {% block title %}NEMI SAMS Approval{% endblock %}
 
-{% block user_login %}
-	{% include "sams_user_login.html" %}
+{% block page_info %}
+	<br />
+	{% include "sams/_sams_user_login.html" %}
+	<br />
+	<hr/>
+	<h2>NEMI SAMS Approval</h2>
 {% endblock %}
 
-{% block page_title %}NEMI SAMS Approval{% endblock %}
-
-{% block content %}
+{% block page-content %}
 	<h4>The SAMS method, {{ source_method_id }}, is now available to the public.</h4>
 {% endblock %}
