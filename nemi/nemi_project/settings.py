@@ -182,7 +182,9 @@ LOGGING = {
 
 SESSION_COOKIE_AGE = 28800 # In seconds, this is eight hours
 
+#NEMI defined settings
 NEW_ACCOUNT_NOTIFICATIONS = () # List of emails to send new account notifications to.
+APEX_METHOD_ENTRY_URL = ''
 
 try:
     ADDITIONAL_APPS = ()

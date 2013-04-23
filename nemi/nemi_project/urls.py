@@ -1,5 +1,6 @@
 ''' Module includes all urls confs for the nemi project '''
 
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
@@ -39,7 +40,7 @@ urlpatterns = patterns('',
         TemplateView.as_view(template_name='home.html'), 
         name='home'),
     url(r'method_entry/',
-        TemplateView.as_view(template_name='method_entry.html'),
+        views.MethodEntryView.as_view(),
         name='method_entry'),
 )
 

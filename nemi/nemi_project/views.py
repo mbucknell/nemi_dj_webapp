@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, FormView
 
 from forms import NEMIUserCreationForm
@@ -66,4 +67,14 @@ class PasswordChangeView(FormView):
     def form_valid(self, form):
         form.save()
         return super(PasswordChangeView, self).form_valid(form)
+    
+class MethodEntryView(TemplateView):
+    template_name = 'method_entry.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(MethodEntryView, self).get_context_data(**kwargs)
+        context['apex_url'] = settings.APEX_METHOD_ENTRY_URL
+        
+        return context
+    
     
