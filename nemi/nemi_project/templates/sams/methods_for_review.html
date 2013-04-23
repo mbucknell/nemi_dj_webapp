@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "sams/base_entry.html" %}
 
 {% block title %}NEMI SAMS Review{% endblock %}
 
@@ -23,16 +23,10 @@
 	
 {% endblock %}
 
-{% block page_info %}
-	<br />
-	{% include "sams/_sams_user_login.html" %}
-	<br />
-	<br />
-{% endblock %}
+{% block page_title %}NEMI SAMS Review/Update{% endblock %}
 
 {% block page-content %}
 	<div id="results-div" class="section-div">
-		<h2>NEMI SAMS Review/Update</h2>
 		{% if methods %}
 			<table class="data-table" id="sort-table" data-sortlist="[[1,0]]" style="width: 100%">
 				<thead>

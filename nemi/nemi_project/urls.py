@@ -38,6 +38,9 @@ urlpatterns = patterns('',
     url(r'^home/', 
         TemplateView.as_view(template_name='home.html'), 
         name='home'),
+    url(r'method_entry/',
+        TemplateView.as_view(template_name='method_entry.html'),
+        name='method_entry'),
 )
 
 urlpatterns += patterns('django.contrib.flatpages.views',

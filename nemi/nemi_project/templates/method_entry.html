@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block page_style %}
+	<style>
+		#classic-nemi-entry-div {
+			font-size: large;
+			display: inline-block;
+		}
+		#separator-div {
+			margin-left: 15px;
+			margin-right: 15px;
+			display: inline-block;
+			font-size: large;
+			font-weight: bold;
+			font-style: italic;
+		}
+		#sams-nemi-entry-div {
+			font-size: large;
+			display: inline-block;
+		}
+	</style>
+
+{% endblock %}
+
+{% block title %}NEMI Method Entry{% endblock %}
+
+{% block page_info %}
+	<h2>NEMI Method Entry</h2>
+{% endblock %}
+
+{% block page-content %}
+	<div id="classic-nemi-entry-div">
+		<a>Go to classic NEMI method entry</a>
+	</div>
+	<div id="separator-div">
+		OR
+    </div>
+    <div id="sams-nemi-entry-div">
+    	<a href="{% url 'sams-method_entry' %}">Go to SAMs NEMI methods</a>
+    </div>
+ {% endblock %}
+	

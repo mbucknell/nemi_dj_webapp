@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "sams/base_entry.html" %}
 <!--  Extend this template to implement pages to create and edit statistical methods -->
 
 {% load form_field_attr %}
@@ -39,14 +39,7 @@
 	</script>
 {% endblock %}
 
-{% block page_info %}
-	<br />
-	{% include "sams/_sams_user_login.html" %}
-	<br />
-	<hr/>
-	<h3><i>{% block section_header %}{% endblock %}</i></h3>
-	<p> A '*' by a field's label indicates the field is required.</p>
-{% endblock %}
+{% block page_title %}Edit Section Header{% endblock %}
 
 {% block page-content %}
 	{% block edit_help_dialog %}
@@ -56,9 +49,9 @@
 		</div>	
 	{% endblock %}
 	
-	
-
 	{% block edit_form %} 
+		<p><i><b>{% block section_header %}{% endblock %}</b></i></p>
+		<p> A '*' by a field's label indicates the field is required.</p>
 		<form action="{{ action_url }}" method="post">{% csrf_token %}
 		
 			{% block form_input_fields %}

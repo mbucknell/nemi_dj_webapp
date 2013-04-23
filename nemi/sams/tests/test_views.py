@@ -13,7 +13,7 @@ from common.models import StatAnalysisRelStg, StatDesignRelStg, StatMediaRelStg,
 
 # TODO: Need to add more functional tests for the statistical update, update lists, and submission/approval views. 
 # Could also improve TestAddStatMethodOnlineView      
-class TestAddStatMethodOnlineView(TestCase):
+class AddStatMethodOnlineViewTestCase(TestCase):
     
     fixtures = ['static_data.json', 
                 'method_subcategory_ref.json', 
@@ -93,7 +93,7 @@ class TestAddStatMethodOnlineView(TestCase):
         self.client.logout()
                                  
 
-class TestSubmitForReviewView(TestCase):
+class SubmitForReviewViewTestCase(TestCase):
      
     def test_permissions(self):
         url = reverse('sams-submit_for_review', kwargs={'pk' : '1'})
@@ -109,7 +109,8 @@ class TestSubmitForReviewView(TestCase):
         
         self.client.logout()
         
-class TestUpdateStatisticalMethodOnlineView(TestCase):
+class UpdateStatisticalMethodOnlineViewTestCase(TestCase):
+    
     def test_permission(self):
         url = reverse('sams-update_method', kwargs={'pk' : '1'})
         
@@ -125,7 +126,7 @@ class TestUpdateStatisticalMethodOnlineView(TestCase):
         self.client.logout()
         
     
-class TestStatisticalMethodOnlineDetailView(TestCase):
+class StatisticalMethodOnlineDetailViewTestCase(TestCase):
     
     def test_permission(self):
         url = reverse('sams-method_detail', kwargs={'pk' : '1'})
@@ -141,7 +142,7 @@ class TestStatisticalMethodOnlineDetailView(TestCase):
         
         self.client.logout()
 
-class TestUpdateStatisticalMethodOnlineListView(TestCase):
+class UpdateStatisticalMethodOnlineListViewTestCase(TestCase):
 
     def test_permission(self):
         url = reverse('sams-update_method_list')
@@ -158,10 +159,9 @@ class TestUpdateStatisticalMethodOnlineListView(TestCase):
         self.client.logout()
         
         
-class TestApproveStatMethod(TestCase):
+class ApproveStatMethodTestCase(TestCase):
     
     def setUp(self):
-        self.g1 = Group.objects.create(name='nemi_admin')
         self.user1 = User.objects.create_user('user1', '', password='test')
             
     def test_permissions(self):
@@ -172,18 +172,18 @@ class TestApproveStatMethod(TestCase):
         self.client.login(username='user1', password='test')
         
         resp = self.client.get(url)
-        self.assertRedirects(resp, '/sams/not_allowed/?next=%s' % url)
+        self.assertRedirects(resp, '/accounts/login/?next=%s' % url)
         
-        self.user1.groups.add(self.g1)
+        self.user1.is_staff = True
+        User.save(self.user1)
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 404)
                 
         self.client.logout()
     
-class TestReviewStatMethodStgListView(TestCase):
+class ReviewStatMethodStgListViewTestCase(TestCase):
     
     def setUp(self):
-        self.g1 = Group.objects.create(name='nemi_admin')
         self.user1 = User.objects.create_user('user1', '', password='test')
             
     def test_permissions(self):
@@ -194,18 +194,18 @@ class TestReviewStatMethodStgListView(TestCase):
         self.client.login(username='user1', password='test')
         
         resp = self.client.get(url)
-        self.assertRedirects(resp, '/sams/not_allowed/?next=%s' % url)
+        self.assertRedirects(resp, '/accounts/login/?next=%s' % url)
         
-        self.user1.groups.add(self.g1)
+        self.user1.is_staff = True
+        User.save(self.user1)
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
                 
         self.client.logout()
  
-class TestStatisticalMethodStgDetailView(TestCase):
+class StatisticalMethodStgDetailViewTestCase(TestCase):
     
     def setUp(self):
-        self.g1 = Group.objects.create(name='nemi_admin')
         self.user1 = User.objects.create_user('user1', '', password='test')
             
     def test_permissions(self):
@@ -216,17 +216,19 @@ class TestStatisticalMethodStgDetailView(TestCase):
         self.client.login(username='user1', password='test')
         
         resp = self.client.get(url)
-        self.assertRedirects(resp, '/sams/not_allowed/?next=%s' % url)
+        self.assertRedirects(resp, '/accounts/login/?next=%s' % url)
         
-        self.user1.groups.add(self.g1)
+        self.user1.is_staff = True
+        User.save(self.user1)
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 404)
                 
         self.client.logout()
  
-class TestUpdateStatisticalMethodStgView(TestCase):
+ 
+class UpdateStatisticalMethodStgViewTestCase(TestCase):
+
     def setUp(self):
-        self.g1 = Group.objects.create(name='nemi_admin')
         self.user1 = User.objects.create_user('user1', '', password='test')
             
     def test_permissions(self):
@@ -237,9 +239,10 @@ class TestUpdateStatisticalMethodStgView(TestCase):
         self.client.login(username='user1', password='test')
         
         resp = self.client.get(url)
-        self.assertRedirects(resp, '/sams/not_allowed/?next=%s' % url)
+        self.assertRedirects(resp, '/accounts/login/?next=%s' % url)
         
-        self.user1.groups.add(self.g1)
+        self.user1.is_staff = True
+        User.save(self.user1)
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 404)
                 

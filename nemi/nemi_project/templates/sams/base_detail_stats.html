@@ -1,18 +1,10 @@
-{% extends "base.html" %}
+{% extends "sams/base_entry.html" %}
 
 {% block title %}NEMI SAMS Method Detail{% endblock %}
 
+{% block page_title %}Method Detail{% endblock %}
 
 {% block page-content %}
-	<br />
-	{% include "sams/_sams_user_login.html" %}	
-	<br />
-	<hr/>
-	<br />
-	<b style="font-size:large;">
-		{% block page_title %}{% endblock %}
-	</b>
-	<br />	
 	{% if data %}
 		<br />
 		<table class="info-table">

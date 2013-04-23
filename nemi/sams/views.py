@@ -1,13 +1,13 @@
 
 import datetime
 
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.core.urlresolvers import reverse, reverse_lazy
+from braces.views import LoginRequiredMixin, StaffuserRequiredMixin
+
+from django.core.urlresolvers import reverse
 from django.db.models import Model
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
-from django.views.generic import ListView, DetailView, FormView, View
+from django.views.generic import ListView, DetailView, FormView, View, RedirectView
 from django.views.generic.edit import TemplateResponseMixin
 
 from common.models import SourceCitationRef, SourceCitationOnlineRef, SourceCitationStgRef, PublicationSourceRel, PublicationSourceRelStg
@@ -16,20 +16,17 @@ from common.models import StatAnalysisRelStg,  StatDesignRelStg, StatTopicRelStg
 from common.models import StatAnalysisRel, StatDesignRel, StatTopicRel, StatMediaRel
 
 from domhelp.views import FieldHelpMixin
+
 from .forms import StatMethodEditForm
 
 
-class AddStatMethodOnlineView(FormView):
+class AddStatMethodOnlineView(LoginRequiredMixin, FormView):
     ''' Extends the FormView to implement the form to create a SAMs method using the StatMethodEditForm. The view prevents anyone who isn't
     logged in from accessing the view.
     '''
     
     template_name = 'sams/create_statistic_source.html'
     form_class = StatMethodEditForm
-    
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(AddStatMethodOnlineView, self).dispatch(request, *args, **kwargs)
     
     def form_valid(self, form):
         #Save the source citation
@@ -161,7 +158,7 @@ class BaseUpdateStatisticalMethodView(FormView):
         return context    
         
     
-class UpdateStatMethodOnlineView(BaseUpdateStatisticalMethodView):
+class UpdateStatMethodOnlineView(LoginRequiredMixin, BaseUpdateStatisticalMethodView):
     '''Extends BaseUpdateStatisticalMethodView to implement the view which updates SAMs methods that are in the 
     MethodOnline table. 
     '''
@@ -170,10 +167,6 @@ class UpdateStatMethodOnlineView(BaseUpdateStatisticalMethodView):
     method_model_class = MethodOnline
     source_model_class = SourceCitationOnlineRef   
      
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(UpdateStatMethodOnlineView, self).dispatch(request, *args, **kwargs)
-    
     def get_success_url(self):
         return reverse('sams-method_detail', kwargs={'pk' : self.kwargs['pk']})
     
@@ -181,7 +174,7 @@ class UpdateStatMethodOnlineView(BaseUpdateStatisticalMethodView):
         return reverse('sams-update_method', kwargs={'pk': self.kwargs['pk']})
     
 
-class UpdateStatisticalMethodStgView(BaseUpdateStatisticalMethodView):
+class UpdateStatisticalMethodStgView(StaffuserRequiredMixin, BaseUpdateStatisticalMethodView):
     '''Extends BaseUpdateStatisticalMethodView to implement the view which updates SAMs methods that are in the 
     MethodStg table. 
     '''
@@ -190,12 +183,6 @@ class UpdateStatisticalMethodStgView(BaseUpdateStatisticalMethodView):
     method_model_class = MethodStg
     source_model_class = SourceCitationStgRef
     
-    @method_decorator(login_required)
-    @method_decorator(user_passes_test(lambda u: u.groups.filter(name__exact='nemi_admin'),
-                                       login_url=reverse_lazy('sams-not_allowed')))
-    def dispatch(self, request, *args, **kwargs):
-        return super(UpdateStatisticalMethodStgView, self).dispatch(request, *args, **kwargs)
-    
     def get_success_url(self):
         return reverse('sams-method_detail_for_approval', kwargs={'pk': self.kwargs['pk']})
 
@@ -203,7 +190,7 @@ class UpdateStatisticalMethodStgView(BaseUpdateStatisticalMethodView):
         return reverse('sams-update_review_method', kwargs={'pk': self.kwargs['pk']})
     
     
-class UpdateStatisticalMethodOnlineListView(ListView):    
+class UpdateStatisticalMethodOnlineListView(LoginRequiredMixin, ListView):    
     ''' Extends the standard ListView to implement the view which
     will show a list of views that the logged in user can edit.
     '''
@@ -211,24 +198,16 @@ class UpdateStatisticalMethodOnlineListView(ListView):
     template_name = 'sams/update_stat_source_list.html'
     context_object_name = 'methods'
     
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(UpdateStatisticalMethodOnlineListView, self).dispatch(request,*args, **kwargs)
-    
     def get_queryset(self):
         result = MethodOnline.stat_methods.filter(insert_person_name=self.request.user.username).order_by('source_method_identifier')
         return result
         
-class SubmitForReviewView(View, TemplateResponseMixin):
+class SubmitForReviewView(LoginRequiredMixin, TemplateResponseMixin, View):
     '''Extends the standard View to implement, saving a method in MethodOnline to MethodStg and then
     deleting it from MethodOnline.
     '''
     
     template_name = 'sams/submit_successful.html'
-    
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(SubmitForReviewView, self).dispatch(request, *args, **kwargs)
     
     def get(self, request, *args, **kwargs):
         # Set ready_to_review to 'Y', copy method from MethodOnline/SourceCitationOnlineRef to 
@@ -282,7 +261,7 @@ class SubmitForReviewView(View, TemplateResponseMixin):
         return self.render_to_response({'source_method_id' : method_stg.source_method_identifier})
 
 
-class ReviewStatMethodStgListView(ListView):
+class ReviewStatMethodStgListView(StaffuserRequiredMixin, ListView):
     ''' Extends ListView to show all SAM methods in MethodStg that have not been approved.
     '''
     
@@ -291,26 +270,14 @@ class ReviewStatMethodStgListView(ListView):
     
     queryset = MethodStg.stat_methods.order_by('source_method_identifier')
     
-    @method_decorator(login_required)
-    @method_decorator(user_passes_test(lambda u: u.groups.filter(name__exact='nemi_admin'),
-                                       login_url=reverse_lazy('sams-not_allowed')))
-    def dispatch(self, request, *args, **kwargs):
-        return super(ReviewStatMethodStgListView, self).dispatch(request, *args, **kwargs)
     
-    
-class ApproveStatMethod(View, TemplateResponseMixin):
+class ApproveStatMethod(StaffuserRequiredMixin, TemplateResponseMixin, View):
     ''' Extends the standard View to implement copying a method from MethodStg to the Method table.
     Methods are not removed from MethodStg, but it's approved flag is set to 'Y'.
     '''
     
     template_name="sams/approve_method.html"
 
-    @method_decorator(login_required)
-    @method_decorator(user_passes_test(lambda u: u.groups.filter(name__exact='nemi_admin'),
-                                       login_url=reverse_lazy('sams-not_allowed')))
-    def dispatch(self, request, *args, **kwargs):
-        return super(ApproveStatMethod, self).dispatch(request, *args, **kwargs)
-    
     def get(self, request, *args, **kwargs):
         method_stg = get_object_or_404(MethodStg, method_id=self.kwargs['pk'])
         sc_stg = get_object_or_404(SourceCitationStgRef, source_citation_id=method_stg.source_citation_id)
@@ -447,27 +414,26 @@ class BaseStatMethodStgDetailView(DetailView):
         return result        
 
 
-class StatisticalMethodOnlineDetailView(BaseStatMethodStgDetailView):
+class StatisticalMethodOnlineDetailView(LoginRequiredMixin, BaseStatMethodStgDetailView):
     ''' Extends BaseStatMethodStgDetailView to implement the Statistical Source Detail view.'''
     
     template_name = 'sams/statistical_source_detail.html'
     method_model_class = MethodOnline
     source_citation_model_class = SourceCitationOnlineRef
     
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(StatisticalMethodOnlineDetailView, self).dispatch(request, *args, **kwargs)
-
         
-class StatisticalMethodStgDetailView(BaseStatMethodStgDetailView):
+class StatisticalMethodStgDetailView(StaffuserRequiredMixin, BaseStatMethodStgDetailView):
     
     template_name = 'sams/statistical_method_review_detail.html'
     method_model_class = MethodStg
     source_citation_model_class = SourceCitationStgRef
     
-    @method_decorator(login_required)
-    @method_decorator(user_passes_test(lambda u: u.groups.filter(name__exact='nemi_admin'),
-                                       login_url=reverse_lazy('sams-not_allowed')))
-    def dispatch(self, request, *args, **kwargs):
-        return super(StatisticalMethodStgDetailView, self).dispatch(request, *args, **kwargs)
+
+class MethodEntryRedirectView(LoginRequiredMixin, RedirectView):
     
+    def get_redirect_url(self, **kwargs):
+        if self.request.user.is_staff:
+            return reverse('sams-method_review_list')
+        else:
+            return reverse('sams-update_method_list')
+        
