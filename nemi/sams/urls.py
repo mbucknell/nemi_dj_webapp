@@ -4,14 +4,10 @@ Created on Jul 25, 2012
 @author: mbucknel
 '''
 from django.conf.urls import patterns, url
-from django.views.generic import TemplateView
 
 import views
 
 urlpatterns = patterns("", 
-        url(r'^method_summary/(?P<pk>\d+)/$',
-            views.StatisticalMethodSummaryView.as_view(),
-            name='sams-method_summary'),
         url(r'^create_method/$',
             views.AddStatMethodOnlineView.as_view(),
             name='sams-create_method'),

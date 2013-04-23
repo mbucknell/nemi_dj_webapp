@@ -43,7 +43,10 @@ urlpatterns = patterns("",
         url(r'^method_analyte_export/(?P<method_id>\w+)/$',
             views.ExportMethodAnalyte.as_view(),
             name='methods-method_analyte_export'),
-                       
+        url(r'^sams_method_summary/(?P<pk>\d+)/$',
+            views.StatisticalMethodSummaryView.as_view(),
+            name='methods-sam_method_summary'),
+                                              
         url(r'^method_pdf/(?P<method_id>\d+)/$',
             views.MethodPdfView.as_view(),
             name='methods-pdf'),

@@ -16,7 +16,7 @@ from django.views.generic.edit import TemplateResponseMixin
 # project specific packages
 from common.models import MethodAnalyteVW, InstrumentationRef, StatisticalDesignObjective, StatisticalItemType
 from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics
-from common.models import StatAnalysisRel, SourceCitationRef, StatDesignRel, StatMediaRel, StatTopicRel
+from common.models import StatAnalysisRel, SourceCitationRef, StatDesignRel, StatMediaRel, StatTopicRel, Method
 from common.utils.view_utils import dictfetchall, xls_response, tsv_response
 from common.views import PdfView, ChoiceJsonView
 
@@ -809,6 +809,33 @@ class MethodSummaryView(FieldHelpMixin, DetailView):
             raise Http404
                
             
+class StatisticalMethodSummaryView(FieldHelpMixin, DetailView):
+    ''' Extends DetailView to implement the Statistical Source Summary view'''
+    
+    template_name = 'sams/statistical_source_summary.html'
+    model = Method
+    context_object_name = 'data'
+    
+    field_names = ['title',
+                   'author',
+                   'abstract_summary',
+                   'table_of_contents',
+                   'source_citation_name',
+                   'method_source',
+                   'citation_country',
+                   'publication_year',
+                   'notes',
+                   'source_citation_item_type',
+                   'publication_source',
+                   'purpose',
+                   'design_objectives',
+                   'sam_complexity',
+                   'media_emphasized',
+                   'media_subcategory',
+                   'special_topics'
+                   ]
+    
+    
 class ExportMethodAnalyte(View):
     ''' Extends the standard view. This view creates a
     tab-separated file of the analyte data. Required keyword argument,

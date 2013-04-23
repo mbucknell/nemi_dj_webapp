@@ -60,7 +60,7 @@
 						<tr>
 							<td> <a title="View method details"
 								{% if r.METHOD_CATEGORY == 'STATISTICAL' %}
-									href="{% url 'sams-method_summary' r.METHOD_ID %}"
+									href="{% url 'methods-sam_method_summary' r.METHOD_ID %}"
 								{% else %}
 									href="{% url 'methods-method_summary' r.METHOD_ID %}"
 								{% endif %}	

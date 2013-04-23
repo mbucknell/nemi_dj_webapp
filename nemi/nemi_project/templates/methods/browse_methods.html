@@ -133,7 +133,7 @@
 								<tr>
 									<td><a title="View method details"
 										{% if by_category.grouper == 'STATISTICAL' %}
-											href="{% url 'sams-method_summary' object.method_id %}"
+											href="{% url 'methods-sam_method_summary' object.method_id %}"
 										{% else %}
 											href="{% url 'methods-method_summary' object.method_id %}"
 										{% endif %}

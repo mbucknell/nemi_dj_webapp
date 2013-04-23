@@ -25,7 +25,7 @@
 					<td><input type="checkbox" /></td>
 					<td>
 						{% if d.method_category == 'STATISTICAL' %}
-							<a href="{% url 'sams-method_summary' d.method_id %}">
+							<a href="{% url 'methods-sam_method_summary' d.method_id %}">
 						{% else %}
 							<a href="{% url 'methods-method_summary' d.method_id %}">
 						{% endif %}

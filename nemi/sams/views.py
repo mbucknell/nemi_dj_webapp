@@ -15,8 +15,6 @@ from common.models import Method, MethodOnline, MethodSubcategoryRef, MethodType
 from common.models import StatAnalysisRelStg,  StatDesignRelStg, StatTopicRelStg, StatMediaRelStg
 from common.models import StatAnalysisRel, StatDesignRel, StatTopicRel, StatMediaRel
 
-from domhelp.views import FieldHelpMixin
-
 from .forms import StatMethodEditForm
 
 
@@ -358,35 +356,6 @@ class ApproveStatMethod(StaffuserRequiredMixin, TemplateResponseMixin, View):
         return self.render_to_response({'source_method_id' : method.source_method_identifier})
         
       
-
-            
-class StatisticalMethodSummaryView(FieldHelpMixin, DetailView):
-    ''' Extends DetailView to implement the Statistical Source Summary view'''
-    
-    template_name = 'sams/statistical_source_summary.html'
-    model = Method
-    context_object_name = 'data'
-    
-    field_names = ['title',
-                   'author',
-                   'abstract_summary',
-                   'table_of_contents',
-                   'source_citation_name',
-                   'method_source',
-                   'citation_country',
-                   'publication_year',
-                   'notes',
-                   'source_citation_item_type',
-                   'publication_source',
-                   'purpose',
-                   'design_objectives',
-                   'sam_complexity',
-                   'media_emphasized',
-                   'media_subcategory',
-                   'special_topics'
-                   ]
-    
-    
 class BaseStatMethodStgDetailView(DetailView):
     '''Extends the DetailView to show a method object. This is intended to be extended using MethodOnline or MethodStg
     to show a detailed view of the object.
