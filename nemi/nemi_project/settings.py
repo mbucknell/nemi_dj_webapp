@@ -135,13 +135,14 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'django.contrib.flatpages',
+    
     # third party apps
     'tinymce',
+    
     # NEMI/CIDA specific apps
     'common',
     'newsfeed',
@@ -180,12 +181,11 @@ LOGGING = {
     }
 }
 
-
 SESSION_COOKIE_AGE = 28800 # In seconds, this is eight hours
 
 #NEMI defined settings
 NEW_ACCOUNT_NOTIFICATIONS = () # List of emails to send new account notifications to.
-APEX_METHOD_ENTRY_URL = ''
+APEX_METHOD_ENTRY_URL = '' # Should be set in local_settings
 
 try:
     ADDITIONAL_APPS = ()
