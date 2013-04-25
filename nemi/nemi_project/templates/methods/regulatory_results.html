@@ -56,8 +56,8 @@
 			{% regroup data by regulation as by_reg %}
 			{% for reg in by_reg %}
 				<tr id="{{ reg.list.0.method_id }}">
-					<td rowspan={{ reg.list|length }}>{{ reg.grouper }}</td>
-					<td rowspan={{ reg.list|length }}>{{ reg.list.0.reg_location }}</td>
+					<td rowspan={{ reg.list|length }}><b>{{ reg.grouper }}</b></td>
+					<td rowspan={{ reg.list|length }}><b>{{ reg.list.0.reg_location }}</b></td>
 					
 					{% regroup reg.list by method_source as by_method_source %}
 					{% for by_source in by_method_source %}
