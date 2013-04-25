@@ -180,7 +180,7 @@
 			if (setToDefault) {
 				divToShow.find('input[type="text"]').val('').change();
 				divToShow.find('textarea').val('').change();
-				divToShow.find('select').val('all').change();				
+				divToShow.find('select').val('All').change();				
 			}
 			setInitialCheckedState(divToShow.find('input[type="checkbox"]'), setToDefault)
 		}
@@ -408,9 +408,9 @@
 					$('#filtered-search-limits form').attr('action', $(this).data('actionUrl'));
 									
 					// Default selects to 'all' selection.
-					$('.limit-by-select-field').select2('val', 'all', true);
-					$('.filter-select').select2('val', 'all', true);
-					$('select.static-field').select2('val', 'all', true);
+					$('.limit-by-select-field').select2('val', 'All', true);
+					$('.filter-select').select2('val', 'All', true);
+					$('select.static-field').select2('val', 'All', true);
 					
 					// Set method type checkbox state. Default all enabled inputs to true.
 					setMethodTypeState($('#method-type-selections input'), true);
