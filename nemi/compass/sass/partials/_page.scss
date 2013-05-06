@@ -1,0 +1,131 @@
+
+body {
+	
+	@include blueprint-typography(true);
+	@include blueprint-utilities;
+	@include blueprint-debug;
+	@include blueprint-interaction;
+	
+	background-color: $blueprint-background-color;
+	margin-left: auto;
+	margin-right: auto;
+	overflow: visible;
+	
+	a { 
+		@include hover-link;
+	}
+	th, td {
+		padding: 4px;
+	}
+	
+	.subcategory-action-div .select2-container {
+		a {
+			border: solid 1px $nemi-search-btn-color;
+		}
+	}
+	select, .select2-results, .select2-choice{
+		font-size: 14px;
+	}
+	.disabled {
+		color: $nemi-disabled-btn-color;
+	}
+	input.disabled {
+		background-color: $nemi-disabled-btn-color;
+		color: $nemi-disabled-btn-text-color;
+	}
+	
+	form > label {
+		font-weight: bold;
+		padding-right: 5px;
+	}
+	#main-page {
+	 @include container;
+	 overflow: visible;
+	 #header {
+ 	 	 @include column(24);
+	 	 @include main-box-shadow; 
+	 	 padding: 0px;
+	 	 #banner {
+	 	 	width: span(24);
+			background-color: white;
+	 	 }
+		 #page-header {
+		 	@include column(24);
+			padding: 0px;
+			#page-info {
+				margin: 0px;
+				@include column(14);
+				background-color: $nemi-info-color;
+				height: 120px;
+				font-weight: bold;
+			}
+			#header-links {
+				@include column(4);
+			  	background-color: $nemi-info-color;
+				height: 120px;
+				ul {
+					@include no-style-or-margin-list;
+			        text-align: right;
+				}		  	
+			  	a {
+			  		@include link-colors(white, white, white, white, white);
+			  	}
+			}
+			#whats-new-div {
+				@include column(6, true);
+				background-color : $nemi-content-color;
+				padding: 0px;
+				height : 120px;
+				font-size: 12px;
+							
+				#news-feed-title {
+					background-color: $nemi-newsfeed-title-color;
+					color: $nemi-newsfeed-title-text-color;
+					font-style: italic;
+					height: 23px;
+					padding-top: 3px;
+				}
+				#news-feed {
+					overflow: auto;
+					height: 97px;
+				}
+			}
+		}
+	}
+	#page-content {
+		@include column(24);
+		padding: 0px;
+	}
+	#page-footer {
+		@include column(24);
+		background-color: $nemi-footer-color;
+		@include main-box-shadow;		
+		h6 {
+			color: $nemi-footer-heading-color;
+		}
+		ul {
+			@include no-style-or-margin-list;
+			font-size: 12px;
+		}
+		a {
+			@include link-colors ($nemi-footer-link-color, $nemi-footer-link-color, $nemi-footer-link-color, $nemi-footer-link-color);	 	
+		}
+		#footer-who {
+			@include column(4);
+		}
+		#footer-workgroups {
+			@include column(4);
+		}
+		#footer-legal {
+			@include column(4);
+		}
+		#footer-for-members {
+			@include column(4);
+		}		
+	}
+	}
+}
+div {
+	@include box-sizing(border-box);
+	padding: 10px;
+}

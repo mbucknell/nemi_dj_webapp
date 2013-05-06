@@ -1,0 +1,195 @@
+.subcategory-button {
+	padding-left: 15px;
+	padding-top : 5px;
+	padding-bottom : 5px;
+	@include border-top-left-radius(6px);
+	@include border-bottom-left-radius(6px);
+	margin-top: 3px;
+	cursor: pointer;
+}
+
+.active {
+	border: 2px groove #AAAAAA;
+	background-color: $nemi-subcategory-btn-highlight-color;
+	color: black;
+}
+.not-active {
+	background-color: $nemi-subcategory-btn-color;
+	color: white;
+	&:hover {
+		color: $nemi-subcategory-btn-rollover-color;
+	}
+}
+.select2-container {
+ 	padding: 2px;
+ }
+ 
+.search-button {
+	color: white;
+	background-color: $nemi-search-btn-color;
+	@include border-radius(6px);
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left : 20px;
+    padding-right: 20px;
+    font-size: 12px;
+    border-style: none;
+}
+
+.search-button-div {
+	@include column(20, true);
+	padding: 0px;
+	padding-bottom : 15px;
+	text-align: center;
+}
+#filter-specific-div {
+	background-color: $nemi-search-form-color;
+	@include column(20, true);
+	padding: 0px;
+	margin: 0px;
+	
+	#filter-header {
+		@include column(20, true);
+		margin: 0px;
+		div {
+			border-bottom: solid 2px $nemi-section-header-color;
+			font-weight: bold;
+		}
+	}
+	#filter-action {
+		@include column(20, true);
+		margin: 0px;
+		
+		.input-section-div div {
+			padding-left: 0px;
+		}
+	}
+}
+
+#analyte-search-div {					
+	textarea {
+		vertical-align: middle;
+	}
+	.form-entry label {
+		@include form-entry-label(130px);
+	}
+	#analyte-kind-separator {
+		color : $nemi-section-header-color;
+		label {
+			text-align: center;
+		}
+	}
+}
+
+#community-search-div {
+	.form-entry label {
+		@include form-entry-label(120px);
+	}
+	#analyte-type-input, #waterbody-type-input {
+		@include select2-width(200px);
+	}
+	#gear-type-input {
+		@include select2-width(300px);
+	}
+}
+#statistical-search-div {
+	.form-entry label {
+		@include form-entry-label(200px);
+	}
+	#study-objective-input, #item-type-input, #analysis-type-input {
+		@include select2-width(250px);
+	}
+	#complexity-input {
+		@include select2-width(150px);
+	}
+	#publication-source-type-input {
+		@include select2-width(300px);
+	}
+	#media-emphasized-input {
+		@include select2-width(200px);
+	}
+	#special-topic-input {
+		@include select2-width(450px);
+	}
+}
+
+.section-div {
+	@include column(24);
+	margin-top: 15px;
+	padding: 0px;
+	h3 {
+		padding: 10px;
+		padding-left: 40px;
+		color: white;
+		background-color: $nemi-section-header-color;
+		margin: 0px;
+		border: solid 1px $nemi-section-header-border-color;
+	}
+	
+	.header {
+		font-weight: bold;
+	}
+	
+	ul {
+		@include no-bullets;
+	}
+	
+	.subcategory-div {
+		@include column(24);
+		padding: 0px;
+		.subcategory-selection-div {
+			float: left;
+			@include column(4);			
+			margin: 0px;
+			padding: 0px;
+			
+			ul {
+				@include no-style-or-margin-list;
+			}
+			
+		}
+		.subcategory-action-div {
+			@include column(20, true);
+			background-color: $nemi-search-form-color;
+			padding: 0px;
+			@include main-box-shadow;
+			
+			.input-section-div {
+				@include column(20, true);
+			
+				.form-entry {
+					@include column(20, true);
+					padding: 2px;
+				}
+			}
+		}
+	}
+}
+
+#limit-by-section {
+	@include column(20, true);
+	h3 {
+		padding-left: 10px;
+	}
+	div {
+		padding-left : 0px;
+	}
+	#filtered-search-limits {
+		padding-left: 40px;
+		padding-bottom : 0px;
+	}
+	.form-entry label {
+		@include form-entry-label(130px);
+	}
+	#media-name-input {
+		@include select2-width(150px);
+	}
+	#source-field-input, #instrumentation-field-input {
+		@include select2-width(600px);
+	}
+}
+	
+
+#results-table {
+	@include stretch-x();
+}

@@ -16,7 +16,7 @@
 			$.ajax({
 				url: '{% url "methods-method_count" %}',
 				success : function(resp) {
-					$('#browse-count-span').html('NEMI current contains ' + resp.method_count + ' methods, protocols and procedures.');	
+					$('#browse-count-span').html('NEMI currently contains ' + resp.method_count + ' methods, protocols and procedures.');	
 				}
 			});
 		}
@@ -161,8 +161,8 @@
 			*/
 			
 			// Update buttonEl and the currently active sibling button's visual state. 
-			buttonEl.removeClass('not-active').addClass('highlight');
-			buttonEl.siblings('.highlight').removeClass('highlight').addClass('not-active');
+			buttonEl.removeClass('not-active').addClass('active');
+			buttonEl.siblings('.active').removeClass('active').addClass('not-active');
 			
 			// Show the associated div and hide the currently visible sibling div (if any)
 			var divToShow = buttonEl.data('actionDivId');
@@ -281,13 +281,10 @@
 
 			// Make select2 out of static option menus.
 			$('select.static-field').select2({
-				width: 'copy',
+				width: 'off',
 				minimumResultsForSearch: 15,
 				placeholder: 'All',
 				allowClear: true,
-				containerCss: {
-					'font-size' : 'small',
-				}
 			});
 			
 			// Add change handler to save state of inputs with class static-field 
@@ -527,141 +524,108 @@ and protocols for all stages of the monitoring process.
 
 {% block page-content %}
 	<div id="general-search-div" class="section-div">
-		<h2>
-			<button class="show-hide-toggle" title="Hide section" type=button>
-				<img src="{{ STATIC_URL }}images/triangle-down-image36.gif" alt="hide" /> 
-			</button>
-			GENERAL SEARCH
-		</h2>
+    	<h3>GENERAL SEARCH</h3>
 		<div id="general-subcategory-div>" class="subcategory-div">
 			<div id="general-selection-div" class="subcategory-selection-div">
 				<ul>
-					<li class="highlight subcategory-button" id="keyword-search-button">KEYWORD</li>
-					<li class="not-active subcategory-button" id="number-search-button">NUMBER</li>
-					<li class="not-active subcategory-button" id="browse-search-button">BROWSE</li>
+					<li class="active subcategory-button" id="keyword-search-button">Keyword</li>
+					<li class="not-active subcategory-button" id="number-search-button">Number</li>
+					<li class="not-active subcategory-button" id="browse-search-button">Browse</li>
 				</ul>
 			</div>
 			<div id="general-action-div" class="subcategory-action-div">
 		    	<div id="keyword-search-div" class="input-section-div">
                    	<form action="{% url 'methods-keyword' %}" method="get">
-                   		<table class="general-search-form-table">
-                   			<tr>
-                   				<th><label for="keyword-search-field">Search entire NEMI database by keyword:</label></th>
-                       			<td><input type="text" id="keyword-search-field" name="keyword_search_field" class="static-field"/></td>
-							</tr>
-						</table>
-						<div class="button-div">
-							<input class="search-button" type="submit" value="Search"/>
-						</div>
+                        <label for="keyword-search-field">Search entire NEMI database by keyword:</label>
+                        <input type="text" id="keyword-search-field" name="keyword_search_field" class="static-field"/>
+                        <div class="search-button-div">
+						  <input class="search-button" type="submit" value="SEARCH"/>
+                        </div>
                 	</form>
             	</div>
             	<div id="number-search-div" class="input-section-div" style="display:none;">
-                   	<form action="{%url 'methods-results' %}" method=get>  
-                   		<table class="general-search-form-table">
-							<tr>
-								<th><label for="number-search-field">Search for a method number:</label></th>
-                       			<td><input id="number-search-field" type="text" name="method_number" class="static-field"/></td>
-							</tr>
-						</table> 
-						<div class="button-div">
-							<input class="search-button" type="submit" value="Search"/>
+                   	<form action="{%url 'methods-results' %}" method=get>
+                        <label for="number-search-field">Search for a method number:</label>
+                        <input id="number-search-field" type="text" name="method_number" class="static-field"/>  
+						<div class="search-button-div">
+							<input class="search-button" type="submit" value="SEARCH"/>
 						</div>
                		</form>
             	</div>		
             	<div id="browse-methods-div" class="input-section-div" style="display: none;">
             		<form action="{% url 'methods-browse' %}" method="get">
-            			<table class="general-search-form-table">
-            				<tr>
-		            			<td><b><span>Browse the entire database:</span></b>
-		            			<span id="browse-count-span"></span></td>
-		            		</tr>
-	            		</table>
-	            		<div class="button-div">
-	            			<input class="search-button" type="submit" value="Browse"/>
+                        <label>Browse the entire database:&nbsp<span id="browse-count-span"></span></label>
+	            		<div class="search-button-div">
+	            			<input class="search-button" type="submit" value="BROWSE"/>
 	            		</div>
 	            	</form>
             	</div>				
 			</div>
 		</div>
- 		<div class="section-spacer-div"></div>	
 	</div>
 	<div id="filtered-search-div" class="section-div">
-		<h2>
-			<button class="show-hide-toggle" title="Hide section" type=button>
-				<img src="{{ STATIC_URL }}images/triangle-down-image36.gif" alt="hide" /> 
-			</button>
-			FILTERED SEARCH		
-		</h2>
+		<h3>FILTERED SEARCH</h3>
 		<div id="filtered-subcategory-div>" class="subcategory-div">
 			<div id="filtered-selection-div" class="subcategory-selection-div">
 				<ul>
-					<li class="highlight subcategory-button" id="analytes-search-button">ANALYTES</li>
-					<li class="not-active subcategory-button" id="chemical-search-button">CHEMICAL</li>
-					<li class="not-active subcategory-button" id="microbiological-search-button">MICROBIOLOGICAL</li>
-					<li class="not-active subcategory-button" id="community-search-button">COMMUNITY</li>
-					<li class="not-active subcategory-button" id="toxicity-search-button">TOXICITY</li>
-					<li class="not-active subcategory-button" id="physical-search-button">PHYSICAL</li>
-					<li class="not-active subcategory-button" id="statistical-search-button">STATISTICAL</li>
-					<li class="not-active subcategory-button" id="regulatory-search-button">REGULATORY</li>
+					<li class="active subcategory-button" id="analytes-search-button">Analytes</li>
+					<li class="not-active subcategory-button" id="chemical-search-button">Chemical</li>
+					<li class="not-active subcategory-button" id="microbiological-search-button">Microbiological</li>
+					<li class="not-active subcategory-button" id="community-search-button">Community</li>
+					<li class="not-active subcategory-button" id="toxicity-search-button">Toxicity</li>
+					<li class="not-active subcategory-button" id="physical-search-button">Physical</li>
+					<li class="not-active subcategory-button" id="statistical-search-button">Statistical</li>
+					<li class="not-active subcategory-button" id="regulatory-search-button">Regulatory</li>
 				</ul>
 			</div>
 			<div id="filtered-action-div" class="subcategory-action-div">
 				<div id="filter-specific-div">
 					<div id="filter-header">
 						<div id="analytes-header">
-							<p>Search by ANALYTES</p>
-							<hr/>
+							Search by ANALYTES
 						</div>
 						<div id="chemical-header" style="display: none;">
-							<p>Limit search to CHEMICAL methods</p>
-							<hr/>
+							Limit search to CHEMICAL methods
 						</div>
 						<div id="microbiological-header" style="display: none;">
 							<p>Limit search to MICROBIOLOGICAL methods</p>
-							<hr />
 						</div>
 						<div id="community-header" style="display: none;">
 							<p>Limit search to POPULATION/COMMUNITY methods</p>
-							<hr/>
 						</div>
 						<div id="toxicity-header" style="display: none;">
 							<p>Limit search to TOXICITY methods</p>
-							<hr />
 						</div>
 						<div id="physical-header" style="display: none;">
 							<p>Limit search to PHYSICAL methods</p>
-							<hr />
 						</div>
 						<div id="statistical-header" style="display: none;">
 							<p>Limit search to STATISTICAL methods</p>
-							<hr />
 						</div>
 						<div id="regulatory-header" style="display: none;">
 							<p>Limit search to REGULATORY methods</p>
-							<hr />
 						</div>
 					</div>
 					<div id="filter-action">
 						<div id="analyte-search-div" class="input-section-div">
 							<form>
-								<div style="display: inline-block;">
-									<table class="general-search-form-table">
-										<tr>
-											<th><label for="analyte-name-field">Analyte name(s):</label></th>
-											<td><textarea id="analyte-name-field" name="analyte_name"  class="static-field" cols=50 rows=3></textarea></td>
-											<td><input type="button" id="find-analyte-name-button" class="find-button" value="Find Analyte Names"></td>
-										</tr>
-										<tr>
-											<td colspan="3"><span style="font-size: large; font-weight: bold; font-style: italic;">OR</span></td>
-										<tr>
-											<th><label for="analyte-code-field">Analyte code(s):</label></th>
-											<td><textarea id="analyte-code-field" name="analyte_code" cols=50 rows=3 class="static-field"></textarea></td>
-											<td><input type="button" id="find-analyte-code-button" class="find-button" value="Find Analyte Codes"></td>
-										</tr>
-									</table>
-									<input type="hidden" name="category" value=""/>
-									<input type="hidden" name="subcategory" value="" />
-								</div>
+                                <div class="form-entry">
+                                    <label for="analyte-name-field">Analyte name(s):</label>
+                                    <textarea id="analyte-name-field" name="analyte_name"  class="static-field" cols=50 rows=3></textarea>
+                                    <input type="button" id="find-analyte-name-button" class="find-button" value="Find Analyte Names">
+                                </div>
+                                <div id="analyte-kind-separator" class="form-entry">
+                                    <label>OR</label>
+                                    <span>&nbsp;</span>                                                                    
+                                </div>
+                                <div class="form-entry">
+                                    <label for="analyte-code-field">Analyte code(s):</label>
+                                    <textarea id="analyte-code-field" name="analyte_code" cols=50 rows=3 class="static-field"></textarea>
+                                    <input type="button" id="find-analyte-code-button" class="find-button" value="Find Analyte Codes">
+                                </div>
+								
+								<input type="hidden" name="category" value=""/>
+								<input type="hidden" name="subcategory" value="" />
 							</form>
 							<div id="find-analyte-dialog" style="display: none;">
 								<div id="find-analyte-text-entry-div">
@@ -695,140 +659,105 @@ and protocols for all stages of the monitoring process.
 						</div>
 						<div id="chemical-search-div" class="input-section-div" style="display: none;">
 							<form>
-								<div style="display: inline-block;">
-									<div class="no-style-list">
-										<span class="header">Chemical subcategories:</span><br />
-										<ul id="chemical-subcategory-selections" >
-										</ul>
-									</div>
-									<input type="hidden" name="category" value="Chemical"/>
+								<div>
+									<span class="header">Chemical subcategories:</span><br />
+									<ul id="chemical-subcategory-selections" >
+									</ul>
 								</div>
+								<input type="hidden" name="category" value="Chemical"/>
 							</form>					
 						</div>
 						<div id="community-search-div" class="input-section-div" style="display: none;">
 							<form>
-								<div style="display: inline-block;">
-									<table class="general-search-form-table">
-										<tr>
-											<th><label for="analyte-type-field">Analyte type:</label></th>
-											<td>
-												<select id="analyte-type-field" name="analyte_type" class="static-field" style="width: 15em;">
- 													<option></option>
- 													<option value="Algae">Algae</option>
-													<option value="Fish">Fish</option>
-													<option value="Macroinvertebrate">Macroinvertebrate</option>
-												</select>
-											</td>
-										</tr>
-										<tr>
-										<th><label for="waterbody-type-field">Waterbody type:</label></th>
-											<td>
-												<select id="waterbody-type-field" name="waterbody_type" class="static-field" style="width: 15em;">
-													<option ></option>
-													<option value="Estuary">Estuary</option>
-													<option value="Lake">Lake</option>
-													<option value="Ocean">Ocean</option>
-													<option value="River">River</option>
-													<option value="Non-wadeable stream">Non-wadeable stream</option>
-													<option value="Wadeable stream">Wadeable stream</option>
-													<option value="Wetland">Wetland</option>
-												</select>
-											</td>
-										</tr>
-										<tr>
-										<th><label for="gear-type-field">Gear type:</label></th>
-											<td>
-												<input type="hidden" class="filter-select" id="gear-type-field" name="gear_type" />
-											</td>
-										</tr>
-									</table>
-									<input type="hidden" name="category" value="Biological"/>
-									<input type="hidden" name="subcategory" value="population/community" />
-								</div>
+                                <div class="form-entry" id="analyte-type-input">
+                                    <label for="analyte-type-field">Analyte type:</label>
+                                    <select id="analyte-type-field" name="analyte_type" class="static-field" style="width: 15em;">
+                                        <option></option>
+                                        <option value="Algae">Algae</option>
+                                        <option value="Fish">Fish</option>
+                                        <option value="Macroinvertebrate">Macroinvertebrate</option>
+                                    </select>
+                                </div>
+                                <div class="form-entry" id="waterbody-type-input">
+                                    <label for="waterbody-type-field">Waterbody type:</label>
+                                    <select id="waterbody-type-field" name="waterbody_type" class="static-field" style="width: 15em;">
+                                        <option ></option>
+                                        <option value="Estuary">Estuary</option>
+                                        <option value="Lake">Lake</option>
+                                        <option value="Ocean">Ocean</option>
+                                        <option value="River">River</option>
+                                        <option value="Non-wadeable stream">Non-wadeable stream</option>
+                                        <option value="Wadeable stream">Wadeable stream</option>
+                                        <option value="Wetland">Wetland</option>
+                                    </select>
+                                </div>
+                                <div class="form-entry" id="gear-type-input">
+                                    <label for="gear-type-field">Gear type:</label>
+                                    <input type="hidden" class="filter-select" id="gear-type-field" name="gear_type" />
+                                </div>
+								<input type="hidden" name="category" value="Biological"/>
+								<input type="hidden" name="subcategory" value="population/community" />
 							</form>
 						</div>
 						<div id="toxicity-search-div" class="input-section-div" style="display: none;">
 							<form>
-								<div style="display: inline-block;">
-									<div class="no-style-list">
-										<span class="header">Toxicity subcategories</span><br />
-										<ul id="toxicity-subcategory-selections"></ul>
-									</div>
-									<table class="general-search-form-table">
-										<tr>
-											<th><label for="matrix-field">Matrix:</label></th>
-											<td>
-												<select id="matrix-field" name="matrix" class="static-field" style="width: 10em;">
-													<option></option>
-													<option value="Freshwater">Freshwater</option>
-													<option value="Saltwater">Saltwater</option>
-													<option value="Both">Both</option>
-												</select>
-											</td>
-										</tr>
-									</table>
-									<input type="hidden" name="category" value="Toxicity Assay"/>
+								<div>
+									<span class="header">Toxicity subcategories</span><br />
+									<ul id="toxicity-subcategory-selections"></ul>
 								</div>
+                                <div class="form-entry">
+                                    <label for="matrix-field">Matrix:&nbsp;</label>
+                                    <select id="matrix-field" name="matrix" class="static-field" style="width: 10em;">
+                                        <option></option>
+                                        <option value="Freshwater">Freshwater</option>
+                                        <option value="Saltwater">Saltwater</option>
+                                        <option value="Both">Both</option>
+                                     </select>
+                                </div>
+								
+								<input type="hidden" name="category" value="Toxicity Assay"/>
 							</form>
 						</div>
 						<div id="statistical-search-div" class="input-section-div" style="display: none;">
 							<form>
-								<div style="display: inline-block;">
-									<div class="no-style-list">
-										<span class="header">Statistical subcategories:</span><br />
-										<ul id="statistical-subcategory-selections"></ul> 
-									</div>
-									<table class="general-search-form-table">
-										<tr>
-											<th><label for="study_objective">What are you interested in:</label></th>
-											<td>
-												<input type="hidden" class="filter-select" id="study_objective" name="study_objective" />
-											</td>
-										</tr>
-										<tr>
-											<th><label for="item_type">Item type:</label></th>
-											<td>
-												<input type="hidden" class="filter-select" id="item_type" name="item_type" />
-											</td>
-										</tr>
-										<tr>
-											<th><label for="complexity">Complexity:</label></th>
-											<td>
-												<select id="complexity" name="complexity" class="static-field" style="width: 8em;">
-													<option ></option>
-													<option value="Low">Low</option>
-													<option value="Medium">Medium</option>
-													<option value="High">High</option>
-												</select>
-											</td>
-										</tr>
-										<tr>
-											<th><label for="analysis_type">Analysis type:</label></th>
-											<td>
-												<input type="hidden" class="filter-select" id="analysis_type" name="analysis_type" />
-											</td>
-										</tr>
-										<tr>
-											<th><label for="publication_source_type">Publication source type:</label></th>
-											<td>
-												<input type="hidden" class="filter-select" id="publication_source_type" name="publication_source_type">
-											</td>
-										</tr>
-										<tr>
-											<th><label for="media_emphasized">Media emphasized:</label></th>
-											<td>
-												<input type="hidden" class="filter-select" id="media_emphasized" name="media_emphasized" />
-											</td>
-										</tr>
-										<tr>
-											<th><label for="special_topic">Special topic:</label></th>
-											<td>
-												<input type="hidden" class="filter-select" id="special_topic" name="special_topic" />
-											</td>
-										</tr>
-									</table>
-									<input type="hidden" name="category" value="Statistical"/>
+								<div>
+									<span class="header">Statistical subcategories:</span><br />
+									<ul id="statistical-subcategory-selections"></ul> 
 								</div>
+                                <div class="form-entry" id="study-objective-input">
+                                    <label for="study_objective">What are you interested in:</label>
+                                    <input type="hidden" class="filter-select" id="study_objective" name="study_objective" />
+                                </div>
+                                <div class="form-entry" id="item-type-input">
+                                    <label for="item_type">Item type:</label></th>
+                                    <input type="hidden" class="filter-select" id="item_type" name="item_type" />
+                                </div>
+                                <div class="form-entry" id="complexity-input">
+                                    <label for="complexity">Complexity:</label>
+                                    <select id="complexity" name="complexity" class="static-field" style="width: 8em;">
+                                        <option ></option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="High">High</option>
+                                    </select>
+                                </div>
+                                <div class="form-entry" id="analysis-type-input">
+                                    <label for="analysis_type">Analysis type:</label>
+                                    <input type="hidden" class="filter-select" id="analysis_type" name="analysis_type" />
+                                </div>
+                                <div class="form-entry" id="publication-source-type-input">
+                                    <label for="publication_source_type">Publication source type:</label>
+                                    <input type="hidden" class="filter-select" id="publication_source_type" name="publication_source_type">
+                                </div>
+                                <div class="form-entry" id="media-emphasized-input">
+                                    <label for="media_emphasized">Media emphasized:</label>
+                                    <input type="hidden" class="filter-select" id="media_emphasized" name="media_emphasized" />
+                                </div>
+                                <div class="form-entry" id="special-topic-input">
+                                    <label for="special_topic">Special topic:</label>
+                                    <input type="hidden" class="filter-select" id="special_topic" name="special_topic" />
+                                </div>
+								<input type="hidden" name="category" value="Statistical"/>
 							</form>
 						</div>
 					</div>
@@ -843,27 +772,19 @@ and protocols for all stages of the monitoring process.
 					<br />
 					<div id=filtered-search-limits class="input-section-div subsection-div">
 						<form action="{% url 'methods-analyte_results' %}" method="get">
-							<table class="general-search-form-table">
-								<tr>
-									<th><label id="media-name-field-label" for="media-name-field">Media name:</label></th>
-									<td>
-										<input type="hidden" class="limit-by-select-field" id="media-name-field" name="media_name"/>
-									</td>
-								</tr>
-								<tr>
-									<th><label id="source-field-label" for="source-field">Source:</label></th>
-									<td>
-										<input type="hidden" class="limit-by-select-field" id="source-field" name="source" />
-									</td>
-								</tr>
-								<tr>
-									<th><label id="instrumentation-field-label" for="instrumentation-field">Instrumentation:</label></th>
-									<td>
-										<input type="hidden" class="limit-by-select-field" id="instrumentation-field" name="instrumentation" />
-									</td>
-								</tr>
-							</table>
-							<div class="no-style-list">
+                            <div class="form-entry" id="media-name-input">
+                                <label id="media-name-field-label" for="media-name-field">Media name:</label>
+                                <input type="hidden" class="limit-by-select-field" id="media-name-field" name="media_name"/>
+                            </div>
+                            <div class="form-entry" id="source-field-input">
+                                <label id="source-field-label" for="source-field">Source:</label>
+                                <input type="hidden" class="limit-by-select-field" id="source-field" name="source" />
+                            </div>
+                            <div class="form-entry" id="instrumentation-field-input">
+                                <label id="instrumentation-field-label" for="instrumentation-field">Instrumentation:</label>
+                                <input type="hidden" class="limit-by-select-field" id="instrumentation-field" name="instrumentation" />
+                            </div>
+							<div>
 								<span class="header">Method type:</span><br />
 								<ul id="method-type-selections" >
 								</ul>
@@ -871,12 +792,11 @@ and protocols for all stages of the monitoring process.
 						</form>
 					</div>
 				</div>
-				<div class="button-div">
-					<input class="search-button" type="button" value="Search"/>
+				<div class="search-button-div">
+					<input class="search-button" type="button" value="SEARCH"/>
 				</div>
 			</div>
 		</div>
-		<div class="section-spacer-div"></div>	
 	</div>
 	
 {% endblock %}

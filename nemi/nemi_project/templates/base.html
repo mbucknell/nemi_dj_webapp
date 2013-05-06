@@ -9,11 +9,10 @@
 			{% block title %}National Environmental Methods Index{% endblock %}
 		</title>
 		
-		{% block page_style %}<!-- Put page specific style here -->{% endblock %}	
-
-		<link rel="stylesheet" href="{{ STATIC_URL }}styles/custom.css" media="screen" type="text/css"> <!-- Project style sheet -->
-		
-			  
+        <link href="{{ STATIC_URL }}styles/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+        <link href="{{ STATIC_URL }}styles/print.css" media="print" rel="stylesheet" type="text/css" />     
+        {% block page_style %}<!-- Put page specific style here -->{% endblock %}   
+		  
 		<script src="{{ STATIC_URL }}script/jquery-ui/jquery-1.9.0.js"></script>
  		<script type="text/javascript">
 			$(document).ready(function(){
@@ -41,47 +40,74 @@
 	</head>
 	
 	<body>
+        <div id="main-page">
 		{% block header %}
-			<div id="page-header">
-				<a href="{% url 'home' %}"><img src="{{ STATIC_URL }}images/nemi4.0.gif" alt="NEMI Logo"></img></a>
-				<div id="right-header">
-					{% block whats_new %}
-						<div id="whats-new-div">
-							<div class="box-header">
-								<span>What's new with NEMI</span>
-							</div>
-							<div id="news-feed">
-								{% for item in news_items %}
-									{{ item.headline|safe }}
-								{% endfor %}
-							</div>
-						</div>
-				    {% endblock %}
-				    {% block header_links %}
-				    	<div id="header-links">
-				    		<ul>
-				    			<li><a href="{% url 'about' %}">About NEMI</a></li>
-				    			<li><a href="{% url 'glossary' %}">Glossary</a></li>
-				    			<li><a href="{% url 'faqs' %}">FAQ</a></li>
-				    		</ul>
-				    	</div>
-				    {% endblock %} 
-				</div>	    
-			</div>
+            <div id="header">
+    			<div id="banner">
+    				<a href="{% url 'home' %}"><img src="{{ STATIC_URL }}images/nemi4.0.gif" alt="NEMI Logo"></img></a>
+    			</div>
+                <div id="page-header">
+                    <div id="page-info">
+                        {% block page_info %}
+                        {% endblock %}
+                    </div>
+                    {% block header_links %}
+                        <div id="header-links">
+                            <ul>
+                                <li><a href="{% url 'about' %}">About NEMI</a></li>
+                                <li><a href="{% url 'glossary' %}">Glossary</a></li>
+                                <li><a href="{% url 'faqs' %}">FAQ</a></li>
+                            </ul>
+                        </div>
+                    {% endblock %} 
+        			{% block whats_new %}
+        				<div id="whats-new-div">
+        					<div id="news-feed-title">
+        						<span>What's new with NEMI</span>
+        					</div>
+        					<div id="news-feed">
+        						{% for item in news_items %}
+        							{{ item.headline|safe }}
+        						{% endfor %}
+        					</div>
+        				</div>
+        		    {% endblock %}
+    			</div>
+            </div>
 		{% endblock %}
-		<div id="page-info">
-			{% block page_info %}
-			{% endblock %}
-		</div>
+		
+        <div id=page-content>
 		{% block page-content %}
 		{% endblock %}
+        </div>
 		<div id="page-footer">
 			{% block footer %}
-			<div id="logos" style="padding-top: 10px;">
-				<a href="http://epa.gov" style="position: relative; left: 5%;"><img src={{ STATIC_URL }}images/epa1.gif /></a>
-				<a href="http://usgs.gov" style="position: relative; left: 10%;"><img src={{ STATIC_URL }}images/usgs_id_green.gif /></a>
-			</div>
+			<div id=footer-who>
+                <h6>WHO WE ARE</h6>
+                <ul>
+                    <li><a>Council members</a></li>
+                </ul>
+            </div>
+            <div id=footer-workgroups>
+            <h6>WORKGROUPS</h6>
+                <ul>
+                    <li><a>Methods and Data Comparability Boards</a></li>
+                </ul>
+            </div>
+            <div id=footer-legal>
+                <h6>LEGAL</h6>
+                <ul>
+                    <li><a>Terms of use</a></li>
+                </ul>
+            </div>
+            <div id=footer-for-members>
+                <h6>FOR MEMBERS</h6>
+                <ul>
+                    <li><a>Meeting minutes</a></li>
+                </ul>
+           </div>
 			{% endblock %}
 		</div>
+        </div>
 	</body>
 </html>	

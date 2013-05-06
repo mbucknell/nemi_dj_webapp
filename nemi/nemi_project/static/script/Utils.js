@@ -53,20 +53,15 @@ Utils = {
 						maxChar = resp.choices[i].display_value.length;
 					}
 				}
-				maxChar = Math.min(maxChar - 2, 50);
 				
 				var select2El = $('#' + select2Id);
 				
-				select2El.css('width', maxChar + 'em');
 				select2El.select2({
-					width: 'copy',
+					width: 'off',
 					data: selectData,
 					placeholder: 'All',
 					allowClear: true,
 					minimumResultsForSearch: 15,
-					containerCss: {
-						'font-size': 'small'
-					}
 				});
 				
 				var enableFn = select2El.data('enableFn');

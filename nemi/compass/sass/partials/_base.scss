@@ -1,0 +1,56 @@
+// Here is where you can define your constants for your application and to configure the blueprint framework.
+// Feel free to delete these if you want keep the defaults:
+
+$blueprint-background-color: #A09B8B;
+$blueprint-font-family: Calibri;
+$blueprint-font-size: 16px;
+
+$nemi-info-color: #EF975B;
+$nemi-content-color: #D3E0C6;
+$nemi-newsfeed-title-color: #51514E;
+$nemi-newsfeed-title-text-color: #80BE72;
+$nemi-footer-color: #51514E;
+$nemi-page-header-height: 120px;
+$nemi-footer-heading-color : #E88846;
+$nemi-footer-link-color: #E2DED0;
+
+$nemi-section-header-color : #639054;
+$nemi-section-header-border-color: #407137;
+
+$nemi-search-form-color: #D3E0C6;
+$nemi-subcategory-btn-color: #333333;
+$nemi-subcategory-btn-highlight-color: #E88846;
+$nemi-subcategory-btn-rollover-color: #24BCFF;
+
+$nemi-disabled-btn-color: #A09B8B;
+$nemi-disabled-btn-text-color: #DDD7C3;
+$nemi-search-btn-color: #0E75BB;
+
+$blueprint-grid-columns: 24;
+$blueprint-container-size: 960px;
+$blueprint-grid-margin: 0px;
+
+// Use this to calculate the width based on the total width.
+// Or you can set $blueprint-grid-width to a fixed value and unset $blueprint-container-size -- it will be calculated for you.
+$blueprint-grid-width: ($blueprint-container-size + $blueprint-grid-margin) / $blueprint-grid-columns - $blueprint-grid-margin;
+
+@mixin main-box-shadow {
+	@include single-box-shadow(#333333, 2px, 2px, 5px);	
+}
+@mixin no-style-or-margin-list {
+	@include no-bullets;
+	padding: 0px;
+	margin: 0px;
+}
+
+@mixin select2-width($width) {
+	.select2-container {
+		width: $width;
+	}
+}
+
+@mixin form-entry-label($width) {
+	display: inline-block;
+	font-weight: bold;
+	width: $width;
+}
