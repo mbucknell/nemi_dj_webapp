@@ -38,8 +38,8 @@
 
 .search-button-div {
 	@include column(20, true);
-	padding: 0px;
-	padding-bottom : 15px;
+	padding-top: 10px;
+	padding-bottom : 10px;
 	text-align: center;
 }
 #filter-specific-div {
@@ -92,6 +92,15 @@
 		@include select2-width(300px);
 	}
 }
+#toxicity-search-div {
+	.form-entry label {
+		@include form-entry-label(60px);
+	}
+	#matrix-input {
+		@include select2-width(150px);
+	}
+}
+
 #statistical-search-div {
 	.form-entry label {
 		@include form-entry-label(200px);

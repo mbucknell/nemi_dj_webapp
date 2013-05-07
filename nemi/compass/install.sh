@@ -3,4 +3,3 @@
 # Assumes Ruby has already been installed
 
 gem install -i Gem compass
-gem install -i Gem zurb-foundation
