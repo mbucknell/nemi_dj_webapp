@@ -60,7 +60,7 @@
 		@include column(20, true);
 		margin: 0px;
 		
-		.input-section-div div {
+		.input-section-div>div {
 			padding-left: 0px;
 		}
 	}
@@ -72,6 +72,14 @@
 	}
 	.form-entry label {
 		@include form-entry-label(130px);
+	}
+	#analyte-name-input, #analyte-code-input {
+		@include select2-width(500px);
+		
+		div {
+			padding: 2px;
+			padding-left: 5px;
+		}
 	}
 	#analyte-kind-separator {
 		color : $nemi-section-header-color;

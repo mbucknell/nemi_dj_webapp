@@ -414,11 +414,11 @@ class AnalyteResultsMixin(ResultsMixin):
             data = super(AnalyteResultsMixin, self).get_queryset()
             
             if 'analyte_name' in self.request.GET and self.request.GET.get('analyte_name'):
-                names = self.request.GET.get('analyte_name').splitlines()
+                names = self.request.GET.getlist('analyte_name')
                 data = data.filter(analyte_name__iregex=r'(' + '|'.join(['^' + re.escape(n) + '$' for n in names]) + ')')
                 
             elif 'analyte_code' in self.request.GET and self.request.GET.get('analyte_code'):
-                codes = self.request.GET.get('analyte_code').splitlines()
+                codes = self.request.GET.getlist('analyte_code')
                 data = data.filter(analyte_code__iregex=r'(' + '|'.join(['^' + re.escape(c) + '$' for c in codes]) + '$)')
                 
             else:

@@ -170,7 +170,7 @@ a img {
   overflow-x: hidden;
 }
 /* line 63, ../../../compass/sass/partials/_home.scss */
-#filter-specific-div #filter-action .input-section-div div {
+#filter-specific-div #filter-action .input-section-div > div {
   padding-left: 0px;
 }
 
@@ -184,16 +184,25 @@ a img {
   font-weight: bold;
   width: 130px;
 }
-/* line 76, ../../../compass/sass/partials/_home.scss */
+/* line 47, ../../../compass/sass/partials/_base.scss */
+#analyte-search-div #analyte-name-input .select2-container, #analyte-search-div #analyte-code-input .select2-container {
+  width: 500px;
+}
+/* line 79, ../../../compass/sass/partials/_home.scss */
+#analyte-search-div #analyte-name-input div, #analyte-search-div #analyte-code-input div {
+  padding: 2px;
+  padding-left: 5px;
+}
+/* line 84, ../../../compass/sass/partials/_home.scss */
 #analyte-search-div #analyte-kind-separator {
   color: #639054;
 }
-/* line 78, ../../../compass/sass/partials/_home.scss */
+/* line 86, ../../../compass/sass/partials/_home.scss */
 #analyte-search-div #analyte-kind-separator label {
   text-align: center;
 }
 
-/* line 85, ../../../compass/sass/partials/_home.scss */
+/* line 93, ../../../compass/sass/partials/_home.scss */
 #community-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -208,7 +217,7 @@ a img {
   width: 300px;
 }
 
-/* line 96, ../../../compass/sass/partials/_home.scss */
+/* line 104, ../../../compass/sass/partials/_home.scss */
 #toxicity-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -219,7 +228,7 @@ a img {
   width: 150px;
 }
 
-/* line 105, ../../../compass/sass/partials/_home.scss */
+/* line 113, ../../../compass/sass/partials/_home.scss */
 #statistical-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -246,7 +255,7 @@ a img {
   width: 450px;
 }
 
-/* line 125, ../../../compass/sass/partials/_home.scss */
+/* line 133, ../../../compass/sass/partials/_home.scss */
 .section-div {
   display: inline;
   float: left;
@@ -259,7 +268,7 @@ a img {
 * html .section-div {
   overflow-x: hidden;
 }
-/* line 129, ../../../compass/sass/partials/_home.scss */
+/* line 137, ../../../compass/sass/partials/_home.scss */
 .section-div h3 {
   padding: 10px;
   padding-left: 40px;
@@ -268,11 +277,11 @@ a img {
   margin: 0px;
   border: solid 1px #407137;
 }
-/* line 138, ../../../compass/sass/partials/_home.scss */
+/* line 146, ../../../compass/sass/partials/_home.scss */
 .section-div .header {
   font-weight: bold;
 }
-/* line 142, ../../../compass/sass/partials/_home.scss */
+/* line 150, ../../../compass/sass/partials/_home.scss */
 .section-div ul {
   list-style: none;
 }
@@ -282,7 +291,7 @@ a img {
   list-style-type: none;
   margin-left: 0;
 }
-/* line 146, ../../../compass/sass/partials/_home.scss */
+/* line 154, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div {
   display: inline;
   float: left;
@@ -294,7 +303,7 @@ a img {
 * html .section-div .subcategory-div {
   overflow-x: hidden;
 }
-/* line 149, ../../../compass/sass/partials/_home.scss */
+/* line 157, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-selection-div {
   float: left;
   display: inline;
@@ -308,7 +317,7 @@ a img {
 * html .section-div .subcategory-div .subcategory-selection-div {
   overflow-x: hidden;
 }
-/* line 155, ../../../compass/sass/partials/_home.scss */
+/* line 163, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-selection-div ul {
   list-style: none;
   padding: 0px;
@@ -320,7 +329,7 @@ a img {
   list-style-type: none;
   margin-left: 0;
 }
-/* line 160, ../../../compass/sass/partials/_home.scss */
+/* line 168, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-action-div {
   display: inline;
   float: left;
@@ -336,7 +345,7 @@ a img {
 * html .section-div .subcategory-div .subcategory-action-div {
   overflow-x: hidden;
 }
-/* line 166, ../../../compass/sass/partials/_home.scss */
+/* line 174, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-action-div .input-section-div {
   display: inline;
   float: left;
@@ -347,7 +356,7 @@ a img {
 * html .section-div .subcategory-div .subcategory-action-div .input-section-div {
   overflow-x: hidden;
 }
-/* line 169, ../../../compass/sass/partials/_home.scss */
+/* line 177, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-action-div .input-section-div .form-entry {
   display: inline;
   float: left;
@@ -360,7 +369,7 @@ a img {
   overflow-x: hidden;
 }
 
-/* line 178, ../../../compass/sass/partials/_home.scss */
+/* line 186, ../../../compass/sass/partials/_home.scss */
 #limit-by-section {
   display: inline;
   float: left;
@@ -371,20 +380,20 @@ a img {
 * html #limit-by-section {
   overflow-x: hidden;
 }
-/* line 180, ../../../compass/sass/partials/_home.scss */
+/* line 188, ../../../compass/sass/partials/_home.scss */
 #limit-by-section h3 {
   padding-left: 10px;
 }
-/* line 183, ../../../compass/sass/partials/_home.scss */
+/* line 191, ../../../compass/sass/partials/_home.scss */
 #limit-by-section div {
   padding-left: 0px;
 }
-/* line 186, ../../../compass/sass/partials/_home.scss */
+/* line 194, ../../../compass/sass/partials/_home.scss */
 #limit-by-section #filtered-search-limits {
   padding-left: 40px;
   padding-bottom: 0px;
 }
-/* line 190, ../../../compass/sass/partials/_home.scss */
+/* line 198, ../../../compass/sass/partials/_home.scss */
 #limit-by-section .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -399,7 +408,7 @@ a img {
   width: 600px;
 }
 
-/* line 202, ../../../compass/sass/partials/_home.scss */
+/* line 210, ../../../compass/sass/partials/_home.scss */
 #results-table {
   position: absolute;
   left: 0;

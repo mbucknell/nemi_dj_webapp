@@ -9,7 +9,7 @@
 	<script src="{{ STATIC_URL }}lib/select2-master/select2.js"></script>
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
 	<script src="{{ STATIC_URL }}script/Utils.js"></script>
-	<script src="{{ STATIC_URL }}script/AnalyteDialog.js"></script>
+    <script src="{{ STATIC_URL }}script/AnalyteSelect.js"></script>
 	 
 	<script type="text/javascript">
 		function updateBrowseMethodCount() {
@@ -245,10 +245,7 @@
 			var activeDiv = $('#filter-action>div:visible');
 			var category = activeDiv.find('input[name="category"]').val();
 			if (((activeDiv.attr('id') == 'analyte-search-div') && (category == '')) || (category == 'regulatory')){
-				// Set state to disabled if the analyte code or name fields are both empty.
-				var nameVal = $.trim($('#analyte-name-field').val());
-				var codeVal = $.trim($('#analyte-code-field').val());
-				Utils.setEnabled (searchBtn, (nameVal != '' || codeVal != ''));
+				Utils.setEnabled(searchBtn, (AnalyteSelect.kindEl.name.val() || AnalyteSelect.kindEl.code.val()));
 			}
 			else {
 				Utils.setEnabled(searchBtn, true);
@@ -286,6 +283,14 @@
 				placeholder: 'All',
 				allowClear: true,
 			});
+			
+			AnalyteSelect.init(
+					'analyte-name-select', 
+					'analyte-code-select', 
+					$('#analyte-search-div input[name="category"]'),
+					$('#analyte-search-div input[name="subcategory"]'),
+					'{% url "methods-analyte_select" %}', 
+					setFilteredSearchButtonState);
 			
 			// Add change handler to save state of inputs with class static-field 
 			$('.static-field').change(function() {
@@ -407,6 +412,7 @@
 					// Default selects to 'all' selection.
 					$('.limit-by-select-field').select2('val', '', true);
 					$('.filter-select').select2('val', '', true);
+					$('.filter-multiselect').select2('val', '', true);
 					$('select.static-field').select2('val', '', true);
 					
 					// Set method type checkbox state. Default all enabled inputs to true.
@@ -432,7 +438,17 @@
 					if ($(this).is('[type="checkbox"]') && !($(this).is(':checked'))) {
 						return;
 					}
-					hiddenInputHtml += '<input type="hidden" name="' + $(this).attr('name') + '" value="' + $(this).val() + '" />';					
+					// multi select elements should have each value sent as a separate parameter 
+					if ($(this).hasClass('filter-multiselect')) {
+						var values = $(this).select2('val');
+						var name = $(this).attr('name');
+						for (var i = 0; i < values.length; i++) {
+							hiddenInputHtml += Utils.getHiddenInputHtml(name, values[i]);
+						}						
+					}
+					else {
+						hiddenInputHtml += Utils.getHiddenInputHtml($(this).attr('name'), $(this).val());
+					}
 				});
 				
 				limitByForm.append(hiddenInputHtml);
@@ -442,43 +458,6 @@
 				return false;
 			});
 			
-			// Initialize Find analyte dialog and set up click handler for find analyte buttons. 
-			AnalyteDialog.initialize($('#find-analyte-dialog'), '{% url "methods-analyte_select" %}');
-			$('#find-analyte-name-button').click(function() {
-				return AnalyteDialog.show(
-						'name', 
-						$('#analyte-name-field'), 
-						$('#analyte-search-div input[name="category"]').val(),
-						$('#analyte-search-div input[name="subcategory"]').val()
-				);
-			});
-			$('#find-analyte-code-button').click(function() {
-				return AnalyteDialog.show('code', $('#analyte-code-field'), $());
-			});	
-			
-			// Add change event handlers to analyte name and code field. The event handler limits to text 
-			// fields to three analytes (or  one if regulatory) and it sets the sensitivity of the analyte text and buttons as
-			// appropriate.
-			var nameEl = $('#analyte-name-field');
-			var nameFindBtn = $('#find-analyte-name-button');
-			var codeEl = $('#analyte-code-field');
-			var codeFindBtn = $('#find-analyte-code-button');
-			
-			nameEl.change(function() {
-				var value = validateAnalyteField($(this), 'name');
-				$(this).val(value);
-				Utils.setEnabled(codeEl, (value == ''));
-				Utils.setEnabled(codeFindBtn, (value == ''));
-				setFilteredSearchButtonState();
-			});
-			
-			codeEl.change(function() {
-				var value = validateAnalyteField($(this), 'code');
-				$(this).val(value);
-				Utils.setEnabled(nameEl, (value == ''));
-				Utils.setEnabled(nameFindBtn, (value == ''));
-				setFilteredSearchButtonState();
-			});
 			
 			//Check to make sure that at least one method type is checked.
 			$('#method-type-selections input[type="checkbox"]').click(function(){
@@ -609,53 +588,22 @@ and protocols for all stages of the monitoring process.
 					<div id="filter-action">
 						<div id="analyte-search-div" class="input-section-div">
 							<form>
-                                <div class="form-entry">
-                                    <label for="analyte-name-field">Analyte name(s):</label>
-                                    <textarea id="analyte-name-field" name="analyte_name"  class="static-field" cols=50 rows=3></textarea>
-                                    <input type="button" id="find-analyte-name-button" class="find-button" value="Find Analyte Names">
+                                <div class="form-entry" id="analyte-name-input">
+                                    <label id="analyte-name-select-label" for="analyte-name-select">Analyte name(s):</label>
+                                    <input type="hidden" class="filter-multiselect" id="analyte-name-select" name="analyte_name" />
                                 </div>
                                 <div id="analyte-kind-separator" class="form-entry">
                                     <label>OR</label>
                                     <span>&nbsp;</span>                                                                    
                                 </div>
-                                <div class="form-entry">
-                                    <label for="analyte-code-field">Analyte code(s):</label>
-                                    <textarea id="analyte-code-field" name="analyte_code" cols=50 rows=3 class="static-field"></textarea>
-                                    <input type="button" id="find-analyte-code-button" class="find-button" value="Find Analyte Codes">
+                                <div class="form-entry" id="analyte-code-input">
+                                    <label id="analyte-code-select-label" for="analyte-code-select">Analyte code(s):</label>
+                                    <input type="hidden" class="filter-multiselect" id="analyte-code-select" name="analyte_code" />
                                 </div>
 								
 								<input type="hidden" name="category" value=""/>
 								<input type="hidden" name="subcategory" value="" />
 							</form>
-							<div id="find-analyte-dialog" style="display: none;">
-								<div id="find-analyte-text-entry-div">
-									<p>Enter a few characters of the 
-										<span style="font-weight" id="analyte-id-kind">analyte name:</span>
-									</p>
-									<form>
-										<input type="text" id="find-analyte-text" size=30 />
-										<button id="find-analyte-button" class="find-button">Find</button>
-									</form>
-								</div>
-								<div id="analyte-match-div">
-									<div id="analyte-search-list-div" style="float: left; display:inline-block">
-										<p>Matching analytes:</p>
-										<select style="width:20em;" multiple="multiple" id="analyte-search-list" size=15>
-										</select>
-										<span id="no-analyte-values" style="display:none;">No matches</span>
-									</div>
-									<div id="find-analyte-button-div" style="display:inline-block; margin-top: 4em; padding-left: 10px;">
-										<button id="add-to-select" class="find-button" style="width: 100%;">Add&nbsp;&gt;&gt;</button>
-										<br />
-										<button id="remove-from-select" class="find-button" style="width: 100%;">&lt;&lt;&nbsp;Remove</button>
-									</div>
-									<div id="find-analyte-match-div" style="float: right; display:inline-block;">
-										<p><span style="font-weight: bold">Select for search</span>(up to three):</p>
-										<select style="width:20em;" multiple="multiple" id="analyte-select-list" size=3>
-										</select>
-									</div>
-								</div>
-							</div>
 						</div>
 						<div id="chemical-search-div" class="input-section-div" style="display: none;">
 							<form>

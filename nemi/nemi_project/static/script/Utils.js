@@ -80,5 +80,10 @@ Utils = {
 				});
 			}
 		});
+	},
+	getHiddenInputHtml : function (name /* String */, value /* String */) {
+		/* Return a string containing the html for a hidden input with name and value.
+		 */
+		return '<input type="hidden" name="' + name + '" value="' + value + '" />';
 	}
 }
