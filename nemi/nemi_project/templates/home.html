@@ -320,18 +320,18 @@
 			// Add click handler for the subsection show/hide buttons 
 			$('.subcategory-action-div').each(function() {
 				var contentDiv = $(this).find('.subsection-div');
-				$(this).find('h3 button').click(function() {
+				$(this).find('h5 button').click(function() {
 					var buttonImgEl = $(this).find('img');
 					if (buttonImgEl.attr('alt') == 'show') {
 						$(this).attr('title', 'Hide subsection');
 						buttonImgEl.attr('alt', 'hide');
-						buttonImgEl.attr('src', '{{ STATIC_URL }}images/triangle-down-image36.gif');
+						buttonImgEl.attr('src', '{{ STATIC_URL }}images/collapse.png');
 						contentDiv.show();
 					}
 					else {
 						$(this).attr('title', 'Show subsection');
 						buttonImgEl.attr('alt', 'show');
-						buttonImgEl.attr('src', '{{ STATIC_URL }}images/triangle-right-image36.gif');
+						buttonImgEl.attr('src', '{{ STATIC_URL }}images/expand.png');
 						contentDiv.hide();
 					}
 				});
@@ -503,7 +503,10 @@ and protocols for all stages of the monitoring process.
 
 {% block page-content %}
 	<div id="general-search-div" class="section-div">
-    	<h3>GENERAL SEARCH</h3>
+        <div class="section-header-banner-div">
+            <h4>&nbsp;</h4>
+        </div>
+    	<h4>GENERAL SEARCH</h3>
 		<div id="general-subcategory-div>" class="subcategory-div">
 			<div id="general-selection-div" class="subcategory-selection-div">
 				<ul>
@@ -543,7 +546,10 @@ and protocols for all stages of the monitoring process.
 		</div>
 	</div>
 	<div id="filtered-search-div" class="section-div">
-		<h3>FILTERED SEARCH</h3>
+        <div class="section-header-banner-div">
+            <h4>&nbsp;</h4>
+        </div>
+		<h4>FILTERED SEARCH</h4>
 		<div id="filtered-subcategory-div>" class="subcategory-div">
 			<div id="filtered-selection-div" class="subcategory-selection-div">
 				<ul>
@@ -567,22 +573,22 @@ and protocols for all stages of the monitoring process.
 							Limit search to CHEMICAL methods
 						</div>
 						<div id="microbiological-header" style="display: none;">
-							<p>Limit search to MICROBIOLOGICAL methods</p>
+							Limit search to MICROBIOLOGICAL methods
 						</div>
 						<div id="community-header" style="display: none;">
-							<p>Limit search to POPULATION/COMMUNITY methods</p>
+							Limit search to POPULATION/COMMUNITY methods
 						</div>
 						<div id="toxicity-header" style="display: none;">
-							<p>Limit search to TOXICITY methods</p>
+							Limit search to TOXICITY methods
 						</div>
 						<div id="physical-header" style="display: none;">
-							<p>Limit search to PHYSICAL methods</p>
+							Limit search to PHYSICAL methods
 						</div>
 						<div id="statistical-header" style="display: none;">
-							<p>Limit search to STATISTICAL methods</p>
+							Limit search to STATISTICAL methods
 						</div>
 						<div id="regulatory-header" style="display: none;">
-							<p>Limit search to REGULATORY methods</p>
+							Limit search to REGULATORY methods
 						</div>
 					</div>
 					<div id="filter-action">
@@ -607,7 +613,7 @@ and protocols for all stages of the monitoring process.
 						</div>
 						<div id="chemical-search-div" class="input-section-div" style="display: none;">
 							<form>
-								<div>
+								<div class="form-entry">
 									<span class="header">Chemical subcategories:</span><br />
 									<ul id="chemical-subcategory-selections" >
 									</ul>
@@ -711,13 +717,12 @@ and protocols for all stages of the monitoring process.
 					</div>
 				</div>
 				<div id="limit-by-section">
-					<h3>
+					<h5>
 						<button class="show-hide-toggle" title="Hide subsection" type=button>
-							<img src="{{ STATIC_URL }}images/triangle-down-image36.gif" alt="hide" /> 
+							<img src="{{ STATIC_URL }}images/collapse.png" alt="hide" /> 
 						</button>
-						Limit by: (optional)		
-					</h3>
-					<br />
+						<span>Limit by: (optional)</span>		
+					</h5>
 					<div id=filtered-search-limits class="input-section-div subsection-div">
 						<form action="{% url 'methods-analyte_results' %}" method="get">
                             <div class="form-entry" id="media-name-input">

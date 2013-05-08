@@ -14,6 +14,19 @@ body {
 	a { 
 		@include hover-link;
 	}
+	.show-hide-toggle {
+		padding: 0px;
+		border: none;
+		height: 17px;
+		width: 20px;
+		
+		img {
+			vertical-align: middle;
+			padding: 0px;
+			height: 17px;
+			width: 20px;
+		}
+	}
 	th, td {
 		padding: 4px;
 	}
@@ -40,27 +53,31 @@ body {
 	}
 	#main-page {
 	 @include container;
+	 margin-top: 2px;
 	 overflow: visible;
 	 #header {
- 	 	 @include column(24);
+ 	 	 @include column(12);
 	 	 @include main-box-shadow; 
 	 	 padding: 0px;
 	 	 #banner {
-	 	 	width: span(24);
-			background-color: white;
+	 	 	padding: 0px;
+	 	 	margin: 0px;
+	 	 	width: column(12);
+	 	 	height: 140px;
 	 	 }
 		 #page-header {
-		 	@include column(24);
+		 	@include column(12);
 			padding: 0px;
+			margin: 0px;
 			#page-info {
 				margin: 0px;
-				@include column(14);
+				@include column(7);
 				background-color: $nemi-info-color;
 				height: 120px;
 				font-weight: bold;
 			}
 			#header-links {
-				@include column(4);
+				@include column(2);
 			  	background-color: $nemi-info-color;
 				height: 120px;
 				ul {
@@ -72,7 +89,7 @@ body {
 			  	}
 			}
 			#whats-new-div {
-				@include column(6, true);
+				@include column(3, true);
 				background-color : $nemi-content-color;
 				padding: 0px;
 				height : 120px;
@@ -93,11 +110,11 @@ body {
 		}
 	}
 	#page-content {
-		@include column(24);
+		@include column(12);
 		padding: 0px;
 	}
 	#page-footer {
-		@include column(24);
+		@include column(12);
 		background-color: $nemi-footer-color;
 		@include main-box-shadow;		
 		h6 {
@@ -111,16 +128,16 @@ body {
 			@include link-colors ($nemi-footer-link-color, $nemi-footer-link-color, $nemi-footer-link-color, $nemi-footer-link-color);	 	
 		}
 		#footer-who {
-			@include column(4);
+			@include column(2);
 		}
 		#footer-workgroups {
-			@include column(4);
+			@include column(2);
 		}
 		#footer-legal {
-			@include column(4);
+			@include column(2);
 		}
 		#footer-for-members {
-			@include column(4);
+			@include column(2);
 		}		
 	}
 	}
