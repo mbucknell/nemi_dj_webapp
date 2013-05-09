@@ -6,7 +6,7 @@ body {
 	@include blueprint-debug;
 	@include blueprint-interaction;
 	
-	background-color: $blueprint-background-color;
+	background-image: url('../images/background.png');
 	margin-left: auto;
 	margin-right: auto;
 	overflow: visible;
