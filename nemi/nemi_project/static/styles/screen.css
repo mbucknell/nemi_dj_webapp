@@ -790,46 +790,47 @@ body a:hover {
 }
 /* line 17, ../../../compass/sass/partials/_page.scss */
 body .show-hide-toggle {
+  vertical-align: middle;
   padding: 0px;
+  background-color: inherit;
   border: none;
   height: 17px;
   width: 20px;
   cursor: pointer;
 }
-/* line 24, ../../../compass/sass/partials/_page.scss */
+/* line 26, ../../../compass/sass/partials/_page.scss */
 body .show-hide-toggle img {
   padding: 0px;
   height: 17px;
   width: 20px;
-  vertical-align: middle;
 }
-/* line 31, ../../../compass/sass/partials/_page.scss */
+/* line 32, ../../../compass/sass/partials/_page.scss */
 body th, body td {
   padding: 4px;
 }
-/* line 36, ../../../compass/sass/partials/_page.scss */
+/* line 37, ../../../compass/sass/partials/_page.scss */
 body .subcategory-action-div .select2-container a {
   border: solid 1px #0e75bb;
 }
-/* line 40, ../../../compass/sass/partials/_page.scss */
+/* line 41, ../../../compass/sass/partials/_page.scss */
 body select, body .select2-results, body .select2-choice {
   font-size: 14px;
 }
-/* line 43, ../../../compass/sass/partials/_page.scss */
+/* line 44, ../../../compass/sass/partials/_page.scss */
 body .disabled {
   color: #a09b8b;
 }
-/* line 46, ../../../compass/sass/partials/_page.scss */
+/* line 47, ../../../compass/sass/partials/_page.scss */
 body input.disabled {
   background-color: #a09b8b;
   color: #ddd7c3;
 }
-/* line 51, ../../../compass/sass/partials/_page.scss */
+/* line 52, ../../../compass/sass/partials/_page.scss */
 body form > label {
   font-weight: bold;
   padding-right: 5px;
 }
-/* line 55, ../../../compass/sass/partials/_page.scss */
+/* line 56, ../../../compass/sass/partials/_page.scss */
 body #main-page {
   width: 1100px;
   margin: 0 auto;
@@ -838,7 +839,7 @@ body #main-page {
   margin-top: 2px;
   overflow: visible;
 }
-/* line 59, ../../../compass/sass/partials/_page.scss */
+/* line 60, ../../../compass/sass/partials/_page.scss */
 body #main-page #header {
   display: inline;
   float: left;
@@ -853,14 +854,14 @@ body #main-page #header {
 * html body #main-page #header {
   overflow-x: hidden;
 }
-/* line 63, ../../../compass/sass/partials/_page.scss */
+/* line 64, ../../../compass/sass/partials/_page.scss */
 body #main-page #header #banner {
   padding: 0px;
   margin: 0px;
   width: column(12);
   height: 140px;
 }
-/* line 69, ../../../compass/sass/partials/_page.scss */
+/* line 70, ../../../compass/sass/partials/_page.scss */
 body #main-page #header #page-header {
   display: inline;
   float: left;
@@ -873,7 +874,7 @@ body #main-page #header #page-header {
 * html body #main-page #header #page-header {
   overflow-x: hidden;
 }
-/* line 73, ../../../compass/sass/partials/_page.scss */
+/* line 74, ../../../compass/sass/partials/_page.scss */
 body #main-page #header #page-header #page-info {
   margin: 0px;
   display: inline;
@@ -888,7 +889,7 @@ body #main-page #header #page-header #page-info {
 * html body #main-page #header #page-header #page-info {
   overflow-x: hidden;
 }
-/* line 80, ../../../compass/sass/partials/_page.scss */
+/* line 81, ../../../compass/sass/partials/_page.scss */
 body #main-page #header #page-header #header-links {
   display: inline;
   float: left;
@@ -901,7 +902,7 @@ body #main-page #header #page-header #header-links {
 * html body #main-page #header #page-header #header-links {
   overflow-x: hidden;
 }
-/* line 84, ../../../compass/sass/partials/_page.scss */
+/* line 85, ../../../compass/sass/partials/_page.scss */
 body #main-page #header #page-header #header-links ul {
   list-style: none;
   padding: 0px;
@@ -914,7 +915,7 @@ body #main-page #header #page-header #header-links ul li {
   list-style-type: none;
   margin-left: 0;
 }
-/* line 88, ../../../compass/sass/partials/_page.scss */
+/* line 89, ../../../compass/sass/partials/_page.scss */
 body #main-page #header #page-header #header-links a {
   color: white;
 }
@@ -934,7 +935,7 @@ body #main-page #header #page-header #header-links a:hover {
 body #main-page #header #page-header #header-links a:active {
   color: white;
 }
-/* line 92, ../../../compass/sass/partials/_page.scss */
+/* line 93, ../../../compass/sass/partials/_page.scss */
 body #main-page #header #page-header #whats-new-div {
   display: inline;
   float: left;
@@ -949,7 +950,7 @@ body #main-page #header #page-header #whats-new-div {
 * html body #main-page #header #page-header #whats-new-div {
   overflow-x: hidden;
 }
-/* line 99, ../../../compass/sass/partials/_page.scss */
+/* line 100, ../../../compass/sass/partials/_page.scss */
 body #main-page #header #page-header #whats-new-div #news-feed-title {
   background-color: #51514e;
   color: #80be72;
@@ -957,12 +958,12 @@ body #main-page #header #page-header #whats-new-div #news-feed-title {
   height: 23px;
   padding-top: 3px;
 }
-/* line 106, ../../../compass/sass/partials/_page.scss */
+/* line 107, ../../../compass/sass/partials/_page.scss */
 body #main-page #header #page-header #whats-new-div #news-feed {
   overflow: auto;
   height: 97px;
 }
-/* line 113, ../../../compass/sass/partials/_page.scss */
+/* line 114, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-content {
   display: inline;
   float: left;
@@ -974,7 +975,7 @@ body #main-page #page-content {
 * html body #main-page #page-content {
   overflow-x: hidden;
 }
-/* line 117, ../../../compass/sass/partials/_page.scss */
+/* line 118, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer {
   display: inline;
   float: left;
@@ -989,11 +990,11 @@ body #main-page #page-footer {
 * html body #main-page #page-footer {
   overflow-x: hidden;
 }
-/* line 121, ../../../compass/sass/partials/_page.scss */
+/* line 122, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer h6 {
   color: #e88846;
 }
-/* line 124, ../../../compass/sass/partials/_page.scss */
+/* line 125, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer ul {
   list-style: none;
   padding: 0px;
@@ -1006,7 +1007,7 @@ body #main-page #page-footer ul li {
   list-style-type: none;
   margin-left: 0;
 }
-/* line 128, ../../../compass/sass/partials/_page.scss */
+/* line 129, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer a {
   color: #e2ded0;
 }
@@ -1022,7 +1023,7 @@ body #main-page #page-footer a:hover {
 body #main-page #page-footer a:active {
   color: #e2ded0;
 }
-/* line 131, ../../../compass/sass/partials/_page.scss */
+/* line 132, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer #footer-who {
   display: inline;
   float: left;
@@ -1033,7 +1034,7 @@ body #main-page #page-footer #footer-who {
 * html body #main-page #page-footer #footer-who {
   overflow-x: hidden;
 }
-/* line 134, ../../../compass/sass/partials/_page.scss */
+/* line 135, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer #footer-workgroups {
   display: inline;
   float: left;
@@ -1044,7 +1045,7 @@ body #main-page #page-footer #footer-workgroups {
 * html body #main-page #page-footer #footer-workgroups {
   overflow-x: hidden;
 }
-/* line 137, ../../../compass/sass/partials/_page.scss */
+/* line 138, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer #footer-legal {
   display: inline;
   float: left;
@@ -1055,7 +1056,7 @@ body #main-page #page-footer #footer-legal {
 * html body #main-page #page-footer #footer-legal {
   overflow-x: hidden;
 }
-/* line 140, ../../../compass/sass/partials/_page.scss */
+/* line 141, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer #footer-for-members {
   display: inline;
   float: left;
@@ -1067,7 +1068,7 @@ body #main-page #page-footer #footer-for-members {
   overflow-x: hidden;
 }
 
-/* line 146, ../../../compass/sass/partials/_page.scss */
+/* line 147, ../../../compass/sass/partials/_page.scss */
 div {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

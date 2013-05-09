@@ -15,7 +15,9 @@ body {
 		@include hover-link;
 	}
 	.show-hide-toggle {
+		vertical-align: middle;
 		padding: 0px;
+		background-color: inherit;
 		border: none;
 		height: 17px;
 		width: 20px;
@@ -25,7 +27,6 @@ body {
 			padding: 0px;
 			height: 17px;
 			width: 20px;
-			vertical-align: middle;
 		}
 	}
 	th, td {
