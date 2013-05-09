@@ -145,14 +145,13 @@
 	
 	.section-header-banner-div {
 		@include stretch-x;
-		background-color: $nemi-section-header-color;
 		border: solid 1px $nemi-section-header-border-color;
 		z-index: -1;
 		padding: 0px;
 	}
 	h4 {
 		padding: 5px;
-		padding-left: 32px;
+		padding-left: 3px;
 		color: white;
 		background-color: $nemi-section-header-color;
 		margin-bottom: 0px;

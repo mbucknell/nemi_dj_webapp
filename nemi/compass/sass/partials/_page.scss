@@ -6,6 +6,7 @@ body {
 	@include blueprint-debug;
 	@include blueprint-interaction;
 	
+	background-color: $blueprint-background-color;
 	background-image: url('../images/background.png');
 	margin-left: auto;
 	margin-right: auto;
@@ -31,6 +32,10 @@ body {
 	}
 	th, td {
 		padding: 4px;
+	}
+	
+	.abbrev{
+		cursor: help;
 	}
 	
 	.subcategory-action-div .select2-container {
