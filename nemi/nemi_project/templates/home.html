@@ -297,40 +297,20 @@
 				sessionStorage[$(this).attr('id')] = $(this).val();
 			});
 			
-			// Add click handler for the section show/hide buttons.
-			$(".section-div").each(function() {
-				var contentDiv = $(this).find('.subcategory-div');
-				$(this).find('h2 button').click(function() {
-					var buttonImgEl = $(this).find('img');
-					if (buttonImgEl.attr('alt') == 'show') {
-						$(this).attr('title', 'Hide section');
-						buttonImgEl.attr('alt', 'hide');
-						buttonImgEl.attr('src', '{{ STATIC_URL }}images/triangle-down-image36.gif');
-						contentDiv.show();					
-					}
-					else {
-						$(this).attr('title', 'Show section');
-						buttonImgEl.attr('alt', 'show');
-						buttonImgEl.attr('src', '{{ STATIC_URL }}images/triangle-right-image36.gif');
-						contentDiv.hide();
-					}
-				});
-			});
-			
 			// Add click handler for the subsection show/hide buttons 
 			$('.subcategory-action-div').each(function() {
 				var contentDiv = $(this).find('.subsection-div');
-				$(this).find('h5 button').click(function() {
+				$(this).find('.show-hide-toggle').click(function() {
 					var buttonImgEl = $(this).find('img');
-					if (buttonImgEl.attr('alt') == 'show') {
+					if ($(this).attr('alt') == 'show') {
 						$(this).attr('title', 'Hide subsection');
-						buttonImgEl.attr('alt', 'hide');
+						$(this).attr('alt', 'hide');
 						buttonImgEl.attr('src', '{{ STATIC_URL }}images/collapse.png');
 						contentDiv.show();
 					}
 					else {
 						$(this).attr('title', 'Show subsection');
-						buttonImgEl.attr('alt', 'show');
+						$(this).attr('alt', 'show');
 						buttonImgEl.attr('src', '{{ STATIC_URL }}images/expand.png');
 						contentDiv.hide();
 					}
@@ -717,12 +697,12 @@ and protocols for all stages of the monitoring process.
 					</div>
 				</div>
 				<div id="limit-by-section">
-					<h5>
-						<button class="show-hide-toggle" title="Hide subsection" type=button>
-							<img src="{{ STATIC_URL }}images/collapse.png" alt="hide" /> 
-						</button>
-						<span>Limit by: (optional)</span>		
-					</h5>
+                    <div id="limit-by-header">
+                        <button class="show-hide-toggle" title="Hide subsection" type=button>
+                            <img src="{{ STATIC_URL }}/images/collapse.png" alt="hide" /> 
+                        </button>
+					   <h5>Limit by: (optional)</h5>
+                    </div>
 					<div id=filtered-search-limits class="input-section-div subsection-div">
 						<form action="{% url 'methods-analyte_results' %}" method="get">
                             <div class="form-entry" id="media-name-input">
@@ -737,7 +717,7 @@ and protocols for all stages of the monitoring process.
                                 <label id="instrumentation-field-label" for="instrumentation-field">Instrumentation:</label>
                                 <input type="hidden" class="limit-by-select-field" id="instrumentation-field" name="instrumentation" />
                             </div>
-							<div>
+							<div id="method-type-input">
 								<span class="header">Method type:</span><br />
 								<ul id="method-type-selections" >
 								</ul>

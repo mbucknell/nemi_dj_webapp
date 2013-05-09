@@ -78,9 +78,6 @@
 }
 
 #analyte-search-div {					
-	textarea {
-		vertical-align: middle;
-	}
 	.form-entry label {
 		@include form-entry-label(130px);
 	}
@@ -162,6 +159,7 @@
 		margin-top: 1px;
 	}
 	.header {
+		padding-left: 0px;
 		font-weight: bold;
 	}
 	
@@ -205,13 +203,20 @@
 #limit-by-section {
 	@include column(10, true);
 	padding-bottom: 0px;
-	h5 {
-	    padding: 5px;
-		padding-left: 10px;
-		color: white;
+	#limit-by-header {
 		background-color: $nemi-section-header-color;
-		margin-bottom: 0px;
-		margin-top: 1px;
+		margin: 0px;
+		button {
+			vertical-align: middle;
+		}
+		h5 {
+			display: inline-block;
+		    padding: 0px;
+			padding-left: 10px;
+			color: white;
+			margin-bottom: 0px;
+			margin-top: 1px;
+		}
 	}
 	#filtered-search-limits {
 		padding-left: 40px;
@@ -225,6 +230,10 @@
 	}
 	#source-field-input, #instrumentation-field-input {
 		@include select2-width(600px);
+	}
+	#method-type-input {
+		@include column(10, true);
+		padding: 2px;
 	}
 }
 	
