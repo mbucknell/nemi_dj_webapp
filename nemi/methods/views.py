@@ -77,7 +77,7 @@ class AnalyteSelectView(View):
     def get(self, request, *args, **kwargs):
         if request.GET:
             if request.GET['kind'] == 'code':
-                if request.GET['selection']:
+                if request.GET.get('selection', ''):
                     qs = AnalyteCodeVW.objects.filter(
                         analyte_analyte_code__icontains=request.GET['selection']).order_by('analyte_analyte_code').values_list('analyte_analyte_code', 
                                                                                                                                flat=True).distinct()
@@ -87,11 +87,9 @@ class AnalyteSelectView(View):
                 
             else:
                 category = request.GET.get('category', '')
-                subcategory = request.GET.get('subcategory', '')    
-                if category != '' or subcategory != '':
-                    qs = MethodAnalyteAllVW.objects.all()
-                    if category != '':
-                        qs = qs.filter(method_category__iexact=category)
+                subcategory = request.GET.get('subcategory', '') 
+                if category != '' and category != 'regulatory':
+                    qs = MethodAnalyteAllVW.objects.all().filter(method_category__iexact=category)
                     if subcategory != '':
                         qs = qs.filter(method_subcategory__iexact=subcategory)
                                             
@@ -619,12 +617,10 @@ class RegulatoryResultsMixin(ResultsMixin):
         data = self.queryset
         
         if 'analyte_name' in self.request.GET and self.request.GET.get('analyte_name'):
-            names = self.request.GET.get('analyte_name').splitlines()
-            data = data.filter(analyte_name__iregex=r'(' + '|'.join(['^' + re.escape(n) + '$' for n in names]) + ')')
+            data = data.filter(analyte_name__iexact=self.request.GET.get('analyte_name'))
             
         elif 'analyte_code' in self.request.GET and self.request.GET.get('analyte_code'):
-            codes = self.request.GET.get('analyte_code').splitlines()
-            data = data.filter(analyte_code__iregex=r'(' + '|'.join(['^' + re.escape(c) + '$' for c in codes]) + '$)')
+            data = data.filter(preferred=-1).filter(analyte_code__iexact=self.request.GET.get('analyte_code'))
        
         return data.order_by('regulation', 'method_source', 'source_method_identifier')           
         

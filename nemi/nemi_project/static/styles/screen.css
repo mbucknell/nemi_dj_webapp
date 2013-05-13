@@ -191,30 +191,30 @@ a img {
 }
 
 /* line 83, ../../../compass/sass/partials/_home.scss */
-#analyte-search-div .form-entry label {
+#analyte-search-div .form-entry label, #microbiological-search-div .form-entry label, #physical-search-div .form-entry label, #regulatory-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
   width: 130px;
 }
 /* line 48, ../../../compass/sass/partials/_base.scss */
-#analyte-search-div #analyte-name-input .select2-container, #analyte-search-div #analyte-code-input .select2-container {
+#analyte-search-div .analyte-name-input .select2-container, #analyte-search-div .analyte-code-input .select2-container, #microbiological-search-div .analyte-name-input .select2-container, #microbiological-search-div .analyte-code-input .select2-container, #physical-search-div .analyte-name-input .select2-container, #physical-search-div .analyte-code-input .select2-container, #regulatory-search-div .analyte-name-input .select2-container, #regulatory-search-div .analyte-code-input .select2-container {
   width: 500px;
 }
-/* line 89, ../../../compass/sass/partials/_home.scss */
-#analyte-search-div #analyte-name-input div, #analyte-search-div #analyte-code-input div {
+/* line 90, ../../../compass/sass/partials/_home.scss */
+#analyte-search-div .analyte-name-input div, #analyte-search-div .analyte-code-input div, #microbiological-search-div .analyte-name-input div, #microbiological-search-div .analyte-code-input div, #physical-search-div .analyte-name-input div, #physical-search-div .analyte-code-input div, #regulatory-search-div .analyte-name-input div, #regulatory-search-div .analyte-code-input div {
   padding: 2px;
   padding-left: 5px;
 }
-/* line 94, ../../../compass/sass/partials/_home.scss */
-#analyte-search-div #analyte-kind-separator {
+/* line 95, ../../../compass/sass/partials/_home.scss */
+#analyte-search-div .analyte-kind-separator, #microbiological-search-div .analyte-kind-separator, #physical-search-div .analyte-kind-separator, #regulatory-search-div .analyte-kind-separator {
   color: #639054;
 }
-/* line 96, ../../../compass/sass/partials/_home.scss */
-#analyte-search-div #analyte-kind-separator label {
+/* line 97, ../../../compass/sass/partials/_home.scss */
+#analyte-search-div .analyte-kind-separator label, #microbiological-search-div .analyte-kind-separator label, #physical-search-div .analyte-kind-separator label, #regulatory-search-div .analyte-kind-separator label {
   text-align: center;
 }
 
-/* line 103, ../../../compass/sass/partials/_home.scss */
+/* line 104, ../../../compass/sass/partials/_home.scss */
 #community-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -229,7 +229,7 @@ a img {
   width: 300px;
 }
 
-/* line 114, ../../../compass/sass/partials/_home.scss */
+/* line 115, ../../../compass/sass/partials/_home.scss */
 #toxicity-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -240,7 +240,7 @@ a img {
   width: 150px;
 }
 
-/* line 123, ../../../compass/sass/partials/_home.scss */
+/* line 124, ../../../compass/sass/partials/_home.scss */
 #statistical-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -267,7 +267,7 @@ a img {
   width: 450px;
 }
 
-/* line 143, ../../../compass/sass/partials/_home.scss */
+/* line 144, ../../../compass/sass/partials/_home.scss */
 .section-div {
   display: inline;
   float: left;
@@ -280,7 +280,7 @@ a img {
 * html .section-div {
   overflow-x: hidden;
 }
-/* line 148, ../../../compass/sass/partials/_home.scss */
+/* line 149, ../../../compass/sass/partials/_home.scss */
 .section-div .section-header-banner-div {
   position: absolute;
   left: 0;
@@ -289,7 +289,7 @@ a img {
   z-index: -1;
   padding: 0px;
 }
-/* line 154, ../../../compass/sass/partials/_home.scss */
+/* line 155, ../../../compass/sass/partials/_home.scss */
 .section-div h4 {
   padding: 5px;
   padding-left: 3px;
@@ -298,12 +298,12 @@ a img {
   margin-bottom: 0px;
   margin-top: 1px;
 }
-/* line 162, ../../../compass/sass/partials/_home.scss */
+/* line 163, ../../../compass/sass/partials/_home.scss */
 .section-div .header {
   padding-left: 0px;
   font-weight: bold;
 }
-/* line 167, ../../../compass/sass/partials/_home.scss */
+/* line 168, ../../../compass/sass/partials/_home.scss */
 .section-div ul {
   list-style: none;
   margin-bottom: 0px;
@@ -314,7 +314,7 @@ a img {
   list-style-type: none;
   margin-left: 0;
 }
-/* line 172, ../../../compass/sass/partials/_home.scss */
+/* line 173, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div {
   display: inline;
   float: left;
@@ -327,7 +327,7 @@ a img {
 * html .section-div .subcategory-div {
   overflow-x: hidden;
 }
-/* line 176, ../../../compass/sass/partials/_home.scss */
+/* line 177, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-selection-div {
   display: inline;
   float: left;
@@ -340,7 +340,7 @@ a img {
 * html .section-div .subcategory-div .subcategory-selection-div {
   overflow-x: hidden;
 }
-/* line 181, ../../../compass/sass/partials/_home.scss */
+/* line 182, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-selection-div ul {
   list-style: none;
   padding: 0px;
@@ -352,7 +352,7 @@ a img {
   list-style-type: none;
   margin-left: 0;
 }
-/* line 186, ../../../compass/sass/partials/_home.scss */
+/* line 187, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-action-div {
   display: inline;
   float: left;
@@ -368,7 +368,7 @@ a img {
 * html .section-div .subcategory-div .subcategory-action-div {
   overflow-x: hidden;
 }
-/* line 192, ../../../compass/sass/partials/_home.scss */
+/* line 193, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-action-div .input-section-div {
   display: inline;
   float: left;
@@ -379,7 +379,7 @@ a img {
 * html .section-div .subcategory-div .subcategory-action-div .input-section-div {
   overflow-x: hidden;
 }
-/* line 195, ../../../compass/sass/partials/_home.scss */
+/* line 196, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-action-div .input-section-div .form-entry {
   display: inline;
   float: left;
@@ -392,7 +392,7 @@ a img {
   overflow-x: hidden;
 }
 
-/* line 204, ../../../compass/sass/partials/_home.scss */
+/* line 205, ../../../compass/sass/partials/_home.scss */
 #limit-by-section {
   display: inline;
   float: left;
@@ -404,16 +404,16 @@ a img {
 * html #limit-by-section {
   overflow-x: hidden;
 }
-/* line 207, ../../../compass/sass/partials/_home.scss */
+/* line 208, ../../../compass/sass/partials/_home.scss */
 #limit-by-section #limit-by-header {
   background-color: #639054;
   margin: 0px;
 }
-/* line 210, ../../../compass/sass/partials/_home.scss */
+/* line 211, ../../../compass/sass/partials/_home.scss */
 #limit-by-section #limit-by-header button {
   vertical-align: middle;
 }
-/* line 213, ../../../compass/sass/partials/_home.scss */
+/* line 214, ../../../compass/sass/partials/_home.scss */
 #limit-by-section #limit-by-header h5 {
   display: inline-block;
   padding: 0px;
@@ -422,12 +422,12 @@ a img {
   margin-bottom: 0px;
   margin-top: 1px;
 }
-/* line 222, ../../../compass/sass/partials/_home.scss */
+/* line 223, ../../../compass/sass/partials/_home.scss */
 #limit-by-section #filtered-search-limits {
   padding-left: 40px;
   padding-bottom: 0px;
 }
-/* line 226, ../../../compass/sass/partials/_home.scss */
+/* line 227, ../../../compass/sass/partials/_home.scss */
 #limit-by-section .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -441,7 +441,7 @@ a img {
 #limit-by-section #source-field-input .select2-container, #limit-by-section #instrumentation-field-input .select2-container {
   width: 600px;
 }
-/* line 235, ../../../compass/sass/partials/_home.scss */
+/* line 236, ../../../compass/sass/partials/_home.scss */
 #limit-by-section #method-type-input {
   display: inline;
   float: left;
@@ -454,7 +454,7 @@ a img {
   overflow-x: hidden;
 }
 
-/* line 242, ../../../compass/sass/partials/_home.scss */
+/* line 243, ../../../compass/sass/partials/_home.scss */
 #results-table {
   position: absolute;
   left: 0;

@@ -79,11 +79,12 @@
 	padding-bottom: 10px;
 }
 
-#analyte-search-div {					
+#analyte-search-div, #microbiological-search-div, #physical-search-div, #regulatory-search-div{					
 	.form-entry label {
 		@include form-entry-label(130px);
 	}
-	#analyte-name-input, #analyte-code-input {
+	
+	.analyte-name-input, .analyte-code-input {
 		@include select2-width(500px);
 		
 		div {
@@ -91,7 +92,7 @@
 			padding-left: 5px;
 		}
 	}
-	#analyte-kind-separator {
+	.analyte-kind-separator {
 		color : $nemi-section-header-color;
 		label {
 			text-align: center;

@@ -185,26 +185,9 @@
 			setInitialCheckedState(divToShow.find('input[type="checkbox"]'), setToDefault)
 		}
 		
-		function validateAnalyteField(textEl /* text field */, fieldKind /* String */) {
-			/* Validate the analyte field and return the validated string */
-			var result = $.trim(textEl.val());
-			var valuesList = result.split('\n');
-			if (activeCategory() === 'regulatory') {
-				if (valuesList.length > 1) {
-					alert('You can only enter one analyte ' + fieldKind + '.');
-					result = valuesList[0];
-				}
-			}
-			else {
-				if (valuesList.length > 3) {
-					alert('You can only enter three analyte ' + fieldKind + 's.');
-					result = valuesList.slice(0,3).join('\n');
-				}
-			}
-			return result;
-		}
-		
 		function activeCategory() {
+			var div = $('#filter-action>div:visible');
+			var cat = div.find('input[name="category"]');
 			return $('#filter-action>div:visible').find('input[name="category"]').val();
 		}
 		
@@ -218,15 +201,6 @@
 			return $.inArray(activeCategory(), ['', 'chemical']) !== -1;
 		}
 		
-		function setActionDivState(buttonEl) {
-			/* Set the category and subcategory inputs in buttonEl's associated actionDiv */
-			var category = buttonEl.data('category');
-			var subcategory = buttonEl.data('subcategory');
-			var actionDiv = buttonEl.data('actionDivId');
-			
-			actionDiv.find('input:hidden[name="category"]').val(category);
-			actionDiv.find('input:hidden[name="subcategory"]').val(subcategory);						
-		}
 		function setLimitBySelectSensitivity() {
 			/*
 			Set the sensitivity of the select elements in the limit by filtered search section for the section
@@ -243,9 +217,10 @@
 		function setFilteredSearchButtonState() {
 			var searchBtn = $('#filtered-action-div .search-button');
 			var activeDiv = $('#filter-action>div:visible');
+			var activeDivId = activeDiv.attr('id');
 			var category = activeDiv.find('input[name="category"]').val();
-			if (((activeDiv.attr('id') == 'analyte-search-div') && (category == '')) || (category == 'regulatory')){
-				Utils.setEnabled(searchBtn, (AnalyteSelect.kindEl.name.val() || AnalyteSelect.kindEl.code.val()));
+			if ((activeDivId === 'analyte-search-div') || (activeDivId === 'regulatory-search-div')) {
+				Utils.setEnabled(searchBtn, (activeDiv.find('input[name="analyte_name"]').val() || activeDiv.find('input[name="analyte_code"]').val()));
 			}
 			else {
 				Utils.setEnabled(searchBtn, true);
@@ -284,13 +259,31 @@
 				allowClear: true,
 			});
 			
-			AnalyteSelect.init(
-					'analyte-name-select', 
-					'analyte-code-select', 
-					$('#analyte-search-div input[name="category"]'),
-					$('#analyte-search-div input[name="subcategory"]'),
-					'{% url "methods-analyte_select" %}', 
-					setFilteredSearchButtonState);
+			// Initialize analyte name/code selection menus
+			AnalyteSelect.init($('#analyte-search-div'), {
+				dynamic: true,
+				searchUrl: '{% url "methods-analyte_select" %}',
+				maxSelectionSize: 3,
+				setSearchButtonState: setFilteredSearchButtonState,
+			});
+			AnalyteSelect.init($('#microbiological-search-div'), {
+				dynamic: false,
+				searchUrl: '{% url "methods-analyte_select" %}',
+				maxSelectionSize: 3,
+				setSearchButtonState: setFilteredSearchButtonState
+			});
+			AnalyteSelect.init($('#physical-search-div'), {
+				dynamic: false,
+				searchUrl: '{% url "methods-analyte_select" %}',
+				maxSelectionSize: 3,
+				setSearchButtonState: setFilteredSearchButtonState
+			});
+			AnalyteSelect.init($('#regulatory-search-div'),{
+				dynamic : true,
+				searchUrl: '{% url "methods-analyte_select" %}',
+				maxSelectionSize: 1,
+				setSearchButtonState: setFilteredSearchButtonState
+			});
 			
 			// Add change handler to save state of inputs with class static-field 
 			$('.static-field').change(function() {
@@ -328,45 +321,34 @@
 			$('#analytes-search-button').data('actionDivId', $('#analyte-search-div'));
 			$('#analytes-search-button').data('headerId', $('#analytes-header'));
 			$('#analytes-search-button').data('actionUrl', '{% url "methods-analyte_results" %}');
-			$('#analytes-search-button').data('category', '');
 			
 			$('#chemical-search-button').data('actionDivId', $('#chemical-search-div'));
 			$('#chemical-search-button').data('headerId', $('#chemical-header'));
 			$('#chemical-search-button').data('actionUrl', '{% url "methods-results" %}');
-			$('#chemical-search-button').data('category', 'chemical');
 			
-			$('#microbiological-search-button').data('actionDivId', $('#analyte-search-div'));
+			$('#microbiological-search-button').data('actionDivId', $('#microbiological-search-div'));
 			$('#microbiological-search-button').data('headerId', $('#microbiological-header'));
 			$('#microbiological-search-button').data('actionUrl', '{% url "methods-analyte_results" %}');
-			$('#microbiological-search-button').data('category', 'biological');
-			$('#microbiological-search-button').data('subcategory', 'Microbiological');
 			
 			$('#community-search-button').data('actionDivId', $('#community-search-div'));
 			$('#community-search-button').data('headerId', $('#community-header'));
 			$('#community-search-button').data('actionUrl', '{% url "methods-analyte_results" %}');
-			$('#community-search-button').data('category', 'biological');
-			$('#community-search-button').data('subcategory', 'Population/Community');
 			
 			$('#toxicity-search-button').data('actionDivId', $('#toxicity-search-div'));
 			$('#toxicity-search-button').data('headerId', $('#toxicity-header'));
 			$('#toxicity-search-button').data('actionUrl', '{% url "methods-results" %}');
-			$('#toxicity-search-button').data('category', 'toxicity assay');
 			
-			$('#physical-search-button').data('actionDivId', $('#analyte-search-div'));
+			$('#physical-search-button').data('actionDivId', $('#physical-search-div'));
 			$('#physical-search-button').data('headerId', $('#physical-header'));
 			$('#physical-search-button').data('actionUrl', '{% url "methods-analyte_results" %}');
-			$('#physical-search-button').data('category', 'physical');
 			
 			$('#statistical-search-button').data('actionDivId', $('#statistical-search-div'));
 			$('#statistical-search-button').data('headerId', $('#statistical-header'));
 			$('#statistical-search-button').data('actionUrl', '{% url "methods-statistical_results" %}');
-			$('#statistical-search-button').data('category', 'statistical');
 			
-			$('#regulatory-search-button').data('actionDivId', $('#analyte-search-div'));
+			$('#regulatory-search-button').data('actionDivId', $('#regulatory-search-div'));
 			$('#regulatory-search-button').data('headerId', $('#regulatory-header'));
-			$('#regulatory-search-button').data('actionUrl', '{% url "methods-regulatory_results" %}');
-			$('#regulatory-search-button').data('category', 'regulatory');
-			
+			$('#regulatory-search-button').data('actionUrl', '{% url "methods-regulatory_results" %}');			
 						
 			// Add click handlers for subcategory buttons 
 			$('.subcategory-button').click(function() {
@@ -383,7 +365,6 @@
 				
 				// If this is a filtered search subcategory then we also need to update the Limit by section.
 				if ($(this).parents('#filtered-selection-div')) {
-					setActionDivState($(this));
 					setLimitBySelectSensitivity();
 					
 					// Attach the appropriate action to the limit by form
@@ -459,7 +440,6 @@
 			if (sessionStorage['filtered-selection-div']) {
 				var buttonEl = $('#' + sessionStorage['filtered-selection-div']);
 				showSearchSubcategory(buttonEl, false);
-				setActionDivState(buttonEl);
 				// Attach the appropriate action to the limit by form
 				$('#filtered-search-limits form').attr('action', buttonEl.data('actionUrl'));
 				setLimitBySelectSensitivity();
@@ -486,7 +466,7 @@ and protocols for all stages of the monitoring process.
         <div class="section-header-banner-div">
             <h4>&nbsp;</h4>
         </div>
-    	<h4>GENERAL SEARCH</h3>
+    	<h4>GENERAL SEARCH</h4>
 		<div id="general-subcategory-div>" class="subcategory-div">
 			<div id="general-selection-div" class="subcategory-selection-div">
 				<ul>
@@ -516,9 +496,9 @@ and protocols for all stages of the monitoring process.
             	</div>		
             	<div id="browse-methods-div" class="input-section-div" style="display: none;">
             		<form action="{% url 'methods-browse' %}" method="get">
-                        <label>Browse the entire database:&nbsp<span id="browse-count-span"></span></label>
+                        <label>Browse the entire database:<span id="browse-count-span"></span></label>
 	            		<div class="search-button-div">
-	            			<input class="search-button" type="submit" value="BROWSE"/>
+	            			<input class="search-button" type="submit" value="BROWSE" />
 	            		</div>
 	            	</form>
             	</div>				
@@ -574,23 +554,75 @@ and protocols for all stages of the monitoring process.
 					<div id="filter-action">
 						<div id="analyte-search-div" class="input-section-div">
 							<form>
-                                <div class="form-entry" id="analyte-name-input">
+                                <div class="form-entry analyte-name-input">
                                     <label id="analyte-name-select-label" for="analyte-name-select">Analyte name(s):</label>
                                     <input type="hidden" class="filter-multiselect" id="analyte-name-select" name="analyte_name" />
                                 </div>
-                                <div id="analyte-kind-separator" class="form-entry">
+                                <div class="form-entry analyte-kind-separator">
                                     <label>OR</label>
                                     <span>&nbsp;</span>                                                                    
                                 </div>
-                                <div class="form-entry" id="analyte-code-input">
+                                <div class="form-entry analyte-code-input">
                                     <label id="analyte-code-select-label" for="analyte-code-select">Analyte code(s):</label>
                                     <input type="hidden" class="filter-multiselect" id="analyte-code-select" name="analyte_code" />
                                 </div>
-								
-								<input type="hidden" name="category" value=""/>
-								<input type="hidden" name="subcategory" value="" />
+                                <input type="hidden" name="category" value=""/>
 							</form>
 						</div>
+                        <div id="microbiological-search-div" class="input-section-div" style="display: none;">
+                            <form>
+                                <div class="form-entry analyte-name-input">
+                                    <label id="microbiological-analyte-name-select-label" for="microbiological-analyte-name-select">Analyte name(s):</label>
+                                    <input type="hidden" class="filter-multiselect" id="microbiological-analyte-name-select" name="analyte_name" />
+                                </div>
+                                <div class="form-entry analyte-kind-separator">
+                                    <label>OR</label>
+                                    <span>&nbsp;</span>                                                                    
+                                </div>
+                                <div class="form-entry analyte-code-input">
+                                    <label id="microbiological-analyte-code-select-label" for="microbiological-analyte-code-select">Analyte code(s):</label>
+                                    <input type="hidden" class="filter-multiselect" id="microbiological-analyte-code-select" name="analyte_code" />
+                                </div>
+                                
+                                <input type="hidden" name="category" value="biological"/>
+                                <input type="hidden" name="subcategory" value="Microbiological" />
+                            </form>
+                        </div>
+                        <div id="physical-search-div" class="input-section-div" style="display: none;">
+                            <form>
+                                <div class="form-entry analyte-name-input">
+                                    <label id="physical-analyte-name-select-label"for="physical-analyte-name-select">Analyte name(s):</label>
+                                    <input type="hidden" class="filter-multiselect" id="physical-analyte-name-select" name="analyte_name" />
+                                </div>
+                                <div class="form-entry analyte-kind-separator">
+                                    <label>OR</label>
+                                    <span>&nbsp;</span>                                                                    
+                                </div>
+                                <div class="form-entry analyte-code-input">
+                                    <label id="physical-analyte-code-select-label" for="physical-analyte-code-select">Analyte code(s):</label>
+                                    <input type="hidden" class="filter-multiselect" id="physical-analyte-code-select" name="analyte_code" />
+                                </div>
+                                
+                                <input type="hidden" name="category" value="physical"/>
+                            </form>
+                        </div>
+                        <div id="regulatory-search-div" class="input-section-div" style="display: none;">
+                            <form>
+                                <div class="form-entry analyte-name-input">
+                                    <label id="regulatory-analyte-name-select-label" for="regulatory-analyte-name-select">Analyte name(s):</label>
+                                    <input type="hidden" class="filter-select" id="regulatory-analyte-name-select" name="analyte_name" />
+                                </div>
+                                <div class="form-entry analyte-kind-separator">
+                                    <label>OR</label>
+                                    <span>&nbsp;</span>                                                                    
+                                </div>
+                                <div class="form-entry analyte-code-input">
+                                    <label id="regulatory-analyte-code-select-label" for="regulatory-analyte-code-select">Analyte code(s):</label>
+                                    <input type="hidden" class="filter-select" id="regulatory-analyte-code-select" name="analyte_code" />
+                                </div>
+                                <input type="hidden" name="category" value="regulatory"/>
+                             </form>
+                        </div>
 						<div id="chemical-search-div" class="input-section-div" style="display: none;">
 							<form>
 								<div class="form-entry">
@@ -598,7 +630,7 @@ and protocols for all stages of the monitoring process.
 									<ul id="chemical-subcategory-selections" >
 									</ul>
 								</div>
-								<input type="hidden" name="category" value="Chemical"/>
+								<input type="hidden" name="category" value="chemical"/>
 							</form>					
 						</div>
 						<div id="community-search-div" class="input-section-div" style="display: none;">
@@ -629,8 +661,8 @@ and protocols for all stages of the monitoring process.
                                     <label for="gear-type-field">Gear type:</label>
                                     <input type="hidden" class="filter-select" id="gear-type-field" name="gear_type" />
                                 </div>
-								<input type="hidden" name="category" value="Biological"/>
-								<input type="hidden" name="subcategory" value="population/community" />
+                                <input type="hidden" name="category" value="biological"/>
+                                <input type="hidden" name="subcategory" value="population/community" />
 							</form>
 						</div>
 						<div id="toxicity-search-div" class="input-section-div" style="display: none;">
@@ -649,7 +681,7 @@ and protocols for all stages of the monitoring process.
                                      </select>
                                 </div>
 								
-								<input type="hidden" name="category" value="Toxicity Assay"/>
+								<input type="hidden" name="category" value="toxicity assay"/>
 							</form>
 						</div>
 						<div id="statistical-search-div" class="input-section-div" style="display: none;">
@@ -663,7 +695,7 @@ and protocols for all stages of the monitoring process.
                                     <input type="hidden" class="filter-select" id="study_objective" name="study_objective" />
                                 </div>
                                 <div class="form-entry" id="item-type-input">
-                                    <label for="item_type">Item type:</label></th>
+                                    <label for="item_type">Item type:</label>
                                     <input type="hidden" class="filter-select" id="item_type" name="item_type" />
                                 </div>
                                 <div class="form-entry" id="complexity-input">
@@ -691,7 +723,7 @@ and protocols for all stages of the monitoring process.
                                     <label for="special_topic">Special topic:</label>
                                     <input type="hidden" class="filter-select" id="special_topic" name="special_topic" />
                                 </div>
-								<input type="hidden" name="category" value="Statistical"/>
+                                <input type="hidden" name="category" value="statistical"/>
 							</form>
 						</div>
 					</div>
