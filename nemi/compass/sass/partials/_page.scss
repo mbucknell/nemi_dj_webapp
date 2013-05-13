@@ -63,65 +63,39 @@ body {
 	 margin-top: 2px;
 	 overflow: visible;
 	 #header {
- 	 	 @include column(12);
+ 	 	 @include column(20);
 	 	 @include main-box-shadow; 
 	 	 padding: 0px;
 	 	 #banner {
 	 	 	padding: 0px;
 	 	 	margin: 0px;
-	 	 	width: column(12);
+	 	 	width: column(20);
 	 	 	height: 140px;
 	 	 }
 		 #page-header {
-		 	@include column(12);
+		 	@include column(20, true);
 			padding: 0px;
 			margin: 0px;
-			#page-info {
-				margin: 0px;
-				@include column(7);
-				background-color: $nemi-info-color;
-				height: 120px;
-				font-weight: bold;
-			}
+			background-color: $nemi-info-color;
+			
 			#header-links {
-				@include column(2);
-			  	background-color: $nemi-info-color;
-				height: 120px;
+				float: right;
 				ul {
-					@include no-style-or-margin-list;
-			        text-align: right;
-				}		  	
-			  	a {
-			  		@include link-colors(white, white, white, white, white);
-			  	}
-			}
-			#whats-new-div {
-				@include column(3, true);
-				background-color : $nemi-content-color;
-				padding: 0px;
-				height : 120px;
-				font-size: 12px;
-							
-				#news-feed-title {
-					background-color: $nemi-newsfeed-title-color;
-					color: $nemi-newsfeed-title-text-color;
-					font-style: italic;
-					height: 23px;
-					padding-top: 3px;
+					@include horizontal-list(20px, right);
 				}
-				#news-feed {
-					overflow: auto;
-					height: 97px;
-				}
-			}
+				a {
+  					text-decoration: none;
+  					@include link-colors(white, #51514E, #51514E, white, white);
+  				}
+			}		  	
 		}
 	}
 	#page-content {
-		@include column(12);
+		@include column(20);
 		padding: 0px;
 	}
 	#page-footer {
-		@include column(12);
+		@include column(20);
 		background-color: $nemi-footer-color;
 		@include main-box-shadow;		
 		h6 {
@@ -135,16 +109,16 @@ body {
 			@include link-colors ($nemi-footer-link-color, $nemi-footer-link-color, $nemi-footer-link-color, $nemi-footer-link-color);	 	
 		}
 		#footer-who {
-			@include column(2);
+			@include column(4);
 		}
 		#footer-workgroups {
-			@include column(2);
+			@include column(4);
 		}
 		#footer-legal {
-			@include column(2);
+			@include column(4);
 		}
 		#footer-for-members {
-			@include column(2);
+			@include column(4);
 		}		
 	}
 	}

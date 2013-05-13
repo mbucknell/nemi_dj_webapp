@@ -13,7 +13,9 @@ from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, FormView
 
-from forms import NEMIUserCreationForm
+from newsfeed.views import RecentNewsMixin
+
+from .forms import NEMIUserCreationForm
 
 class CreateUserView(CreateView):
     ''' Extends CreateView using the NEMIUserCreationForm to create a user who can create and edit NEMI methods.
@@ -67,6 +69,9 @@ class PasswordChangeView(FormView):
     def form_valid(self, form):
         form.save()
         return super(PasswordChangeView, self).form_valid(form)
+    
+class HomeView(RecentNewsMixin, TemplateView):
+    template_name = 'home.html'
     
 class MethodEntryView(TemplateView):
     template_name = 'method_entry.html'

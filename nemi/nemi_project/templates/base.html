@@ -47,32 +47,18 @@
     				<a href="{% url 'home' %}"><img src="{{ STATIC_URL }}images/NEMI_header.png" alt="NEMI Logo"></img></a>
     			</div>
                 <div id="page-header">
-                    <div id="page-info">
-                        {% block page_info %}
-                        {% endblock %}
-                    </div>
-                    {% block header_links %}
-                        <div id="header-links">
-                            <ul>
-                                <li><a href="{% url 'about' %}">About NEMI</a></li>
-                                <li><a href="{% url 'glossary' %}">Glossary</a></li>
-                                <li><a href="{% url 'faqs' %}">FAQ</a></li>
-                            </ul>
-                        </div>
-                    {% endblock %} 
-        			{% block whats_new %}
-        				<div id="whats-new-div">
-        					<div id="news-feed-title">
-        						<span>What's new with NEMI</span>
-        					</div>
-        					<div id="news-feed">
-        						{% for item in news_items %}
-        							{{ item.headline|safe }}
-        						{% endfor %}
-        					</div>
-        				</div>
-        		    {% endblock %}
-    			</div>
+                    {% block page_header %}
+                        {% block header_links %}
+                            <div id="header-links">
+                                <ul>
+                                    <li><a href="{% url 'faqs' %}">FAQ</a></li>
+                                    <li><a href="{% url 'glossary' %}">Glossary</a></li>
+                                    <li><a href="{% url 'about' %}">About NEMI</a></li>
+                                </ul>
+                            </div>
+                        {% endblock %} 
+                    {% endblock %}
+                </div>
             </div>
 		{% endblock %}
 		

@@ -116,7 +116,7 @@ a img {
   display: inline;
   float: left;
   margin-right: 0;
-  width: 916.66667px;
+  width: 880px;
   padding-top: 10px;
   padding-bottom: 10px;
   text-align: center;
@@ -126,13 +126,120 @@ a img {
   overflow-x: hidden;
 }
 
-/* line 45, ../../../compass/sass/partials/_home.scss */
+/* line 46, ../../../compass/sass/partials/_home.scss */
+#page-info {
+  margin: 0px;
+  display: inline;
+  float: left;
+  margin-right: 0px;
+  width: 660px;
+  height: 120px;
+  font-weight: bold;
+}
+/* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
+* html #page-info {
+  overflow-x: hidden;
+}
+
+/* line 52, ../../../compass/sass/partials/_home.scss */
+#home-header-links {
+  display: inline;
+  float: left;
+  margin-right: 0px;
+  width: 165px;
+  height: 120px;
+}
+/* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
+* html #home-header-links {
+  overflow-x: hidden;
+}
+/* line 55, ../../../compass/sass/partials/_home.scss */
+#home-header-links ul {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  text-align: right;
+}
+/* line 11, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/lists/_bullets.scss */
+#home-header-links ul li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0;
+}
+/* line 59, ../../../compass/sass/partials/_home.scss */
+#home-header-links a {
+  text-decoration: none;
+  color: white;
+}
+/* line 18, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/links/_link-colors.scss */
+#home-header-links a:visited {
+  color: white;
+}
+/* line 21, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/links/_link-colors.scss */
+#home-header-links a:focus {
+  color: white;
+}
+/* line 24, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/links/_link-colors.scss */
+#home-header-links a:hover {
+  color: #51514e;
+}
+/* line 27, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/links/_link-colors.scss */
+#home-header-links a:active {
+  color: #51514e;
+}
+
+/* line 64, ../../../compass/sass/partials/_home.scss */
+#whats-new-div {
+  display: inline;
+  float: left;
+  margin-right: 0;
+  width: 275px;
+  background-color: #d3e0c6;
+  padding: 0px;
+  height: 120px;
+  font-size: 12px;
+}
+/* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
+* html #whats-new-div {
+  overflow-x: hidden;
+}
+/* line 71, ../../../compass/sass/partials/_home.scss */
+#whats-new-div #news-feed-title {
+  display: inline;
+  float: left;
+  margin-right: 0;
+  width: 275px;
+  background-color: #51514e;
+  color: #80be72;
+  font-style: italic;
+  height: 23px;
+  padding-top: 3px;
+}
+/* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
+* html #whats-new-div #news-feed-title {
+  overflow-x: hidden;
+}
+/* line 79, ../../../compass/sass/partials/_home.scss */
+#whats-new-div #news-feed {
+  display: inline;
+  float: left;
+  margin-right: 0;
+  width: 275px;
+  overflow: auto;
+  height: 97px;
+}
+/* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
+* html #whats-new-div #news-feed {
+  overflow-x: hidden;
+}
+
+/* line 85, ../../../compass/sass/partials/_home.scss */
 #filter-specific-div {
   background-color: #d3e0c6;
   display: inline;
   float: left;
   margin-right: 0;
-  width: 916.66667px;
+  width: 880px;
   padding: 0px;
   margin: 0px;
 }
@@ -140,12 +247,12 @@ a img {
 * html #filter-specific-div {
   overflow-x: hidden;
 }
-/* line 51, ../../../compass/sass/partials/_home.scss */
+/* line 91, ../../../compass/sass/partials/_home.scss */
 #filter-specific-div #filter-header {
   display: inline;
   float: left;
   margin-right: 0;
-  width: 916.66667px;
+  width: 880px;
   padding-top: 4px;
   padding-bottom: 4px;
   margin: 0px;
@@ -154,19 +261,19 @@ a img {
 * html #filter-specific-div #filter-header {
   overflow-x: hidden;
 }
-/* line 56, ../../../compass/sass/partials/_home.scss */
+/* line 96, ../../../compass/sass/partials/_home.scss */
 #filter-specific-div #filter-header div {
   border-bottom: solid 2px #639054;
   font-weight: bold;
   padding-left: 4px;
   padding-right: 4px;
 }
-/* line 63, ../../../compass/sass/partials/_home.scss */
+/* line 103, ../../../compass/sass/partials/_home.scss */
 #filter-specific-div #filter-action {
   display: inline;
   float: left;
   margin-right: 0;
-  width: 916.66667px;
+  width: 880px;
   padding: 0px;
   padding-left: 4px;
   margin: 0px;
@@ -175,22 +282,22 @@ a img {
 * html #filter-specific-div #filter-action {
   overflow-x: hidden;
 }
-/* line 69, ../../../compass/sass/partials/_home.scss */
+/* line 109, ../../../compass/sass/partials/_home.scss */
 #filter-specific-div #filter-action .input-section-div > div {
   padding-left: 0px;
 }
 
-/* line 74, ../../../compass/sass/partials/_home.scss */
+/* line 114, ../../../compass/sass/partials/_home.scss */
 #general-action-div {
   padding-top: 10px;
   padding-bottom: 10px;
 }
-/* line 75, ../../../compass/sass/partials/_home.scss */
+/* line 115, ../../../compass/sass/partials/_home.scss */
 #general-action-div label {
   padding-left: 4px;
 }
 
-/* line 83, ../../../compass/sass/partials/_home.scss */
+/* line 123, ../../../compass/sass/partials/_home.scss */
 #analyte-search-div .form-entry label, #microbiological-search-div .form-entry label, #physical-search-div .form-entry label, #regulatory-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -200,21 +307,21 @@ a img {
 #analyte-search-div .analyte-name-input .select2-container, #analyte-search-div .analyte-code-input .select2-container, #microbiological-search-div .analyte-name-input .select2-container, #microbiological-search-div .analyte-code-input .select2-container, #physical-search-div .analyte-name-input .select2-container, #physical-search-div .analyte-code-input .select2-container, #regulatory-search-div .analyte-name-input .select2-container, #regulatory-search-div .analyte-code-input .select2-container {
   width: 500px;
 }
-/* line 90, ../../../compass/sass/partials/_home.scss */
+/* line 130, ../../../compass/sass/partials/_home.scss */
 #analyte-search-div .analyte-name-input div, #analyte-search-div .analyte-code-input div, #microbiological-search-div .analyte-name-input div, #microbiological-search-div .analyte-code-input div, #physical-search-div .analyte-name-input div, #physical-search-div .analyte-code-input div, #regulatory-search-div .analyte-name-input div, #regulatory-search-div .analyte-code-input div {
   padding: 2px;
   padding-left: 5px;
 }
-/* line 95, ../../../compass/sass/partials/_home.scss */
+/* line 135, ../../../compass/sass/partials/_home.scss */
 #analyte-search-div .analyte-kind-separator, #microbiological-search-div .analyte-kind-separator, #physical-search-div .analyte-kind-separator, #regulatory-search-div .analyte-kind-separator {
   color: #639054;
 }
-/* line 97, ../../../compass/sass/partials/_home.scss */
+/* line 137, ../../../compass/sass/partials/_home.scss */
 #analyte-search-div .analyte-kind-separator label, #microbiological-search-div .analyte-kind-separator label, #physical-search-div .analyte-kind-separator label, #regulatory-search-div .analyte-kind-separator label {
   text-align: center;
 }
 
-/* line 104, ../../../compass/sass/partials/_home.scss */
+/* line 144, ../../../compass/sass/partials/_home.scss */
 #community-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -229,7 +336,7 @@ a img {
   width: 300px;
 }
 
-/* line 115, ../../../compass/sass/partials/_home.scss */
+/* line 155, ../../../compass/sass/partials/_home.scss */
 #toxicity-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -240,7 +347,7 @@ a img {
   width: 150px;
 }
 
-/* line 124, ../../../compass/sass/partials/_home.scss */
+/* line 164, ../../../compass/sass/partials/_home.scss */
 #statistical-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -267,12 +374,12 @@ a img {
   width: 450px;
 }
 
-/* line 144, ../../../compass/sass/partials/_home.scss */
+/* line 184, ../../../compass/sass/partials/_home.scss */
 .section-div {
   display: inline;
   float: left;
   margin-right: 0px;
-  width: 1100px;
+  width: 660px;
   margin-top: 15px;
   padding: 0px;
 }
@@ -280,7 +387,7 @@ a img {
 * html .section-div {
   overflow-x: hidden;
 }
-/* line 149, ../../../compass/sass/partials/_home.scss */
+/* line 189, ../../../compass/sass/partials/_home.scss */
 .section-div .section-header-banner-div {
   position: absolute;
   left: 0;
@@ -289,7 +396,7 @@ a img {
   z-index: -1;
   padding: 0px;
 }
-/* line 155, ../../../compass/sass/partials/_home.scss */
+/* line 195, ../../../compass/sass/partials/_home.scss */
 .section-div h4 {
   padding: 5px;
   padding-left: 3px;
@@ -298,12 +405,12 @@ a img {
   margin-bottom: 0px;
   margin-top: 1px;
 }
-/* line 163, ../../../compass/sass/partials/_home.scss */
+/* line 203, ../../../compass/sass/partials/_home.scss */
 .section-div .header {
   padding-left: 0px;
   font-weight: bold;
 }
-/* line 168, ../../../compass/sass/partials/_home.scss */
+/* line 208, ../../../compass/sass/partials/_home.scss */
 .section-div ul {
   list-style: none;
   margin-bottom: 0px;
@@ -314,7 +421,7 @@ a img {
   list-style-type: none;
   margin-left: 0;
 }
-/* line 173, ../../../compass/sass/partials/_home.scss */
+/* line 213, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div {
   display: inline;
   float: left;
@@ -327,12 +434,12 @@ a img {
 * html .section-div .subcategory-div {
   overflow-x: hidden;
 }
-/* line 177, ../../../compass/sass/partials/_home.scss */
+/* line 217, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-selection-div {
   display: inline;
   float: left;
   margin-right: 0px;
-  width: 183.33333px;
+  width: 220px;
   margin: 0px;
   padding: 0px;
 }
@@ -340,7 +447,7 @@ a img {
 * html .section-div .subcategory-div .subcategory-selection-div {
   overflow-x: hidden;
 }
-/* line 182, ../../../compass/sass/partials/_home.scss */
+/* line 222, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-selection-div ul {
   list-style: none;
   padding: 0px;
@@ -352,12 +459,12 @@ a img {
   list-style-type: none;
   margin-left: 0;
 }
-/* line 187, ../../../compass/sass/partials/_home.scss */
+/* line 227, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-action-div {
   display: inline;
   float: left;
   margin-right: 0;
-  width: 916.66667px;
+  width: 880px;
   background-color: #d3e0c6;
   padding: 0px;
   -webkit-box-shadow: 2px 2px 5px #333333;
@@ -368,23 +475,23 @@ a img {
 * html .section-div .subcategory-div .subcategory-action-div {
   overflow-x: hidden;
 }
-/* line 193, ../../../compass/sass/partials/_home.scss */
+/* line 233, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-action-div .input-section-div {
   display: inline;
   float: left;
   margin-right: 0;
-  width: 916.66667px;
+  width: 880px;
 }
 /* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
 * html .section-div .subcategory-div .subcategory-action-div .input-section-div {
   overflow-x: hidden;
 }
-/* line 196, ../../../compass/sass/partials/_home.scss */
+/* line 236, ../../../compass/sass/partials/_home.scss */
 .section-div .subcategory-div .subcategory-action-div .input-section-div .form-entry {
   display: inline;
   float: left;
   margin-right: 0;
-  width: 916.66667px;
+  width: 880px;
   padding: 2px;
 }
 /* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
@@ -392,28 +499,28 @@ a img {
   overflow-x: hidden;
 }
 
-/* line 205, ../../../compass/sass/partials/_home.scss */
+/* line 245, ../../../compass/sass/partials/_home.scss */
 #limit-by-section {
   display: inline;
   float: left;
   margin-right: 0;
-  width: 916.66667px;
+  width: 550px;
   padding-bottom: 0px;
 }
 /* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
 * html #limit-by-section {
   overflow-x: hidden;
 }
-/* line 208, ../../../compass/sass/partials/_home.scss */
+/* line 248, ../../../compass/sass/partials/_home.scss */
 #limit-by-section #limit-by-header {
   background-color: #639054;
   margin: 0px;
 }
-/* line 211, ../../../compass/sass/partials/_home.scss */
+/* line 251, ../../../compass/sass/partials/_home.scss */
 #limit-by-section #limit-by-header button {
   vertical-align: middle;
 }
-/* line 214, ../../../compass/sass/partials/_home.scss */
+/* line 254, ../../../compass/sass/partials/_home.scss */
 #limit-by-section #limit-by-header h5 {
   display: inline-block;
   padding: 0px;
@@ -422,12 +529,12 @@ a img {
   margin-bottom: 0px;
   margin-top: 1px;
 }
-/* line 223, ../../../compass/sass/partials/_home.scss */
+/* line 263, ../../../compass/sass/partials/_home.scss */
 #limit-by-section #filtered-search-limits {
   padding-left: 40px;
   padding-bottom: 0px;
 }
-/* line 227, ../../../compass/sass/partials/_home.scss */
+/* line 267, ../../../compass/sass/partials/_home.scss */
 #limit-by-section .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -441,12 +548,12 @@ a img {
 #limit-by-section #source-field-input .select2-container, #limit-by-section #instrumentation-field-input .select2-container {
   width: 600px;
 }
-/* line 236, ../../../compass/sass/partials/_home.scss */
+/* line 276, ../../../compass/sass/partials/_home.scss */
 #limit-by-section #method-type-input {
   display: inline;
   float: left;
   margin-right: 0;
-  width: 916.66667px;
+  width: 880px;
   padding: 2px;
 }
 /* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
@@ -454,7 +561,7 @@ a img {
   overflow-x: hidden;
 }
 
-/* line 243, ../../../compass/sass/partials/_home.scss */
+/* line 283, ../../../compass/sass/partials/_home.scss */
 #results-table {
   position: absolute;
   left: 0;
@@ -710,11 +817,11 @@ body .bottom {
 }
 /* line 25, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_debug.scss */
 body .showgrid {
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(5%, rgba(0, 0, 0, 0.5)), color-stop(5%, rgba(0, 0, 0, 0))), -webkit-gradient(linear, 0% 50%, 1100 50%, color-stop(0%, rgba(0, 0, 0, 0)), color-stop(0%, rgba(100, 100, 225, 0.25)), color-stop(8.33333%, rgba(100, 100, 225, 0.25)), color-stop(8.33333%, rgba(0, 0, 0, 0)), color-stop(8.33333%, rgba(0, 0, 0, 0)), color-stop(8.33333%, rgba(100, 100, 225, 0.25)), color-stop(16.66667%, rgba(100, 100, 225, 0.25)), color-stop(16.66667%, rgba(0, 0, 0, 0)), color-stop(16.66667%, rgba(0, 0, 0, 0)), color-stop(16.66667%, rgba(100, 100, 225, 0.25)), color-stop(25%, rgba(100, 100, 225, 0.25)), color-stop(25%, rgba(0, 0, 0, 0)), color-stop(25%, rgba(0, 0, 0, 0)), color-stop(25%, rgba(100, 100, 225, 0.25)), color-stop(33.33333%, rgba(100, 100, 225, 0.25)), color-stop(33.33333%, rgba(0, 0, 0, 0)), color-stop(33.33333%, rgba(0, 0, 0, 0)), color-stop(33.33333%, rgba(100, 100, 225, 0.25)), color-stop(41.66667%, rgba(100, 100, 225, 0.25)), color-stop(41.66667%, rgba(0, 0, 0, 0)), color-stop(41.66667%, rgba(0, 0, 0, 0)), color-stop(41.66667%, rgba(100, 100, 225, 0.25)), color-stop(50%, rgba(100, 100, 225, 0.25)), color-stop(50%, rgba(0, 0, 0, 0)), color-stop(50%, rgba(0, 0, 0, 0)), color-stop(50%, rgba(100, 100, 225, 0.25)), color-stop(58.33333%, rgba(100, 100, 225, 0.25)), color-stop(58.33333%, rgba(0, 0, 0, 0)), color-stop(58.33333%, rgba(0, 0, 0, 0)), color-stop(58.33333%, rgba(100, 100, 225, 0.25)), color-stop(66.66667%, rgba(100, 100, 225, 0.25)), color-stop(66.66667%, rgba(0, 0, 0, 0)), color-stop(66.66667%, rgba(0, 0, 0, 0)), color-stop(66.66667%, rgba(100, 100, 225, 0.25)), color-stop(75%, rgba(100, 100, 225, 0.25)), color-stop(75%, rgba(0, 0, 0, 0)), color-stop(75%, rgba(0, 0, 0, 0)), color-stop(75%, rgba(100, 100, 225, 0.25)), color-stop(83.33333%, rgba(100, 100, 225, 0.25)), color-stop(83.33333%, rgba(0, 0, 0, 0)), color-stop(83.33333%, rgba(0, 0, 0, 0)), color-stop(83.33333%, rgba(100, 100, 225, 0.25)), color-stop(91.66667%, rgba(100, 100, 225, 0.25)), color-stop(91.66667%, rgba(0, 0, 0, 0)), color-stop(91.66667%, rgba(0, 0, 0, 0)), color-stop(91.66667%, rgba(100, 100, 225, 0.25)), color-stop(100%, rgba(100, 100, 225, 0.25)), color-stop(100%, rgba(0, 0, 0, 0)), color-stop(100%, rgba(0, 0, 0, 0)));
-  background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.5) 5%, rgba(0, 0, 0, 0) 5%), -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0px, rgba(100, 100, 225, 0.25) 0px, rgba(100, 100, 225, 0.25) 91.66667px, rgba(0, 0, 0, 0) 91.66667px, rgba(0, 0, 0, 0) 91.66667px, rgba(100, 100, 225, 0.25) 91.66667px, rgba(100, 100, 225, 0.25) 183.33333px, rgba(0, 0, 0, 0) 183.33333px, rgba(0, 0, 0, 0) 183.33333px, rgba(100, 100, 225, 0.25) 183.33333px, rgba(100, 100, 225, 0.25) 275px, rgba(0, 0, 0, 0) 275px, rgba(0, 0, 0, 0) 275px, rgba(100, 100, 225, 0.25) 275px, rgba(100, 100, 225, 0.25) 366.66667px, rgba(0, 0, 0, 0) 366.66667px, rgba(0, 0, 0, 0) 366.66667px, rgba(100, 100, 225, 0.25) 366.66667px, rgba(100, 100, 225, 0.25) 458.33333px, rgba(0, 0, 0, 0) 458.33333px, rgba(0, 0, 0, 0) 458.33333px, rgba(100, 100, 225, 0.25) 458.33333px, rgba(100, 100, 225, 0.25) 550px, rgba(0, 0, 0, 0) 550px, rgba(0, 0, 0, 0) 550px, rgba(100, 100, 225, 0.25) 550px, rgba(100, 100, 225, 0.25) 641.66667px, rgba(0, 0, 0, 0) 641.66667px, rgba(0, 0, 0, 0) 641.66667px, rgba(100, 100, 225, 0.25) 641.66667px, rgba(100, 100, 225, 0.25) 733.33333px, rgba(0, 0, 0, 0) 733.33333px, rgba(0, 0, 0, 0) 733.33333px, rgba(100, 100, 225, 0.25) 733.33333px, rgba(100, 100, 225, 0.25) 825px, rgba(0, 0, 0, 0) 825px, rgba(0, 0, 0, 0) 825px, rgba(100, 100, 225, 0.25) 825px, rgba(100, 100, 225, 0.25) 916.66667px, rgba(0, 0, 0, 0) 916.66667px, rgba(0, 0, 0, 0) 916.66667px, rgba(100, 100, 225, 0.25) 916.66667px, rgba(100, 100, 225, 0.25) 1008.33333px, rgba(0, 0, 0, 0) 1008.33333px, rgba(0, 0, 0, 0) 1008.33333px, rgba(100, 100, 225, 0.25) 1008.33333px, rgba(100, 100, 225, 0.25) 1100px, rgba(0, 0, 0, 0) 1100px, rgba(0, 0, 0, 0) 1100px);
-  background-image: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.5) 5%, rgba(0, 0, 0, 0) 5%), -moz-linear-gradient(left, rgba(0, 0, 0, 0) 0px, rgba(100, 100, 225, 0.25) 0px, rgba(100, 100, 225, 0.25) 91.66667px, rgba(0, 0, 0, 0) 91.66667px, rgba(0, 0, 0, 0) 91.66667px, rgba(100, 100, 225, 0.25) 91.66667px, rgba(100, 100, 225, 0.25) 183.33333px, rgba(0, 0, 0, 0) 183.33333px, rgba(0, 0, 0, 0) 183.33333px, rgba(100, 100, 225, 0.25) 183.33333px, rgba(100, 100, 225, 0.25) 275px, rgba(0, 0, 0, 0) 275px, rgba(0, 0, 0, 0) 275px, rgba(100, 100, 225, 0.25) 275px, rgba(100, 100, 225, 0.25) 366.66667px, rgba(0, 0, 0, 0) 366.66667px, rgba(0, 0, 0, 0) 366.66667px, rgba(100, 100, 225, 0.25) 366.66667px, rgba(100, 100, 225, 0.25) 458.33333px, rgba(0, 0, 0, 0) 458.33333px, rgba(0, 0, 0, 0) 458.33333px, rgba(100, 100, 225, 0.25) 458.33333px, rgba(100, 100, 225, 0.25) 550px, rgba(0, 0, 0, 0) 550px, rgba(0, 0, 0, 0) 550px, rgba(100, 100, 225, 0.25) 550px, rgba(100, 100, 225, 0.25) 641.66667px, rgba(0, 0, 0, 0) 641.66667px, rgba(0, 0, 0, 0) 641.66667px, rgba(100, 100, 225, 0.25) 641.66667px, rgba(100, 100, 225, 0.25) 733.33333px, rgba(0, 0, 0, 0) 733.33333px, rgba(0, 0, 0, 0) 733.33333px, rgba(100, 100, 225, 0.25) 733.33333px, rgba(100, 100, 225, 0.25) 825px, rgba(0, 0, 0, 0) 825px, rgba(0, 0, 0, 0) 825px, rgba(100, 100, 225, 0.25) 825px, rgba(100, 100, 225, 0.25) 916.66667px, rgba(0, 0, 0, 0) 916.66667px, rgba(0, 0, 0, 0) 916.66667px, rgba(100, 100, 225, 0.25) 916.66667px, rgba(100, 100, 225, 0.25) 1008.33333px, rgba(0, 0, 0, 0) 1008.33333px, rgba(0, 0, 0, 0) 1008.33333px, rgba(100, 100, 225, 0.25) 1008.33333px, rgba(100, 100, 225, 0.25) 1100px, rgba(0, 0, 0, 0) 1100px, rgba(0, 0, 0, 0) 1100px);
-  background-image: -o-linear-gradient(bottom, rgba(0, 0, 0, 0.5) 5%, rgba(0, 0, 0, 0) 5%), -o-linear-gradient(left, rgba(0, 0, 0, 0) 0px, rgba(100, 100, 225, 0.25) 0px, rgba(100, 100, 225, 0.25) 91.66667px, rgba(0, 0, 0, 0) 91.66667px, rgba(0, 0, 0, 0) 91.66667px, rgba(100, 100, 225, 0.25) 91.66667px, rgba(100, 100, 225, 0.25) 183.33333px, rgba(0, 0, 0, 0) 183.33333px, rgba(0, 0, 0, 0) 183.33333px, rgba(100, 100, 225, 0.25) 183.33333px, rgba(100, 100, 225, 0.25) 275px, rgba(0, 0, 0, 0) 275px, rgba(0, 0, 0, 0) 275px, rgba(100, 100, 225, 0.25) 275px, rgba(100, 100, 225, 0.25) 366.66667px, rgba(0, 0, 0, 0) 366.66667px, rgba(0, 0, 0, 0) 366.66667px, rgba(100, 100, 225, 0.25) 366.66667px, rgba(100, 100, 225, 0.25) 458.33333px, rgba(0, 0, 0, 0) 458.33333px, rgba(0, 0, 0, 0) 458.33333px, rgba(100, 100, 225, 0.25) 458.33333px, rgba(100, 100, 225, 0.25) 550px, rgba(0, 0, 0, 0) 550px, rgba(0, 0, 0, 0) 550px, rgba(100, 100, 225, 0.25) 550px, rgba(100, 100, 225, 0.25) 641.66667px, rgba(0, 0, 0, 0) 641.66667px, rgba(0, 0, 0, 0) 641.66667px, rgba(100, 100, 225, 0.25) 641.66667px, rgba(100, 100, 225, 0.25) 733.33333px, rgba(0, 0, 0, 0) 733.33333px, rgba(0, 0, 0, 0) 733.33333px, rgba(100, 100, 225, 0.25) 733.33333px, rgba(100, 100, 225, 0.25) 825px, rgba(0, 0, 0, 0) 825px, rgba(0, 0, 0, 0) 825px, rgba(100, 100, 225, 0.25) 825px, rgba(100, 100, 225, 0.25) 916.66667px, rgba(0, 0, 0, 0) 916.66667px, rgba(0, 0, 0, 0) 916.66667px, rgba(100, 100, 225, 0.25) 916.66667px, rgba(100, 100, 225, 0.25) 1008.33333px, rgba(0, 0, 0, 0) 1008.33333px, rgba(0, 0, 0, 0) 1008.33333px, rgba(100, 100, 225, 0.25) 1008.33333px, rgba(100, 100, 225, 0.25) 1100px, rgba(0, 0, 0, 0) 1100px, rgba(0, 0, 0, 0) 1100px);
-  background-image: linear-gradient(bottom, rgba(0, 0, 0, 0.5) 5%, rgba(0, 0, 0, 0) 5%), linear-gradient(left, rgba(0, 0, 0, 0) 0px, rgba(100, 100, 225, 0.25) 0px, rgba(100, 100, 225, 0.25) 91.66667px, rgba(0, 0, 0, 0) 91.66667px, rgba(0, 0, 0, 0) 91.66667px, rgba(100, 100, 225, 0.25) 91.66667px, rgba(100, 100, 225, 0.25) 183.33333px, rgba(0, 0, 0, 0) 183.33333px, rgba(0, 0, 0, 0) 183.33333px, rgba(100, 100, 225, 0.25) 183.33333px, rgba(100, 100, 225, 0.25) 275px, rgba(0, 0, 0, 0) 275px, rgba(0, 0, 0, 0) 275px, rgba(100, 100, 225, 0.25) 275px, rgba(100, 100, 225, 0.25) 366.66667px, rgba(0, 0, 0, 0) 366.66667px, rgba(0, 0, 0, 0) 366.66667px, rgba(100, 100, 225, 0.25) 366.66667px, rgba(100, 100, 225, 0.25) 458.33333px, rgba(0, 0, 0, 0) 458.33333px, rgba(0, 0, 0, 0) 458.33333px, rgba(100, 100, 225, 0.25) 458.33333px, rgba(100, 100, 225, 0.25) 550px, rgba(0, 0, 0, 0) 550px, rgba(0, 0, 0, 0) 550px, rgba(100, 100, 225, 0.25) 550px, rgba(100, 100, 225, 0.25) 641.66667px, rgba(0, 0, 0, 0) 641.66667px, rgba(0, 0, 0, 0) 641.66667px, rgba(100, 100, 225, 0.25) 641.66667px, rgba(100, 100, 225, 0.25) 733.33333px, rgba(0, 0, 0, 0) 733.33333px, rgba(0, 0, 0, 0) 733.33333px, rgba(100, 100, 225, 0.25) 733.33333px, rgba(100, 100, 225, 0.25) 825px, rgba(0, 0, 0, 0) 825px, rgba(0, 0, 0, 0) 825px, rgba(100, 100, 225, 0.25) 825px, rgba(100, 100, 225, 0.25) 916.66667px, rgba(0, 0, 0, 0) 916.66667px, rgba(0, 0, 0, 0) 916.66667px, rgba(100, 100, 225, 0.25) 916.66667px, rgba(100, 100, 225, 0.25) 1008.33333px, rgba(0, 0, 0, 0) 1008.33333px, rgba(0, 0, 0, 0) 1008.33333px, rgba(100, 100, 225, 0.25) 1008.33333px, rgba(100, 100, 225, 0.25) 1100px, rgba(0, 0, 0, 0) 1100px, rgba(0, 0, 0, 0) 1100px);
+  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(5%, rgba(0, 0, 0, 0.5)), color-stop(5%, rgba(0, 0, 0, 0))), -webkit-gradient(linear, 0% 50%, 1100 50%, color-stop(0%, rgba(0, 0, 0, 0)), color-stop(0%, rgba(100, 100, 225, 0.25)), color-stop(5%, rgba(100, 100, 225, 0.25)), color-stop(5%, rgba(0, 0, 0, 0)), color-stop(5%, rgba(0, 0, 0, 0)), color-stop(5%, rgba(100, 100, 225, 0.25)), color-stop(10%, rgba(100, 100, 225, 0.25)), color-stop(10%, rgba(0, 0, 0, 0)), color-stop(10%, rgba(0, 0, 0, 0)), color-stop(10%, rgba(100, 100, 225, 0.25)), color-stop(15%, rgba(100, 100, 225, 0.25)), color-stop(15%, rgba(0, 0, 0, 0)), color-stop(15%, rgba(0, 0, 0, 0)), color-stop(15%, rgba(100, 100, 225, 0.25)), color-stop(20%, rgba(100, 100, 225, 0.25)), color-stop(20%, rgba(0, 0, 0, 0)), color-stop(20%, rgba(0, 0, 0, 0)), color-stop(20%, rgba(100, 100, 225, 0.25)), color-stop(25%, rgba(100, 100, 225, 0.25)), color-stop(25%, rgba(0, 0, 0, 0)), color-stop(25%, rgba(0, 0, 0, 0)), color-stop(25%, rgba(100, 100, 225, 0.25)), color-stop(30%, rgba(100, 100, 225, 0.25)), color-stop(30%, rgba(0, 0, 0, 0)), color-stop(30%, rgba(0, 0, 0, 0)), color-stop(30%, rgba(100, 100, 225, 0.25)), color-stop(35%, rgba(100, 100, 225, 0.25)), color-stop(35%, rgba(0, 0, 0, 0)), color-stop(35%, rgba(0, 0, 0, 0)), color-stop(35%, rgba(100, 100, 225, 0.25)), color-stop(40%, rgba(100, 100, 225, 0.25)), color-stop(40%, rgba(0, 0, 0, 0)), color-stop(40%, rgba(0, 0, 0, 0)), color-stop(40%, rgba(100, 100, 225, 0.25)), color-stop(45%, rgba(100, 100, 225, 0.25)), color-stop(45%, rgba(0, 0, 0, 0)), color-stop(45%, rgba(0, 0, 0, 0)), color-stop(45%, rgba(100, 100, 225, 0.25)), color-stop(50%, rgba(100, 100, 225, 0.25)), color-stop(50%, rgba(0, 0, 0, 0)), color-stop(50%, rgba(0, 0, 0, 0)), color-stop(50%, rgba(100, 100, 225, 0.25)), color-stop(55.0%, rgba(100, 100, 225, 0.25)), color-stop(55.0%, rgba(0, 0, 0, 0)), color-stop(55.0%, rgba(0, 0, 0, 0)), color-stop(55.0%, rgba(100, 100, 225, 0.25)), color-stop(60%, rgba(100, 100, 225, 0.25)), color-stop(60%, rgba(0, 0, 0, 0)), color-stop(60%, rgba(0, 0, 0, 0)), color-stop(60%, rgba(100, 100, 225, 0.25)), color-stop(65%, rgba(100, 100, 225, 0.25)), color-stop(65%, rgba(0, 0, 0, 0)), color-stop(65%, rgba(0, 0, 0, 0)), color-stop(65%, rgba(100, 100, 225, 0.25)), color-stop(70%, rgba(100, 100, 225, 0.25)), color-stop(70%, rgba(0, 0, 0, 0)), color-stop(70%, rgba(0, 0, 0, 0)), color-stop(70%, rgba(100, 100, 225, 0.25)), color-stop(75%, rgba(100, 100, 225, 0.25)), color-stop(75%, rgba(0, 0, 0, 0)), color-stop(75%, rgba(0, 0, 0, 0)), color-stop(75%, rgba(100, 100, 225, 0.25)), color-stop(80%, rgba(100, 100, 225, 0.25)), color-stop(80%, rgba(0, 0, 0, 0)), color-stop(80%, rgba(0, 0, 0, 0)), color-stop(80%, rgba(100, 100, 225, 0.25)), color-stop(85%, rgba(100, 100, 225, 0.25)), color-stop(85%, rgba(0, 0, 0, 0)), color-stop(85%, rgba(0, 0, 0, 0)), color-stop(85%, rgba(100, 100, 225, 0.25)), color-stop(90%, rgba(100, 100, 225, 0.25)), color-stop(90%, rgba(0, 0, 0, 0)), color-stop(90%, rgba(0, 0, 0, 0)), color-stop(90%, rgba(100, 100, 225, 0.25)), color-stop(95%, rgba(100, 100, 225, 0.25)), color-stop(95%, rgba(0, 0, 0, 0)), color-stop(95%, rgba(0, 0, 0, 0)), color-stop(95%, rgba(100, 100, 225, 0.25)), color-stop(100%, rgba(100, 100, 225, 0.25)), color-stop(100%, rgba(0, 0, 0, 0)), color-stop(100%, rgba(0, 0, 0, 0)));
+  background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.5) 5%, rgba(0, 0, 0, 0) 5%), -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0px, rgba(100, 100, 225, 0.25) 0px, rgba(100, 100, 225, 0.25) 55px, rgba(0, 0, 0, 0) 55px, rgba(0, 0, 0, 0) 55px, rgba(100, 100, 225, 0.25) 55px, rgba(100, 100, 225, 0.25) 110px, rgba(0, 0, 0, 0) 110px, rgba(0, 0, 0, 0) 110px, rgba(100, 100, 225, 0.25) 110px, rgba(100, 100, 225, 0.25) 165px, rgba(0, 0, 0, 0) 165px, rgba(0, 0, 0, 0) 165px, rgba(100, 100, 225, 0.25) 165px, rgba(100, 100, 225, 0.25) 220px, rgba(0, 0, 0, 0) 220px, rgba(0, 0, 0, 0) 220px, rgba(100, 100, 225, 0.25) 220px, rgba(100, 100, 225, 0.25) 275px, rgba(0, 0, 0, 0) 275px, rgba(0, 0, 0, 0) 275px, rgba(100, 100, 225, 0.25) 275px, rgba(100, 100, 225, 0.25) 330px, rgba(0, 0, 0, 0) 330px, rgba(0, 0, 0, 0) 330px, rgba(100, 100, 225, 0.25) 330px, rgba(100, 100, 225, 0.25) 385px, rgba(0, 0, 0, 0) 385px, rgba(0, 0, 0, 0) 385px, rgba(100, 100, 225, 0.25) 385px, rgba(100, 100, 225, 0.25) 440px, rgba(0, 0, 0, 0) 440px, rgba(0, 0, 0, 0) 440px, rgba(100, 100, 225, 0.25) 440px, rgba(100, 100, 225, 0.25) 495px, rgba(0, 0, 0, 0) 495px, rgba(0, 0, 0, 0) 495px, rgba(100, 100, 225, 0.25) 495px, rgba(100, 100, 225, 0.25) 550px, rgba(0, 0, 0, 0) 550px, rgba(0, 0, 0, 0) 550px, rgba(100, 100, 225, 0.25) 550px, rgba(100, 100, 225, 0.25) 605px, rgba(0, 0, 0, 0) 605px, rgba(0, 0, 0, 0) 605px, rgba(100, 100, 225, 0.25) 605px, rgba(100, 100, 225, 0.25) 660px, rgba(0, 0, 0, 0) 660px, rgba(0, 0, 0, 0) 660px, rgba(100, 100, 225, 0.25) 660px, rgba(100, 100, 225, 0.25) 715px, rgba(0, 0, 0, 0) 715px, rgba(0, 0, 0, 0) 715px, rgba(100, 100, 225, 0.25) 715px, rgba(100, 100, 225, 0.25) 770px, rgba(0, 0, 0, 0) 770px, rgba(0, 0, 0, 0) 770px, rgba(100, 100, 225, 0.25) 770px, rgba(100, 100, 225, 0.25) 825px, rgba(0, 0, 0, 0) 825px, rgba(0, 0, 0, 0) 825px, rgba(100, 100, 225, 0.25) 825px, rgba(100, 100, 225, 0.25) 880px, rgba(0, 0, 0, 0) 880px, rgba(0, 0, 0, 0) 880px, rgba(100, 100, 225, 0.25) 880px, rgba(100, 100, 225, 0.25) 935px, rgba(0, 0, 0, 0) 935px, rgba(0, 0, 0, 0) 935px, rgba(100, 100, 225, 0.25) 935px, rgba(100, 100, 225, 0.25) 990px, rgba(0, 0, 0, 0) 990px, rgba(0, 0, 0, 0) 990px, rgba(100, 100, 225, 0.25) 990px, rgba(100, 100, 225, 0.25) 1045px, rgba(0, 0, 0, 0) 1045px, rgba(0, 0, 0, 0) 1045px, rgba(100, 100, 225, 0.25) 1045px, rgba(100, 100, 225, 0.25) 1100px, rgba(0, 0, 0, 0) 1100px, rgba(0, 0, 0, 0) 1100px);
+  background-image: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.5) 5%, rgba(0, 0, 0, 0) 5%), -moz-linear-gradient(left, rgba(0, 0, 0, 0) 0px, rgba(100, 100, 225, 0.25) 0px, rgba(100, 100, 225, 0.25) 55px, rgba(0, 0, 0, 0) 55px, rgba(0, 0, 0, 0) 55px, rgba(100, 100, 225, 0.25) 55px, rgba(100, 100, 225, 0.25) 110px, rgba(0, 0, 0, 0) 110px, rgba(0, 0, 0, 0) 110px, rgba(100, 100, 225, 0.25) 110px, rgba(100, 100, 225, 0.25) 165px, rgba(0, 0, 0, 0) 165px, rgba(0, 0, 0, 0) 165px, rgba(100, 100, 225, 0.25) 165px, rgba(100, 100, 225, 0.25) 220px, rgba(0, 0, 0, 0) 220px, rgba(0, 0, 0, 0) 220px, rgba(100, 100, 225, 0.25) 220px, rgba(100, 100, 225, 0.25) 275px, rgba(0, 0, 0, 0) 275px, rgba(0, 0, 0, 0) 275px, rgba(100, 100, 225, 0.25) 275px, rgba(100, 100, 225, 0.25) 330px, rgba(0, 0, 0, 0) 330px, rgba(0, 0, 0, 0) 330px, rgba(100, 100, 225, 0.25) 330px, rgba(100, 100, 225, 0.25) 385px, rgba(0, 0, 0, 0) 385px, rgba(0, 0, 0, 0) 385px, rgba(100, 100, 225, 0.25) 385px, rgba(100, 100, 225, 0.25) 440px, rgba(0, 0, 0, 0) 440px, rgba(0, 0, 0, 0) 440px, rgba(100, 100, 225, 0.25) 440px, rgba(100, 100, 225, 0.25) 495px, rgba(0, 0, 0, 0) 495px, rgba(0, 0, 0, 0) 495px, rgba(100, 100, 225, 0.25) 495px, rgba(100, 100, 225, 0.25) 550px, rgba(0, 0, 0, 0) 550px, rgba(0, 0, 0, 0) 550px, rgba(100, 100, 225, 0.25) 550px, rgba(100, 100, 225, 0.25) 605px, rgba(0, 0, 0, 0) 605px, rgba(0, 0, 0, 0) 605px, rgba(100, 100, 225, 0.25) 605px, rgba(100, 100, 225, 0.25) 660px, rgba(0, 0, 0, 0) 660px, rgba(0, 0, 0, 0) 660px, rgba(100, 100, 225, 0.25) 660px, rgba(100, 100, 225, 0.25) 715px, rgba(0, 0, 0, 0) 715px, rgba(0, 0, 0, 0) 715px, rgba(100, 100, 225, 0.25) 715px, rgba(100, 100, 225, 0.25) 770px, rgba(0, 0, 0, 0) 770px, rgba(0, 0, 0, 0) 770px, rgba(100, 100, 225, 0.25) 770px, rgba(100, 100, 225, 0.25) 825px, rgba(0, 0, 0, 0) 825px, rgba(0, 0, 0, 0) 825px, rgba(100, 100, 225, 0.25) 825px, rgba(100, 100, 225, 0.25) 880px, rgba(0, 0, 0, 0) 880px, rgba(0, 0, 0, 0) 880px, rgba(100, 100, 225, 0.25) 880px, rgba(100, 100, 225, 0.25) 935px, rgba(0, 0, 0, 0) 935px, rgba(0, 0, 0, 0) 935px, rgba(100, 100, 225, 0.25) 935px, rgba(100, 100, 225, 0.25) 990px, rgba(0, 0, 0, 0) 990px, rgba(0, 0, 0, 0) 990px, rgba(100, 100, 225, 0.25) 990px, rgba(100, 100, 225, 0.25) 1045px, rgba(0, 0, 0, 0) 1045px, rgba(0, 0, 0, 0) 1045px, rgba(100, 100, 225, 0.25) 1045px, rgba(100, 100, 225, 0.25) 1100px, rgba(0, 0, 0, 0) 1100px, rgba(0, 0, 0, 0) 1100px);
+  background-image: -o-linear-gradient(bottom, rgba(0, 0, 0, 0.5) 5%, rgba(0, 0, 0, 0) 5%), -o-linear-gradient(left, rgba(0, 0, 0, 0) 0px, rgba(100, 100, 225, 0.25) 0px, rgba(100, 100, 225, 0.25) 55px, rgba(0, 0, 0, 0) 55px, rgba(0, 0, 0, 0) 55px, rgba(100, 100, 225, 0.25) 55px, rgba(100, 100, 225, 0.25) 110px, rgba(0, 0, 0, 0) 110px, rgba(0, 0, 0, 0) 110px, rgba(100, 100, 225, 0.25) 110px, rgba(100, 100, 225, 0.25) 165px, rgba(0, 0, 0, 0) 165px, rgba(0, 0, 0, 0) 165px, rgba(100, 100, 225, 0.25) 165px, rgba(100, 100, 225, 0.25) 220px, rgba(0, 0, 0, 0) 220px, rgba(0, 0, 0, 0) 220px, rgba(100, 100, 225, 0.25) 220px, rgba(100, 100, 225, 0.25) 275px, rgba(0, 0, 0, 0) 275px, rgba(0, 0, 0, 0) 275px, rgba(100, 100, 225, 0.25) 275px, rgba(100, 100, 225, 0.25) 330px, rgba(0, 0, 0, 0) 330px, rgba(0, 0, 0, 0) 330px, rgba(100, 100, 225, 0.25) 330px, rgba(100, 100, 225, 0.25) 385px, rgba(0, 0, 0, 0) 385px, rgba(0, 0, 0, 0) 385px, rgba(100, 100, 225, 0.25) 385px, rgba(100, 100, 225, 0.25) 440px, rgba(0, 0, 0, 0) 440px, rgba(0, 0, 0, 0) 440px, rgba(100, 100, 225, 0.25) 440px, rgba(100, 100, 225, 0.25) 495px, rgba(0, 0, 0, 0) 495px, rgba(0, 0, 0, 0) 495px, rgba(100, 100, 225, 0.25) 495px, rgba(100, 100, 225, 0.25) 550px, rgba(0, 0, 0, 0) 550px, rgba(0, 0, 0, 0) 550px, rgba(100, 100, 225, 0.25) 550px, rgba(100, 100, 225, 0.25) 605px, rgba(0, 0, 0, 0) 605px, rgba(0, 0, 0, 0) 605px, rgba(100, 100, 225, 0.25) 605px, rgba(100, 100, 225, 0.25) 660px, rgba(0, 0, 0, 0) 660px, rgba(0, 0, 0, 0) 660px, rgba(100, 100, 225, 0.25) 660px, rgba(100, 100, 225, 0.25) 715px, rgba(0, 0, 0, 0) 715px, rgba(0, 0, 0, 0) 715px, rgba(100, 100, 225, 0.25) 715px, rgba(100, 100, 225, 0.25) 770px, rgba(0, 0, 0, 0) 770px, rgba(0, 0, 0, 0) 770px, rgba(100, 100, 225, 0.25) 770px, rgba(100, 100, 225, 0.25) 825px, rgba(0, 0, 0, 0) 825px, rgba(0, 0, 0, 0) 825px, rgba(100, 100, 225, 0.25) 825px, rgba(100, 100, 225, 0.25) 880px, rgba(0, 0, 0, 0) 880px, rgba(0, 0, 0, 0) 880px, rgba(100, 100, 225, 0.25) 880px, rgba(100, 100, 225, 0.25) 935px, rgba(0, 0, 0, 0) 935px, rgba(0, 0, 0, 0) 935px, rgba(100, 100, 225, 0.25) 935px, rgba(100, 100, 225, 0.25) 990px, rgba(0, 0, 0, 0) 990px, rgba(0, 0, 0, 0) 990px, rgba(100, 100, 225, 0.25) 990px, rgba(100, 100, 225, 0.25) 1045px, rgba(0, 0, 0, 0) 1045px, rgba(0, 0, 0, 0) 1045px, rgba(100, 100, 225, 0.25) 1045px, rgba(100, 100, 225, 0.25) 1100px, rgba(0, 0, 0, 0) 1100px, rgba(0, 0, 0, 0) 1100px);
+  background-image: linear-gradient(bottom, rgba(0, 0, 0, 0.5) 5%, rgba(0, 0, 0, 0) 5%), linear-gradient(left, rgba(0, 0, 0, 0) 0px, rgba(100, 100, 225, 0.25) 0px, rgba(100, 100, 225, 0.25) 55px, rgba(0, 0, 0, 0) 55px, rgba(0, 0, 0, 0) 55px, rgba(100, 100, 225, 0.25) 55px, rgba(100, 100, 225, 0.25) 110px, rgba(0, 0, 0, 0) 110px, rgba(0, 0, 0, 0) 110px, rgba(100, 100, 225, 0.25) 110px, rgba(100, 100, 225, 0.25) 165px, rgba(0, 0, 0, 0) 165px, rgba(0, 0, 0, 0) 165px, rgba(100, 100, 225, 0.25) 165px, rgba(100, 100, 225, 0.25) 220px, rgba(0, 0, 0, 0) 220px, rgba(0, 0, 0, 0) 220px, rgba(100, 100, 225, 0.25) 220px, rgba(100, 100, 225, 0.25) 275px, rgba(0, 0, 0, 0) 275px, rgba(0, 0, 0, 0) 275px, rgba(100, 100, 225, 0.25) 275px, rgba(100, 100, 225, 0.25) 330px, rgba(0, 0, 0, 0) 330px, rgba(0, 0, 0, 0) 330px, rgba(100, 100, 225, 0.25) 330px, rgba(100, 100, 225, 0.25) 385px, rgba(0, 0, 0, 0) 385px, rgba(0, 0, 0, 0) 385px, rgba(100, 100, 225, 0.25) 385px, rgba(100, 100, 225, 0.25) 440px, rgba(0, 0, 0, 0) 440px, rgba(0, 0, 0, 0) 440px, rgba(100, 100, 225, 0.25) 440px, rgba(100, 100, 225, 0.25) 495px, rgba(0, 0, 0, 0) 495px, rgba(0, 0, 0, 0) 495px, rgba(100, 100, 225, 0.25) 495px, rgba(100, 100, 225, 0.25) 550px, rgba(0, 0, 0, 0) 550px, rgba(0, 0, 0, 0) 550px, rgba(100, 100, 225, 0.25) 550px, rgba(100, 100, 225, 0.25) 605px, rgba(0, 0, 0, 0) 605px, rgba(0, 0, 0, 0) 605px, rgba(100, 100, 225, 0.25) 605px, rgba(100, 100, 225, 0.25) 660px, rgba(0, 0, 0, 0) 660px, rgba(0, 0, 0, 0) 660px, rgba(100, 100, 225, 0.25) 660px, rgba(100, 100, 225, 0.25) 715px, rgba(0, 0, 0, 0) 715px, rgba(0, 0, 0, 0) 715px, rgba(100, 100, 225, 0.25) 715px, rgba(100, 100, 225, 0.25) 770px, rgba(0, 0, 0, 0) 770px, rgba(0, 0, 0, 0) 770px, rgba(100, 100, 225, 0.25) 770px, rgba(100, 100, 225, 0.25) 825px, rgba(0, 0, 0, 0) 825px, rgba(0, 0, 0, 0) 825px, rgba(100, 100, 225, 0.25) 825px, rgba(100, 100, 225, 0.25) 880px, rgba(0, 0, 0, 0) 880px, rgba(0, 0, 0, 0) 880px, rgba(100, 100, 225, 0.25) 880px, rgba(100, 100, 225, 0.25) 935px, rgba(0, 0, 0, 0) 935px, rgba(0, 0, 0, 0) 935px, rgba(100, 100, 225, 0.25) 935px, rgba(100, 100, 225, 0.25) 990px, rgba(0, 0, 0, 0) 990px, rgba(0, 0, 0, 0) 990px, rgba(100, 100, 225, 0.25) 990px, rgba(100, 100, 225, 0.25) 1045px, rgba(0, 0, 0, 0) 1045px, rgba(0, 0, 0, 0) 1045px, rgba(100, 100, 225, 0.25) 1045px, rgba(100, 100, 225, 0.25) 1100px, rgba(0, 0, 0, 0) 1100px, rgba(0, 0, 0, 0) 1100px);
   -webkit-background-size: 100% 24px, auto;
   -moz-background-size: 100% 24px, auto;
   -o-background-size: 100% 24px, auto;
@@ -867,65 +974,61 @@ body #main-page #header {
 body #main-page #header #banner {
   padding: 0px;
   margin: 0px;
-  width: column(12);
+  width: column(20);
   height: 140px;
 }
 /* line 75, ../../../compass/sass/partials/_page.scss */
 body #main-page #header #page-header {
   display: inline;
   float: left;
-  margin-right: 0px;
+  margin-right: 0;
   width: 1100px;
   padding: 0px;
   margin: 0px;
+  background-color: #ef975b;
 }
 /* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
 * html body #main-page #header #page-header {
   overflow-x: hidden;
 }
-/* line 79, ../../../compass/sass/partials/_page.scss */
-body #main-page #header #page-header #page-info {
-  margin: 0px;
-  display: inline;
-  float: left;
-  margin-right: 0px;
-  width: 641.66667px;
-  background-color: #ef975b;
-  height: 120px;
-  font-weight: bold;
-}
-/* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
-* html body #main-page #header #page-header #page-info {
-  overflow-x: hidden;
-}
-/* line 86, ../../../compass/sass/partials/_page.scss */
+/* line 81, ../../../compass/sass/partials/_page.scss */
 body #main-page #header #page-header #header-links {
-  display: inline;
-  float: left;
-  margin-right: 0px;
-  width: 183.33333px;
-  background-color: #ef975b;
-  height: 120px;
+  float: right;
 }
-/* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
-* html body #main-page #header #page-header #header-links {
-  overflow-x: hidden;
-}
-/* line 90, ../../../compass/sass/partials/_page.scss */
+/* line 83, ../../../compass/sass/partials/_page.scss */
 body #main-page #header #page-header #header-links ul {
-  list-style: none;
-  padding: 0px;
-  margin: 0px;
-  text-align: right;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  *zoom: 1;
 }
-/* line 11, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/lists/_bullets.scss */
+/* line 60, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
 body #main-page #header #page-header #header-links ul li {
   list-style-image: none;
   list-style-type: none;
   margin-left: 0;
+  white-space: nowrap;
+  display: inline;
+  float: right;
+  padding-left: 20px;
+  padding-right: 20px;
 }
-/* line 94, ../../../compass/sass/partials/_page.scss */
+/* line 48, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+body #main-page #header #page-header #header-links ul li:first-child, body #main-page #header #page-header #header-links ul li.first {
+  padding-right: 0;
+}
+/* line 49, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+body #main-page #header #page-header #header-links ul li:last-child {
+  padding-left: 0;
+}
+/* line 50, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/lists/_horizontal-list.scss */
+body #main-page #header #page-header #header-links ul li.last {
+  padding-left: 0;
+}
+/* line 86, ../../../compass/sass/partials/_page.scss */
 body #main-page #header #page-header #header-links a {
+  text-decoration: none;
   color: white;
 }
 /* line 18, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/links/_link-colors.scss */
@@ -938,41 +1041,13 @@ body #main-page #header #page-header #header-links a:focus {
 }
 /* line 24, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/links/_link-colors.scss */
 body #main-page #header #page-header #header-links a:hover {
-  color: white;
+  color: #51514e;
 }
 /* line 27, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/links/_link-colors.scss */
 body #main-page #header #page-header #header-links a:active {
-  color: white;
+  color: #51514e;
 }
-/* line 98, ../../../compass/sass/partials/_page.scss */
-body #main-page #header #page-header #whats-new-div {
-  display: inline;
-  float: left;
-  margin-right: 0;
-  width: 275px;
-  background-color: #d3e0c6;
-  padding: 0px;
-  height: 120px;
-  font-size: 12px;
-}
-/* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
-* html body #main-page #header #page-header #whats-new-div {
-  overflow-x: hidden;
-}
-/* line 105, ../../../compass/sass/partials/_page.scss */
-body #main-page #header #page-header #whats-new-div #news-feed-title {
-  background-color: #51514e;
-  color: #80be72;
-  font-style: italic;
-  height: 23px;
-  padding-top: 3px;
-}
-/* line 112, ../../../compass/sass/partials/_page.scss */
-body #main-page #header #page-header #whats-new-div #news-feed {
-  overflow: auto;
-  height: 97px;
-}
-/* line 119, ../../../compass/sass/partials/_page.scss */
+/* line 93, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-content {
   display: inline;
   float: left;
@@ -984,7 +1059,7 @@ body #main-page #page-content {
 * html body #main-page #page-content {
   overflow-x: hidden;
 }
-/* line 123, ../../../compass/sass/partials/_page.scss */
+/* line 97, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer {
   display: inline;
   float: left;
@@ -999,11 +1074,11 @@ body #main-page #page-footer {
 * html body #main-page #page-footer {
   overflow-x: hidden;
 }
-/* line 127, ../../../compass/sass/partials/_page.scss */
+/* line 101, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer h6 {
   color: #e88846;
 }
-/* line 130, ../../../compass/sass/partials/_page.scss */
+/* line 104, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer ul {
   list-style: none;
   padding: 0px;
@@ -1016,7 +1091,7 @@ body #main-page #page-footer ul li {
   list-style-type: none;
   margin-left: 0;
 }
-/* line 134, ../../../compass/sass/partials/_page.scss */
+/* line 108, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer a {
   color: #e2ded0;
 }
@@ -1032,52 +1107,52 @@ body #main-page #page-footer a:hover {
 body #main-page #page-footer a:active {
   color: #e2ded0;
 }
-/* line 137, ../../../compass/sass/partials/_page.scss */
+/* line 111, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer #footer-who {
   display: inline;
   float: left;
   margin-right: 0px;
-  width: 183.33333px;
+  width: 220px;
 }
 /* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
 * html body #main-page #page-footer #footer-who {
   overflow-x: hidden;
 }
-/* line 140, ../../../compass/sass/partials/_page.scss */
+/* line 114, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer #footer-workgroups {
   display: inline;
   float: left;
   margin-right: 0px;
-  width: 183.33333px;
+  width: 220px;
 }
 /* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
 * html body #main-page #page-footer #footer-workgroups {
   overflow-x: hidden;
 }
-/* line 143, ../../../compass/sass/partials/_page.scss */
+/* line 117, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer #footer-legal {
   display: inline;
   float: left;
   margin-right: 0px;
-  width: 183.33333px;
+  width: 220px;
 }
 /* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
 * html body #main-page #page-footer #footer-legal {
   overflow-x: hidden;
 }
-/* line 146, ../../../compass/sass/partials/_page.scss */
+/* line 120, ../../../compass/sass/partials/_page.scss */
 body #main-page #page-footer #footer-for-members {
   display: inline;
   float: left;
   margin-right: 0px;
-  width: 183.33333px;
+  width: 220px;
 }
 /* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
 * html body #main-page #page-footer #footer-for-members {
   overflow-x: hidden;
 }
 
-/* line 152, ../../../compass/sass/partials/_page.scss */
+/* line 126, ../../../compass/sass/partials/_page.scss */
 div {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

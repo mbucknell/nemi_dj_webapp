@@ -454,11 +454,29 @@
 	</script>
 {% endblock %}
 
-{% block page_info %}
-<p>NEMI is a searchable database of environmental methods, protocols, and procedures 
-that allows scientists and managers to find and compare data-collection methods
-and protocols for all stages of the monitoring process.
-</p>
+{% block page_header %}
+    <div id="page-info">
+        NEMI is a searchable database of environmental methods, protocols, and procedures 
+        that allows scientists and managers to find and compare data-collection methods
+        and protocols for all stages of the monitoring process.
+    </div>
+    <div id="home-header-links">
+        <ul>
+            <li><a href="{% url 'about' %}">About NEMI</a></li>
+            <li><a href="{% url 'glossary' %}">Glossary</a></li>
+            <li><a href="{% url 'faqs' %}">FAQ</a></li>
+        </ul>
+    </div>
+    <div id="whats-new-div">
+        <div id="news-feed-title">
+            <span>What's new with NEMI</span>
+        </div>
+        <div id="news-feed">
+            {% for item in news_items %}
+                {{ item.headline|safe }}
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
 
 {% block page-content %}
