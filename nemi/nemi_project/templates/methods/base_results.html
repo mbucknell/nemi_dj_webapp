@@ -3,7 +3,7 @@
 {% block title %}NEMI Results{% endblock %}
 
 {% block page_style %}
-	<link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesort/theme.nemi.css" media="screen" type="text/css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesorter.css" media="screen" type="text/css" />
 	<link rel="stylesheet" href="{{ STATIC_URL }}styles/jquery-ui-1.10.0.custom/smoothness/jquery-ui-1.10.0.custom.css" media="screen" type="text/css" />
 {% endblock %}
 
@@ -24,13 +24,13 @@
 			
 			// The tables can be customized using meta data and class definitions
 			// See the jquery tablesorter documentation.
-			$('.data-table').tablesorter({
-				theme: 'nemi',
+			$('.results-table').tablesorter({
+			    theme: 'nemi',			    
 				widgets: ['zebra']
 			});
 			
 
-			$('#back-button').click(function() {
+			$('.back-button').click(function() {
 				window.location.assign("{% url 'home' %}");
 			});
 			
@@ -62,7 +62,7 @@
 			});
 			
 			// Add click handler for selecting methods to set the state of the operations buttons .
-			$('#results-table input[type=checkbox]').click(function() {
+			$('.results-table input[type=checkbox]').click(function() {
 				var compareBtn = $('.compare-button');
 				if ($(this).is(':checked')) {
 					Utils.setEnabled(compareBtn, true);
@@ -101,7 +101,7 @@
 			// Forces a click on the header information button to call it's link rather than perform 
 			// the sort. We have to use mousedown mouseup because that's the event the tablesorter has bound an
 			// event handler too.
-			$('#results-table th a').bind('mousedown mouseup',function(event){
+			$('.results-table th a').bind('mousedown mouseup',function(event){
 				event.stopPropagation();
 				window.location=$(this).attr('href');
 				return false;
@@ -109,9 +109,9 @@
 			
 			// Initialize customize headers dialog and add click handler for button
 			if ($('#customize_dialog')){
-				CustomHeaderDialog.initialize($('#customize-dialog'), $('#results-table'));
+				CustomHeaderDialog.initialize($('#customize-dialog'), $('.results-table'));
 				
-				$('#customize-button').click(function() {
+				$('.customize-button').click(function() {
 					CustomHeaderDialog.show();
 				});
 			}
@@ -119,53 +119,75 @@
 	</script>
 {% endblock %}
 
-{% block page_info %}
-	<p>
-		{% block page_specific_info %}
-			Your search returned: {{ data|length }} results.
-		{% endblock %}
-		<input id="back-button" class="search-button" type="button" style="font-size: small;" value="Back to search">
-	</p>
-	{% block top_results_actions %}
-		<div id="top-results-actions" class="results-actions">
-			<input type="button" class="compare-button search-button disabled" disabled="disabled" value="Compare selected results" />
-			<input type="button" class="full-results-button search-button disabled" disabled="disabled" value="Show full results" />
-			<input type="button" class="download-button search-button" value="Download results"/>
-		</div>
-	{% endblock %}
-{% endblock %}
-
 {% block page-content %}
-	<!--  Place holder for the field information dialog  -->
-	<div id="header-info" style="display: none;">
+    <div id="results-page_content">
+        <div id="top-results-actions">
+            <div class="results-action-div">
+                {% block top_results_actions %}                
+                    <input type="button" class="compare-button disabled" disabled="disabled" value="Compare selected results" />
+			        <input type="button" class="full-results-button disabled" disabled="disabled" value="Show full results" />
+			        <input type="button" class="download-button" value="Download results"/>
+   		        {% endblock %}
+   		    </div>
+	    </div>
+         
+        {% block customize_dialog %}
+	        <div id="customize-dialog" style="display: none;">
+		        <p>Select the fields you want to see in your results table:</p>
+			    <ul></ul>
+		    </div>
+	    {% endblock %}   
+	 
+	    <div id="results-div">  
+            <div id="top-results-header">
+                <div class="results-header-info">
+                    <span>RESULTS:&nbsp;</span>
+                    {% block top_results_header_info %}                   
+                        Your search returned {{ data|length }} results.
+                    {% endblock %}
+	    	        <input class="back-button" type="button" value="Back to search">
+	    	    </div>
+	    	    <div class="results-header-actions">
+	    	        {% block top_results_header_actions %}
+		                <input class="customize-button" type="button" value="Show/hide columns" />
+		            {% endblock %}
+		        </div>
+            </div>   
+            
+	        <!--  Place holder for the field help dialog  -->
+	        <div id="header-info" style="display: none;">
+	        </div>
+	
+	        <div id="results-table-div">
+		        {% block results_content %}
+		        {% endblock %}
+	        </div>
+	    
+	        <div id="bottom-results-header">
+	            <div class="results-header-info">
+                    <span>RESULTS:&nbsp;</span>
+                    {% block bottom_results_header_info %}
+			            Your search returned {{ data|length }} results.
+			        {% endblock %}
+	    	        <input class="back-button" type="button" value="Back to search">
+	    	    </div>
+	    	    <div class="results-header-actions">
+	    	        {% block bottom_results_header_actions %}
+		                <input class="customize-button" type="button" value="Show/hide columns" />
+                    {% endblock %}
+                </div>
+            </div>   
+	   	</div>
+		
+	    <div id="bottom-results-actions">
+            <div class="results-action-div">		        				    
+                {% block bottom_results_actions %}
+		            <input type="button" class="compare-button disabled" disabled="disabled" value="Compare selected results" />
+			        <input type="button" class="full-results-button disabled" disabled="disabled" value="Show full results" />
+				    <input type="button" class="download-button " value="Download results"/>
+		        {% endblock %}
+		    </div>
+	    </div>
 	</div>
-	<div id="results-div" class="section-div">
-		<h2>
-			{% block page_content_title%}
-				RESULTS
-			{% endblock %}
-			
-			{% block customize_dialog %}
-				<div style="display: inline-block; float:right;">
-					<input id="customize-button" type="button" class="search-button" style="font-size:small;position: relative; top: -3px;" value="Show/hide columns" />
-				</div>
-				<div id="customize-dialog" style="display: none;">
-					<p>Select the fields you want to see in your results table:</p>
-					<ul></ul>
-				</div>
-			{% endblock %}
-		</h2>	
-		
-		{% block results_content %}
-		{% endblock %}
-		
-		{% block bottom_results_actions %}
-			<div id="bottom-results-actions" class="results-actions">
-				<input type="button" class="compare-button search-button disabled" disabled="disabled" value="Compare selected results" />
-				<input type="button" class="full-results-button search-button disabled" disabled="disabled" value="Show full results" />
-				<input type="button" class="download-button search-button" value="Download results"/>
-			</div>
-		{% endblock %}
-
 {% endblock %}	
 	

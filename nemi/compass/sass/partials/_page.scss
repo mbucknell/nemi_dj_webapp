@@ -46,24 +46,16 @@ body {
 	select, .select2-results, .select2-choice{
 		font-size: 14px;
 	}
-	.disabled {
-		color: $nemi-disabled-btn-color;
-	}
-	input.disabled {
-		background-color: $nemi-disabled-btn-color;
-		color: $nemi-disabled-btn-text-color;
-	}
 	
 	form > label {
 		font-weight: bold;
 		padding-right: 5px;
 	}
 	#main-page {
-	 @include container;
 	 margin-top: 2px;
 	 overflow: visible;
 	 #header {
- 	 	 @include column(20);
+	 	 @include container;
 	 	 @include main-box-shadow; 
 	 	 padding: 0px;
 	 	 #banner {
@@ -90,12 +82,8 @@ body {
 			}		  	
 		}
 	}
-	#page-content {
-		@include column(20);
-		padding: 0px;
-	}
 	#page-footer {
-		@include column(20);
+		@include container;
 		background-color: $nemi-footer-color;
 		@include main-box-shadow;		
 		h6 {

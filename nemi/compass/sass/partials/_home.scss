@@ -1,3 +1,7 @@
+#home-page-content {
+	@include container;
+	padding: 0px;
+}
 .subcategory-button {
 	padding-left: 30px;
 	padding-top : 4px;
@@ -187,7 +191,9 @@
 	padding: 0px;
 	
 	.section-header-banner-div {
-		@include stretch-x;
+		position: absolute;
+		right: 0px;
+		left: 0px;
 		border: solid 1px $nemi-section-header-border-color;
 		z-index: -1;
 		padding: 0px;
@@ -230,6 +236,14 @@
 			padding: 0px;
 			@include main-box-shadow;
 			
+			.disabled {
+				color: $nemi-search-disabled-color;
+			}
+			input.disabled {
+				background-color: $nemi-search-disabled-color;
+				color: $nemi-search-disabled-text-color;
+			}
+			
 			.input-section-div {
 				@include column(16, true);
 			
@@ -237,6 +251,7 @@
 					@include column(16, true);
 					padding: 2px;
 				}
+				
 			}
 		}
 	}
@@ -277,9 +292,4 @@
 		@include column(16, true);
 		padding: 2px;
 	}
-}
-	
-
-#results-table {
-	@include stretch-x();
 }

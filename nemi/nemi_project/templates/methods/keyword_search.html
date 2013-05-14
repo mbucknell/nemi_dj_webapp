@@ -2,97 +2,83 @@
 
 {% block title %}NEMI Keyword Search Results{% endblock %}
 
-{% block page_style %}
-	{{ block.super }}
-	<!-- Styles for the page navigation links -->
-	<style>
-		.empty-div {
-			font-size: medium;
-			display: inline-block;
-		}
-		.results-nav {
-			float: right;
-		}
- 		.results-nav, .results-nav>a{
-			font-size: medium;
-		}
-	</style>
-{% endblock %}
-
-{% block page_specific_info %}
-	Your search returned: {{ total_found }} results.
-{% endblock %}
-
-{% block top_results_actions %}{% endblock %}
-
-{% block page_content_title %}
-	KEYWORD RESULTS for {{ keyword }}
+{% block top_results_actions %}
+    <form class="keyword-results-actions" action="{% url 'methods-keyword' %}" method="get">
+		 <label for="keyword-search-text">Modify your search:</label>
+		 <input type="text" id="keyword-search-text" name="keyword_search_field" value="{{ keyword }}" />
+		 <input type="submit" id="keyword-search-button" class="search-button" value="Search" />
+    </form>
 {% endblock %}
 
 {% block customize_dialog %}{% endblock %}
 
-{% block results_content %}
-	{% if results.object_list %}
-		<div id="results">
-		 	<br />
-		 	<div id="keyword-search-div" style="display: inline-block;">
-		 		<form action="{% url 'methods-keyword' %}" method="get">
-		 			<label style="font-size: medium;"for="keyword-search-text">Modify your search:</label>
-		 			<input type="text" id="keyword-search-text" name="keyword_search_field" value="{{ keyword }}" />
-		 			<input type="submit" id="keyword-search-button" class="search-button" value="Search" />
-		 		</form>
-		 	</div>
-			{% include "methods/_results_nav.html" %}
-			<br />
-			<table class="data-table" style="width: 100%">
-				<thead>
-					<tr>
-						<th class="sorter-false">Method Id</th>
-						<th class="sorter-false">Method Source</th>
-						<th class="sorter-false">Descriptive Method Name</th>
-						<th class="sorter-false">Link to Method</th>
-						<th class="sorter-false">Search Ranking</th>
-						
-					</tr>
-				</thead>
-				</tbody>
-					{% for r in results.object_list %}
-						<tr>
-							<td> <a title="View method details"
-								{% if r.METHOD_CATEGORY == 'STATISTICAL' %}
-									href="{% url 'methods-sam_method_summary' r.METHOD_ID %}"
-								{% else %}
-									href="{% url 'methods-method_summary' r.METHOD_ID %}"
-								{% endif %}	
-							>{{ r.METHOD_NUMBER|safe}}</a></td>
-							<td>{{ r.METHOD_SOURCE}}</td>
-							<td>{{ r.METHOD_DESCRIPTIVE_NAME }}</td>
-							<td>
-								{% if r.MIMETYPE %}
-									<a href="{% url 'methods-pdf' method_id=r.METHOD_ID %}" 
-										title="Click to download PDF version of this method's documentation">
-										<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat (pdf) icon">Download full method now (PDF file)
-									</a>
-								{% elif r.LINK_TO_FULL_METHOD %}				
-									This is a proprietary method. 
-									<a class="popup" href="javascript:showOnNewWindow('{{  r.LINK_TO_FULL_METHOD }}')" 
-									title="Link to method owner's method documentation (in a new window)">
-									Please visit the method owner's site for method documentation</a>								
-								{% else %}
-									Method .pdf will be loaded into the database soon. Please contact the webmaster if you are in need of the full method.
-								{% endif %}
-							</td>
-							<td>{{ r.METHOD_SUMMARY_SCORE }}</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-			<br/>
-			{% include "methods/_results_nav.html" %}
-		</div>
-	{% else %}
-		<p>No data found.</p>
-	{% endif %}
+{% block top_results_header_info %}
+	Your search for "{{ keyword }}" returned: {{ total_found }} results.
 {% endblock %}
 
-{% block bottom_results_actions %}{% endblock %}
+{% block top_results_header_actions %}
+    {% include "methods/_results_nav.html" %}
+{% endblock %}
+
+{% block results_content %}
+	<table id="keyword-results-table" class="results-table" style="width: 100%">
+		<thead>
+			<tr>
+				<th class="sorter-false">Method Id</th>
+				<th class="sorter-false">Method Source</th>
+				<th class="sorter-false">Descriptive Method Name</th>
+				<th class="sorter-false">Link to Method</th>
+				<th class="sorter-false">Search Ranking</th>
+						
+			</tr>
+		</thead>
+		</tbody>
+			{% for r in results.object_list %}
+				<tr>
+					<td> <a title="View method details"
+						{% if r.METHOD_CATEGORY == 'STATISTICAL' %}
+							href="{% url 'methods-sam_method_summary' r.METHOD_ID %}"
+						{% else %}
+							href="{% url 'methods-method_summary' r.METHOD_ID %}"
+						{% endif %}	
+					>{{ r.METHOD_NUMBER|safe}}</a></td>
+					<td>{{ r.METHOD_SOURCE}}</td>
+					<td>{{ r.METHOD_DESCRIPTIVE_NAME }}</td>
+					<td>
+						{% if r.MIMETYPE %}
+							<a href="{% url 'methods-pdf' method_id=r.METHOD_ID %}" 
+								title="Click to download PDF version of this method's documentation">
+								<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat (pdf) icon">Download full method now (PDF file)
+							</a>
+						{% elif r.LINK_TO_FULL_METHOD %}				
+							This is a proprietary method. 
+							<a class="popup" href="javascript:showOnNewWindow('{{  r.LINK_TO_FULL_METHOD }}')" 
+							title="Link to method owner's method documentation (in a new window)">
+							Please visit the method owner's site for method documentation</a>								
+						{% else %}
+							Method .pdf will be loaded into the database soon. Please contact the webmaster if you are in need of the full method.
+						{% endif %}
+					</td>
+					<td>{{ r.METHOD_SUMMARY_SCORE }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}
+
+{% block bottom_results_header_info %}
+	Your search for "{{ keyword }}" returned: {{ total_found }} results.
+{% endblock %}
+
+{% block bottom_results_header_actions %}
+    {% include "methods/_results_nav.html" %}
+{% endblock %}
+
+{% block bottom_results_actions %}
+    <form class="keyword-results-actions" action="{% url 'methods-keyword' %}" method="get">
+		 <label for="keyword-search-text">Modify your search:</label>
+		 <input type="text" id="keyword-search-text" name="keyword_search_field" value="{{ keyword }}" />
+		 <input type="submit" id="keyword-search-button" class="search-button" value="Search" />
+    </form>
+{% endblock %}
+

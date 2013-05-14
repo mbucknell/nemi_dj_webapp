@@ -1,15 +1,10 @@
 <!-- 
 Template can be included to show a pagination navigation.
  -->
-<div class="results-nav-div">
-	<div class="empty-div">&nbsp;</div>
-	<div class="results-nav">
-		{% if results.has_previous %}
-			<a href="{{ current_url }}&page={{ results.previous_page_number }}"><b>Previous</b></a>
-		{% endif %}
-		&nbsp;&nbsp;Page {{ results.number }} of {{ results.paginator.num_pages }}&nbsp;&nbsp;
-		{% if results.has_next %}
-			<a href="{{ current_url }}&page={{ results.next_page_number }}"><b>Next</b></a>
-		{% endif %}
-	</div>
-</div>
+{% if results.has_previous %}
+	<a href="{{ current_url }}&page={{ results.previous_page_number }}"><b>Previous</b></a>
+{% endif %}
+&nbsp;&nbsp;Page {{ results.number }} of {{ results.paginator.num_pages }}&nbsp;&nbsp;
+{% if results.has_next %}
+	<a href="{{ current_url }}&page={{ results.next_page_number }}"><b>Next</b></a>
+{% endif %}

@@ -5,25 +5,6 @@
 {% block page_style %}
 	{{ block.super }}
 	<!--  Overriding the tablesorter's hovering style as it is visually confusing with the childrows -->
-	<style>
-		.tablesorter-nemi tbody > tr:hover > td,
-		.tablesorter-nemi tbody > tr:hover > td table td,
-		.tablesorter-nemi tbody > tr:hover + tr.tablesorter-childRow > td,
-		.tablesorter-nemi tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
-		.tablesorter-nemi tbody > tr.even:hover > td,
-		.tablesorter-nemi tbody > tr.even:hover > td table td,
-		.tablesorter-nemi tbody > tr.even:hover + tr.tablesorter-childRow > td,
-		.tablesorter-nemi tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-			background: #F7E5D1;
-		}
-		.tablesorter-nemi tbody > tr.odd:hover > td,
-		.tablesorter-nemi tbody > tr.odd:hover > td table td,
-		.tablesorter-nemi tbody > tr.odd:hover + tr.tablesorter-childRow > td,
-		.tablesorter-nemi tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-			background: #F7EFE5;
-		}
-
-	</style>
 {% endblock %}
 
 {% block top_results_actions %}
@@ -37,7 +18,7 @@
 {% load data_format %} <!-- Imports decimal_format tag -->
 
 {% block results_content %}
-	<table id="results-table" class="data-table">
+	<table id="reg-results-table" class="results-table">
 		<thead>
 			<tr>
 				<th class="sorter-false">{% include "methods/_field_def.html" with help=field_help|get_help_content:'regulation' %}</th>

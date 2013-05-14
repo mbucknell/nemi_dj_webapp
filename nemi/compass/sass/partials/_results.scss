@@ -1,0 +1,117 @@
+#results-page-content {
+	position : relative;
+}
+#top-results-actions, #bottom-results-actions {
+	@include container;
+	height: 60px;
+	
+	.results-action-div {
+		text-align: center;
+		
+		input[type=button] {
+			color: white;
+			background-color: $nemi-results-action-btn-color;
+			@include border-radius(6px);
+			padding-top: 5px;
+			padding-bottom: 5px;
+			padding-left : 20px;
+    		padding-right: 20px;
+    		font-size: 14px;
+    		border-style: none;
+		}
+		input[type=button].disabled {
+			color: $nemi-results-disabled-text-color;
+			background-color: $nemi-results-disabled-color;
+		}
+	}
+}
+#results-div {
+	position: relative;
+	margin-right: 10px;
+	margin-left: 10px;
+	padding: 0px;
+	@include main-box-shadow;
+
+	#top-results-header, #bottom-results-header {
+		position: relative;
+		margin-right: 0px;
+		margin-left: 0px;
+		
+		background-color: $nemi-results-header-color;
+		color: white;
+		
+		input[type=button] {
+			font-size: 12px;
+			@include border-radius(6px);
+			color: black;
+			background-color: $nemi-results-header-btn-color;
+		}
+		
+		.results-header-info {
+			display: inline-block;
+			padding: 0px;
+			span {
+				font-size: 20px;
+				color: $nemi-results-header-highlight-color;
+			}
+			.back-button {
+				margin-left: 50px;
+			}
+		}
+		.results-header-actions {
+			padding: 0px;
+			display: inline-block;
+			float: right;
+		}
+	}
+	
+	#results-table-div {
+		position: relative;
+		padding: 0px;
+		margin-left: 0px;
+		margin-right: 0px;
+	}
+	.results-table {
+		margin-bottom: 0px;
+		
+		div>div {
+			padding: 0px;
+		}
+		.help-button {
+			padding: 0px;
+		}
+	}
+}
+/* Specific to a results page */
+#reg-results-table {
+	td {
+		border : $nemi-results-table-column-border-color 1px solid;
+	}
+	 tbody > tr:hover > td,
+	 tbody > tr:hover > td table td,
+	 tbody > tr:hover + tr.tablesorter-childRow > td,
+	 tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
+	 tbody > tr.even:hover > td,
+	 tbody > tr.even:hover > td table td,
+	 tbody > tr.even:hover + tr.tablesorter-childRow > td,
+	 tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
+			background: $nemi-results-table-even-row-color;
+	 }
+	 tbody > tr.odd:hover > td,
+	 tbody > tr.odd:hover > td table td,
+	 tbody > tr.odd:hover + tr.tablesorter-childRow > td,
+	 tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
+			background: $nemi-results-table-odd-row-color;
+	 }
+}
+.keyword-results-actions {
+	label {
+		font-size: 18px;
+	}
+}
+.hidden-details-div {
+	.inside-table th, .inside-table td{
+		border: none;
+	}
+}	
+	
