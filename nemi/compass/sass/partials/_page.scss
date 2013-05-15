@@ -115,3 +115,19 @@ div {
 	@include box-sizing(border-box);
 	padding: 10px;
 }
+.ui-widget, .ui-widget input, .ui-widget button{
+	font-family : $blueprint-font-family;
+	font-size: 16px;
+}
+.ui-widget-header {
+	color: white;
+	background-color: $nemi-dialog-header-color;
+}
+.ui-widget-content {
+	color: black;
+	background-color: $nemi-dialog-color;
+}
+.ui-dialog-buttonpane .ui-button-text {
+	color: white;
+	background-color: $nemi-search-btn-color;
+}
