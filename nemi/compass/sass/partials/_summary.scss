@@ -1,0 +1,203 @@
+#method-summary-page-content {
+	.summary-banner-header {
+		position: absolute;
+		right: 0px;
+		left: 0px;
+		background-color: $nemi-summary-header-color;
+		z-index: -1;
+		padding: 10px;
+	}
+	.summary-header {
+		@include container;
+		padding: 0px;
+		background-color: $nemi-summary-header-color;
+		color: white;
+		.method-info-div {
+			display: inline-block;
+			.method-name {
+				color: $nemi-summary-header-highlight-color;
+			}
+		}
+		.method-header-button {
+			padding-top: 7px;
+			padding-bottom: 0px;
+			float: right;
+		}
+		.download-button {
+			vertical-align: middle;
+			@include nemi-button;
+		}
+		.download-button.disabled {
+			color: $nemi-results-disabled-text-color;
+			background-color: $nemi-results-disabled-color;
+		}
+	}
+	.summary-content {
+		@include container;
+		padding: 0px;
+		.summary-tabs {
+			padding-top: 4px;
+			padding-right: 0px;
+			padding-left: 0px;
+			@include column(3);
+			ul {
+				@include no-style-or-margin-list;
+				li {
+					@include nemi-tab;
+				}
+				.active {
+					color: white;
+					background-color: $nemi-summary-tab-active-color;
+				}
+				.not-active {
+					color: black;
+					background-color: $nemi-summary-tab-inactive-color;
+					&:hover {
+						color: $nemi-subcategory-btn-rollover-color;
+					}				
+				}
+			}
+		}
+		.summary-tab-contents {
+			background-color: $nemi-summary-table-data-color;
+			padding: 0px;
+			@include main-box-shadow;
+			@include column(17, true);
+			.tab-contents {
+				padding: 0px;
+			}
+			.info-table {
+				margin: 0px;
+				padding: 0px;
+				th {
+					@include nowrap;
+					color: white;
+					background-color: $nemi-summary-table-header-color;
+					border-bottom: solid 1px $nemi-summary-table-border-color;
+					padding-right: 5px;
+					.header-label {
+						display: inline-block;
+						vertical-align: middle;
+						padding-top: 0px;
+						padding-bottom: 0px;
+						padding-left: 5px;
+						padding-right: 5px;
+						float: left;
+					}
+					.help-button {
+						display: inline-block;
+						padding-top: 0px;
+						padding-bottom: 0px;
+						padding-left: 5px;
+						padding-right: 5px;
+						float: right;
+						vertical-align: middle;
+					}					
+				}
+				td {
+					color: black;
+					background-color: $nemi-summary-table-data-color;
+					border-bottom: solid 1px $nemi-summary-table-border-color;
+				}
+				.inside-table {
+					margin: 0px;
+					th {
+						@include nowrap;
+						color: black;
+						background-color: inherit;
+						border: none;
+						vertical-align: top;
+					}
+					td {
+						padding-left: 0px;
+						padding-right: 0px;
+						border: none;
+					}
+				}
+			}
+			.data-table {
+				margin: 0px;
+				border-bottom: solid 1px $nemi-summary-table-border-color;
+				th {
+					text-align: center;
+					color: white;
+					background-color: $nemi-summary-table-header-color;
+					border-right: solid 1px $nemi-summary-table-border-color;
+					&:last-child {
+						border-right: none;
+					}
+				}
+				tbody>tr {
+					color: black;
+					&:nth-child(odd) {
+						background-color: $nemi-summary-table-data-color;
+					}
+					&:nth-child(even) {
+						background-color: $nemi-summary-table-data-even-color;
+					}
+					
+					td {
+						padding-right: 6px;
+						padding-left: 6px;
+						border-right: solid 1px $nemi-summary-table-border-color;
+						&:last-child {
+							border-right: none;
+						}
+					}
+
+				}
+				ul {
+					@include no-bullets;
+					margin: 0px;
+				}
+			}
+			.show-hide-detail-div {
+				button {
+					margin-right: 10px;
+				}
+				padding: 0px;
+				.hidden-details-div {
+					padding-top: 0px;
+					padding-bottom: 0px;
+				}
+			}	
+		}
+	}
+	#analytes-tab {
+		.info-table {
+			padding: 10px;
+			th {
+				vertical-align: top;
+				color: black;
+				background-color: $nemi-summary-table-data-color;
+				border: none;
+				padding-right: 4px;
+			}
+			td {
+				border: none;
+			}
+		}
+		#analytes-button-div {
+			text-align: center;
+			input[type=button] {
+				@include nemi-button($color: $nemi-summary-analyte-download-color, $text_color:black);
+			}
+		}
+	}
+	#revision-tab {
+		.data-table {
+			margin-top: 30px;
+			
+			input[type=button] {
+				@include nemi-button($color: $nemi-summary-analyte-download-color, $text_color:black);
+			}
+		}
+	}
+	#bottom-method-download-div {
+		background-color: $nemi-summary-table-data-color;
+		text-align: center;
+		.download-button {
+			@include nemi-button;
+		}
+	}
+}

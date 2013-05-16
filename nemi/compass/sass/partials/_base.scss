@@ -14,6 +14,8 @@ $nemi-page-header-height: 120px;
 $nemi-footer-heading-color : #E88846;
 $nemi-footer-link-color: #E2DED0;
 
+$nemi-op-button-color: #0E75BB;
+
 $nemi-section-header-color : #639054;
 $nemi-section-header-border-color: #407137;
 
@@ -25,7 +27,6 @@ $nemi-subcategory-btn-border-color: #E88846;
 
 $nemi-search-disabled-color: #A09B8B;
 $nemi-search-disabled-text-color: #DDD7C3;
-$nemi-search-btn-color: #0E75BB;
 
 $nemi-results-disabled-color: #82827D;
 $nemi-results-disabled-text-color: #CCC6B8;
@@ -39,6 +40,17 @@ $nemi-results-table-column-border-color: #407137;
 $nemi-results-table-column-sort-color: #407137;
 $nemi-results-table-odd-row-color: #D3E0C6;
 $nemi-results-table-even-row-color: #ACCD96;
+
+$nemi-summary-header-color: #333333;
+$nemi-summary-header-highlight-color: #24BCFF;
+$nemi-summary-download-button-color: #0E75BB;
+$nemi-summary-tab-active-color: #639054;
+$nemi-summary-tab-inactive-color: #E88846;
+$nemi-summary-table-header-color: #639054;
+$nemi-summary-table-data-color: #D3E0C6;
+$nemi-summary-table-data-even-color: #ACCD96;
+$nemi-summary-table-border-color: #407137;
+$nemi-summary-analyte-download-color: #E88846;
 
 $nemi-dialog-header-color: #639054;
 $nemi-dialog-color: #D3E0C6;
@@ -59,6 +71,18 @@ $blueprint-grid-width: ($blueprint-container-size + $blueprint-grid-margin) / $b
 	padding: 0px;
 	margin: 0px;
 }
+@mixin nemi-button($color: $nemi-op-button-color, $text_color: white, $font_size: 12px) {
+	color: $text_color;
+	background-color: $color;
+	font-size: $font_size;
+	@include border-radius(6px);
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 20px;
+	padding-left: 20px;
+	border-style: none;
+	cursor: pointer;
+}
 
 @mixin select2-width($width) {
 	.select2-container {
@@ -70,4 +94,14 @@ $blueprint-grid-width: ($blueprint-container-size + $blueprint-grid-margin) / $b
 	display: inline-block;
 	font-weight: bold;
 	width: $width;
+}
+
+@mixin nemi-tab {
+	padding-left: 30px;
+	padding-top : 4px;
+	padding-bottom : 4px;
+	@include border-top-left-radius(6px);
+	@include border-bottom-left-radius(6px);
+	margin-top: 3px;
+	cursor: pointer;
 }

@@ -57,13 +57,13 @@
 				$(this).find('button').click(function(){
 					var detailsImgEl = $(this).find('img');
 					if (detailsImgEl.attr('alt') == 'show') {
-						detailsImgEl.attr('src', "{{ STATIC_URL }}/images/collapse.png");
+						detailsImgEl.attr('src', "{{ STATIC_URL }}/images/collapse_summary.png");
 						detailsImgEl.attr('alt', 'hide');
 						detailsImgEl.attr('title', 'Hide details');
 						detailsDiv.show();
 					}
 					else{
-						detailsImgEl.attr('src', "{{ STATIC_URL }}/images/expand.png");
+						detailsImgEl.attr('src', "{{ STATIC_URL }}/images/expand_summary.png");
 						detailsImgEl.attr('alt', 'show');
 						detailsImgEl.attr('title', 'Show details');
 						detailsDiv.hide();

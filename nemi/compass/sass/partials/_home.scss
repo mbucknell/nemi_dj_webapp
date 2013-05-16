@@ -1,50 +1,36 @@
 #home-page-content {
 	@include container;
 	padding: 0px;
-}
-.subcategory-button {
-	padding-left: 30px;
-	padding-top : 4px;
-	padding-bottom : 4px;
-	@include border-top-left-radius(6px);
-	@include border-bottom-left-radius(6px);
-	margin-top: 3px;
-	cursor: pointer;
-}
-
-.active {
-	border: 2px groove $nemi-subcategory-btn-border-color;
-	background-color: $nemi-subcategory-btn-highlight-color;
-	color: black;
-}
-.not-active {
-	background-color: $nemi-subcategory-btn-color;
-	color: white;
-	&:hover {
-		color: $nemi-subcategory-btn-rollover-color;
+		.subcategory-button {
+	@include nemi-tab;
 	}
-}
-.select2-container {
- 	padding: 2px;
- }
- 
-.search-button {
-	color: white;
-	background-color: $nemi-search-btn-color;
-	@include border-radius(6px);
-	padding-top: 5px;
-	padding-bottom: 5px;
-	padding-left : 20px;
-    padding-right: 20px;
-    font-size: 12px;
-    border-style: none;
-}
 
-.search-button-div {
-	@include column(16, true);
-	padding-top: 10px;
-	padding-bottom : 10px;
-	text-align: center;
+	.active {
+		border: 2px groove $nemi-subcategory-btn-border-color;
+		background-color: $nemi-subcategory-btn-highlight-color;
+		color: black;
+	}
+	.not-active {
+		background-color: $nemi-subcategory-btn-color;
+		color: white;
+		&:hover {
+			color: $nemi-subcategory-btn-rollover-color;
+		}
+	}
+	.select2-container {
+	 	padding: 2px;
+	 }
+	 
+	.search-button {
+		@include nemi-button;
+	}
+	
+	.search-button-div {
+		@include column(16, true);
+		padding-top: 10px;
+		padding-bottom : 10px;
+		text-align: center;
+	}	
 }
 
 #page-info {
@@ -236,7 +222,7 @@
 			padding: 0px;
 			@include main-box-shadow;
 			
-			.disabled {
+			label.disabled {
 				color: $nemi-search-disabled-color;
 			}
 			input.disabled {

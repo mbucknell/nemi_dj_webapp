@@ -38,11 +38,6 @@ body {
 		cursor: help;
 	}
 	
-	.subcategory-action-div .select2-container {
-		a {
-			border: solid 1px $nemi-search-btn-color;
-		}
-	}
 	select, .select2-results, .select2-choice{
 		font-size: 14px;
 	}
@@ -129,5 +124,5 @@ div {
 }
 .ui-dialog-buttonpane .ui-button-text {
 	color: white;
-	background-color: $nemi-search-btn-color;
+	background-color: $nemi-op-button-color;
 }
