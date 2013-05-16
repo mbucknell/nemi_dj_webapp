@@ -4,11 +4,6 @@
 
 {% block title %}NEMI Statistical Source Summary{% endblock %}
 
-{% block page_style %}
-	<!--  Style sheets for ui-dialog plugins -->
-	<link type="text/css" href="{{ STATIC_URL }}styles/jquery-ui-1.10.0.custom/smoothness/jquery-ui-1.10.0.custom.css" rel="stylesheet" media="screen"/>
-{% endblock %}
-
 {% block page_script %}
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
 	<script src="{{ STATIC_URL }}script/HelpDialog.js"></script>
@@ -16,89 +11,98 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			// Initialize header information dialogs 
-			HelpDialog.initialize($('#header-info'))
+			HelpDialog.initialize($('#header-info'));
+
+		    $('.download-button').click(function() {
+		        window.open('{{ data.link_to_full_method }}');
+		    });
 		});
+		
 	</script>
-{% endblock %}
-			
-{% block page_info %}
-	<br />
-	<b style="font-size:large;">{{ data.method_source}} {{ data.source_citation }}</b>
-	<span id="method-detail-link">
-		<a class="popup" href="{{ data.link_to_full_method }}" 
-			title="Link to method owner's website (will open in a new window)"
-			target="_blank">
-			Method owner's website
-		</a>
-	</span>
-	<br />
 {% endblock %}
 
 {% block page-content %}
-	<!--  Place holder for the field information dialog  -->
-	<div id="header-info" style="display: none;"></div>
-	{% if data %}
-		<br />
-		<table class="info-table">
-			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'title' %}</th><td>{{ data.method_official_name }}</td></tr>
-			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'author' %}</th><td>{{ data.source_citation.author }}</td></tr>
-			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'abstract_summary' %}</th><td>{{ data.brief_method_summary|linebreaksbr }}</td></tr>
-			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'table_of_contents' %}</th><td>{{ data.source_citation.table_of_contents|linebreaksbr }}</td></tr>
-			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'source_citation_name' %}</th><td>{{ data.source_citation.source_citation_name }}</td></tr>
-			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_source' %}</th><td>{{ data.method_source|default_if_none:"Not assigned" }}</td></tr>
-			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'citation_country' %}</th><td>{{ data.source_citation.country }}</td></tr>
-			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'publication_year' %}</th><td>{{ data.source_citation.publication_year }}</td></tr>
-			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'notes' %}</th><td>{{ data.notes }}</td></tr>			
-			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'source_citation_item_type' %}</th><td>{{ data.source_citation.item_type }}</td></tr>
-			<tr>
-				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'publication_source' %}</th>
-				<td>
-					{% for t in data.source_citation.publicationsourcerel_set.all %}
-						{{ t.source }}<br />
-					{% endfor %}
-					{% if data.source_citation.sponser_type_note %}
-						Additional information:&nbsp;{{ data.source_citation.sponser_type_note }}
-					{% endif %}
-				</td>
-			</tr>
-			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'purpose' %}</th>
-				<td>
-					{% for t in data.statanalysisrel_set.all %}
-						{{ t }}<br />
-					{% endfor %}
-				</td>
-			</tr>
-			<tr>
-				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'design_objectives' %}</th>
-				<td>
-					{% for t in data.statdesignrel_set.all %}
-						{{ t }}<br />
-					{% endfor %}
-				</td>
-			</tr>	
-			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'sam_complexity' %}</th><td>{{ data.sam_complexity }}</td></tr>
-			<tr>
-				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'media_emphasized' %}</th>
-				<td>
-					{% for t in data.statmediarel_set.all %}
-						{{ t }}<br />
-					{% endfor %}
-					{% if data.media_emphasized_note %}
-						Additional information:&nbsp;{{ data.media_emphasized_note }}
-					{% endif %}
-				</td>
-			</tr>
-			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'media_subcategory' %}</th><td>{{ data.media_subcategory }}</td></tr>
-			<tr>
-				<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'special_topics' %}</th>
-				<td>
-					{% for t in data.stattopicrel_set.all %}
-						{{ t }}<br />
-					{% endfor %}
-				</td>
-			</tr>
-		</table>
-	{% else %}
-		<p>Source citation data not found.</p>
-	{% endif %}
+    <div id="statistical-method-summary-page-content" class="summary-page-content">
+        <div class="summary-banner-header">
+            <span class="method-name">{:&nbsp;</span>
+        </div>
+        <div class="summary-header">
+            <div class="method-info-div">
+                <span class="method-name">{{ data.method_source }}:&nbsp;</span>
+                    {{ data.source_citation }}
+            </div>
+            <div class="method-header-button">
+                <input type="button" class="download-button" value="LINK TO METHOD" />
+            </div>
+        </div>    
+        <div class="summary-content">
+	    <!--  Place holder for the field information dialog  -->
+    	    <div id="header-info" style="display: none;"></div>
+            <div class="summary-tab-contents">
+		        <table class="info-table">
+			        <tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'title' %}</th><td>{{ data.method_official_name }}</td></tr>
+		    	    <tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'author' %}</th><td>{{ data.source_citation.author }}</td></tr>
+    	    		<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'abstract_summary' %}</th><td>{{ data.brief_method_summary|linebreaksbr }}</td></tr>
+        			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'table_of_contents' %}</th><td>{{ data.source_citation.table_of_contents|linebreaksbr }}</td></tr>
+		    	    <tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'source_citation_name' %}</th><td>{{ data.source_citation.source_citation_name }}</td></tr>
+		        	<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_source' %}</th><td>{{ data.method_source|default_if_none:"Not assigned" }}</td></tr>
+	    		    <tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'citation_country' %}</th><td>{{ data.source_citation.country }}</td></tr>
+        			<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'publication_year' %}</th><td>{{ data.source_citation.publication_year }}</td></tr>
+	    		    <tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'notes' %}</th><td>{{ data.notes }}</td></tr>			
+		        	<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'source_citation_item_type' %}</th><td>{{ data.source_citation.item_type }}</td></tr>
+	    	    	<tr>
+    			    	<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'publication_source' %}</th>
+				        <td>
+			    		    {% for t in data.source_citation.publicationsourcerel_set.all %}
+    		    				{{ t.source }}<br />
+	        				{% endfor %}
+    	    				{% if data.source_citation.sponser_type_note %}
+			    		    	Additional information:&nbsp;{{ data.source_citation.sponser_type_note }}
+				        	{% endif %}
+			    	    </td>
+    		    	</tr>
+	        		<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'purpose' %}</th>
+    	    			<td>
+			    	    	{% for t in data.statanalysisrel_set.all %}
+			        			{{ t }}<br />
+		    		    	{% endfor %}
+    	    			</td>
+        			</tr>
+		    	    <tr>
+		        		<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'design_objectives' %}</th>
+	    		    	<td>
+    				    	{% for t in data.statdesignrel_set.all %}
+					        	{{ t }}<br />
+    				    	{% endfor %}
+	    		    	</td>
+		        	</tr>	
+	    	    	<tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'sam_complexity' %}</th><td>{{ data.sam_complexity }}</td></tr>
+    			    <tr>
+			    	    <th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'media_emphasized' %}</th>
+    		    		<td>
+	        				{% for t in data.statmediarel_set.all %}
+    	    					{{ t }}<br />
+			    		    {% endfor %}
+				        	{% if data.media_emphasized_note %}
+			    	    		Additional information:&nbsp;{{ data.media_emphasized_note }}
+		    			    {% endif %}
+    	    			</td>
+        			</tr>
+		    	    <tr><th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'media_subcategory' %}</th><td>{{ data.media_subcategory }}</td></tr>
+		        	<tr>
+	    		    	<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'special_topics' %}</th>
+    				    <td>
+				    	    {% for t in data.stattopicrel_set.all %}
+			    			    {{ t }}<br />
+	    	    			{% endfor %}
+    	    			</td>
+        			</tr>
+    	    	</table>
+    	    </div>
+    	    <div id="bottom-method-download-div">
+    	        <input type="button" class="download-button" value="LINK TO METHOD" />
+            </div>
+    	</div>
+        
+    </div>
 {% endblock %}

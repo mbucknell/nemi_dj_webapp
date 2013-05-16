@@ -1,4 +1,4 @@
-#method-summary-page-content {
+.summary-page-content {
 	.summary-banner-header {
 		position: absolute;
 		right: 0px;
@@ -163,6 +163,15 @@
 			}	
 		}
 	}
+}
+#bottom-method-download-div {
+	background-color: $nemi-summary-table-data-color;
+	text-align: center;
+	.download-button {
+		@include nemi-button;
+	}
+}
+#method-summary-page-content {	
 	#analytes-tab {
 		.info-table {
 			padding: 10px;
@@ -193,11 +202,12 @@
 			}
 		}
 	}
+}
+#statistical-method-summary-page-content {
+	.summary-tab-contents {
+		@include column(20, true);
+	}
 	#bottom-method-download-div {
-		background-color: $nemi-summary-table-data-color;
-		text-align: center;
-		.download-button {
-			@include nemi-button;
-		}
+		@include column(20, true);
 	}
 }

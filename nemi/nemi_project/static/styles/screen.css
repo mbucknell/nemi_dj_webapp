@@ -2933,7 +2933,7 @@ body .ui-tooltip {
 }
 
 /* line 2, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-banner-header {
+.summary-page-content .summary-banner-header {
   position: absolute;
   right: 0px;
   left: 0px;
@@ -2942,7 +2942,7 @@ body .ui-tooltip {
   padding: 10px;
 }
 /* line 10, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-header {
+.summary-page-content .summary-header {
   width: 1100px;
   margin: 0 auto;
   overflow: hidden;
@@ -2952,21 +2952,21 @@ body .ui-tooltip {
   color: white;
 }
 /* line 15, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-header .method-info-div {
+.summary-page-content .summary-header .method-info-div {
   display: inline-block;
 }
 /* line 17, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-header .method-info-div .method-name {
+.summary-page-content .summary-header .method-info-div .method-name {
   color: #24bcff;
 }
 /* line 21, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-header .method-header-button {
+.summary-page-content .summary-header .method-header-button {
   padding-top: 7px;
   padding-bottom: 0px;
   float: right;
 }
 /* line 26, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-header .download-button {
+.summary-page-content .summary-header .download-button {
   vertical-align: middle;
   color: white;
   background-color: #0e75bb;
@@ -2984,12 +2984,12 @@ body .ui-tooltip {
   cursor: pointer;
 }
 /* line 30, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-header .download-button.disabled {
+.summary-page-content .summary-header .download-button.disabled {
   color: #ccc6b8;
   background-color: #82827d;
 }
 /* line 35, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content {
+.summary-page-content .summary-content {
   width: 1100px;
   margin: 0 auto;
   overflow: hidden;
@@ -2997,7 +2997,7 @@ body .ui-tooltip {
   padding: 0px;
 }
 /* line 38, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tabs {
+.summary-page-content .summary-content .summary-tabs {
   padding-top: 4px;
   padding-right: 0px;
   padding-left: 0px;
@@ -3007,23 +3007,23 @@ body .ui-tooltip {
   width: 165px;
 }
 /* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
-* html #method-summary-page-content .summary-content .summary-tabs {
+* html .summary-page-content .summary-content .summary-tabs {
   overflow-x: hidden;
 }
 /* line 43, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tabs ul {
+.summary-page-content .summary-content .summary-tabs ul {
   list-style: none;
   padding: 0px;
   margin: 0px;
 }
 /* line 11, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/lists/_bullets.scss */
-#method-summary-page-content .summary-content .summary-tabs ul li {
+.summary-page-content .summary-content .summary-tabs ul li {
   list-style-image: none;
   list-style-type: none;
   margin-left: 0;
 }
 /* line 45, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tabs ul li {
+.summary-page-content .summary-content .summary-tabs ul li {
   padding-left: 30px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -3037,21 +3037,21 @@ body .ui-tooltip {
   cursor: pointer;
 }
 /* line 48, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tabs ul .active {
+.summary-page-content .summary-content .summary-tabs ul .active {
   color: white;
   background-color: #639054;
 }
 /* line 52, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tabs ul .not-active {
+.summary-page-content .summary-content .summary-tabs ul .not-active {
   color: black;
   background-color: #e88846;
 }
 /* line 55, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tabs ul .not-active:hover {
+.summary-page-content .summary-content .summary-tabs ul .not-active:hover {
   color: #24bcff;
 }
 /* line 61, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents {
+.summary-page-content .summary-content .summary-tab-contents {
   background-color: #d3e0c6;
   padding: 0px;
   -webkit-box-shadow: 2px 2px 5px #333333;
@@ -3063,20 +3063,20 @@ body .ui-tooltip {
   width: 935px;
 }
 /* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
-* html #method-summary-page-content .summary-content .summary-tab-contents {
+* html .summary-page-content .summary-content .summary-tab-contents {
   overflow-x: hidden;
 }
 /* line 66, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .tab-contents {
+.summary-page-content .summary-content .summary-tab-contents .tab-contents {
   padding: 0px;
 }
 /* line 69, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .info-table {
+.summary-page-content .summary-content .summary-tab-contents .info-table {
   margin: 0px;
   padding: 0px;
 }
 /* line 72, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .info-table th {
+.summary-page-content .summary-content .summary-tab-contents .info-table th {
   white-space: nowrap;
   color: white;
   background-color: #639054;
@@ -3084,7 +3084,7 @@ body .ui-tooltip {
   padding-right: 5px;
 }
 /* line 78, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .info-table th .header-label {
+.summary-page-content .summary-content .summary-tab-contents .info-table th .header-label {
   display: inline-block;
   vertical-align: middle;
   padding-top: 0px;
@@ -3094,7 +3094,7 @@ body .ui-tooltip {
   float: left;
 }
 /* line 87, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .info-table th .help-button {
+.summary-page-content .summary-content .summary-tab-contents .info-table th .help-button {
   display: inline-block;
   padding-top: 0px;
   padding-bottom: 0px;
@@ -3104,17 +3104,17 @@ body .ui-tooltip {
   vertical-align: middle;
 }
 /* line 97, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .info-table td {
+.summary-page-content .summary-content .summary-tab-contents .info-table td {
   color: black;
   background-color: #d3e0c6;
   border-bottom: solid 1px #407137;
 }
 /* line 102, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .info-table .inside-table {
+.summary-page-content .summary-content .summary-tab-contents .info-table .inside-table {
   margin: 0px;
 }
 /* line 104, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .info-table .inside-table th {
+.summary-page-content .summary-content .summary-tab-contents .info-table .inside-table th {
   white-space: nowrap;
   color: black;
   background-color: inherit;
@@ -3122,78 +3122,102 @@ body .ui-tooltip {
   vertical-align: top;
 }
 /* line 111, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .info-table .inside-table td {
+.summary-page-content .summary-content .summary-tab-contents .info-table .inside-table td {
   padding-left: 0px;
   padding-right: 0px;
   border: none;
 }
 /* line 118, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .data-table {
+.summary-page-content .summary-content .summary-tab-contents .data-table {
   margin: 0px;
   border-bottom: solid 1px #407137;
 }
 /* line 121, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .data-table th {
+.summary-page-content .summary-content .summary-tab-contents .data-table th {
   text-align: center;
   color: white;
   background-color: #639054;
   border-right: solid 1px #407137;
 }
 /* line 126, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .data-table th:last-child {
+.summary-page-content .summary-content .summary-tab-contents .data-table th:last-child {
   border-right: none;
 }
 /* line 130, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .data-table tbody > tr {
+.summary-page-content .summary-content .summary-tab-contents .data-table tbody > tr {
   color: black;
 }
 /* line 132, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .data-table tbody > tr:nth-child(odd) {
+.summary-page-content .summary-content .summary-tab-contents .data-table tbody > tr:nth-child(odd) {
   background-color: #d3e0c6;
 }
 /* line 135, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .data-table tbody > tr:nth-child(even) {
+.summary-page-content .summary-content .summary-tab-contents .data-table tbody > tr:nth-child(even) {
   background-color: #accd96;
 }
 /* line 139, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .data-table tbody > tr td {
+.summary-page-content .summary-content .summary-tab-contents .data-table tbody > tr td {
   padding-right: 6px;
   padding-left: 6px;
   border-right: solid 1px #407137;
 }
 /* line 143, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .data-table tbody > tr td:last-child {
+.summary-page-content .summary-content .summary-tab-contents .data-table tbody > tr td:last-child {
   border-right: none;
 }
 /* line 149, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .data-table ul {
+.summary-page-content .summary-content .summary-tab-contents .data-table ul {
   list-style: none;
   margin: 0px;
 }
 /* line 11, ../../../compass/Gem/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/typography/lists/_bullets.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .data-table ul li {
+.summary-page-content .summary-content .summary-tab-contents .data-table ul li {
   list-style-image: none;
   list-style-type: none;
   margin-left: 0;
 }
 /* line 154, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .show-hide-detail-div {
+.summary-page-content .summary-content .summary-tab-contents .show-hide-detail-div {
   padding: 0px;
 }
 /* line 155, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .show-hide-detail-div button {
+.summary-page-content .summary-content .summary-tab-contents .show-hide-detail-div button {
   margin-right: 10px;
 }
 /* line 159, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content .summary-content .summary-tab-contents .show-hide-detail-div .hidden-details-div {
+.summary-page-content .summary-content .summary-tab-contents .show-hide-detail-div .hidden-details-div {
   padding-top: 0px;
   padding-bottom: 0px;
 }
+
 /* line 167, ../../../compass/sass/partials/_summary.scss */
+#bottom-method-download-div {
+  background-color: #d3e0c6;
+  text-align: center;
+}
+/* line 170, ../../../compass/sass/partials/_summary.scss */
+#bottom-method-download-div .download-button {
+  color: white;
+  background-color: #0e75bb;
+  font-size: 12px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 20px;
+  padding-left: 20px;
+  border-style: none;
+  cursor: pointer;
+}
+
+/* line 176, ../../../compass/sass/partials/_summary.scss */
 #method-summary-page-content #analytes-tab .info-table {
   padding: 10px;
 }
-/* line 169, ../../../compass/sass/partials/_summary.scss */
+/* line 178, ../../../compass/sass/partials/_summary.scss */
 #method-summary-page-content #analytes-tab .info-table th {
   vertical-align: top;
   color: black;
@@ -3201,15 +3225,15 @@ body .ui-tooltip {
   border: none;
   padding-right: 4px;
 }
-/* line 176, ../../../compass/sass/partials/_summary.scss */
+/* line 185, ../../../compass/sass/partials/_summary.scss */
 #method-summary-page-content #analytes-tab .info-table td {
   border: none;
 }
-/* line 180, ../../../compass/sass/partials/_summary.scss */
+/* line 189, ../../../compass/sass/partials/_summary.scss */
 #method-summary-page-content #analytes-tab #analytes-button-div {
   text-align: center;
 }
-/* line 182, ../../../compass/sass/partials/_summary.scss */
+/* line 191, ../../../compass/sass/partials/_summary.scss */
 #method-summary-page-content #analytes-tab #analytes-button-div input[type=button] {
   color: black;
   background-color: #e88846;
@@ -3226,11 +3250,11 @@ body .ui-tooltip {
   border-style: none;
   cursor: pointer;
 }
-/* line 188, ../../../compass/sass/partials/_summary.scss */
+/* line 197, ../../../compass/sass/partials/_summary.scss */
 #method-summary-page-content #revision-tab .data-table {
   margin-top: 30px;
 }
-/* line 191, ../../../compass/sass/partials/_summary.scss */
+/* line 200, ../../../compass/sass/partials/_summary.scss */
 #method-summary-page-content #revision-tab .data-table input[type=button] {
   color: black;
   background-color: #e88846;
@@ -3247,27 +3271,28 @@ body .ui-tooltip {
   border-style: none;
   cursor: pointer;
 }
-/* line 196, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content #bottom-method-download-div {
-  background-color: #d3e0c6;
-  text-align: center;
+
+/* line 207, ../../../compass/sass/partials/_summary.scss */
+#statistical-method-summary-page-content .summary-tab-contents {
+  display: inline;
+  float: left;
+  margin-right: 0;
+  width: 1100px;
 }
-/* line 199, ../../../compass/sass/partials/_summary.scss */
-#method-summary-page-content #bottom-method-download-div .download-button {
-  color: white;
-  background-color: #0e75bb;
-  font-size: 12px;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  -ms-border-radius: 6px;
-  -o-border-radius: 6px;
-  border-radius: 6px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-right: 20px;
-  padding-left: 20px;
-  border-style: none;
-  cursor: pointer;
+/* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
+* html #statistical-method-summary-page-content .summary-tab-contents {
+  overflow-x: hidden;
+}
+/* line 210, ../../../compass/sass/partials/_summary.scss */
+#statistical-method-summary-page-content #bottom-method-download-div {
+  display: inline;
+  float: left;
+  margin-right: 0;
+  width: 1100px;
+}
+/* line 147, ../../../compass/Gem/gems/compass-0.12.2/frameworks/blueprint/stylesheets/blueprint/_grid.scss */
+* html #statistical-method-summary-page-content #bottom-method-download-div {
+  overflow-x: hidden;
 }
 
 /* line 2, ../../../compass/sass/partials/_page.scss */
