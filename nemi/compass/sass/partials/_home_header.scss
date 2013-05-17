@@ -1,0 +1,49 @@
+#nemi-info {
+	@include column(12);
+	padding: 10px;
+	height: 120px;
+	font-weight: bold;
+}
+
+#home-header-links {
+	@include column(3);
+	padding: 10px;
+	height: 120px;
+	ul {
+		@include no-style-or-margin-list;
+        text-align: right;
+        
+        a {
+			text-decoration: none;
+			@include link-colors($nemi-header-link-normal-color, 
+								 $nemi-header-link-hover-color,
+								 $nemi-header-link-hover-color);
+	    }
+	}		  	
+}
+
+#whats-new-div {
+	@include column(5, true);
+	background-color : $nemi-content-color;
+	padding: 0px;
+	height : 120px;
+	font-size: 12px;
+				
+	#news-feed-title {
+		@include column(5, true);
+		background-color: $nemi-newsfeed-title-color;
+		color: $nemi-newsfeed-title-text-color;
+		font-style: italic;
+		height: 23px;
+		padding-top: 3px;
+		padding-left: 10px;
+	}
+	
+	#news-feed {
+		@include column(5, true);
+		overflow: auto;
+		height: 97px;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+}

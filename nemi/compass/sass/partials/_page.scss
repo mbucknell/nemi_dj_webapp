@@ -2,9 +2,6 @@
 body {
 	
 	@include blueprint-typography(true);
-	@include blueprint-utilities;
-	@include blueprint-debug;
-	@include blueprint-interaction;
 	
 	background-color: $blueprint-background-color;
 	background-image: url('../images/background.png');
@@ -47,68 +44,11 @@ body {
 		padding-right: 5px;
 	}
 	#main-page {
-	 margin-top: 2px;
-	 overflow: visible;
-	 #header {
-	 	 @include container;
-	 	 @include main-box-shadow; 
-	 	 padding: 0px;
-	 	 #banner {
-	 	 	padding: 0px;
-	 	 	margin: 0px;
-	 	 	width: column(20);
-	 	 	height: 140px;
-	 	 }
-		 #page-header {
-		 	@include column(20, true);
-			padding: 0px;
-			margin: 0px;
-			background-color: $nemi-info-color;
-			
-			#header-links {
-				float: right;
-				ul {
-					@include horizontal-list(20px, right);
-				}
-				a {
-  					text-decoration: none;
-  					@include link-colors(white, #51514E, #51514E, white, white);
-  				}
-			}		  	
-		}
-	}
-	#page-footer {
 		@include container;
-		background-color: $nemi-footer-color;
-		@include main-box-shadow;		
-		h6 {
-			color: $nemi-footer-heading-color;
-		}
-		ul {
-			@include no-style-or-margin-list;
-			font-size: 12px;
-		}
-		a {
-			@include link-colors ($nemi-footer-link-color, $nemi-footer-link-color, $nemi-footer-link-color, $nemi-footer-link-color);	 	
-		}
-		#footer-who {
-			@include column(4);
-		}
-		#footer-workgroups {
-			@include column(4);
-		}
-		#footer-legal {
-			@include column(4);
-		}
-		#footer-for-members {
-			@include column(4);
-		}		
-	}
 	}
 }
 div {
 	@include box-sizing(border-box);
-	padding: 10px;
 }
 .ui-widget, .ui-widget input, .ui-widget button{
 	font-family : $blueprint-font-family;

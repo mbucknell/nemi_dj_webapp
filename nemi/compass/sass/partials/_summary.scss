@@ -1,26 +1,19 @@
 .summary-page-content {
-	.summary-banner-header {
-		position: absolute;
-		right: 0px;
-		left: 0px;
-		background-color: $nemi-summary-header-color;
-		z-index: -1;
-		padding: 10px;
+	margin-top: 15px;
+	@include section-header(42px, $nemi-summary-header-color);
+	
+	.method-name {
+		font-size: 18px;
+		color: $nemi-summary-header-highlight-color;
 	}
-	.summary-header {
-		@include container;
-		padding: 0px;
-		background-color: $nemi-summary-header-color;
+	.section-header {
 		color: white;
+		
 		.method-info-div {
 			display: inline-block;
-			.method-name {
-				color: $nemi-summary-header-highlight-color;
-			}
 		}
 		.method-header-button {
-			padding-top: 7px;
-			padding-bottom: 0px;
+			padding: 0px;
 			float: right;
 		}
 		.download-button {
@@ -34,6 +27,7 @@
 	}
 	.summary-content {
 		@include container;
+		margin-top: 2px;
 		padding: 0px;
 		.summary-tabs {
 			padding-top: 4px;

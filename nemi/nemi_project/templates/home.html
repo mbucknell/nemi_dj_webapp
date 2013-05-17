@@ -454,7 +454,7 @@
 {% endblock %}
 
 {% block page_header %}
-    <div id="page-info">
+    <div id="nemi-info">
         NEMI is a searchable database of environmental methods, protocols, and procedures 
         that allows scientists and managers to find and compare data-collection methods
         and protocols for all stages of the monitoring process.
@@ -481,10 +481,12 @@
 {% block page-content %}
     <div id="home-page-content">
 	<div id="general-search-div" class="section-div">
-        <div class="section-header-banner-div">
-            <h4>&nbsp;</h4>
+        <div class="section-banner-header">
         </div>
-    	<h4>GENERAL SEARCH</h4>
+        <div class="section-header">
+            <span class="home-section-label">GENERAL SEARCH</span>
+        </div>
+    
 		<div id="general-subcategory-div>" class="subcategory-div">
 			<div id="general-selection-div" class="subcategory-selection-div">
 				<ul>
@@ -524,10 +526,11 @@
 		</div>
 	</div>
 	<div id="filtered-search-div" class="section-div">
-        <div class="section-header-banner-div">
-            <h4>&nbsp;</h4>
+        <div class="section-banner-header">
         </div>
-		<h4>FILTERED SEARCH</h4>
+        <div class="section-header">
+		    <span class="home-section-label">FILTERED SEARCH</span>
+        </div>
 		<div id="filtered-subcategory-div>" class="subcategory-div">
 			<div id="filtered-selection-div" class="subcategory-selection-div">
 				<ul>
@@ -644,7 +647,7 @@
 						<div id="chemical-search-div" class="input-section-div" style="display: none;">
 							<form>
 								<div class="form-entry">
-									<span class="header">Chemical subcategories:</span><br />
+									<span class="field-header">Chemical subcategories:</span><br />
 									<ul id="chemical-subcategory-selections" >
 									</ul>
 								</div>
@@ -686,7 +689,7 @@
 						<div id="toxicity-search-div" class="input-section-div" style="display: none;">
 							<form>
 								<div>
-									<span class="header">Toxicity subcategories</span><br />
+									<span class="field-header">Toxicity subcategories</span><br />
 									<ul id="toxicity-subcategory-selections"></ul>
 								</div>
                                 <div class="form-entry" id="matrix-input">
@@ -705,7 +708,7 @@
 						<div id="statistical-search-div" class="input-section-div" style="display: none;">
 							<form>
 								<div>
-									<span class="header">Statistical subcategories:</span><br />
+									<span class="field-header">Statistical subcategories:</span><br />
 									<ul id="statistical-subcategory-selections"></ul> 
 								</div>
                                 <div class="form-entry" id="study-objective-input">
@@ -768,7 +771,7 @@
                                 <input type="hidden" class="limit-by-select-field" id="instrumentation-field" name="instrumentation" />
                             </div>
 							<div id="method-type-input">
-								<span class="header">Method type:</span><br />
+								<span class="field-header">Method type:</span><br />
 								<ul id="method-type-selections" >
 								</ul>
 							</div>

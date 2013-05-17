@@ -40,16 +40,16 @@
 	</head>
 	
 	<body>
-        <div id="main-page">
+        <div class="main-page">
 		{% block header %}
-            <div id="header">
-    			<div id="banner">
+            <div class="header">
+    			<div class="banner">
     				<a href="{% url 'home' %}"><img src="{{ STATIC_URL }}images/NEMI_header.png" alt="NEMI Logo"></img></a>
     			</div>
-                <div id="page-header">
+                <div class="bottom-header-banner">
                     {% block page_header %}
                         {% block header_links %}
-                            <div id="header-links">
+                            <div class="header-links">
                                 <ul>
                                     <li><a href="{% url 'faqs' %}">FAQ</a></li>
                                     <li><a href="{% url 'glossary' %}">Glossary</a></li>
@@ -64,27 +64,27 @@
 		
 		{% block page-content %}
 		{% endblock %}
-		<div id="page-footer">
+		<div class="page-footer">
 			{% block footer %}
-			<div id=footer-who>
+			<div class=footer-who>
                 <h6>WHO WE ARE</h6>
                 <ul>
                     <li><a>Council members</a></li>
                 </ul>
             </div>
-            <div id=footer-workgroups>
+            <div class=footer-workgroups>
             <h6>WORKGROUPS</h6>
                 <ul>
                     <li><a>Methods and Data Comparability Boards</a></li>
                 </ul>
             </div>
-            <div id=footer-legal>
+            <div class=footer-legal>
                 <h6>LEGAL</h6>
                 <ul>
                     <li><a>Terms of use</a></li>
                 </ul>
             </div>
-            <div id=footer-for-members>
+            <div class=footer-for-members>
                 <h6>FOR MEMBERS</h6>
                 <ul>
                     <li><a>Meeting minutes</a></li>

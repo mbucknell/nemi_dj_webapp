@@ -1,281 +1,197 @@
 #home-page-content {
 	@include container;
-	padding: 0px;
-		.subcategory-button {
-	@include nemi-tab;
-	}
-
-	.active {
-		border: 2px groove $nemi-subcategory-btn-border-color;
-		background-color: $nemi-subcategory-btn-highlight-color;
-		color: black;
-	}
-	.not-active {
-		background-color: $nemi-subcategory-btn-color;
-		color: white;
-		&:hover {
-			color: $nemi-subcategory-btn-rollover-color;
-		}
-	}
-	.select2-container {
-	 	padding: 2px;
-	 }
-	 
-	.search-button {
-		@include nemi-button;
-	}
 	
-	.search-button-div {
-		@include column(16, true);
-		padding-top: 10px;
-		padding-bottom : 10px;
-		text-align: center;
-	}	
-}
-
-#page-info {
-	margin: 0px;
-	@include column(12);
-	height: 120px;
-	font-weight: bold;
-}
-#home-header-links {
-	@include column(3);
-	height: 120px;
-	ul {
-		@include no-style-or-margin-list;
-        text-align: right;
-	}		  	
-  	a {
-  		text-decoration: none;
-  		@include link-colors(white, #51514E, #51514E, white, white);
-  	}
-}
-#whats-new-div {
-	@include column(5, true);
-	background-color : $nemi-content-color;
-	padding: 0px;
-	height : 120px;
-	font-size: 12px;
-				
-	#news-feed-title {
-		@include column(5, true);
-		background-color: $nemi-newsfeed-title-color;
-		color: $nemi-newsfeed-title-text-color;
-		font-style: italic;
-		height: 23px;
-		padding-top: 3px;
-	}
-	#news-feed {
-		@include column(5, true);
-		overflow: auto;
-		height: 97px;
-	}
-}
-#filter-specific-div {
-	background-color: $nemi-search-form-color;
-	@include column(16, true);
-	padding: 0px;
-	margin: 0px;
-	
-	#filter-header {
-		@include column(16, true);
-		padding-top : 4px;
-		padding-bottom: 4px;
-		margin: 0px;
-		div {
-			border-bottom: solid 2px $nemi-section-header-color;
-			font-weight: bold;
-			padding-left : 4px;
-			padding-right: 4px;
-		}
-	}
-	#filter-action {
-		@include column(16, true);
-		padding: 0px;
-		padding-left: 4px;
-		margin: 0px;
+	.section-div {
+		@include column(20);
+		@include section_header(42px, $nemi-section-header-color, $nemi-section-header-border-color);
+		margin-top: 15px;
 		
-		.input-section-div>div {
-			padding-left: 0px;
+		.home-section-label {
+			color: white;
+			font-size: 18px;
 		}
 	}
-}
-#general-action-div {
-	label {
-		padding-left: 4px;
-	}
-	padding-top: 10px;
-	padding-bottom: 10px;
-}
-
-#analyte-search-div, #microbiological-search-div, #physical-search-div, #regulatory-search-div{					
-	.form-entry label {
-		@include form-entry-label(130px);
-	}
-	
-	.analyte-name-input, .analyte-code-input {
-		@include select2-width(500px);
 		
-		div {
-			padding: 2px;
-			padding-left: 5px;
+	.subcategory-div {
+		@include column(20, true);
+	}
+	.subcategory-selection-div {
+		@include column(4);
+		ul {
+			@include no-style-or-margin-list ;
+			margin-bottom: 0px;
+	
+			.subcategory-button {
+				@include nemi-tab;
+			}
+			.active {
+				border: 2px groove $nemi-subcategory-btn-border-color;
+				background-color: $nemi-subcategory-btn-highlight-color;
+				color: black;
+			}
+			.not-active {
+				background-color: $nemi-subcategory-btn-color;
+				color: white;
+				&:hover {
+					color: $nemi-subcategory-btn-rollover-color;
+				}
+			}
 		}
 	}
-	.analyte-kind-separator {
-		color : $nemi-section-header-color;
-		label {
+	.subcategory-action-div {
+		@include column(16, true);
+		width: span(16) - 6; // This is so we get the box-shadow
+		margin-top: 1px;
+		background-color: $nemi-content-background-color;
+		@include main-box-shadow;
+		
+		.select2-container {
+		 	padding: 2px;
+		 }
+		 
+		.search-button {
+			@include nemi-button;
+		}
+		
+		.search-button-div {
+			@include column(16, true);
+			padding-top: 10px;
+			padding-bottom : 10px;
 			text-align: center;
 		}
-	}
-}
-
-#community-search-div {
-	.form-entry label {
-		@include form-entry-label(120px);
-	}
-	#analyte-type-input, #waterbody-type-input {
-		@include select2-width(200px);
-	}
-	#gear-type-input {
-		@include select2-width(300px);
-	}
-}
-#toxicity-search-div {
-	.form-entry label {
-		@include form-entry-label(60px);
-	}
-	#matrix-input {
-		@include select2-width(150px);
-	}
-}
-
-#statistical-search-div {
-	.form-entry label {
-		@include form-entry-label(200px);
-	}
-	#study-objective-input, #item-type-input, #analysis-type-input {
-		@include select2-width(250px);
-	}
-	#complexity-input {
-		@include select2-width(150px);
-	}
-	#publication-source-type-input {
-		@include select2-width(300px);
-	}
-	#media-emphasized-input {
-		@include select2-width(200px);
-	}
-	#special-topic-input {
-		@include select2-width(450px);
-	}
-}
-
-.section-div {
-	@include column(12);
-	margin-top: 15px;
-	padding: 0px;
-	
-	.section-header-banner-div {
-		position: absolute;
-		right: 0px;
-		left: 0px;
-		border: solid 1px $nemi-section-header-border-color;
-		z-index: -1;
-		padding: 0px;
-	}
-	h4 {
-		padding: 5px;
-		padding-left: 3px;
-		color: white;
-		background-color: $nemi-section-header-color;
-		margin-bottom: 0px;
-		margin-top: 1px;
-	}
-	.header {
-		padding-left: 0px;
-		font-weight: bold;
-	}
-	
-	ul {
-		@include no-bullets;
-		margin-bottom: 0px;
-	}
-	
-	.subcategory-div {
-		@include column(20);
-		margin-top: 2px;
-		padding: 0px;
-		.subcategory-selection-div {
-			@include column(4);			
-			margin: 0px;
-			padding: 0px;
-			
-			ul {
-				@include no-style-or-margin-list;
-			}
-			
+		
+		ul {
+			@include no-bullets;
 		}
-		.subcategory-action-div {
-			@include column(16, true);
-			background-color: $nemi-search-form-color;
-			padding: 0px;
-			@include main-box-shadow;
-			
-			label.disabled {
-				color: $nemi-search-disabled-color;
+		
+		.input-section-div {
+			padding: 10px;
+			label {
+				padding: 4px;
 			}
-			input.disabled {
-				background-color: $nemi-search-disabled-color;
-				color: $nemi-search-disabled-text-color;
-			}
-			
-			.input-section-div {
-				@include column(16, true);
-			
-				.form-entry {
-					@include column(16, true);
-					padding: 2px;
-				}
-				
+		}
+		.field-header {
+			padding-left: 0px;
+			font-weight: bold;
+		}
+		
+		label.disabled {
+			color: $nemi-search-disabled-color;
+		}
+		
+		input.disabled {
+			background-color: $nemi-search-disabled-color;
+			color: $nemi-search-disabled-text-color;
+		}		
+	}
+	
+	#filter-specific-div {
+		#filter-header {
+			padding: 10px;
+			div {
+				border-bottom: solid 2px $nemi-section-header-color;
+				font-weight: bold;
+				padding-left : 4px;
+				padding-right: 4px;
+				padding-top: 10px;
+				padding-bottom: 10px;
 			}
 		}
 	}
-}
-
-#limit-by-section {
-	@include column(10, true);
-	padding-bottom: 0px;
-	#limit-by-header {
-		background-color: $nemi-section-header-color;
-		margin: 0px;
-		button {
-			vertical-align: middle;
+	#general-action-div {
+		padding-top: 10px;
+		padding-bottom: 15px;
+	}
+	
+	#analyte-search-div, #microbiological-search-div, #physical-search-div, #regulatory-search-div{					
+		.form-entry label {
+			@include form-entry-label(130px);
 		}
-		h5 {
-			display: inline-block;
-		    padding: 0px;
+		
+		.analyte-name-input, .analyte-code-input {
+			@include select2-width(500px);
+		}
+		.analyte-kind-separator {
+			color : $nemi-section-header-color;
+			label {
+				text-align: center;
+			}
+		}
+	}
+	
+	#community-search-div {
+		.form-entry label {
+			@include form-entry-label(120px);
+		}
+		#analyte-type-input, #waterbody-type-input {
+			@include select2-width(200px);
+		}
+		#gear-type-input {
+			@include select2-width(300px);
+		}
+	}
+	#toxicity-search-div {
+		.form-entry label {
+			@include form-entry-label(60px);
+		}
+		#matrix-input {
+			@include select2-width(150px);
+		}
+	}
+	
+	#statistical-search-div {
+		.form-entry label {
+			@include form-entry-label(200px);
+		}
+		#study-objective-input, #item-type-input, #analysis-type-input {
+			@include select2-width(250px);
+		}
+		#complexity-input {
+			@include select2-width(150px);
+		}
+		#publication-source-type-input {
+			@include select2-width(300px);
+		}
+		#media-emphasized-input {
+			@include select2-width(200px);
+		}
+		#special-topic-input {
+			@include select2-width(450px);
+		}
+	}
+	
+	#limit-by-section {
+		padding: 10px;
+		#limit-by-header {
 			padding-left: 10px;
-			color: white;
-			margin-bottom: 0px;
-			margin-top: 1px;
+			padding-bottom: 5px;
+			padding-top: 5px;
+			background-color: $nemi-section-header-color;
+			margin: 0px;
+			button {
+				vertical-align: middle;
+			}
+			h5 {
+				display: inline-block;
+			    padding: 0px;
+				padding-left: 10px;
+				color: white;
+				margin-bottom: 0px;
+				margin-top: 1px;
+			}
 		}
-	}
-	#filtered-search-limits {
-		padding-left: 40px;
-		padding-bottom : 0px;
-	}
-	.form-entry label {
-		@include form-entry-label(130px);
-	}
-	#media-name-input {
-		@include select2-width(150px);
-	}
-	#source-field-input, #instrumentation-field-input {
-		@include select2-width(600px);
-	}
-	#method-type-input {
-		@include column(16, true);
-		padding: 2px;
+		#filtered-search-limits {
+			padding-left: 40px;
+			padding-bottom : 0px;
+		}
+		.form-entry label {
+			@include form-entry-label(130px);
+		}
+		#media-name-input {
+			@include select2-width(150px);
+		}
+		#source-field-input, #instrumentation-field-input {
+			@include select2-width(600px);
+		}
 	}
 }

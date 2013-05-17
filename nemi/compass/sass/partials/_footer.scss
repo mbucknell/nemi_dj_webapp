@@ -1,0 +1,32 @@
+.page-footer {
+	@include container;
+	background-color: $nemi-footer-color;
+	@include main-box-shadow;		
+	h6 {
+		color: $nemi-footer-heading-color;
+	}
+	ul {
+		@include no-style-or-margin-list;
+		font-size: 12px;
+	}
+	a { 
+		@include link-colors ($nemi-footer-link-color, 
+		                      $nemi-footer-link-hover-color, 
+		                      $nemi-footer-link-hover-color);	 	
+	}
+	.footer-who {
+		@include column(4);
+	}
+	.footer-workgroups {
+		@include column(4);
+	}
+	.footer-legal {
+		@include column(4);
+	}
+	.footer-for-members {
+		@include column(4);
+	}		
+}
+.page-footer > div {
+	padding: 10px;
+}

@@ -1,0 +1,34 @@
+.header {
+	@include container;
+	@include main-box-shadow;
+	padding: 0px;
+	
+	.banner {
+		@include column(20, true);
+		padding: 0px;
+		margin: 0px;
+		height: 140px;
+	}
+	
+	.bottom-header-banner {
+		@include column(20, true);
+		padding: 0px;
+		margin: 0px;
+		background-color: $nemi-bottom-header-color;
+		
+		.header-links {
+			float: right;
+			padding: 10px;
+			ul {
+				@include horizontal-list(20px, right);
+				
+				a {
+					text-decoration: none;
+					@include link-colors($nemi-header-link-normal-color, 
+										 $nemi-header-link-hover-color,
+										 $nemi-header-link-hover-color);
+			    }
+			}
+		}
+	}
+}
