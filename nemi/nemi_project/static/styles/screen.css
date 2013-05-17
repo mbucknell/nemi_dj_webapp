@@ -3295,6 +3295,47 @@ body .ui-tooltip {
   overflow-x: hidden;
 }
 
+/* line 2, ../../../compass/sass/partials/_flat_page.scss */
+.banner-header {
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  background-color: #333333;
+  z-index: -1;
+  padding: 10px;
+}
+
+/* line 11, ../../../compass/sass/partials/_flat_page.scss */
+.page-header {
+  width: 1100px;
+  margin: 0 auto;
+  overflow: hidden;
+  *zoom: 1;
+  padding: 0px;
+  background-color: #333333;
+  color: white;
+}
+/* line 17, ../../../compass/sass/partials/_flat_page.scss */
+.page-header .page-name-div {
+  display: inline-block;
+}
+/* line 20, ../../../compass/sass/partials/_flat_page.scss */
+.page-header .page-name-div page-name {
+  color: #24bcff;
+}
+
+/* line 25, ../../../compass/sass/partials/_flat_page.scss */
+.content-div {
+  width: 1100px;
+  margin: 0 auto;
+  overflow: hidden;
+  *zoom: 1;
+  background-color: #d3e0c6;
+  -webkit-box-shadow: 2px 2px 5px #333333;
+  -moz-box-shadow: 2px 2px 5px #333333;
+  box-shadow: 2px 2px 5px #333333;
+}
+
 /* line 2, ../../../compass/sass/partials/_page.scss */
 body {
   line-height: 1.5;

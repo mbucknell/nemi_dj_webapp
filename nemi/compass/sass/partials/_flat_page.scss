@@ -1,0 +1,32 @@
+
+.banner-header {
+	position: absolute;
+	right: 0px;
+	left: 0px;
+	background-color: $nemi-summary-header-color;
+	z-index: -1;
+	padding: 10px;
+}
+
+.page-header {
+	@include container;
+	padding: 0px;
+	background-color: $nemi-summary-header-color;
+	color: white;
+	
+	.page-name-div {
+		display: inline-block;
+		
+		page-name {
+			color: $nemi-summary-header-highlight-color;
+		}
+	}
+}
+.content-div {
+	@include container;
+	background-color: $nemi-summary-table-data-color;
+	@include main-box-shadow;
+}
+	
+		
+	

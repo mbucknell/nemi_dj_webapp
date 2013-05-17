@@ -2,4 +2,18 @@
 
 {% block title %}{{ flatpage.title }}{% endblock %}
 
-{% block page-content %}{{ flatpage.content }}{% endblock %}
+{% block page-content %}
+    <div class="flat-page-content">
+        <div class="banner-header">
+            <span class="page-name">&nbsp;</span>
+        </div>
+        <div class="page-header">
+            <div class="page-name-div">
+                <span class="page-name">{{ flatpage.title }}</span>
+            </div>
+        </div>
+        <div class="content-div">
+            {{ flatpage.content }}
+        </div>
+    </div>        
+{% endblock %}
