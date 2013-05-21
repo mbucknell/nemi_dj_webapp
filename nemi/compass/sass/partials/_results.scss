@@ -3,13 +3,14 @@
 }
 #top-results-actions, #bottom-results-actions {
 	@include container;
+	padding: 10px;
 	height: 60px;
 	
 	.results-action-div {
 		text-align: center;
 		
 		input[type=button] {
-			@include nemi-button;
+			@include nemi-button($font-size: 14px);
 		}
 		input[type=button].disabled {
 			color: $nemi-results-disabled-text-color;
@@ -21,14 +22,10 @@
 	position: relative;
 	margin-right: 10px;
 	margin-left: 10px;
-	padding: 0px;
 	@include main-box-shadow;
 
 	#top-results-header, #bottom-results-header {
-		position: relative;
-		margin-right: 0px;
-		margin-left: 0px;
-		
+		padding: 10px;		
 		background-color: $nemi-results-header-color;
 		color: white;
 		
@@ -37,7 +34,6 @@
 		}
 		.results-header-info {
 			display: inline-block;
-			padding: 0px;
 			span {
 				font-size: 20px;
 				color: $nemi-results-header-highlight-color;
@@ -47,27 +43,13 @@
 			}
 		}
 		.results-header-actions {
-			padding: 0px;
 			display: inline-block;
 			float: right;
 		}
 	}
 	
-	#results-table-div {
-		position: relative;
-		padding: 0px;
-		margin-left: 0px;
-		margin-right: 0px;
-	}
 	.results-table {
 		margin-bottom: 0px;
-		
-		div>div {
-			padding: 0px;
-		}
-		.help-button {
-			padding: 0px;
-		}
 	}
 }
 /* Specific to a results page */
