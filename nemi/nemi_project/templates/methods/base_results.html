@@ -45,7 +45,7 @@
 			// Add code to limit visible results to selected rows if there 
 			// is a compare button.
 			$('.compare-button').click(function() {
-				$('#results-table input[type=checkbox]').not(':checked').parents('tr').hide();
+				$('.results-table input[type=checkbox]').not(':checked').parents('tr').hide();
 				var resort = true;
 				$('.data-table').trigger('update', [resort]);
 				Utils.setEnabled($('.full-results-button'), true);
@@ -53,8 +53,8 @@
 			
 			// Add click handler for full results button.
 			$('.full-results-button').click(function() {
-				$('#results-table tr:hidden').show();
-				$('#results-table input[type=checkbox]:checked').removeAttr('checked');
+				$('.results-table tr:hidden').show();
+				$('.results-table input[type=checkbox]:checked').removeAttr('checked');
 				Utils.setEnabled($('.full-results-button'), false);
 				Utils.setEnabled($('.compare-button'), false);
 				
@@ -68,7 +68,7 @@
 				}
 				else {
 					// Have to look at all visible checkboxes to see if any are set.
-					if (!$('#results-table input[type=checkbox]:visible').is(':checked')) {
+					if (!$('.results-table input[type=checkbox]:visible').is(':checked')) {
 						Utils.setEnabled(compareBtn, false);
 					}
 				}
@@ -83,7 +83,7 @@
 				$('.download-button').click(function() {
 					// Get all visible method ids and put into a query parameter 
 					var params = '{{ request.GET.urlencode }}';
-					$('#results-table tbody tr:visible').each(function() {
+					$('.results-table tbody tr:visible').each(function() {
 						if (params != '') {
 							params += '&';
 						}

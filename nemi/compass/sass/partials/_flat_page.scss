@@ -1,16 +1,16 @@
 .flat-page-content {
-	@include section-header(42px, $nemi-summary-header-color);
+	@include section-header(42px, $nemi-page-header-color);
 
 	.page-name-div {
 		display: inline-block;
-		color: $nemi-summary-header-highlight-color;
+		color: $nemi-page-header-highlight-color;
 		font-size: 18px;
 	}
 	.content-div {
 		padding: 10px;
 		@include container;
 		margin-top : 2px;
-		background-color: $nemi-summary-table-data-color;
+		background-color: $nemi-primary-content-bg-color;
 		@include main-box-shadow;
 	}
 }

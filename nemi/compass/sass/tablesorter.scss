@@ -13,7 +13,7 @@
 .tablesorter-nemi,
 .tablesorter-nemi th,
 .tablesorter-nemi td {
-	border-right: $nemi-results-table-column-border-color 1px solid;
+	border-right: $nemi-table-border-color 1px solid;
 	border-spacing: 0;
 	padding: 0;
 	text-align: left;
@@ -22,13 +22,13 @@
 /* header */
 .tablesorter-nemi thead tr,
 .tablesorter-nemi tfoot tr {
-	background-color: $nemi-results-table-header-color;
+	background-color: $nemi-table-header-color;
 }
 .tablesorter-nemi th,
 .tablesorter-nemi thead td {
 	text-align: center;
 	font-weight: bold;
-	border-right: $nemi-results-table-column-border-color 1px solid;
+	border-right: $nemi-table-border-color 1px solid;
 	border-collapse: collapse;
 	padding: 2px;
 }
@@ -44,13 +44,13 @@
 .tablesorter-nemi thead .headerSortUp,
 .tablesorter-nemi thead .tablesorter-headerSortUp,
 .tablesorter-nemi thead .tablesorter-headerAsc {
-	background-color: $nemi-results-table-column-sort-color;
+	background-color: $nemi-table-header-sort-color;
 	background-image: url(../images/sort_asc.png);
 }
 .tablesorter-nemi thead .headerSortDown,
 .tablesorter-nemi thead .tablesorter-headerSortDown,
 .tablesorter-nemi thead .tablesorter-headerDesc {
-	background-color: $nemi-results-table-column-sort-color;
+	background-color: $nemi-table-header-sort-color;
 	background-image: url(../images/sort_desc.png);
 }
 .tablesorter-nemi th.tablesorter-header .tablesorter-header-inner,
@@ -118,13 +118,14 @@
 
 /* Zebra Widget - row alternating colors */
 .tablesorter-nemi tr.odd td {
-	background-color: $nemi-results-table-odd-row-color;
+	background-color: $nemi-table-primary-color;
 }
 .tablesorter-nemi tr.even td {
-	background-color: $nemi-results-table-even-row-color;
+	background-color: $nemi-table-secondary-color;
 }
 
 /* Column Widget - column sort colors */
+/* We are not using this feature in NEMI so we would probably have to adjust these colors. */
 .tablesorter-nemi td.primary,
 .tablesorter-nemi tr.odd td.primary {
 	background-color: #99e6a6;

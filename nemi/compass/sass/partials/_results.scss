@@ -13,8 +13,8 @@
 			@include nemi-button($font-size: 14px);
 		}
 		input[type=button].disabled {
-			color: $nemi-results-disabled-text-color;
-			background-color: $nemi-results-disabled-color;
+			color: $nemi-disabled-text-color;
+			background-color: $nemi-disabled-color;
 		}
 	}
 }
@@ -26,7 +26,7 @@
 
 	#top-results-header, #bottom-results-header {
 		padding: 10px;		
-		background-color: $nemi-results-header-color;
+		background-color: $nemi-page-header-color;
 		color: white;
 		
 		input[type=button] {
@@ -36,7 +36,7 @@
 			display: inline-block;
 			span {
 				font-size: 20px;
-				color: $nemi-results-header-highlight-color;
+				color: $nemi-page-header-highlight-color;
 			}
 			.back-button {
 				margin-left: 50px;
@@ -55,7 +55,7 @@
 /* Specific to a results page */
 #reg-results-table {
 	td {
-		border : $nemi-results-table-column-border-color 1px solid;
+		border : $nemi-table-border-color 1px solid;
 	}
 	 tbody > tr:hover > td,
 	 tbody > tr:hover > td table td,
@@ -65,13 +65,13 @@
 	 tbody > tr.even:hover > td table td,
 	 tbody > tr.even:hover + tr.tablesorter-childRow > td,
 	 tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-			background: $nemi-results-table-even-row-color;
+			background: $nemi-table-secondary-color;
 	 }
 	 tbody > tr.odd:hover > td,
 	 tbody > tr.odd:hover > td table td,
 	 tbody > tr.odd:hover + tr.tablesorter-childRow > td,
 	 tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-			background: $nemi-results-table-odd-row-color;
+			background: $nemi-table-primary-color;
 	 }
 }
 .keyword-results-actions {

@@ -24,7 +24,7 @@
 
 #whats-new-div {
 	@include column(5, true);
-	background-color : $nemi-content-color;
+	background-color : $nemi-primary-content-bg-color;
 	padding: 0px;
 	height : 120px;
 	font-size: 12px;

@@ -1,9 +1,18 @@
 #home-page-content {
 	@include container;
 	
+	select, .select2-results, .select2-choice{
+		font-size: 14px;
+	}
+	
+	form > label {
+		font-weight: bold;
+		padding-right: 5px;
+	}
+	
 	.section-div {
 		@include column(20);
-		@include section_header(42px, $nemi-section-header-color, $nemi-section-header-border-color);
+		@include section_header(42px, $nemi-home-header-bg-color, $nemi-home-header-border-color);
 		margin-top: 15px;
 		
 		.home-section-label {
@@ -25,15 +34,15 @@
 				@include nemi-tab;
 			}
 			.active {
-				border: 2px groove $nemi-subcategory-btn-border-color;
-				background-color: $nemi-subcategory-btn-highlight-color;
+				border: 2px groove $nemi-home-tab-btn-border-color;
+				background-color: $nemi-home-tab-btn-highlight-color;
 				color: black;
 			}
 			.not-active {
-				background-color: $nemi-subcategory-btn-color;
+				background-color: $nemi-home-tab-btn-color;
 				color: white;
 				&:hover {
-					color: $nemi-subcategory-btn-rollover-color;
+					color: $nemi-home-tab-btn-rollover-color;
 				}
 			}
 		}
@@ -42,7 +51,7 @@
 		@include column(16, true);
 		width: span(16) - 6; // This is so we get the box-shadow
 		margin-top: 1px;
-		background-color: $nemi-content-background-color;
+		background-color: $nemi-primary-content-bg-color;
 		@include main-box-shadow;
 		
 		.select2-container {
@@ -76,12 +85,12 @@
 		}
 		
 		label.disabled {
-			color: $nemi-search-disabled-color;
+			color: $nemi-home-disabled-color;
 		}
 		
 		input.disabled {
-			background-color: $nemi-search-disabled-color;
-			color: $nemi-search-disabled-text-color;
+			background-color: $nemi-home-disabled-color;
+			color: $nemi-home-disabled-text-color;
 		}		
 	}
 	
@@ -89,7 +98,7 @@
 		#filter-header {
 			padding: 10px;
 			div {
-				border-bottom: solid 2px $nemi-section-header-color;
+				border-bottom: solid 2px $nemi-home-header-bg-color;
 				font-weight: bold;
 				padding-left : 4px;
 				padding-right: 4px;
@@ -112,7 +121,7 @@
 			@include select2-width(500px);
 		}
 		.analyte-kind-separator {
-			color : $nemi-section-header-color;
+			color : $nemi-home-header-bg-color;
 			label {
 				text-align: center;
 			}
@@ -166,7 +175,7 @@
 			padding-left: 10px;
 			padding-bottom: 5px;
 			padding-top: 5px;
-			background-color: $nemi-section-header-color;
+			background-color: $nemi-home-header-bg-color;
 			margin: 0px;
 			button {
 				vertical-align: middle;

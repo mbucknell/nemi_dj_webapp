@@ -8,7 +8,6 @@ $blueprint-font-size: 16px;
 $blueprint-grid-columns: 20;
 $blueprint-grid-margin: 0px;
 $blueprint-grid-width: 55px;
-$nemi-content-background-color: #D3E0C6;
 
 //Colors for page header
 $nemi-bottom-header-color: #EF975B;
@@ -23,46 +22,45 @@ $nemi-footer-heading-color : #E88846;
 $nemi-footer-link-color: #E2DED0;
 $nemi-footer-link-hover-color: #24BCFF;
 
-// old colors
-$nemi-info-color: #EF975B;
-$nemi-content-color: #D3E0C6;
 
-$nemi-op-button-color: #0E75BB;
+// Colors for content
+$nemi-primary-content-bg-color: #D3E0C6;
 
-$nemi-section-header-color : #639054;
-$nemi-section-header-border-color: #407137;
+$nemi-home-header-bg-color: #639054;
+$nemi-home-header-border-color: #407137;
+$nemi-home-tab-btn-color: #333333;
+$nemi-home-tab-btn-highlight-color: #E88846;
+$nemi-home-tab-btn-rollover-color: #24BCFF;
+$nemi-home-tab-btn-border-color: #E88846;
+$nemi-home-disabled-color: #A09B8B;
+$nemi-home-disabled-text-color: #DDD7C3;
 
-$nemi-search-form-color: #D3E0C6;
-$nemi-subcategory-btn-color: #333333;
-$nemi-subcategory-btn-highlight-color: #E88846;
-$nemi-subcategory-btn-rollover-color: #24BCFF;
-$nemi-subcategory-btn-border-color: #E88846;
+$nemi-table-primary-color : $nemi-primary-content-bg-color;
+$nemi-table-secondary-color: #ACCD96;
+$nemi-table-border-color: #407137;
+$nemi-table-header-color: #639054;
+$nemi-table-header-sort-color: #407137;
 
-$nemi-search-disabled-color: #A09B8B;
-$nemi-search-disabled-text-color: #DDD7C3;
+$nemi-disabled-color: #82827D;
+$nemi-disabled-text-color: #CCC6B8;
 
-$nemi-results-disabled-color: #82827D;
-$nemi-results-disabled-text-color: #CCC6B8;
-$nemi-results-action-btn-color: #0E75BB;
-$nemi-results-header-btn-color: #E88846;
-$nemi-results-header-color: #333333;
-$nemi-results-header-highlight-color: #24BCFF;
+$nemi-op-button-color: #0E75BB; // Default button color
+
+$nemi-page-header-color: #333333;
+$nemi-page-header-highlight-color: #24BCFF;
 
 $nemi-results-table-header-color: #639054;
 $nemi-results-table-column-border-color: #407137;
 $nemi-results-table-column-sort-color: #407137;
 $nemi-results-table-odd-row-color: #D3E0C6;
 $nemi-results-table-even-row-color: #ACCD96;
+$nemi-results-header-btn-color: #E88846;
 
-$nemi-summary-header-color: #333333;
-$nemi-summary-header-highlight-color: #24BCFF;
 $nemi-summary-download-button-color: #0E75BB;
 $nemi-summary-tab-active-color: #639054;
 $nemi-summary-tab-inactive-color: #E88846;
-$nemi-summary-table-header-color: #639054;
-$nemi-summary-table-data-color: #D3E0C6;
-$nemi-summary-table-data-even-color: #ACCD96;
-$nemi-summary-table-border-color: #407137;
+$nemi-summary-tab-active-border-color: #407137;
+$nemi-summary-tab-btn-rollover-color: #24BCFF;
 $nemi-summary-analyte-download-color: #E88846;
 
 $nemi-dialog-header-color: #639054;

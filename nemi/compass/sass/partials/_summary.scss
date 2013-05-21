@@ -1,10 +1,10 @@
 .summary-page-content {
 	margin-top: 15px;
-	@include section-header(42px, $nemi-summary-header-color);
+	@include section-header(42px, $nemi-page-header-color);
 	
 	.method-name {
 		font-size: 18px;
-		color: $nemi-summary-header-highlight-color;
+		color: $nemi-page-header-highlight-color;
 	}
 	.section-header {
 		color: white;
@@ -13,7 +13,6 @@
 			display: inline-block;
 		}
 		.method-header-button {
-			padding: 0px;
 			float: right;
 		}
 		.download-button {
@@ -21,18 +20,15 @@
 			@include nemi-button;
 		}
 		.download-button.disabled {
-			color: $nemi-results-disabled-text-color;
-			background-color: $nemi-results-disabled-color;
+			color: $nemi-disabled-text-color;
+			background-color: $nemi-disabled-color;
 		}
 	}
 	.summary-content {
 		@include container;
 		margin-top: 2px;
-		padding: 0px;
 		.summary-tabs {
 			padding-top: 4px;
-			padding-right: 0px;
-			padding-left: 0px;
 			@include column(3);
 			ul {
 				@include no-style-or-margin-list;
@@ -42,46 +38,41 @@
 				.active {
 					color: white;
 					background-color: $nemi-summary-tab-active-color;
+					border: 1px solid $nemi-summary-tab-active-border-color;
+					
 				}
 				.not-active {
 					color: black;
 					background-color: $nemi-summary-tab-inactive-color;
 					&:hover {
-						color: $nemi-subcategory-btn-rollover-color;
+						color: $nemi-summary-tab-btn-rollover-color;
 					}				
 				}
 			}
 		}
 		.summary-tab-contents {
-			background-color: $nemi-summary-table-data-color;
-			padding: 0px;
+			background-color: $nemi-primary-content-bg-color;
 			@include main-box-shadow;
-			@include column(17, true);
-			.tab-contents {
-				padding: 0px;
-			}
+			@include column(16, true);
+			width: span(17) - 6;
+			margin-bottom: 15px;
+
 			.info-table {
-				margin: 0px;
-				padding: 0px;
+				margin-bottom: 10px;
 				th {
 					@include nowrap;
 					color: white;
-					background-color: $nemi-summary-table-header-color;
-					border-bottom: solid 1px $nemi-summary-table-border-color;
-					padding-right: 5px;
+					background-color: $nemi-table-header-color;
+					border-bottom: solid 1px $nemi-table-border-color;
+					padding-left: 10px;
 					.header-label {
 						display: inline-block;
 						vertical-align: middle;
-						padding-top: 0px;
-						padding-bottom: 0px;
-						padding-left: 5px;
 						padding-right: 5px;
 						float: left;
 					}
 					.help-button {
 						display: inline-block;
-						padding-top: 0px;
-						padding-bottom: 0px;
 						padding-left: 5px;
 						padding-right: 5px;
 						float: right;
@@ -89,12 +80,13 @@
 					}					
 				}
 				td {
+					padding-left: 10px;
+					padding-right: 10px;
 					color: black;
-					background-color: $nemi-summary-table-data-color;
-					border-bottom: solid 1px $nemi-summary-table-border-color;
+					background-color: $nemi-table-primary-color;
+					border-bottom: solid 1px $nemi-table-border-color;
 				}
 				.inside-table {
-					margin: 0px;
 					th {
 						@include nowrap;
 						color: black;
@@ -103,20 +95,17 @@
 						vertical-align: top;
 					}
 					td {
-						padding-left: 0px;
-						padding-right: 0px;
 						border: none;
 					}
 				}
 			}
 			.data-table {
-				margin: 0px;
-				border-bottom: solid 1px $nemi-summary-table-border-color;
+				border-bottom: solid 1px $nemi-table-border-color;
 				th {
 					text-align: center;
 					color: white;
-					background-color: $nemi-summary-table-header-color;
-					border-right: solid 1px $nemi-summary-table-border-color;
+					background-color: $nemi-table-header-color;
+					border-right: solid 1px $nemi-table-border-color;
 					&:last-child {
 						border-right: none;
 					}
@@ -124,16 +113,16 @@
 				tbody>tr {
 					color: black;
 					&:nth-child(odd) {
-						background-color: $nemi-summary-table-data-color;
+						background-color: $nemi-table-primary-color;
 					}
 					&:nth-child(even) {
-						background-color: $nemi-summary-table-data-even-color;
+						background-color: $nemi-table-secondary-color;
 					}
 					
 					td {
 						padding-right: 6px;
 						padding-left: 6px;
-						border-right: solid 1px $nemi-summary-table-border-color;
+						border-right: solid 1px $nemi-table-border-color;
 						&:last-child {
 							border-right: none;
 						}
@@ -159,28 +148,33 @@
 	}
 }
 #bottom-method-download-div {
-	background-color: $nemi-summary-table-data-color;
+	padding: 10px;
+	background-color: $nemi-primary-content-bg-color;
 	text-align: center;
+	
 	.download-button {
 		@include nemi-button;
 	}
 }
 #method-summary-page-content {	
 	#analytes-tab {
+		#analyte-header {
+			padding: 10px;
+		}
 		.info-table {
 			padding: 10px;
 			th {
 				vertical-align: top;
 				color: black;
-				background-color: $nemi-summary-table-data-color;
+				background-color: $nemi-primary-content-bg-color;
 				border: none;
-				padding-right: 4px;
 			}
 			td {
 				border: none;
 			}
 		}
 		#analytes-button-div {
+			padding: 10px;
 			text-align: center;
 			input[type=button] {
 				@include nemi-button($color: $nemi-summary-analyte-download-color, $text_color:black);
@@ -200,8 +194,6 @@
 #statistical-method-summary-page-content {
 	.summary-tab-contents {
 		@include column(20, true);
-	}
-	#bottom-method-download-div {
-		@include column(20, true);
+		width: span(20) - 6;
 	}
 }
