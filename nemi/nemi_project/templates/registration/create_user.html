@@ -1,24 +1,24 @@
-{% extends 'base.html' %}
+{% extends 'base_with_header.html' %}
 
-{% block page_info %}<h1>NEMI Create User Account</h1>{% endblock %}
+{% block section_name %}NEMI Create User Account{% endblock %}
 
-{% block page-content %}
+{% block content %}
 <p style="font-size: medium;">Please enter the information requested. All fields are required.</p>
 	<form action="{{ request.get_path }}" method="post" autocomplete="off">{% csrf_token %}
-		<table id="data-entry-table">
+		<table>
 			{% for field in form %}
 				<tr>
-					<td style="white-space:nowrap;"><b>{{ field.label_tag }}:</b>
+					<th style="white-space:nowrap;">{{ field.label_tag }}:
 						{% for e in field.errors %}
 							<br /><span style="color:red;">{{ e }}</span>
 						{% endfor %}
-					</td>
-					<td style="padding-right: 20px;">{{ field }}</td>
+					</th>
+					<td>{{ field }}</td>
 					<td style="color: grey">{{ field.help_text }}</td>
 				</tr>
 			{% endfor %}
 		</table>
 		<br />
-		<input type="submit" value="Create account" />
+		<input class="default-button" type="submit" value="Create account" />
 	</form>
 {% endblock %}

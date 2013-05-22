@@ -36,7 +36,5 @@ class NEMIUserCreationForm(UserCreationForm):
         if commit:
             user.save()
             
-        user.groups.add(Group.objects.get(name="nemi_data_entry"))
-
         return user
         

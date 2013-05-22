@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "base_with_header.html" %}
 
 {% block title %}NEMI New User{% endblock %}
 
-{% block page_info %}<h1>NEMI - Account creation successful</h2>{% endblock %}
+{% block section_name %}NEMI - Account creation successful{% endblock %}
 
-{% block page-content %}
+{% block content %}
 	<p>Your NEMI account, {{ user.username }}, has been successfully created. This will allow you to enter,
 	revise, and then submit your SAMs method to NEMI. The method will still need to be reviewed and approved before
 	it will appear in the NEMI search results.

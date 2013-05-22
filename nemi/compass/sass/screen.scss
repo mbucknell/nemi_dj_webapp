@@ -12,14 +12,15 @@
 // Combine the partials into a single screen stylesheet.
 @import "vendor/_jquery-ui-1.10.0.custom";
 
+@import "partials/default_page";
+@import "partials/page";
 @import "partials/header";
 @import "partials/home_header";
 @import "partials/footer";
 @import "partials/home";
 @import "partials/results";
 @import "partials/summary";
-@import "partials/flat_page";
-@import "partials/page";
+@import "partials/sams_entry";
 
 
 

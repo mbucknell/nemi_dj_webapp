@@ -1,0 +1,52 @@
+#sams-page-info {
+	#navigation-bar {
+		padding: 10px;
+		background-color: $nemi-table-header-color;
+		display: inline-block;
+	
+		ul {
+			padding: 10px;
+			@include horizontal-list(10px);
+			
+			li {
+				a {
+					color: white;
+					font-size: 18px;
+					padding: 5px;
+					&:hover {
+						background-color: $nemi-table-header-sort-color;
+						text-decoration: none;
+					}
+				}
+			}
+		}
+	}
+	#login-div {
+		float: right;
+		a {
+			@include link-colors($nemi-table-header-sort-color, $nemi-header-link-hover-color, $nemi-header-link-hover-color, $nemi-table-header-sort-color, $nemi-table-header-sort-color);
+		}
+	}
+}
+#sams-entry-content {
+	.info-table {
+		margin-left: 0px;
+		th {
+			color: white;
+			background-color: $nemi-table-header-color;
+			border-top: 1px solid $nemi-table-border-color;
+		}
+		
+		td {
+			border-top: 1px solid $nemi-table-border-color;
+		}
+	}
+	form {
+		ul {
+			@include no-bullets;
+		}
+		.errorlist {
+			color: red;
+		}
+	}			
+}

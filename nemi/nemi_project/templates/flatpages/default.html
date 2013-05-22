@@ -1,18 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'base_with_header.html' %}
 
 {% block title %}{{ flatpage.title }}{% endblock %}
 
-{% block page-content %}
-    <div class="flat-page-content">
-        <div class="section-banner-header">
-        </div>
-        <div class="section-header">
-            <div class="page-name-div">
-                {{ flatpage.title }}
-            </div>
-        </div>
-        <div class="content-div">
-            {{ flatpage.content }}
-        </div>
-    </div>        
+{% block section_name %}
+    {{ flatpage.title }}
+{% endblock  %}
+
+{% block content %}
+    {{ flatpage.content }}
 {% endblock %}

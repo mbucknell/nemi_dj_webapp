@@ -2,18 +2,18 @@
 
 {% block title %}Update Statistical Methods{% endblock %}
 
-{% block page_title %}Update Statistical Method{% endblock %}
+{% block section_name %}Update Statistical Method{% endblock %}
 
-{% block page-content %}
+{% block entry_content %}
 	{% if methods %}
 		<h3>List of statistical methods that can be edited</h3>
-		<table class="data-table" style="width: 100%">
+		<table class="info-table" style="width: 100%">
 			<tr>
 				<th></th><th>Source Abbreviation</th><th>Title</th>
 			</tr>
 			{% for method in methods %}
 				<tr>
-					<td><input type="button" value="Update" onclick="location.href='{% url "sams-update_method" method.method_id %}'"></td>
+					<td><input class="default-button" type="button" value="Update" onclick="location.href='{% url "sams-update_method" method.method_id %}'"></td>
 					<td>{{ method.source_method_identifier }}</td>
 					<td>{{ method.method_official_name }}</td>
 				</tr>

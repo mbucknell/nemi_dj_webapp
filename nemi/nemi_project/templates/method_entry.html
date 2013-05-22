@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_with_header.html" %}
 
 {% block page_style %}
 	<style>
@@ -24,11 +24,11 @@
 
 {% block title %}NEMI Method Entry{% endblock %}
 
-{% block page_info %}
-	<h2>NEMI Method Entry</h2>
+{% block section_name %}
+	NEMI Method Entry
 {% endblock %}
 
-{% block page-content %}
+{% block content %}
 	<div id="classic-nemi-entry-div">
 		<a href="{{ apex_url }}">Go to classic NEMI method entry</a>
 	</div>

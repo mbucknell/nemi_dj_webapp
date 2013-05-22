@@ -28,10 +28,16 @@ body {
 			width: 20px;
 		}
 	}
-	th, td {
-		padding: 4px;
+	.default-button {
+		@include nemi-button;
 	}
-	
+	table {
+		width: auto;
+		
+		th, td {
+			padding: 4px;
+		}
+	}	
 	.abbrev{
 		cursor: help;
 	}

@@ -1,7 +1,9 @@
-.flat-page-content {
+// Can be used to style a default page
+
+.default-page-content {
 	@include section-header(42px, $nemi-page-header-color);
 
-	.page-name-div {
+	.section-name-div {
 		display: inline-block;
 		color: $nemi-page-header-highlight-color;
 		font-size: 18px;
@@ -12,5 +14,6 @@
 		margin-top : 2px;
 		background-color: $nemi-primary-content-bg-color;
 		@include main-box-shadow;
+		margin-bottom: 15px;
 	}
 }
