@@ -52,6 +52,12 @@
 		margin-bottom: 0px;
 	}
 }
+
+#customize-dialog {
+	ul {
+		@include no-bullets;
+	}
+}
 /* Specific to a results page */
 #reg-results-table {
 	td {

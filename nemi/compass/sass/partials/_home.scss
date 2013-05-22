@@ -4,6 +4,16 @@
 	select, .select2-results, .select2-choice{
 		font-size: 14px;
 	}
+	.select2-container, select2-choice{
+	    a {
+			border: 1px solid $nemi-page-header-highlight-color;
+		}
+	}
+	.select2-container.select2-container-disabled, .select2-choice {
+		a {
+			border: 1px solid #ddd;
+		}
+	}
 	
 	form > label {
 		font-weight: bold;
