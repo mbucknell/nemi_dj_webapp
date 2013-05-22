@@ -83,5 +83,18 @@
 	.inside-table th, .inside-table td{
 		border: none;
 	}
-}	
+}
+// Below is for the browse page
+.method-category-div {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-right: 10px;
+	padding-left: 20px;
 	
+	.method-subcategory-div	{
+		padding-top: 10px;
+		padding-bottom: 10px;
+		padding-right: 10px;
+		padding-left: 40px;
+	}
+}	

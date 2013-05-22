@@ -3339,6 +3339,21 @@ body .ui-dialog-buttonpane .ui-button-text {
   border: none;
 }
 
+/* line 88, ../../../compass/sass/partials/_results.scss */
+.method-category-div {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 10px;
+  padding-left: 20px;
+}
+/* line 94, ../../../compass/sass/partials/_results.scss */
+.method-category-div .method-subcategory-div {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 10px;
+  padding-left: 40px;
+}
+
 /* line 1, ../../../compass/sass/partials/_summary.scss */
 .summary-page-content {
   margin-top: 15px;
