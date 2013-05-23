@@ -712,15 +712,15 @@
 									<ul id="statistical-subcategory-selections"></ul> 
 								</div>
                                 <div class="form-entry" id="study-objective-input">
-                                    <label for="study_objective">What are you interested in:</label>
+                                    <label title="{{ field_help.design_objectives.tooltip }}" for="study_objective">What are you interested in:</label>
                                     <input type="hidden" class="filter-select" id="study_objective" name="study_objective" />
                                 </div>
                                 <div class="form-entry" id="item-type-input">
-                                    <label for="item_type">Item type:</label>
+                                    <label title="{{ field_help.item_type.tooltip }}" for="item_type">Item type:</label>
                                     <input type="hidden" class="filter-select" id="item_type" name="item_type" />
                                 </div>
                                 <div class="form-entry" id="complexity-input">
-                                    <label for="complexity">Complexity:</label>
+                                    <label title="{{ field_help.sam_complexity.tooltip }}" for="complexity">Complexity:</label>
                                     <select id="complexity" name="complexity" class="static-field" style="width: 8em;">
                                         <option ></option>
                                         <option value="Low">Low</option>
@@ -729,19 +729,19 @@
                                     </select>
                                 </div>
                                 <div class="form-entry" id="analysis-type-input">
-                                    <label for="analysis_type">Analysis type:</label>
+                                    <label title="{{ field_help.analysis_types.tooltip }}" for="analysis_type">Analysis type:</label>
                                     <input type="hidden" class="filter-select" id="analysis_type" name="analysis_type" />
                                 </div>
                                 <div class="form-entry" id="publication-source-type-input">
-                                    <label for="publication_source_type">Publication source type:</label>
+                                    <label title="{{ field_help.sponser_types.tooltip }}" for="publication_source_type">Publication source type:</label>
                                     <input type="hidden" class="filter-select" id="publication_source_type" name="publication_source_type">
                                 </div>
                                 <div class="form-entry" id="media-emphasized-input">
-                                    <label for="media_emphasized">Media emphasized:</label>
+                                    <label title="{{ field_help.media_emphasized.tooltip }}" for="media_emphasized">Media emphasized:</label>
                                     <input type="hidden" class="filter-select" id="media_emphasized" name="media_emphasized" />
                                 </div>
                                 <div class="form-entry" id="special-topic-input">
-                                    <label for="special_topic">Special topic:</label>
+                                    <label title="{{ field_help.special_topics.tooltip }}" for="special_topic">Special topic:</label>
                                     <input type="hidden" class="filter-select" id="special_topic" name="special_topic" />
                                 </div>
                                 <input type="hidden" name="category" value="statistical"/>

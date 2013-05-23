@@ -13,6 +13,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, FormView
 
+from domhelp.views import FieldHelpMixin
 from newsfeed.views import RecentNewsMixin
 
 from .forms import NEMIUserCreationForm
@@ -70,8 +71,18 @@ class PasswordChangeView(FormView):
         form.save()
         return super(PasswordChangeView, self).form_valid(form)
     
-class HomeView(RecentNewsMixin, TemplateView):
+class HomeView(RecentNewsMixin, FieldHelpMixin, TemplateView):
     template_name = 'home.html'
+    
+    field_names = [
+                   'analysis_types',
+                   'design_objectives',
+                   'item_type',
+                   'sam_complexity',
+                   'sponser_types',
+                   'media_emphasized',
+                   'special_topics'
+                   ]
     
 class MethodEntryView(TemplateView):
     template_name = 'method_entry.html'
