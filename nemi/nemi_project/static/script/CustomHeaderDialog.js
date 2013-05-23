@@ -34,7 +34,7 @@ CustomHeaderDialog = {
                 text: 'Apply',
                 click: function(){
                 	$(this).dialog('close');
-                	
+                	                	
                 	$(this).find('input:checkbox').each(function() {
                 		var colIndex = parseInt($(this).val()) + 1;
                 		var colEls = CustomHeaderDialog.tableEl.find('tr :nth-child(' + colIndex + ')');
@@ -44,9 +44,7 @@ CustomHeaderDialog = {
                 		else {
                 			colEls.hide();
                 		}
-                	});
-                	
-                	CustomHeaderDialog.tableEl.trigger("update").trigger("appendCache");
+                	});                 	
                 }
             }]
 	    });
