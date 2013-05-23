@@ -322,12 +322,12 @@ class ExportBaseResultsView(View):
     export_fields = () #Define fields to be written to the download field. Tuple of strings.
     filename = None #Download field name string.
     
-    def get(self, request, *args, **kwargs):
-        if request.GET:
+    def post(self, request, *args, **kwargs):
+        if request.POST:
             HEADINGS = [name.replace('_', ' ').title() for name in self.export_fields]
             export_type = kwargs.get('export', 'xls')
             
-            vl_qs = self.get_queryset().filter(method_id__in=self.request.GET.getlist('method_id', [])).values_list(*self.export_fields)
+            vl_qs = self.get_queryset().filter(method_id__in=self.request.POST.getlist('method_id', [])).values_list(*self.export_fields)
          
             if export_type == 'tsv':
                 return tsv_response(HEADINGS, vl_qs, self.filename)
