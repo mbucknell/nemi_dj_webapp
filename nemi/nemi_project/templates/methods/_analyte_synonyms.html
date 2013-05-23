@@ -5,7 +5,7 @@ Uses template variables analyte_name and analyte_code which are of type string a
 
 <div class="show-hide-detail-div">
 	<button class="show-hide-toggle" title="Show detail" type="button">
-		<img src="{{ STATIC_URL }}images/expand.png" alt="show"/>
+		<img src="{{ STATIC_URL }}images/expand_summary.png" alt="show"/>
 	</button>
 	<b>{{ analyte_name }}{% if analyte_code %}({{analyte_code}})</b>{% endif %}
 	<div class="hidden-details-div" style="display: none;">
