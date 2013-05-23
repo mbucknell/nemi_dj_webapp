@@ -16,6 +16,18 @@
 	
 	
 	<script type="text/javascript">
+		// Add parser for select column
+	    $.tablesorter.addParser({
+	        id: 'checked',
+	        is: function(s, table, cell) {
+	            return false;
+	        },
+	        format: function(s, table, cell, cellIndex) {
+	            return (!($(cell).find('input[type="checkbox"]').is(':checked')));
+	        },
+	        type: 'numeric'
+	    });
+	    
 		$(document).ready(function() {
 			// Tried to use the stickyHeaders widget but when columns where added or remove
 			// the header did not adjust as it should. Also tried to use 'resizable' which 
@@ -47,8 +59,13 @@
 			$('.compare-button').click(function() {
 				$('.results-table input[type=checkbox]').not(':checked').parents('tr').hide();
 				var resort = true;
-				$('.data-table').trigger('update', [resort]);
+				$('.results-table').trigger('update', [resort]);
 				Utils.setEnabled($('.full-results-button'), true);
+			});
+			
+			// Update the select cell when clicked
+			$('.results-table td input[type="checkbox"]').click(function() {
+			    $('.results-table').trigger('updateCell', [$(this).parent().get(), true]);
 			});
 			
 			// Add click handler for full results button.
