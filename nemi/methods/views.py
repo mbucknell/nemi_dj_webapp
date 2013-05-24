@@ -738,7 +738,7 @@ class BrowseMethodsView(ListView):
     '''
     template_name = 'methods/browse_methods.html'
     
-    queryset = MethodVW.objects.filter(method_category__in=['CHEMICAL']).filter(method_subcategory__in=['General', 'Radiochemical']).order_by('method_category', 'method_subcategory', 'source_method_identifier')
+    queryset = MethodVW.objects.order_by('method_category', 'method_subcategory', 'source_method_identifier')
     
     
 class MethodSummaryView(FieldHelpMixin, DetailView):
