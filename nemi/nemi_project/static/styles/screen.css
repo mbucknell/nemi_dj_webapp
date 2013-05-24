@@ -3229,13 +3229,12 @@ body .ui-dialog-buttonpane .ui-button-text {
   overflow: hidden;
   *zoom: 1;
   padding: 10px;
-  height: 60px;
 }
-/* line 9, ../../../compass/sass/partials/_results.scss */
+/* line 8, ../../../compass/sass/partials/_results.scss */
 #top-results-actions .results-action-div, #bottom-results-actions .results-action-div {
   text-align: center;
 }
-/* line 12, ../../../compass/sass/partials/_results.scss */
+/* line 11, ../../../compass/sass/partials/_results.scss */
 #top-results-actions .results-action-div input[type=button], #bottom-results-actions .results-action-div input[type=button] {
   color: white;
   background-color: #0e75bb;
@@ -3252,13 +3251,13 @@ body .ui-dialog-buttonpane .ui-button-text {
   border-style: none;
   cursor: pointer;
 }
-/* line 15, ../../../compass/sass/partials/_results.scss */
+/* line 14, ../../../compass/sass/partials/_results.scss */
 #top-results-actions .results-action-div input[type=button].disabled, #bottom-results-actions .results-action-div input[type=button].disabled {
   color: #ccc6b8;
   background-color: #82827d;
 }
 
-/* line 21, ../../../compass/sass/partials/_results.scss */
+/* line 20, ../../../compass/sass/partials/_results.scss */
 #results-div {
   position: relative;
   margin-right: 10px;
@@ -3267,13 +3266,13 @@ body .ui-dialog-buttonpane .ui-button-text {
   -moz-box-shadow: 3px 3px 5px #333333;
   box-shadow: 3px 3px 5px #333333;
 }
-/* line 27, ../../../compass/sass/partials/_results.scss */
+/* line 26, ../../../compass/sass/partials/_results.scss */
 #results-div #top-results-header, #results-div #bottom-results-header {
   padding: 10px;
   background-color: #333333;
   color: white;
 }
-/* line 32, ../../../compass/sass/partials/_results.scss */
+/* line 31, ../../../compass/sass/partials/_results.scss */
 #results-div #top-results-header input[type=button], #results-div #bottom-results-header input[type=button] {
   color: black;
   background-color: #e88846;
@@ -3290,30 +3289,30 @@ body .ui-dialog-buttonpane .ui-button-text {
   border-style: none;
   cursor: pointer;
 }
-/* line 35, ../../../compass/sass/partials/_results.scss */
+/* line 34, ../../../compass/sass/partials/_results.scss */
 #results-div #top-results-header .results-header-info, #results-div #bottom-results-header .results-header-info {
   display: inline-block;
 }
-/* line 37, ../../../compass/sass/partials/_results.scss */
+/* line 36, ../../../compass/sass/partials/_results.scss */
 #results-div #top-results-header .results-header-info span, #results-div #bottom-results-header .results-header-info span {
   font-size: 20px;
   color: #24bcff;
 }
-/* line 41, ../../../compass/sass/partials/_results.scss */
+/* line 40, ../../../compass/sass/partials/_results.scss */
 #results-div #top-results-header .results-header-info .back-button, #results-div #bottom-results-header .results-header-info .back-button {
   margin-left: 50px;
 }
-/* line 45, ../../../compass/sass/partials/_results.scss */
+/* line 44, ../../../compass/sass/partials/_results.scss */
 #results-div #top-results-header .results-header-actions, #results-div #bottom-results-header .results-header-actions {
   display: inline-block;
   float: right;
 }
-/* line 51, ../../../compass/sass/partials/_results.scss */
+/* line 50, ../../../compass/sass/partials/_results.scss */
 #results-div .results-table {
   margin-bottom: 0px;
 }
 
-/* line 57, ../../../compass/sass/partials/_results.scss */
+/* line 56, ../../../compass/sass/partials/_results.scss */
 #customize-dialog ul {
   list-style: none;
 }
@@ -3325,11 +3324,11 @@ body .ui-dialog-buttonpane .ui-button-text {
 }
 
 /* Specific to a results page */
-/* line 63, ../../../compass/sass/partials/_results.scss */
+/* line 62, ../../../compass/sass/partials/_results.scss */
 #reg-results-table td {
   border: #407137 1px solid;
 }
-/* line 73, ../../../compass/sass/partials/_results.scss */
+/* line 72, ../../../compass/sass/partials/_results.scss */
 #reg-results-table tbody > tr:hover > td,
 #reg-results-table tbody > tr:hover > td table td,
 #reg-results-table tbody > tr:hover + tr.tablesorter-childRow > td,
@@ -3340,7 +3339,7 @@ body .ui-dialog-buttonpane .ui-button-text {
 #reg-results-table tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
   background: #accd96;
 }
-/* line 79, ../../../compass/sass/partials/_results.scss */
+/* line 78, ../../../compass/sass/partials/_results.scss */
 #reg-results-table tbody > tr.odd:hover > td,
 #reg-results-table tbody > tr.odd:hover > td table td,
 #reg-results-table tbody > tr.odd:hover + tr.tablesorter-childRow > td,
@@ -3348,24 +3347,24 @@ body .ui-dialog-buttonpane .ui-button-text {
   background: #d3e0c6;
 }
 
-/* line 84, ../../../compass/sass/partials/_results.scss */
+/* line 83, ../../../compass/sass/partials/_results.scss */
 .keyword-results-actions label {
   font-size: 18px;
 }
 
-/* line 89, ../../../compass/sass/partials/_results.scss */
+/* line 88, ../../../compass/sass/partials/_results.scss */
 .hidden-details-div .inside-table th, .hidden-details-div .inside-table td {
   border: none;
 }
 
-/* line 94, ../../../compass/sass/partials/_results.scss */
+/* line 93, ../../../compass/sass/partials/_results.scss */
 .method-category-div {
   padding-top: 10px;
   padding-bottom: 10px;
   padding-right: 10px;
   padding-left: 20px;
 }
-/* line 100, ../../../compass/sass/partials/_results.scss */
+/* line 99, ../../../compass/sass/partials/_results.scss */
 .method-category-div .method-subcategory-div {
   padding-top: 10px;
   padding-bottom: 10px;
