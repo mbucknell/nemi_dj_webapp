@@ -15,14 +15,15 @@
 		.method-header-button {
 			float: right;
 		}
-		.download-button {
-			vertical-align: middle;
-			@include nemi-button;
-		}
-		.download-button.disabled {
-			color: $nemi-disabled-text-color;
-			background-color: $nemi-disabled-color;
-		}
+	}
+	.download-button {
+		vertical-align: middle;
+		@include nemi-button;
+	}
+	.download-button.disabled {
+		color: $nemi-disabled-text-color;
+		background-color: $nemi-disabled-color;
+		cursor: auto;
 	}
 	.summary-content {
 		@include container;
@@ -151,10 +152,6 @@
 	padding: 10px;
 	background-color: $nemi-primary-content-bg-color;
 	text-align: center;
-	
-	.download-button {
-		@include nemi-button;
-	}
 }
 #method-summary-page-content {	
 	#analytes-tab {

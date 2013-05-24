@@ -9,7 +9,7 @@
 	<script src="{{ STATIC_URL }}script/HelpDialog.js"></script>
 	
 	<script type="text/javascript">
-	    function downloadRevisionPDF(url) {
+	    function openWindow(url) {
 	        window.open(url);
 	        return false;
 	    };
@@ -53,9 +53,13 @@
 				});
 			});
 			
-			// Should we change the name of the button since it doesn't always download?
-			{% if not method.details.mimetype and not method.details.link_to_full_method %}
-			    $('.download-button').addClass('disabled');
+			// Change the download button if link available or none is available
+			{% if not method.details.mimetype %}
+				{% if method.details.link_to_full_method %}
+					$('.download-button').val('GO TO METHOD SOURCE');
+				{% else %}
+			    	$('.download-button').addClass('disabled');
+			   	{% endif %}
 			{% endif %}
 			
 			$('.download-button').click(function() {
@@ -256,7 +260,7 @@
 				    	<thead>
 					    	<tr>
 						    	<th>Revision</th>
-							    <th>PDF</th>
+							    <th>PDF/Link</th>
     						</tr>
 	    				</thead>
 		    			<tbody>
@@ -264,7 +268,9 @@
     							<td>{{ method.latest_revision.revision_information }}</td>
 	    						<td>
 		    						{% if method.latest_revision.mimetype %}
-		    						    <input type="button" value="DOWNLOAD CURRENT REVISION" onclick="downloadRevisionPDF('{% url 'revision-pdf' method.latest_revision.revision_id %}')" />
+		    						    <input type="button" value="DOWNLOAD CURRENT REVISION" onclick="openWindow('{% url 'revision-pdf' method.latest_revision.revision_id %}')" />
+                                    {% elif method.details.link_to_full_method %}
+                                        <input type="button" value="GO TO METHOD SOURCE" onclick="openWindow('{{ method.details.link_to_full_method }}')" />   
 							    	{% endif %}
     							</td>
 	    					</tr>
@@ -274,7 +280,7 @@
 					    				<td>{{ revision.revision_information }}</td>
 						    			<td>
 							    			{% if revision.mimetype %}
-        		    						    <input type="button" value="DOWNLOAD CURRENT REVISION" onclick="downloadRevisionPDF('{% url 'revision-pdf' revision.revision_id %})" />
+        		    						    <input type="button" value="DOWNLOAD CURRENT REVISION" onclick="openWindow('{% url 'revision-pdf' revision.revision_id %})" />
     										{% endif %}
 	    								</td>
 		    						</tr>
