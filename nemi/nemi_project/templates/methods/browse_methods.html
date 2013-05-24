@@ -125,28 +125,46 @@
 				<div class="method-subcategory-div" style="display: none;">
 					<h4><button id="subcategory-{{ by_subcategory.grouper }}" class="show-hide-toggle subcategory-button" title="Show methods" type="button"><img src="{{ STATIC_URL }}images/expand.png" alt="show" /></button>&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>				
 					<table id="browse-results-table" class="results-table" data-sortlist="[[0,0]]" style="display: none;">
-						<thead>
-							<tr>
-								<th class="sorter-text">Method Id</th>
-								<th>Method Descriptive Name</th>
-								<th>Method Source</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for object in by_subcategory.list %}
-								<tr>
-									<td><a title="View method details"
-										{% if by_category.grouper == 'STATISTICAL' %}
-											href="{% url 'methods-sam_method_summary' object.method_id %}"
-										{% else %}
-											href="{% url 'methods-method_summary' object.method_id %}"
-										{% endif %}
-									>{{ object.source_method_identifier|safe }}</a></td>
-									<td>{{ object.method_descriptive_name }}</td>
-									<td>{% include "methods/_method_source_details.html" with r=object %}</td>
-								</tr>
-							{% endfor %}
-						</tbody>
+                        {% if by_category.grouper == 'STATISTICAL' %}
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Method Source</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for object in by_subcategory.list %}
+                                    <tr>
+                                        <td><a title="View method details" href="{% url 'methods-sam_method_summary' object.method_id %}">
+                                            {{ object.method_official_name}}
+                                        </a></td>
+                                        <td>{{ object.author }}</td>
+                                        <td>{% include "methods/_method_source_details.html" with r=object %}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        {% else %}
+    						<thead>
+    							<tr>
+    								<th class="sorter-text">Method Id</th>
+    								<th>Method Descriptive Name</th>
+    								<th>Method Source</th>
+    							</tr>
+    						</thead>
+    						<tbody>
+    							{% for object in by_subcategory.list %}
+    								<tr>
+    									<td><a title="View method details" href="{% url 'methods-method_summary' object.method_id %}">
+                                            {{ object.source_method_identifier|safe }}
+                                        </a></td>
+    									<td>{{ object.method_descriptive_name }}</td>
+    									<td>{% include "methods/_method_source_details.html" with r=object %}</td>
+    								</tr>
+    							{% endfor %}
+    						</tbody>
+                        {% endif %}
 					</table>
 				</div>
 			{% endfor %}

@@ -27,7 +27,7 @@
 				<th class="sorter-false">Method Id</th>
 				<th class="sorter-false">Method Source</th>
 				<th class="sorter-false">Descriptive Method Name</th>
-				<th class="sorter-false">Link to Method</th>
+				<th class="sorter-false">Get Method</th>
 				<th class="sorter-false">Search Ranking</th>
 						
 			</tr>
@@ -51,10 +51,10 @@
 								<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat (pdf) icon">Download full method now (PDF file)
 							</a>
 						{% elif r.LINK_TO_FULL_METHOD %}				
-							This is a proprietary method. 
+							This is a proprietary method. Go to 
 							<a href="{{  r.LINK_TO_FULL_METHOD }}" target="_blank"
 							title="Link to method owner's method documentation (in a new window)">
-							Please visit the method owner's site for method documentation</a>								
+							method owner's site</a>								
 						{% else %}
 							Method .pdf will be loaded into the database soon. Please contact the webmaster if you are in need of the full method.
 						{% endif %}
