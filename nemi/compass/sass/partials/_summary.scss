@@ -102,14 +102,13 @@
 			}
 			.data-table {
 				border-bottom: solid 1px $nemi-table-border-color;
+				border-collapse: collapse;
 				th {
 					text-align: center;
 					color: white;
 					background-color: $nemi-table-header-color;
 					border-right: solid 1px $nemi-table-border-color;
-					&:last-child {
-						border-right: none;
-					}
+					border-left: solid 1px $nemi-table-border-color;
 				}
 				tbody>tr {
 					color: black;
@@ -124,9 +123,7 @@
 						padding-right: 6px;
 						padding-left: 6px;
 						border-right: solid 1px $nemi-table-border-color;
-						&:last-child {
-							border-right: none;
-						}
+						border-left: solid 1px $nemi-table-border-color;
 					}
 
 				}

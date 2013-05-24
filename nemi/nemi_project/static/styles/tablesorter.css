@@ -15,19 +15,20 @@
 .tablesorter-nemi th,
 .tablesorter-nemi td {
   border-right: #407137 1px solid;
+  border-left: #407137 1px solid;
   border-spacing: 0;
   padding: 0;
   text-align: left;
 }
 
 /* header */
-/* line 24, ../../../compass/sass/tablesorter.scss */
+/* line 25, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi thead tr,
 .tablesorter-nemi tfoot tr {
   background-color: #639054;
 }
 
-/* line 28, ../../../compass/sass/tablesorter.scss */
+/* line 29, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi th,
 .tablesorter-nemi thead td {
   text-align: center;
@@ -37,7 +38,7 @@
   padding: 2px;
 }
 
-/* line 36, ../../../compass/sass/tablesorter.scss */
+/* line 37, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi .header,
 .tablesorter-nemi .tablesorter-header {
   background: no-repeat 5px center;
@@ -48,7 +49,7 @@
   cursor: pointer;
 }
 
-/* line 46, ../../../compass/sass/tablesorter.scss */
+/* line 47, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi thead .headerSortUp,
 .tablesorter-nemi thead .tablesorter-headerSortUp,
 .tablesorter-nemi thead .tablesorter-headerAsc {
@@ -56,7 +57,7 @@
   background-image: url(../images/sort_asc.png);
 }
 
-/* line 52, ../../../compass/sass/tablesorter.scss */
+/* line 53, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi thead .headerSortDown,
 .tablesorter-nemi thead .tablesorter-headerSortDown,
 .tablesorter-nemi thead .tablesorter-headerDesc {
@@ -64,7 +65,7 @@
   background-image: url(../images/sort_desc.png);
 }
 
-/* line 57, ../../../compass/sass/tablesorter.scss */
+/* line 58, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi th.tablesorter-header .tablesorter-header-inner,
 .tablesorter-nemi td.tablesorter-header .tablesorter-header-inner {
   padding-left: 20px;
@@ -72,13 +73,13 @@
   padding-bottom: 2px;
   padding-right: 2px;
 }
-/* line 63, ../../../compass/sass/tablesorter.scss */
+/* line 64, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi th.tablesorter-header .tablesorter-header-inner .header-label,
 .tablesorter-nemi td.tablesorter-header .tablesorter-header-inner .header-label {
   padding: 0px;
 }
 
-/* line 68, ../../../compass/sass/tablesorter.scss */
+/* line 69, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi th.tablesorter-header.sorter-false .tablesorter-header-inner,
 .tablesorter-nemi td.tablesorter-header.sorter-false .tablesorter-header-inner {
   padding-left: 2px;
@@ -86,7 +87,7 @@
   cursor: auto;
 }
 
-/* line 73, ../../../compass/sass/tablesorter.scss */
+/* line 74, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi thead .tablesorter-header.sorter-false {
   background-image: none;
   padding: 4px;
@@ -94,7 +95,7 @@
 }
 
 /* tfoot */
-/* line 81, ../../../compass/sass/tablesorter.scss */
+/* line 82, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi tbody td,
 .tablesorter-nemi tfoot th {
   padding: 6px;
@@ -102,7 +103,7 @@
 }
 
 /* tbody */
-/* line 87, ../../../compass/sass/tablesorter.scss */
+/* line 88, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi td {
   color: #3d3d3d;
   background-color: #d3e0c6;
@@ -113,7 +114,7 @@
  you'll need to add additional lines for
  rows with more than 2 child rows
  */
-/* line 104, ../../../compass/sass/tablesorter.scss */
+/* line 105, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi tbody > tr:hover > td,
 .tablesorter-nemi tbody > tr:hover > td table td,
 .tablesorter-nemi tbody > tr:hover + tr.tablesorter-childRow > td,
@@ -125,7 +126,7 @@
   background: lightgrey;
 }
 
-/* line 110, ../../../compass/sass/tablesorter.scss */
+/* line 111, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi tbody > tr.odd:hover > td,
 .tablesorter-nemi tbody > tr.odd:hover > td table td,
 .tablesorter-nemi tbody > tr.odd:hover + tr.tablesorter-childRow > td,
@@ -134,7 +135,7 @@
 }
 
 /* table processing indicator */
-/* line 115, ../../../compass/sass/tablesorter.scss */
+/* line 116, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi .tablesorter-processing {
   background-position: center center !important;
   background-repeat: no-repeat !important;
@@ -143,53 +144,53 @@
 }
 
 /* Zebra Widget - row alternating colors */
-/* line 123, ../../../compass/sass/tablesorter.scss */
+/* line 124, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi tr.odd td {
   background-color: #d3e0c6;
 }
 
-/* line 126, ../../../compass/sass/tablesorter.scss */
+/* line 127, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi tr.even td {
   background-color: #accd96;
 }
 
 /* Column Widget - column sort colors */
 /* We are not using this feature in NEMI so we would probably have to adjust these colors. */
-/* line 133, ../../../compass/sass/tablesorter.scss */
+/* line 134, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi td.primary,
 .tablesorter-nemi tr.odd td.primary {
   background-color: #99e6a6;
 }
 
-/* line 136, ../../../compass/sass/tablesorter.scss */
+/* line 137, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi tr.even td.primary {
   background-color: #c2f0c9;
 }
 
-/* line 140, ../../../compass/sass/tablesorter.scss */
+/* line 141, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi td.secondary,
 .tablesorter-nemi tr.odd td.secondary {
   background-color: #c2f0c9;
 }
 
-/* line 143, ../../../compass/sass/tablesorter.scss */
+/* line 144, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi tr.even td.secondary {
   background-color: #d6f5db;
 }
 
-/* line 147, ../../../compass/sass/tablesorter.scss */
+/* line 148, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi td.tertiary,
 .tablesorter-nemi tr.odd td.tertiary {
   background-color: #d6f5db;
 }
 
-/* line 150, ../../../compass/sass/tablesorter.scss */
+/* line 151, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi tr.even td.tertiary {
   background-color: #ebfaed;
 }
 
 /* filter widget */
-/* line 155, ../../../compass/sass/tablesorter.scss */
+/* line 156, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi .tablesorter-filter-row td {
   background: #eee;
   line-height: normal;
@@ -202,7 +203,7 @@
 }
 
 /* optional disabled input styling */
-/* line 165, ../../../compass/sass/tablesorter.scss */
+/* line 166, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi .tablesorter-filter-row .disabled {
   opacity: 0.5;
   filter: alpha(opacity=50);
@@ -210,7 +211,7 @@
 }
 
 /* hidden filter row */
-/* line 171, ../../../compass/sass/tablesorter.scss */
+/* line 172, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi .tablesorter-filter-row.hideme td {
   /*** *********************************************** ***/
   /*** change this padding to modify the thickness     ***/
@@ -222,7 +223,7 @@
   cursor: pointer;
 }
 
-/* line 181, ../../../compass/sass/tablesorter.scss */
+/* line 182, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi .tablesorter-filter-row.hideme .tablesorter-filter {
   height: 1px;
   min-height: 0;
@@ -235,7 +236,7 @@
 }
 
 /* filters */
-/* line 192, ../../../compass/sass/tablesorter.scss */
+/* line 193, ../../../compass/sass/tablesorter.scss */
 .tablesorter-nemi .tablesorter-filter {
   width: 98%;
   height: inherit;
