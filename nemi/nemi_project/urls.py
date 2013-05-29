@@ -2,19 +2,32 @@
 
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.contrib.sitemaps import FlatPageSitemap
 from django.views.generic import TemplateView
 
 import methods.urls
 import sams.urls
 #import memo.urls
+
+import sitemaps
 import views
 
 admin.autodiscover()
 
+sitemaps = {
+    'flatpages' : FlatPageSitemap,
+    'staticpages' : sitemaps.StaticSitemap,
+    'methods' : sitemaps.MethodSitemap,
+    'statisticalmethods' : sitemaps.StatisticalMethodSitemap
+    }
+
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     
+    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
+    
     url(r'^tinymce/', include('tinymce.urls')),
+    
     url(r'^accounts/login/$', 
         'django.contrib.auth.views.login', 
         {}, 
@@ -32,9 +45,11 @@ urlpatterns = patterns('',
     url(r'^accounts/create_account_success$', 
         TemplateView.as_view(template_name="registration/create_account_success.html"), 
         name="nemi_create_account_success"),
+                       
     url(r'^methods/', include(methods.urls)),
     url(r'^sams/', include(sams.urls)),
 #	url(r'^memo/', include(memo.urls)),
+
     url(r'^home/', 
         views.HomeView.as_view(),
         name='home'),
