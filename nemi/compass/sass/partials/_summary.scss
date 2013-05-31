@@ -3,10 +3,10 @@
 	@include section-header(42px, $nemi-page-header-color);
 	
 	.method-name {
-		font-size: 18px;
 		color: $nemi-page-header-highlight-color;
 	}
-	.section-header {
+	.section-header, .section-header h1 {
+		font-size: 18px;
 		color: white;
 		
 		.method-info-div {

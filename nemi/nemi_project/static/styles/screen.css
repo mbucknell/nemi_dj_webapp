@@ -2294,8 +2294,10 @@ body .ui-tooltip {
   display: inline-block;
   color: #24bcff;
   font-size: 18px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
-/* line 11, ../../../compass/sass/partials/_default_page.scss */
+/* line 13, ../../../compass/sass/partials/_default_page.scss */
 .default-page-content .content-div {
   padding: 10px;
   width: 1100px;
@@ -2937,8 +2939,10 @@ body .ui-dialog-buttonpane .ui-button-text {
 #home-page-content .section-div .home-section-label {
   color: white;
   font-size: 18px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
-/* line 34, ../../../compass/sass/partials/_home.scss */
+/* line 36, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-div {
   display: inline;
   float: left;
@@ -2949,7 +2953,7 @@ body .ui-dialog-buttonpane .ui-button-text {
 * html #home-page-content .subcategory-div {
   overflow-x: hidden;
 }
-/* line 37, ../../../compass/sass/partials/_home.scss */
+/* line 39, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-selection-div {
   display: inline;
   float: left;
@@ -2960,7 +2964,7 @@ body .ui-dialog-buttonpane .ui-button-text {
 * html #home-page-content .subcategory-selection-div {
   overflow-x: hidden;
 }
-/* line 39, ../../../compass/sass/partials/_home.scss */
+/* line 41, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-selection-div ul {
   list-style: none;
   padding: 0px;
@@ -2973,7 +2977,7 @@ body .ui-dialog-buttonpane .ui-button-text {
   list-style-type: none;
   margin-left: 0;
 }
-/* line 43, ../../../compass/sass/partials/_home.scss */
+/* line 45, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-selection-div ul .subcategory-button {
   padding-left: 30px;
   padding-top: 4px;
@@ -2987,22 +2991,22 @@ body .ui-dialog-buttonpane .ui-button-text {
   margin-top: 3px;
   cursor: pointer;
 }
-/* line 46, ../../../compass/sass/partials/_home.scss */
+/* line 48, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-selection-div ul .active {
   border: 2px groove #e88846;
   background-color: #e88846;
   color: black;
 }
-/* line 51, ../../../compass/sass/partials/_home.scss */
+/* line 53, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-selection-div ul .not-active {
   background-color: #333333;
   color: white;
 }
-/* line 54, ../../../compass/sass/partials/_home.scss */
+/* line 56, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-selection-div ul .not-active:hover {
   color: #24bcff;
 }
-/* line 60, ../../../compass/sass/partials/_home.scss */
+/* line 62, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-action-div {
   display: inline;
   float: left;
@@ -3019,11 +3023,11 @@ body .ui-dialog-buttonpane .ui-button-text {
 * html #home-page-content .subcategory-action-div {
   overflow-x: hidden;
 }
-/* line 67, ../../../compass/sass/partials/_home.scss */
+/* line 69, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-action-div .select2-container {
   padding: 2px;
 }
-/* line 71, ../../../compass/sass/partials/_home.scss */
+/* line 73, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-action-div .search-button {
   color: white;
   background-color: #0e75bb;
@@ -3040,7 +3044,7 @@ body .ui-dialog-buttonpane .ui-button-text {
   border-style: none;
   cursor: pointer;
 }
-/* line 75, ../../../compass/sass/partials/_home.scss */
+/* line 77, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-action-div .search-button-div {
   display: inline;
   float: left;
@@ -3054,7 +3058,7 @@ body .ui-dialog-buttonpane .ui-button-text {
 * html #home-page-content .subcategory-action-div .search-button-div {
   overflow-x: hidden;
 }
-/* line 82, ../../../compass/sass/partials/_home.scss */
+/* line 84, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-action-div ul {
   list-style: none;
 }
@@ -3064,33 +3068,33 @@ body .ui-dialog-buttonpane .ui-button-text {
   list-style-type: none;
   margin-left: 0;
 }
-/* line 86, ../../../compass/sass/partials/_home.scss */
+/* line 88, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-action-div .input-section-div {
   padding: 10px;
 }
-/* line 88, ../../../compass/sass/partials/_home.scss */
+/* line 90, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-action-div .input-section-div label {
   padding: 4px;
 }
-/* line 92, ../../../compass/sass/partials/_home.scss */
+/* line 94, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-action-div .field-header {
   padding-left: 0px;
   font-weight: bold;
 }
-/* line 97, ../../../compass/sass/partials/_home.scss */
+/* line 99, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-action-div label.disabled {
   color: #a09b8b;
 }
-/* line 101, ../../../compass/sass/partials/_home.scss */
+/* line 103, ../../../compass/sass/partials/_home.scss */
 #home-page-content .subcategory-action-div input.disabled {
   background-color: #a09b8b;
   color: #ddd7c3;
 }
-/* line 108, ../../../compass/sass/partials/_home.scss */
+/* line 110, ../../../compass/sass/partials/_home.scss */
 #home-page-content #filter-specific-div #filter-header {
   padding: 10px;
 }
-/* line 110, ../../../compass/sass/partials/_home.scss */
+/* line 112, ../../../compass/sass/partials/_home.scss */
 #home-page-content #filter-specific-div #filter-header div {
   border-bottom: solid 2px #639054;
   font-weight: bold;
@@ -3099,12 +3103,12 @@ body .ui-dialog-buttonpane .ui-button-text {
   padding-top: 10px;
   padding-bottom: 10px;
 }
-/* line 120, ../../../compass/sass/partials/_home.scss */
+/* line 122, ../../../compass/sass/partials/_home.scss */
 #home-page-content #general-action-div {
   padding-top: 10px;
   padding-bottom: 15px;
 }
-/* line 126, ../../../compass/sass/partials/_home.scss */
+/* line 128, ../../../compass/sass/partials/_home.scss */
 #home-page-content #analyte-search-div .form-entry label, #home-page-content #microbiological-search-div .form-entry label, #home-page-content #physical-search-div .form-entry label, #home-page-content #regulatory-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -3114,15 +3118,15 @@ body .ui-dialog-buttonpane .ui-button-text {
 #home-page-content #analyte-search-div .analyte-name-input .select2-container, #home-page-content #analyte-search-div .analyte-code-input .select2-container, #home-page-content #microbiological-search-div .analyte-name-input .select2-container, #home-page-content #microbiological-search-div .analyte-code-input .select2-container, #home-page-content #physical-search-div .analyte-name-input .select2-container, #home-page-content #physical-search-div .analyte-code-input .select2-container, #home-page-content #regulatory-search-div .analyte-name-input .select2-container, #home-page-content #regulatory-search-div .analyte-code-input .select2-container {
   width: 500px;
 }
-/* line 133, ../../../compass/sass/partials/_home.scss */
+/* line 135, ../../../compass/sass/partials/_home.scss */
 #home-page-content #analyte-search-div .analyte-kind-separator, #home-page-content #microbiological-search-div .analyte-kind-separator, #home-page-content #physical-search-div .analyte-kind-separator, #home-page-content #regulatory-search-div .analyte-kind-separator {
   color: #639054;
 }
-/* line 135, ../../../compass/sass/partials/_home.scss */
+/* line 137, ../../../compass/sass/partials/_home.scss */
 #home-page-content #analyte-search-div .analyte-kind-separator label, #home-page-content #microbiological-search-div .analyte-kind-separator label, #home-page-content #physical-search-div .analyte-kind-separator label, #home-page-content #regulatory-search-div .analyte-kind-separator label {
   text-align: center;
 }
-/* line 142, ../../../compass/sass/partials/_home.scss */
+/* line 144, ../../../compass/sass/partials/_home.scss */
 #home-page-content #community-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -3136,7 +3140,7 @@ body .ui-dialog-buttonpane .ui-button-text {
 #home-page-content #community-search-div #gear-type-input .select2-container {
   width: 300px;
 }
-/* line 153, ../../../compass/sass/partials/_home.scss */
+/* line 155, ../../../compass/sass/partials/_home.scss */
 #home-page-content #toxicity-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -3146,7 +3150,7 @@ body .ui-dialog-buttonpane .ui-button-text {
 #home-page-content #toxicity-search-div #matrix-input .select2-container {
   width: 150px;
 }
-/* line 162, ../../../compass/sass/partials/_home.scss */
+/* line 164, ../../../compass/sass/partials/_home.scss */
 #home-page-content #statistical-search-div .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -3172,11 +3176,11 @@ body .ui-dialog-buttonpane .ui-button-text {
 #home-page-content #statistical-search-div #special-topic-input .select2-container {
   width: 450px;
 }
-/* line 182, ../../../compass/sass/partials/_home.scss */
+/* line 184, ../../../compass/sass/partials/_home.scss */
 #home-page-content #limit-by-section {
   padding: 10px;
 }
-/* line 184, ../../../compass/sass/partials/_home.scss */
+/* line 186, ../../../compass/sass/partials/_home.scss */
 #home-page-content #limit-by-section #limit-by-header {
   padding-left: 10px;
   padding-bottom: 5px;
@@ -3184,11 +3188,11 @@ body .ui-dialog-buttonpane .ui-button-text {
   background-color: #639054;
   margin: 0px;
 }
-/* line 190, ../../../compass/sass/partials/_home.scss */
+/* line 192, ../../../compass/sass/partials/_home.scss */
 #home-page-content #limit-by-section #limit-by-header button {
   vertical-align: middle;
 }
-/* line 193, ../../../compass/sass/partials/_home.scss */
+/* line 195, ../../../compass/sass/partials/_home.scss */
 #home-page-content #limit-by-section #limit-by-header h5 {
   display: inline-block;
   padding: 0px;
@@ -3197,12 +3201,12 @@ body .ui-dialog-buttonpane .ui-button-text {
   margin-bottom: 0px;
   margin-top: 1px;
 }
-/* line 202, ../../../compass/sass/partials/_home.scss */
+/* line 204, ../../../compass/sass/partials/_home.scss */
 #home-page-content #limit-by-section #filtered-search-limits {
   padding-left: 40px;
   padding-bottom: 0px;
 }
-/* line 206, ../../../compass/sass/partials/_home.scss */
+/* line 208, ../../../compass/sass/partials/_home.scss */
 #home-page-content #limit-by-section .form-entry label {
   display: inline-block;
   font-weight: bold;
@@ -3401,19 +3405,19 @@ body .ui-dialog-buttonpane .ui-button-text {
 }
 /* line 5, ../../../compass/sass/partials/_summary.scss */
 .summary-page-content .method-name {
-  font-size: 18px;
   color: #24bcff;
 }
-/* line 9, ../../../compass/sass/partials/_summary.scss */
-.summary-page-content .section-header {
+/* line 8, ../../../compass/sass/partials/_summary.scss */
+.summary-page-content .section-header, .summary-page-content .section-header h1 {
+  font-size: 18px;
   color: white;
 }
 /* line 12, ../../../compass/sass/partials/_summary.scss */
-.summary-page-content .section-header .method-info-div {
+.summary-page-content .section-header .method-info-div, .summary-page-content .section-header h1 .method-info-div {
   display: inline-block;
 }
 /* line 15, ../../../compass/sass/partials/_summary.scss */
-.summary-page-content .section-header .method-header-button {
+.summary-page-content .section-header .method-header-button, .summary-page-content .section-header h1 .method-header-button {
   float: right;
 }
 /* line 19, ../../../compass/sass/partials/_summary.scss */
