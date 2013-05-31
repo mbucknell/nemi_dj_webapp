@@ -2,6 +2,12 @@
 
 {% block title %}NEMI Browse Methods{% endblock %}
 
+{% block page_description %}
+    Lists all environmental methods, protocols, and procedures in NEMI grouped by category - subcategory:
+    {% regroup object_list by method_category as objects_by_category %}{% for by_category in objects_by_category %}{{ by_category.grouper }} - ({% regroup by_category.list by method_subcategory as objects_by_subcategory %}{% for by_subcategory in objects_by_subcategory %}{{ by_subcategory.grouper }}{% if forloop.last %}){% else %},{% endif %}{% endfor %}
+    {% endfor %}
+{% endblock %}
+                    
 {% block page_script %}
 	{{ block.super }}
 	<script type="text/javascript">

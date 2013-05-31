@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% block page_description %}
+    NEMI is a searchable database of environmental methods, protocols, and procedures 
+    that allows scientists and managers to find and compare data-collection methods
+    and protocols for all stages of the water monitoring process.
+{% endblock %}
+
 {% block page_style %}
 	<link rel="stylesheet" href="{{ STATIC_URL }}lib/select2-master/select2.css" media="screen" type="text/css" />
 {% endblock %}
