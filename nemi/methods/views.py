@@ -808,7 +808,7 @@ class MethodSummaryView(FieldHelpMixin, DetailView):
 class StatisticalMethodSummaryView(FieldHelpMixin, DetailView):
     ''' Extends DetailView to implement the Statistical Source Summary view'''
     
-    template_name = 'sams/statistical_source_summary.html'
+    template_name = 'methods/statistical_method_summary.html'
     model = Method
     context_object_name = 'data'
     
