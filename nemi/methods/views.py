@@ -674,7 +674,7 @@ class KeywordResultsView(TemplateResponseMixin, View):
     processes get requests.
     '''  
     
-    template_name = "methods/keyword_search.html"
+    template_name = "methods/keyword_results.html"
     
     def get(self, request, *args, **kwargs):
         '''Returns the http response for the keyword search form. If the form is bound
