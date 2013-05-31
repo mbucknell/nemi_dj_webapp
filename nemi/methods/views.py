@@ -692,7 +692,7 @@ class KeywordResultsView(TemplateResponseMixin, View):
                 clean_keyword = _clean_keyword(keyword)
                 # Execute as raw query since  it uses a CONTAINS clause and context grammer.
                 cursor = connection.cursor() #@UndefinedVariable
-                cursor.execute('SELECT DISTINCT score(1) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
+                cursor.execute('SELECT MAX(score(1)) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
 mf.link_to_full_method, mf.mimetype, mf.revision_id, mf.method_official_name, mf.method_descriptive_name, mf.method_source, mf.method_category \
 FROM nemi_data.method_fact mf, nemi_data.revision_join rj \
 WHERE mf.revision_id = rj.revision_id AND \
@@ -704,7 +704,9 @@ OR CONTAINS(rj.method_pdf, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">
 <seq><rewrite>transform((TOKENS, "{", "}", " "))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", "AND"))</rewrite></seq>\
 </progression></textquery><score datatype="INTEGER" algorithm="COUNT"/></query>\', 2) > 1) \
-ORDER BY score(1) desc;')
+GROUP BY mf.method_id, mf.source_method_identifier, mf.link_to_full_method, mf.mimetype, mf.revision_id, mf.method_official_name, \
+mf.method_descriptive_name, mf.method_source, mf.method_category \
+ORDER BY method_summary_score desc;')
                 results_list = dictfetchall(cursor)
                 paginator = Paginator(results_list, 20)
                 
