@@ -2,7 +2,7 @@
 
 {% load helpcontent %}
 
-{% block title %}NEMI Method Summary{% endblock %}
+{% block title %}NEMI Method Summary - {{ method.details.source_method_identifier|safe }}{% endblock %}
 
 {% block page_script %}
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>

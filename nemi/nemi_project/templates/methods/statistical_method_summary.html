@@ -2,7 +2,7 @@
 
 {% load helpcontent %}
 
-{% block title %}NEMI Statistical Source Summary{% endblock %}
+{% block title %}NEMI Statistical Method Summary - {{ data.source_method_identifier|safe }} {% endblock %}
 
 {% block page_script %}
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
