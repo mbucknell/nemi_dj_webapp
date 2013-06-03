@@ -26,7 +26,7 @@ def build_virtualenv(for_deployment=False):
     if for_deployment:
         # this is needed so that the link to lib64 is relative rather than absolute
         local('rm env/lib64')
-        local('ln -s env/lib64')
+        local('ln -s lib env/lib64')
         
     with shell_env(PIP_DOWNLOAD_CACHE=download_cache, ORACLE_HOME=oracle_home):
         local('env/bin/pip --timeout=120 install -r requirements.txt')
