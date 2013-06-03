@@ -10,7 +10,7 @@ def build_virtualenv(for_deployment=False):
     '''Assumes code has been retrieved from SVN'
     '''
     if for_deployment:
-        download_cache = os.environ.get('HOME/.pip/download_cache', './')
+        download_cache = '$HOME/.pip/download_cache'
         oracle_home = '/usr/oracle/app/oracle/product/11.2.0/client_1'
         
     else:
@@ -39,7 +39,7 @@ def build_project_env(for_deployment=False):
     '''
     # Collect static files
     if for_deployment:
-        local('env/bin/python manage.py collectstatic');
+        local('env/bin/python manage.py collectstatic --settings=nemi_project.settings');
     
     # Install compass and compile sass files
     with lcd('compass'):
