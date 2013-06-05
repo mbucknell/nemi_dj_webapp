@@ -56,9 +56,6 @@ def build_virtualenv(for_deployment=False):
 def build_project_env(for_deployment=False):
     '''Assumes code has already been retrieved from SVN and requirements installed in the virtualenv in env.
     '''
-    # Collect static files
-    execute_django_command('collectstatic --settings=nemi_project.settings', for_deployment, force_overwrite=True)
-    
     # Install compass and compile sass files
     # Note that nemidjdev will always contain a copy of the latest css files in
     # webapps/nemi/nemi_project/static/styles if you don't have Ruby installed.
@@ -66,6 +63,10 @@ def build_project_env(for_deployment=False):
         local('./install.sh')
         local('./compass.sh compile')
         
+    # Collect static files
+    execute_django_command('collectstatic --settings=nemi_project.settings', for_deployment, force_overwrite=True)
+    
+
 @task
 def run_jenkins_tests(for_deployment=False):
     if not for_deployment:
