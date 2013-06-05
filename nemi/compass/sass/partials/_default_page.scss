@@ -1,15 +1,15 @@
 // Can be used to style a default page
 
 .default-page-content {
-	@include section-header(42px, $nemi-home-header-bg-color);
+	padding-top: 20px;
+	@include section-header(35px, $nemi-home-header-bg-color);
 	
 
 	.section-name-div {
 		display: inline-block;
 		color: white;
 		font-size: 18px;
-		margin-top: 5px;
-		margin-bottom: 5px;
+		letter-spacing: 2px;
 	}
 	.content-div {
 		padding: 10px;
@@ -17,6 +17,5 @@
 		margin-top : 2px;
 		background-color: $nemi-primary-content-bg-color;
 		@include main-box-shadow;
-		margin-bottom: 15px;
 	}
 }
