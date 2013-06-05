@@ -2,7 +2,7 @@
 
 .default-page-content {
 	padding-top: 20px;
-	@include section-header(35px, $nemi-home-header-bg-color);
+	@include section-header(35px, $nemi-home-header-bg-color, $nemi-home-header-border-color);
 	
 
 	.section-name-div {
