@@ -15,7 +15,7 @@ def execute_django_command(command, for_deployment=False):
     '''
     
     if for_deployment:
-        local('echo "SECRET_KEY = \'temporary key\'" > project_name/local_settings.py')
+        local('echo "SECRET_KEY = \'temporary key\'" > nemi_project/local_settings.py')
 
     local('env/bin/python manage.py ' + command)
     
