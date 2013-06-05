@@ -17,6 +17,7 @@
 		}
 	}
 }
+
 #results-div {
 	position: relative;
 	margin-right: 10px;
@@ -24,7 +25,10 @@
 	@include main-box-shadow;
 
 	#top-results-header, #bottom-results-header {
-		padding: 10px;		
+		padding-left: 10px;
+		padding-right: 10px;
+		padding-top: 4px;
+		padding-bottom: 4px;
 		background-color: $nemi-page-header-color;
 		color: white;
 		
@@ -42,13 +46,22 @@
 			}
 		}
 		.results-header-actions {
+			padding-top: 3px;
 			display: inline-block;
 			float: right;
 		}
 	}
+	.page-navigation {
+		@include link-colors($nemi-home-tab-btn-highlight-color,
+							 $nemi-home-tab-btn-rollover-color,
+							 $nemi-home-tab-btn-rollover-color);
+	}
 	
 	.results-table {
 		margin-bottom: 0px;
+	}
+	.results-table>th {
+		letter-spacing: 2px;
 	}
 }
 
@@ -83,9 +96,18 @@
 	label {
 		font-size: 18px;
 	}
+	input[type="text"] {
+		@include nemi-text-input;
+	}
 }
 .hidden-details-div {
-	.inside-table th, .inside-table td{
+	.inside-table th {
+		border: none;
+		vertical-align: top;
+		text-align: left;
+	}
+	
+	.inside-table td{
 		border: none;
 	}
 }

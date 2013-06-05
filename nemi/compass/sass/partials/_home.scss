@@ -4,17 +4,19 @@
 	select, .select2-results, .select2-choice{
 		font-size: 14px;
 	}
-	.select2-container, select2-choice{
-	    a {
-			border: 1px solid $nemi-page-header-highlight-color;
-		}
+	.select2-choices, .select2-choice{
+		border: 1px solid $nemi-home-header-border-color;
 	}
-	.select2-container.select2-container-disabled, .select2-choice {
+	.select2-container.select2-container-disabled {
 		a {
 			border: 1px solid #ddd;
 		}
 	}
-	
+	.select2-search-choice {
+		div {
+			margin-left: 5px;
+		}
+	}
 	form > label {
 		font-weight: bold;
 		padding-right: 5px;
@@ -22,14 +24,15 @@
 	
 	.section-div {
 		@include column(20);
-		@include section_header(42px, $nemi-home-header-bg-color, $nemi-home-header-border-color);
+		@include section_header(35px, $nemi-home-header-bg-color, $nemi-home-header-border-color);
 		margin-top: 15px;
 		
 		.home-section-label {
 			color: white;
 			font-size: 18px;
-			margin-top: 5px;
-			margin-bottom: 5px;
+			margin-top: 1px;
+			margin-bottom: 1px;
+			letter-spacing: 3px;
 		}
 	}
 		
@@ -76,13 +79,14 @@
 		
 		.search-button-div {
 			@include column(16, true);
-			padding-top: 10px;
-			padding-bottom : 10px;
+			padding-top: 5px;
+			padding-bottom : 5px;
 			text-align: center;
 		}
 		
 		ul {
-			@include no-bullets;
+			@include no-bullet;
+			margin-bottom: 5px;
 		}
 		
 		.input-section-div {
@@ -92,7 +96,7 @@
 			}
 		}
 		.field-header {
-			padding-left: 0px;
+			padding-left: 4px;
 			font-weight: bold;
 		}
 		
@@ -122,6 +126,10 @@
 	#general-action-div {
 		padding-top: 10px;
 		padding-bottom: 15px;
+		
+		input[type=text] {
+			@include nemi-text-input;
+		}
 	}
 	
 	#analyte-search-div, #microbiological-search-div, #physical-search-div, #regulatory-search-div{					
@@ -194,6 +202,7 @@
 			}
 			h5 {
 				display: inline-block;
+				font-weight: normal;
 			    padding: 0px;
 				padding-left: 10px;
 				color: white;

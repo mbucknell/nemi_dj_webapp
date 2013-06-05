@@ -1,11 +1,12 @@
 // Can be used to style a default page
 
 .default-page-content {
-	@include section-header(42px, $nemi-page-header-color);
+	@include section-header(42px, $nemi-home-header-bg-color);
+	
 
 	.section-name-div {
 		display: inline-block;
-		color: $nemi-page-header-highlight-color;
+		color: white;
 		font-size: 18px;
 		margin-top: 5px;
 		margin-bottom: 5px;
