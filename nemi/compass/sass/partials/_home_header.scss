@@ -1,14 +1,14 @@
 #nemi-info {
 	@include column(12);
 	padding: 10px;
-	height: 100px;
+	height: 85px;
 	font-weight: bold;
 }
 
 #home-header-links {
 	@include column(3);
 	padding: 10px;
-	height: 100px;
+	height: 85px;
 	ul {
 		@include no-style-or-margin-list;
         text-align: right;
@@ -26,7 +26,7 @@
 	@include column(5, true);
 	background-color : $nemi-primary-content-bg-color;
 	padding: 0px;
-	height : 100px;
+	height : 85px;
 	font-size: 12px;
 				
 	#news-feed-title {
@@ -42,9 +42,10 @@
 	#news-feed {
 		@include column(5, true);
 		overflow: auto;
-		height: 77px;
-		padding-left: 10px;
-		padding-right: 10px;
+		height: 62px;
+		padding-top: 2px;
+		padding-left: 6px;
+		padding-right: 6px;
 		line-height: 110%;
 		p {
 			margin-bottom: 5px;

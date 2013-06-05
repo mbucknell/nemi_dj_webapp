@@ -39,12 +39,13 @@
 				.active {
 					color: white;
 					background-color: $nemi-summary-tab-active-color;
-					border: 1px solid $nemi-summary-tab-active-border-color;
+					border: 2px groove $nemi-summary-tab-active-border-color;
 					
 				}
 				.not-active {
 					color: black;
 					background-color: $nemi-summary-tab-inactive-color;
+					border: 2px groove $nemi-summary-tab-inactive-border-color;
 					&:hover {
 						color: $nemi-summary-tab-btn-rollover-color;
 					}				
@@ -103,6 +104,7 @@
 			.data-table {
 				border-bottom: solid 1px $nemi-table-border-color;
 				border-collapse: collapse;
+				width : 100%;
 				th {
 					text-align: center;
 					color: white;
@@ -141,6 +143,11 @@
 					padding-top: 0px;
 					padding-bottom: 0px;
 				}
+			}
+			#revision-tab .data-table {
+				margin-left: 30px;
+				width: span(16) - 24;
+				
 			}	
 		}
 	}

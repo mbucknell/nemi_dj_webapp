@@ -28,8 +28,8 @@ CustomHeaderDialog = {
 		CustomHeaderDialog.dialogEl.dialog('option', {
             'modal':  true,
             'title': 'Customize Header',
-            'width': 250,
-            'height' : 450,
+            'width': 270,
+            'height' : 400,
             'buttons' : [{
                 text: 'Apply',
                 click: function(){
