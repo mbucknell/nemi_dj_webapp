@@ -81,6 +81,7 @@ $nemi-dialog-color: #D3E0C6;
 	background-color: $color;
 	font-size: $font_size;
 	@include border-radius(6px);
+	box-shadow: 0px 0px 2px black;
 	padding-top: 5px;
 	padding-bottom: 5px;
 	padding-right: 20px;
@@ -114,9 +115,10 @@ $nemi-dialog-color: #D3E0C6;
 	padding-left: 30px;
 	padding-top : 2px;
 	padding-bottom : 2px;
+	box-shadow: 0px 0px 2px black;
 	@include border-top-left-radius(6px);
 	@include border-bottom-left-radius(6px);
-	margin-top: 3px;
+	margin-top: 4px;
 	cursor: pointer;
 }
 // Mixin to style viewport spanning section headers. Should be included in
