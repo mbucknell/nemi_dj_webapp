@@ -6,7 +6,7 @@ from fabric.contrib.console import confirm
 import os
 
 
-def execute_django_command(command, for_deployment=False):
+def execute_django_command(command, for_deployment=False, force_overwrite=False):
     '''
     When building for deployment there will not be a local_settings.py. The
     django management commands require SECRET_KEY to be defined so create a
@@ -16,8 +16,11 @@ def execute_django_command(command, for_deployment=False):
     
     if for_deployment:
         local('echo "SECRET_KEY = \'temporary key\'" > nemi_project/local_settings.py')
-
-    local('env/bin/python manage.py ' + command)
+    
+    if force_overwrite:
+        local('yes yes | env/bin/python manage.py ' + command)
+    else:
+        local('env/bin/python manage.py ' + command)
     
     if for_deployment:
         local('rm nemi_project/local_settings.*');
@@ -54,7 +57,7 @@ def build_project_env(for_deployment=False):
     '''Assumes code has already been retrieved from SVN and requirements installed in the virtualenv in env.
     '''
     # Collect static files
-    execute_django_command('collectstatic --settings=nemi_project.settings', for_deployment)
+    execute_django_command('collectstatic --settings=nemi_project.settings', for_deployment, force_overwrite=True)
     
     # Install compass and compile sass files
     # Note that nemidjdev will always contain a copy of the latest css files in
