@@ -12,10 +12,8 @@ body {
 	
 	a { 
 		text-decoration: none;
-		@include link-colors($nemi-link-color, $nemi-link-hover-color, $nemi-link-hover-color, $nemi-link-color);
-		&:hover {
-			font-weight: bold;
-		}
+		@include hover-link;
+		@include link-colors($nemi-link-color, $nemi-link-color, $nemi-link-color, $nemi-link-color);
 	}
 	.show-hide-toggle {
 		vertical-align: middle;

@@ -139,7 +139,7 @@
                 <div class="section-header">
                     <h3><button id="category-{{ by_category.grouper }}" class="show-hide-toggle category-button" title="Show subcategories" type="button">
                         <img src="{{ STATIC_URL }}images/expand_browse.png" alt="show" />
-                    </button>&nbsp;{{ by_category.grouper|lower|capfirst }} - {{ by_category.list|length}} methods</h3>
+                    </button>&nbsp;{{ by_category.grouper|lower|upper }} - {{ by_category.list|length}} methods</h3>
                 </div>
                 <div class="method-category-content-div"></div>
                 {% regroup by_category.list by method_subcategory as objects_by_subcategory %}

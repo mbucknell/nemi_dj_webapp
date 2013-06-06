@@ -24,8 +24,15 @@
 #browse-methods-content-div {
 	@include container;
 	
-	@include section-header (38px, $nemi-browse-category-header-color, $nemi-home-header-border-color);
-	.section-banner-header, .section-header {
+	@include section-header (34px, $nemi-browse-category-header-color, $nemi-home-header-border-color);
+	h3 {
+		letter-spacing: 2px;
+		font-size: 20px;
+		font-weight: bold;
+	}
+	h4 {
+		font-size: 18px;
+		font-weight: bold;
 	}
 	.method-category-content-div {
 		margin-top: 1px;
@@ -49,6 +56,7 @@
 				th {
 					color: white;
 					background-color: $nemi-browse-table-header-color;
+					letter-spacing: 2px;
 				}
 				
 			    thead .headerSortUp,
