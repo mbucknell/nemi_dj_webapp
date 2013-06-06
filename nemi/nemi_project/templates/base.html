@@ -24,6 +24,7 @@
 			});
 		</script>
 		{% block page_script %}<!-- Put page specific script here -->{% endblock %}
+        	
 		<script type="text/javascript">
 			var ENABLE_GOOGLE_ANALYTICS = location.hostname.search('cida-test.er.usgs.gov') != -1;
 			if (ENABLE_GOOGLE_ANALYTICS) {
@@ -41,7 +42,7 @@
 		</script>
 	</head>
 	
-	<body>
+	<body id="nemi-body">
         <div class="main-page">
 		{% block header %}
             <div class="header">

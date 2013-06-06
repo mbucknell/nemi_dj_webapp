@@ -48,7 +48,7 @@
 						{% if r.MIMETYPE %}
 							<a href="{% url 'methods-pdf' method_id=r.METHOD_ID %}" 
 								title="Click to download PDF version of this method's documentation">
-								<img src="{{ STATIC_URL }}images/pdf_icon.gif" alt="Adobe Acrobat (pdf) icon">Download full method now (PDF file)
+								<img src="{{ STATIC_URL }}images/pdf_icon_nowhite_20px.png" alt="Adobe Acrobat (pdf) icon">&nbsp;Download full method now (PDF file)
 							</a>
 						{% elif r.LINK_TO_FULL_METHOD %}				
 							This is a proprietary method. Go to 

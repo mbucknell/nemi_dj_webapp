@@ -1,6 +1,6 @@
 .summary-page-content {
 	margin-top: 15px;
-	@include section-header(38px, $nemi-page-header-color);
+	@include section-header(40px, $nemi-page-header-color);
 	
 	.method-name {
 		color: $nemi-page-header-highlight-color;
@@ -43,7 +43,7 @@
 					
 				}
 				.not-active {
-					color: black;
+					color: white;
 					background-color: $nemi-summary-tab-inactive-color;
 					&:hover {
 						color: $nemi-summary-tab-btn-rollover-color;

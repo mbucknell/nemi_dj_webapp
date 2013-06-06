@@ -11,7 +11,11 @@ body {
 	overflow: visible;
 	
 	a { 
-		@include hover-link;
+		text-decoration: none;
+		@include link-colors($nemi-link-color, $nemi-link-hover-color, $nemi-link-hover-color, $nemi-link-color);
+		&:hover {
+			font-weight: bold;
+		}
 	}
 	.show-hide-toggle {
 		vertical-align: middle;
@@ -45,14 +49,37 @@ body {
 	div {
 		@include box-sizing(border-box);
 	}
-	.ui-widget, .ui-widget input, .ui-widget button{
-		font-family : $blueprint-font-family;
-		font-size: 16px;
-	}
-	.ui-widget-header {
-		color: white;
-		background-color: $nemi-dialog-header-color;
-	}
+
+}
+.ui-widget, .ui-widget input, .ui-widget button{
+	font-family : $blueprint-font-family;
+	font-size: 16px;
+}
+.ui-widget-header {
+	color: white;
+	background-color: $nemi-dialog-header-color;
+}
+
+.ui-icon-closethick {
+	background-image: url("../images/close_window.png");
+	background-position: left top !important;
+}
+
+.ui-dialog .ui-dialog-titlebar-close, .ui-icon-closethick {
+    width: 20px !important;
+    height: 17px !important;
+    margin-right: 3px;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+    background: none !important;
+    border: none !important;
+}
+
+.ui-dialog .ui-dialog-titlebar-close, .ui-dialog .ui-dialog-titlebar-close:hover {
+    padding: 0 !important;
+}
+
 	.ui-widget-content {
 		color: black;
 		background-color: $nemi-dialog-color;
@@ -62,4 +89,3 @@ body {
 		background-color: $nemi-op-button-color;
 	}
 	
-}
