@@ -1,0 +1,75 @@
+
+#browsepage-banner-header {
+	margin-top: 15px;
+	padding-left: 10px;
+	padding-bottom: 4px;
+	padding-top: 6px;
+	background-color: $nemi-page-header-color;
+	h1 {
+		display: inline-block;
+		font-size: 18px;
+		color: white;
+		span {
+			font-size: 20px;
+			color: $nemi-page-header-highlight-color;
+		}
+	}
+	.back-button {
+		@include nemi-button($color: $nemi-results-header-btn-color, $text-color: black);
+		margin-left: 50px;
+	}
+		
+}
+
+#browse-methods-content-div {
+	@include container;
+	
+	@include section-header (38px, $nemi-browse-category-header-color, $nemi-home-header-border-color);
+	.section-banner-header, .section-header {
+	}
+	.method-category-content-div {
+		margin-top: 1px;
+	}
+	.method-subcategory-div {
+		background-color: $nemi-primary-content-bg-color;
+		
+		.method-subcategory-content-div {
+			padding-right: 10px;
+			padding-bottom: 10px;
+			border-bottom: 1px solid $nemi-browse-category-header-color;
+	
+			h4 {
+				margin-bottom: 10px;
+			}
+			.browse-results-table {
+				@include main-box-shadow;
+				width: span(17);
+				margin-left: 22px;
+				margin-bottom: 0px;
+				th {
+					color: white;
+					background-color: $nemi-browse-table-header-color;
+				}
+				
+			    thead .headerSortUp,
+		        thead .tablesorter-headerSortUp,
+		        thead .tablesorter-headerAsc {
+		        	background-color: $nemi-browse-table-column-sort-color;
+		        }
+		        
+		        thead .headerSortDown,
+		        thead .tablesorter-headerSortDown,
+		        thead .tablesorter-headerDesc {
+		        	background-color: $nemi-browse-table-column-sort-color;
+		        }
+		        
+		        .inside-table {
+		        	th {
+		        		color: inherit;
+		        		background-color: inherit;
+		        	}
+		        }
+			}
+		}
+	}
+}

@@ -79,22 +79,22 @@
 	td {
 		border : $nemi-table-border-color 1px solid;
 	}
-	 tbody > tr:hover > td,
-	 tbody > tr:hover > td table td,
-	 tbody > tr:hover + tr.tablesorter-childRow > td,
-	 tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
-	 tbody > tr.even:hover > td,
-	 tbody > tr.even:hover > td table td,
-	 tbody > tr.even:hover + tr.tablesorter-childRow > td,
-	 tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-			background: $nemi-table-secondary-color;
-	 }
-	 tbody > tr.odd:hover > td,
-	 tbody > tr.odd:hover > td table td,
-	 tbody > tr.odd:hover + tr.tablesorter-childRow > td,
-	 tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-			background: $nemi-table-primary-color;
-	 }
+	tbody > tr:hover > td,
+	tbody > tr:hover > td table td,
+	tbody > tr:hover + tr.tablesorter-childRow > td,
+	tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
+	tbody > tr.even:hover > td,
+	tbody > tr.even:hover > td table td,
+	tbody > tr.even:hover + tr.tablesorter-childRow > td,
+	tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
+		background: $nemi-table-secondary-color;
+	}
+	tbody > tr.odd:hover > td,
+	tbody > tr.odd:hover > td table td,
+	tbody > tr.odd:hover + tr.tablesorter-childRow > td,
+	tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
+		background: $nemi-table-primary-color;
+	}
 }
 .keyword-results-actions {
 	label {

@@ -99,13 +99,13 @@
 .tablesorter-nemi tbody > tr.even:hover > td table td,
 .tablesorter-nemi tbody > tr.even:hover + tr.tablesorter-childRow > td,
 .tablesorter-nemi tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-	background: lightgrey;
+	background: $nemi-table-rollover-color;
 }
 .tablesorter-nemi tbody > tr.odd:hover > td,
 .tablesorter-nemi tbody > tr.odd:hover > td table td,
 .tablesorter-nemi tbody > tr.odd:hover + tr.tablesorter-childRow > td,
 .tablesorter-nemi tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-	background: lightgrey;
+	background: $nemi-table-rollover-color;;
 }
 
 /* table processing indicator */

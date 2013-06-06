@@ -1,4 +1,4 @@
-{% extends "methods/base_results.html" %}
+{% extends "base.html" %}
 
 {% block title %}NEMI Browse Methods{% endblock %}
 
@@ -7,24 +7,40 @@
     {% regroup object_list by method_category as objects_by_category %}{% for by_category in objects_by_category %}{{ by_category.grouper }} - ({% regroup by_category.list by method_subcategory as objects_by_subcategory %}{% for by_subcategory in objects_by_subcategory %}{{ by_subcategory.grouper }}{% if forloop.last %}){% else %},{% endif %}{% endfor %}
     {% endfor %}
 {% endblock %}
+
+{% block page_style %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesorter.css" media="screen" type="text/css" />
+{% endblock %}
                     
 {% block page_script %}
-	{{ block.super }}
+    <script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.js"></script>
+    <script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.widgets.js"></script>
+    <script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
+
 	<script type="text/javascript">
 		$(document).ready(function(){
+			$('.back-button').click(function() {
+				window.location.assign("{% url 'home' %}");
+			});
+			
+			$('.browse-results-table').tablesorter({
+			    theme: 'nemi',			    
+				widgets: ['zebra']
+			});
+						
 			// Set up the show/hide button for method categories 
 			$(".method-category-div").each(function(){
 				var subcatDiv = $(this).find(".method-subcategory-div");
 				$(this).find('.category-button').click(function(){
 					var catImgEl = $(this).find('img');
 					if (catImgEl.attr('alt') == 'show') {
-						catImgEl.attr('src', "{{ STATIC_URL }}/images/collapse.png");
+						catImgEl.attr('src', "{{ STATIC_URL }}/images/collapse_browse.png");
 						catImgEl.attr('alt', 'hide');
 						catImgEl.attr('title', 'Hide subcategories');
 						subcatDiv.show();
 					}
 					else{
-						catImgEl.attr('src', "{{ STATIC_URL }}/images/expand.png");
+						catImgEl.attr('src', "{{ STATIC_URL }}/images/expand_browse.png");
 						catImgEl.attr('alt', 'show');
 						catImgEl.attr('title', 'Show subcategories');
 						subcatDiv.hide();
@@ -35,11 +51,11 @@
 			});
 			// Set up the show/hide/ button for method subcategories 
 			$(".method-subcategory-div").each(function(){
-				var tableEl = $(this).find(".results-table");
+				var tableEl = $(this).find(".browse-results-table");
 				$(this).find('.subcategory-button').click(function(){
 					var imgEl = $(this).find('img');
 					if (imgEl.attr('alt') == 'show') {
-						imgEl.attr('src', "{{ STATIC_URL }}/images/collapse.png");
+						imgEl.attr('src', "{{ STATIC_URL }}/images/collapse_summary.png");
 						imgEl.attr('alt', 'hide');
 						imgEl.attr('title', 'Hide methods');
 						
@@ -49,7 +65,7 @@
 						tableEl.trigger('update', [true]);
 					}
 					else{
-						imgEl.attr('src', "{{ STATIC_URL }}/images/expand.png");
+						imgEl.attr('src', "{{ STATIC_URL }}/images/expand_summary.png");
 						imgEl.attr('alt', 'show');
 						imgEl.attr('title', 'Show methods');
 						tableEl.hide();
@@ -106,83 +122,77 @@
 	</script>
 {% endblock %}
 
-{% block page_specific_info %}
-	<span style="font-size: medium">NEMI contains {{ object_list|length }} methods, protocols, and procedures.</span>
+{% block page-content %}
+    {% load data_format %}
+    <div id="browsepage-banner-header">
+        <h1 id="browse-page-name">
+            <span>BROWSE:&nbsp;</span>NEMI contains {{ object_list|length }} methods, protocols, and procedures.
+        </h1>
+        <input class="back-button" type="button" value="Back to search" />
+    </div>
+    <div id="browse-methods-content-div">        
+        {% regroup object_list by method_category as objects_by_category %}
+        {% for by_category in objects_by_category %}
+            <div class="method-category-div">
+                <div class="section-banner-header">
+                </div>
+                <div class="section-header">
+                    <h3><button id="category-{{ by_category.grouper }}" class="show-hide-toggle category-button" title="Show subcategories" type="button">
+                        <img src="{{ STATIC_URL }}images/expand_browse.png" alt="show" />
+                    </button>&nbsp;{{ by_category.grouper|lower|capfirst }} - {{ by_category.list|length}} methods</h3>
+                </div>
+                <div class="method-category-content-div"></div>
+                {% regroup by_category.list by method_subcategory as objects_by_subcategory %}
+                    {% for by_subcategory in objects_by_subcategory %}
+                        <div class="method-subcategory-div" style="display: none;">
+                            <div class="method-subcategory-content-div">
+                            <h4><button id="subcategory-{{ by_subcategory.grouper }}" class="show-hide-toggle subcategory-button" title="Show methods" type="button"><img src="{{ STATIC_URL }}images/expand_summary.png" alt="show" /></button>&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>              
+                            <table class="browse-results-table" data-sortlist="[[0,0]]" style="display: none;">
+                                {% if by_category.grouper == 'STATISTICAL' %}
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Author</th>
+                                            <th>Method Source</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for object in by_subcategory.list %}
+                                            <tr>
+                                                <td><a title="View method details" href="{% url 'methods-sam_method_summary' object.method_id %}">
+                                                    {{ object.method_official_name}}
+                                                </a></td>
+                                                <td>{{ object.author }}</td>
+                                                <td>{% include "methods/_method_source_details.html" with r=object %}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+        
+                                {% else %}
+                                    <thead>
+                                        <tr>
+                                            <th class="sorter-text">Method Id</th>
+                                            <th>Method Descriptive Name</th>
+                                            <th>Method Source</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for object in by_subcategory.list %}
+                                            <tr>
+                                                <td><a title="View method details" href="{% url 'methods-method_summary' object.method_id %}">
+                                                    {{ object.source_method_identifier|safe }}
+                                                </a></td>
+                                                <td>{{ object.method_descriptive_name }}</td>
+                                                <td>{% include "methods/_method_source_details.html" with r=object %}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                {% endif %}
+                            </table>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>            
+            {% endfor %}
+    </div>    
 {% endblock %}
-
-{% block top_results_actions %}{% endblock %}
-
-{% block customize_dialog %}{% endblock %}
-
-{% block top_results_header_info %}
-    NEMI contains {{ object_list|length }} methods, protocols, and procedures.
-{% endblock %}
- 
-{% block top_results_header_actions %}{% endblock %}
-
-{% block results_content %}
-	{% load data_format %}
-	{% regroup object_list by method_category as objects_by_category %}
-	{% for by_category in objects_by_category %}
-		<div class="method-category-div">
-			<h3><button id="category-{{ by_category.grouper }}" class="show-hide-toggle category-button" title="Show subcategories" type="button"><img src="{{ STATIC_URL }}images/expand.png" alt="show" /></button>&nbsp;{{ by_category.grouper|lower|capfirst }} - {{ by_category.list|length}} methods</h3>
-			{% regroup by_category.list by method_subcategory as objects_by_subcategory %}
-			{% for by_subcategory in objects_by_subcategory %}
-				<div class="method-subcategory-div" style="display: none;">
-					<h4><button id="subcategory-{{ by_subcategory.grouper }}" class="show-hide-toggle subcategory-button" title="Show methods" type="button"><img src="{{ STATIC_URL }}images/expand.png" alt="show" /></button>&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>				
-					<table id="browse-results-table" class="results-table" data-sortlist="[[0,0]]" style="display: none;">
-                        {% if by_category.grouper == 'STATISTICAL' %}
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Author</th>
-                                    <th>Method Source</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for object in by_subcategory.list %}
-                                    <tr>
-                                        <td><a title="View method details" href="{% url 'methods-sam_method_summary' object.method_id %}">
-                                            {{ object.method_official_name}}
-                                        </a></td>
-                                        <td>{{ object.author }}</td>
-                                        <td>{% include "methods/_method_source_details.html" with r=object %}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-
-                        {% else %}
-    						<thead>
-    							<tr>
-    								<th class="sorter-text">Method Id</th>
-    								<th>Method Descriptive Name</th>
-    								<th>Method Source</th>
-    							</tr>
-    						</thead>
-    						<tbody>
-    							{% for object in by_subcategory.list %}
-    								<tr>
-    									<td><a title="View method details" href="{% url 'methods-method_summary' object.method_id %}">
-                                            {{ object.source_method_identifier|safe }}
-                                        </a></td>
-    									<td>{{ object.method_descriptive_name }}</td>
-    									<td>{% include "methods/_method_source_details.html" with r=object %}</td>
-    								</tr>
-    							{% endfor %}
-    						</tbody>
-                        {% endif %}
-					</table>
-				</div>
-			{% endfor %}
-		</div>
-	{% endfor %}
-{% endblock %}
-
-{% block bottom_results_header_info %}
-    NEMI contains {{ object_list|length }} methods, protocols, and procedures.
-{% endblock %}
-
-{% block bottom_results_header_actions %}{% endblock %}
-
- 
-{% block bottom_results_actions %}{% endblock %}
