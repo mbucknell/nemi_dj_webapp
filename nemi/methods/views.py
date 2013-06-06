@@ -740,7 +740,7 @@ class BrowseMethodsView(ListView):
     '''
     template_name = 'methods/browse_methods.html'
     
-    queryset = MethodVW.objects.filter(method_category__in=['BIOLOGICAL', 'PHYSICAL', 'STATISTICAL']).order_by('method_category', 'method_subcategory', 'source_method_identifier')
+    queryset = MethodVW.objects.order_by('method_category', 'method_subcategory', 'source_method_identifier')
     
     
 class MethodSummaryView(FieldHelpMixin, DetailView):
