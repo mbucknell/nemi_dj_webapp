@@ -82,7 +82,8 @@ def build(for_deployment=False):
     
     # Create dummy local_settings.py if for_deployment  
     build_project_env(for_deployment)
-    
+
+@task    
 def save_build_artifact(deployment_kind):
     env.svn_repo = "https://cida-svn.er.usgs.gov/repos/dev/usgs/nemi/search/"
     date_tag = datetime.datetime.now().strftime("%d%b%Y-%H:%M")
