@@ -102,7 +102,7 @@ def save_build_artifact(deployment_kind):
         local('svn copy ' + env.svn_repo + 'trunk ' + env.svn_repo + 'tags/' + release_tag + ' -m ' + deployment_kind + ' release for ' + date_tag)
         
     # save the current build artifact
-    local('tar /tmp/nemi.tar cvf ./*')
+    local('tar -czf /tmp/nemi.tar.gz ./*')
     local('svn import /tmp/nemi.tar ' + env.svn_repo + 'releases/snapshots -m Importing new snapshot ')
     if release_tag != '':
         local('svn copy ' + env.svn_repo + 'release/snapshots ' + env.svn_repo + release_tag + ' -m ' + deployment_kind + 'release for ' + date_tag)
