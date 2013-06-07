@@ -1,8 +1,9 @@
 
-from fabric.api import local, task, abort
+from fabric.api import local, task, abort, env
 from fabric.context_managers import lcd, shell_env
 from fabric.contrib.console import confirm
 
+import datetime
 import os
 
 
@@ -80,6 +81,29 @@ def build(for_deployment=False):
     build_virtualenv(for_deployment)
     
     # Create dummy local_settings.py if for_deployment  
-    build_project_env(for_deployment) 
+    build_project_env(for_deployment)
     
+def save_build_artifact(deployment_kind):
+    env.svn_repo = "https://cida-svn.er.usgs.gov/repos/dev/usgs/nemi/search/"
+    date_tag = datetime.datetime.now().strftime("%d%b%Y-%H:%M")
     
+    release_tag = ''
+    if deployment_kind == 'test':
+        # tag current code and with qa and date
+        release_tag = 'qa_release_' + date_tag
+    elif deployment_kind == 'prod':
+        release_tag = 'prod_release_' + date_tag
+    else:
+        release_tag = '';
+        
+    # tag the current version of the code if it's a qa or production release    
+    if release_tag != '':
+        local('svn copy ' + env.svn_repo + 'trunk ' + env.svn_repo + 'tags/' + release_tag + ' -m ' + deployment_kind + ' release for ' + date_tag)
+        
+    # save the current build artifact
+    local('tar /tmp/nemi.tar cvf ./*')
+    local('svn import /tmp/nemi.tar ' + env.svn_repo + 'releases/snapshots -m Importing new snapshot ')
+    if release_tag != '':
+        local('svn copy ' + env.svn_repo + 'release/snapshots ' + env.svn_repo + release_tag + ' -m ' + deployment_kind + 'release for ' + date_tag)
+    local('rm /tmp/nemi.tar')
+        
