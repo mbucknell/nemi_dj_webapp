@@ -99,9 +99,12 @@ def save_build_artifact(deployment_kind):
         
     if release_tag == '':
         #save the current build artifact
+        
         local('mkdir /tmp/nemi')
+        local('svn --username hudson checkout ' + env.svn_repo + 'release/snapshots /tmp/nemi')
         local('tar -czf /tmp/nemi/nemi.tar.gz --exclude=./compass/* ./*')
-        local('svn --username hudson import /tmp/nemi ' + env.svn_repo + 'releases/snapshots -m "Importing new snapshot"')
+        with lcd('/tmp/nemi'):
+            local('svn --username hudson commit -m "Importing new snapshot"')
         local('rm -r /tmp/nemi')
    
     else:
