@@ -101,7 +101,7 @@ def save_build_artifact(deployment_kind):
         #save the current build artifact
         
         local('mkdir /tmp/nemi')
-        local('svn --username hudson checkout ' + env.svn_repo + 'release/snapshots /tmp/nemi')
+        local('svn --username hudson checkout ' + env.svn_repo + 'releases/snapshots /tmp/nemi')
         local('tar -czf /tmp/nemi/nemi.tar.gz --exclude=./compass/* ./*')
         with lcd('/tmp/nemi'):
             local('svn --username hudson commit -m "Importing new snapshot"')
@@ -112,7 +112,7 @@ def save_build_artifact(deployment_kind):
         local('svn --username hudson copy ' + env.svn_repo + 'trunk ' + env.svn_repo + 'tags/' + release_tag + ' -m "' + deployment_kind + ' release for ' + date_tag + '"')
 
         #tag the build artifact/
-        local('svn --username hudson copy ' + env.svn_repo + 'release/snapshots ' + env.svn_repo + release_tag + ' -m "' + deployment_kind + 'release for ' + date_tag + '"')
+        local('svn --username hudson copy ' + env.svn_repo + 'releases/snapshots ' + env.svn_repo + 'releases/' + deployment_kind + '/' + release_tag + ' -m "' + deployment_kind + 'release for ' + date_tag + '"')
         
 
         
