@@ -122,10 +122,9 @@ def save_build_artifact(deployment_kind):
         local('svn --username hudson copy ' + env.svn_repo + 'releases/snapshots ' + env.svn_repo + 'releases/' + deployment_kind + '/' + release_tag + ' -m "' + deployment_kind + 'release for ' + date_tag + '"')
         
 @task
-def deploy(deployment_kind):
-    env.hosts = env.roledefs[deployment_kind]
-    
-    local('rsync -avz --delete --exclude=nemi_project/local_settings.* --exclude=.svn ./ ' + env.hosts[0] + ':/opt/django/webapps/nemi')
+def deploy():
+    local('rsync -avz --delete --exclude=nemi_project/local_settings.* --exclude=.svn ./ ' + env.host_string + ':/opt/django/webapps/nemi')
+
     with cd('/opt/django/wsgi'):
         run('touch nemi')   
         
