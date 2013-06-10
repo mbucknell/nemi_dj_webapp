@@ -1,12 +1,19 @@
 
-from fabric.api import local, task, abort, env
-from fabric.context_managers import lcd, shell_env
+from fabric.api import local, task, abort, env, run
+from fabric.context_managers import lcd, shell_env, cd
 from fabric.contrib.console import confirm
 
 import datetime
 import os
 
 env.svn_repo = "https://cida-svn.er.usgs.gov/repos/dev/usgs/nemi/search/"
+
+env.roledefs = {
+    'dev' : ['django@cida-wiwsc-nemidjdev.er.usgs.gov'],
+    'test' : ['django@cida-wiwsc-nemidjtest.er.usgs.gov'],
+    'prod' : ['django@cida-eros-nemidjprod.er.usgs.gov']
+    }
+
 
 def execute_django_command(command, for_deployment=False, force_overwrite=False):
     '''
@@ -114,5 +121,11 @@ def save_build_artifact(deployment_kind):
         #tag the build artifact/
         local('svn --username hudson copy ' + env.svn_repo + 'releases/snapshots ' + env.svn_repo + 'releases/' + deployment_kind + '/' + release_tag + ' -m "' + deployment_kind + 'release for ' + date_tag + '"')
         
+@task
+def deploy(deployment_kind):
+    env.roles = env.roledefs[deployment_kind]
     
+    local('rsync -avz --delete --exclude=nemi_project/local_settings.* --exclude=.svn ./ ' + env.roles + ':/opt/django/webapps/nemi')
+    with cd('/opt/django/wsgi'):
+        run('touch nemi')   
         
