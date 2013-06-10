@@ -6,6 +6,7 @@ from fabric.contrib.console import confirm
 import datetime
 import os
 
+env.svn_repo = "https://cida-svn.er.usgs.gov/repos/dev/usgs/nemi/search/"
 
 def execute_django_command(command, for_deployment=False, force_overwrite=False):
     '''
@@ -85,7 +86,6 @@ def build(for_deployment=False):
 
 @task    
 def save_build_artifact(deployment_kind):
-    env.svn_repo = "https://cida-svn.er.usgs.gov/repos/dev/usgs/nemi/search/"
     date_tag = datetime.datetime.now().strftime("%d%b%Y-%H:%M")
     
     release_tag = ''
@@ -102,7 +102,7 @@ def save_build_artifact(deployment_kind):
         
         local('mkdir /tmp/nemi')
         local('svn --username hudson checkout ' + env.svn_repo + 'releases/snapshots /tmp/nemi')
-        local('tar -czf /tmp/nemi/nemi.tar.gz --exclude=./compass/* ./*')
+        local('tar -czf /tmp/nemi/nemi.tar.gz --exclude=./compass ./*')
         with lcd('/tmp/nemi'):
             local('svn --username hudson commit -m "Importing new snapshot"')
         local('rm -r /tmp/nemi')
@@ -114,5 +114,5 @@ def save_build_artifact(deployment_kind):
         #tag the build artifact/
         local('svn --username hudson copy ' + env.svn_repo + 'releases/snapshots ' + env.svn_repo + 'releases/' + deployment_kind + '/' + release_tag + ' -m "' + deployment_kind + 'release for ' + date_tag + '"')
         
-
+    
         
