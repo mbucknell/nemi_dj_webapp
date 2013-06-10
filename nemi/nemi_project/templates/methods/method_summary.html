@@ -77,6 +77,15 @@
 		    $('#analytes-button-div input[type="button"]').click(function() {
 		        window.open("{% url 'methods-method_analyte_export' method.details.method_id %}");
 		    });
+		    
+		    // See if the section header is too large and if so shorten it and but the full description in the title attribute. 
+		    if ($('.section-header h1').height() > $('.section-banner-header').height()){
+		    	var nameText = $('.section-header h1 .method-name').html();
+		    	var descrText = $('.section-header h1 .method-descriptive-name').html();
+		    			    	
+		    	
+		    	$('.section-header h1 .method-descriptive-name').html(descrText.substr(0, 80 - nameText.length) + ' ...').attr('title', descrText);
+		    }
 		});		
 	</script>
 {% endblock %}
@@ -88,7 +97,7 @@
         <div class="section-header">
             <h1 class="method-info-div">
                     <span class="method-name">{{ method.details.method_source }}: {{ method.details.source_method_identifier|safe }}:&nbsp;</span>
-                    {{ method.details.method_descriptive_name }}
+                    <span class="method-descriptive-name">{{ method.details.method_descriptive_name }}</span>
             </h1>
             <div class="method-header-button">
                 <input type="button" class="download-button" value="DOWNLOAD METHOD" />
