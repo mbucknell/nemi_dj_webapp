@@ -123,7 +123,7 @@ def save_build_artifact(deployment_kind):
         
 @task
 def deploy(deployment_kind):
-    env.roles = env.roledefs[deployment_kind]
+    env.hosts = env.roledefs[deployment_kind]
     
     local('rsync -avz --delete --exclude=nemi_project/local_settings.* --exclude=.svn ./ ' + env.roles[0] + ':/opt/django/webapps/nemi')
     with cd('/opt/django/wsgi'):

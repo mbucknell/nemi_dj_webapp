@@ -132,6 +132,10 @@
 		}
 	}
 	
+	#filtered-search-div {
+		margin-top: 50px;
+	}
+	
 	#analyte-search-div, #microbiological-search-div, #physical-search-div, #regulatory-search-div{					
 		.form-entry label {
 			@include form-entry-label(130px);

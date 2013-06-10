@@ -295,24 +295,25 @@
 				sessionStorage[$(this).attr('id')] = $(this).val();
 			});
 			
-			// Add click handler for the subsection show/hide buttons 
-			$('.subcategory-action-div').each(function() {
-				var contentDiv = $(this).find('.subsection-div');
-				$(this).find('.show-hide-toggle').click(function() {
-					var buttonImgEl = $(this).find('img');
-					if ($(this).attr('alt') == 'show') {
-						$(this).attr('title', 'Hide subsection');
-						$(this).attr('alt', 'hide');
-						buttonImgEl.attr('src', '{{ STATIC_URL }}images/collapse.png');
-						contentDiv.show();
-					}
-					else {
-						$(this).attr('title', 'Show subsection');
-						$(this).attr('alt', 'show');
-						buttonImgEl.attr('src', '{{ STATIC_URL }}images/expand.png');
-						contentDiv.hide();
-					}
-				});
+			// Add click handler for the limit by show/hide buttons 
+			var contentDiv = ('#filtered-search-limits');
+		
+			$('#limit-by-section .show-hide-toggle').click(function() {
+				var buttonImgEl = $(this).find('img');
+				if (buttonImgEl.attr('alt') == 'show') {
+					$(this).attr('title', 'Hide subsection');
+					buttonImgEl.attr('alt', 'hide').attr('src', '{{ STATIC_URL }}images/collapse.png');
+					contentDiv.show();
+				}
+				else {
+					$(this).attr('title', 'Show subsection');
+					buttonImgEl.attr('alt', 'show').attr('src', '{{ STATIC_URL }}images/expand.png');
+					contentDiv.hide();
+					// Reset limit by form input elements
+					$('.limit-by-select-field').select2('val', '', true);
+					setMethodTypeState($('#method-type-selections input'), true);
+				}
+				sessionStorage['limit-by-section'] = buttonImgEl.attr('alt');
 			});
 			
 			// Associate the id of the div to show/hide for each subcategory button and set show callback if necessary 
@@ -452,6 +453,11 @@
 			$('.static-field').each(function() {
 				$(this).val(sessionStorage[$(this).attr('id')]).change();
 			});
+			
+			if (sessionStorage['limit-by-section'] == 'hide') {
+				// We need to show the limit by section
+				$('#limit-by-section .show-hide-toggle').click();
+			}
 			
 			// Set sensitivity of Limit by Search button 
 			setFilteredSearchButtonState();
@@ -757,12 +763,12 @@
 				</div>
 				<div id="limit-by-section">
                     <div id="limit-by-header">
-                        <button class="show-hide-toggle" title="Hide subsection" type=button>
-                            <img src="{{ STATIC_URL }}/images/collapse.png" alt="hide" /> 
+                        <button class="show-hide-toggle" title="Show subsection" type=button>
+                            <img src="{{ STATIC_URL }}/images/expand.png" alt="show" /> 
                         </button>
 					   <h5>Limit by: (optional)</h5>
                     </div>
-					<div id=filtered-search-limits class="input-section-div subsection-div">
+					<div id=filtered-search-limits class="input-section-div subsection-div" style="display: none;">
 						<form action="{% url 'methods-analyte_results' %}" method="get">
                             <div class="form-entry" id="media-name-input">
                                 <label id="media-name-field-label" for="media-name-field">Media name:</label>
