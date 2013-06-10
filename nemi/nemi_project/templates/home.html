@@ -296,10 +296,11 @@
 			});
 			
 			// Add click handler for the limit by show/hide buttons 
-			var contentDiv = ('#filtered-search-limits');
 		
 			$('#limit-by-section .show-hide-toggle').click(function() {
 				var buttonImgEl = $(this).find('img');
+				var contentDiv = $('#filtered-search-limits');
+
 				if (buttonImgEl.attr('alt') == 'show') {
 					$(this).attr('title', 'Hide subsection');
 					buttonImgEl.attr('alt', 'hide').attr('src', '{{ STATIC_URL }}images/collapse.png');
