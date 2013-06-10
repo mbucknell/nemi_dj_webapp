@@ -97,15 +97,19 @@ def save_build_artifact(deployment_kind):
     else:
         release_tag = '';
         
-    # tag the current version of the code if it's a qa or production release    
-    if release_tag != '':
+    if release_tag == '':
+        #save the current build artifact
+        local('mkdir /tmp/nemi')
+        local('tar -czf --exclude compass /tmp/nemi/nemi.tar.gz ./*')
+        local('svn --username hudson import /tmp/nemi ' + env.svn_repo + 'releases/snapshots -m "Importing new snapshot"')
+        local('rm -r /tmp/nemi')
+   
+    else:
+        # tag the current code version
         local('svn --username hudson copy ' + env.svn_repo + 'trunk ' + env.svn_repo + 'tags/' + release_tag + ' -m "' + deployment_kind + ' release for ' + date_tag + '"')
-        
-    # save the current build artifact
-    local('mkdir /tmp/nemi')
-    local('tar -czf /tmp/nemi/nemi.tar.gz ./*')
-    local('svn --username hudson import /tmp/nemi ' + env.svn_repo + 'releases/snapshots -m "Importing new snapshot"')
-    if release_tag != '':
+
+        #tag the build artifact/
         local('svn --username hudson copy ' + env.svn_repo + 'release/snapshots ' + env.svn_repo + release_tag + ' -m "' + deployment_kind + 'release for ' + date_tag + '"')
-    local('rm -r /tmp/nemi')
+        
+
         
