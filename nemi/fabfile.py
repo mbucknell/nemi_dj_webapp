@@ -125,7 +125,7 @@ def save_build_artifact(deployment_kind):
 def deploy(deployment_kind):
     env.roles = env.roledefs[deployment_kind]
     
-    local('rsync -avz --delete --exclude=nemi_project/local_settings.* --exclude=.svn ./ ' + env.roles + ':/opt/django/webapps/nemi')
+    local('rsync -avz --delete --exclude=nemi_project/local_settings.* --exclude=.svn ./ ' + env.roles[0] + ':/opt/django/webapps/nemi')
     with cd('/opt/django/wsgi'):
         run('touch nemi')   
         
