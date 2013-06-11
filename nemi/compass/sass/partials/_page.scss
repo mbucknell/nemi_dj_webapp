@@ -49,6 +49,10 @@ body {
 	}
 
 }
+button {
+	outline: none;
+}
+
 .ui-widget, .ui-widget input, .ui-widget button{
 	font-family : $blueprint-font-family;
 	font-size: 16px;
