@@ -14,6 +14,7 @@ body {
 		text-decoration: none;
 		@include hover-link;
 		@include link-colors($nemi-link-color, $nemi-link-color, $nemi-link-color, $nemi-link-color);
+		outline: none;
 	}
 	.show-hide-toggle {
 		vertical-align: middle;
