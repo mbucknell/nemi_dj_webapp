@@ -7,7 +7,7 @@ Template can be included to show method source details with the detail visibilit
 	<button class="show-hide-toggle" title="Show details" type="button">
 		<img src="{{ STATIC_URL }}/images/expand_summary.png" alt="show"/>
 	</button>
-	{{ r.method_source }}
+	&nbsp;&nbsp;{{ r.method_source }}
 	<div class="hidden-details-div" style="display: none;">
 		<table class="inside-table">
 			<tr><th>Contact Information:</th><td>{{ r.method_source_contact|safe }}</td></tr>

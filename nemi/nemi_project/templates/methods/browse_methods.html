@@ -139,14 +139,14 @@
                 <div class="section-header">
                     <h3><button id="category-{{ by_category.grouper }}" class="show-hide-toggle category-button" title="Show subcategories" type="button">
                         <img src="{{ STATIC_URL }}images/expand_browse.png" alt="show" />
-                    </button>&nbsp;{{ by_category.grouper|lower|upper }} - {{ by_category.list|length}} methods</h3>
+                    </button>&nbsp;&nbsp;{{ by_category.grouper|lower|upper }} - {{ by_category.list|length}} methods</h3>
                 </div>
                 <div class="method-category-content-div"></div>
                 {% regroup by_category.list by method_subcategory as objects_by_subcategory %}
                     {% for by_subcategory in objects_by_subcategory %}
                         <div class="method-subcategory-div" style="display: none;">
                             <div class="method-subcategory-content-div">
-                            <h4><button id="subcategory-{{ by_subcategory.grouper }}" class="show-hide-toggle subcategory-button" title="Show methods" type="button"><img src="{{ STATIC_URL }}images/expand_summary.png" alt="show" /></button>&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>              
+                            <h4><button id="subcategory-{{ by_subcategory.grouper }}" class="show-hide-toggle subcategory-button" title="Show methods" type="button"><img src="{{ STATIC_URL }}images/expand_summary.png" alt="show" /></button>&nbsp;&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>              
                             <table class="browse-results-table" data-sortlist="[[0,0]]" style="display: none;">
                                 {% if by_category.grouper == 'STATISTICAL' %}
                                     <thead>
