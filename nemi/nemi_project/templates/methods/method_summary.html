@@ -291,7 +291,7 @@
 					    				<td>{{ revision.revision_information }}</td>
 						    			<td>
 							    			{% if revision.mimetype %}
-        		    						    <input type="button" value="DOWNLOAD CURRENT REVISION" onclick="openWindow('{% url 'revision-pdf' revision.revision_id %})" />
+        		    						    <input type="button" value="DOWNLOAD PDF" onclick="openWindow('{% url 'revision-pdf' revision.revision_id %}')" />
     										{% endif %}
 	    								</td>
 		    						</tr>
