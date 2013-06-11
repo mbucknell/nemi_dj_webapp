@@ -153,7 +153,7 @@
 			        	    			<button class="show-hide-toggle" title="Show detail" type="button">
 				    		    			<img src="{{ STATIC_URL }}images/expand_summary.png" alt="show"/>
 			    				    	</button>
-						    		    {{ method.details.source_citation_name|safe }}
+						    		    &nbsp;&nbsp;{{ method.details.source_citation_name|safe }}
     				    				<div class="hidden-details-div" style="display: none;">				
 	    				    				<table class="inside-table">
 		    			    					<tr><th>Citation Information:</th><td>{{ method.details.source_citation_information|safe }}</td></tr>
