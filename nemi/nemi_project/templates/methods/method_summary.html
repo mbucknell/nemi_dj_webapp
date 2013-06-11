@@ -78,13 +78,13 @@
 		        window.open("{% url 'methods-method_analyte_export' method.details.method_id %}");
 		    });
 		    
-		    // See if the section header is too large and if so shorten it and but the full description in the title attribute. 
-		    if ($('.section-header h1').height() > $('.section-banner-header').height()){
-		    	var nameText = $('.section-header h1 .method-name').html();
-		    	var descrText = $('.section-header h1 .method-descriptive-name').html();
-		    			    	
+		    // See if the section header exceeds a character limit and if so shorten it and put the full description in the title attribute. 
+			var methodDescEl = $('.method-descriptive-name');
+		    var methodDescText = methodDescEl.html();
+		    var methodNameText = $('.method-name').html();
+		    if (methodDescText.length +methodNameText.length > 80) {
+		    	methodDescEl.html(methodDescText.substr(0, 80 - methodNameText.length) + ' ...').attr('title', methodDescText);
 		    	
-		    	$('.section-header h1 .method-descriptive-name').html(descrText.substr(0, 80 - nameText.length) + ' ...').attr('title', descrText);
 		    }
 		});		
 	</script>
