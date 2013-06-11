@@ -126,9 +126,9 @@
 		    	    	    <td>{{ method.details.revision_information }}</td>
 		    	    	<tr>
 		        			<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'media_name' %}</th>
-		        			<td>{{ method.details.media_name }}&nbsp;&nbsp;&nbsp;&nbsp;
+		        			<td>{{ method.details.media_name }}
 		        				{% if method.details.waterbody_type %}
-		        				   <b>       Waterbody type: </b>{{ method.details.waterbody_type }}
+		        				   &nbsp;(Waterbody type - {{ method.details.waterbody_type }})
 		        				{% endif %}
 			        		</td>
 			        	</tr>
