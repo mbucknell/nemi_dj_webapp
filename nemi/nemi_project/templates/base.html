@@ -44,57 +44,59 @@
 	
 	<body id="nemi-body">
         <div class="main-page">
-		{% block header %}
-            <div class="header">
-    			<div class="banner">
-    				<a href="{% url 'home' %}"><img src="{{ STATIC_URL }}images/NEMI_header.png" alt="NEMI Logo"></img></a>
-    			</div>
-                <div class="bottom-header-banner">
-                    {% block page_header %}
-                        {% block header_links %}
-                            <div class="header-links">
-                                <ul>
-                                    <li><a href="{% url 'faqs' %}">FAQ</a></li>
-                                    <li><a href="{% url 'glossary' %}">Glossary</a></li>
-                                    <li><a href="{% url 'about' %}">About NEMI</a></li>
-                                </ul>
-                            </div>
-                        {% endblock %} 
-                    {% endblock %}
+    		{% block header %}
+                <div class="header">
+        			<div class="banner">
+        				<a href="{% url 'home' %}"><img src="{{ STATIC_URL }}images/NEMI_header.png" alt="NEMI Logo"></img></a>
+        			</div>
+                    <div class="bottom-header-banner">
+                        {% block page_header %}
+                            {% block header_links %}
+                                <div class="header-links">
+                                    <ul>
+                                        <li><a href="{% url 'faqs' %}">FAQ</a></li>
+                                        <li><a href="{% url 'glossary' %}">Glossary</a></li>
+                                        <li><a href="{% url 'about' %}">About NEMI</a></li>
+                                    </ul>
+                                </div>
+                            {% endblock %} 
+                        {% endblock %}
+                    </div>
                 </div>
-            </div>
-		{% endblock %}
-		
-		{% block page-content %}
-		{% endblock %}
-		<div class="page-footer">
-			{% block footer %}
-			<div class=footer-who>
-                <h6>WHO WE ARE</h6>
-                <ul>
-                    <li><a>Council members</a></li>
-                </ul>
-            </div>
-            <div class=footer-workgroups>
-            <h6>WORKGROUPS</h6>
-                <ul>
-                    <li><a>Methods and Data Comparability Boards</a></li>
-                </ul>
-            </div>
-            <div class=footer-legal>
-                <h6>LEGAL</h6>
-                <ul>
-                    <li><a>Terms of use</a></li>
-                </ul>
-            </div>
-            <div class=footer-for-members>
-                <h6>FOR MEMBERS</h6>
-                <ul>
-                    <li><a>Meeting minutes</a></li>
-                </ul>
-           </div>
-			{% endblock %}
-		</div>
+    		{% endblock %}
+    		
+    		{% block page-content %}
+    		{% endblock %}
+            
+    		<div class="page-footer">
+    			{% block footer %}
+        			<div class=footer-who>
+                        <h6>WHO WE ARE</h6>
+                        <ul>
+                            <li><a href="{% url 'about' %}">About NEMI</a></li>
+                            <li><a href="http://acwi.gov/monitoring/">NWQMC</a></li>
+                            <li><a href="http://acwi.gov/">ACWI</a></li>
+                        </ul>
+                    </div>
+                    <div class=footer-logos>
+                        <ul>
+                            <li><a href="http://www.usgs.gov/"><img src="{{ STATIC_URL }}images/usgs_id_green.gifs" title="USGS" /></a></li>
+                            <li><a href="http://epa.gov/"><img src="{{ STATIC_URL }}images/epa1.gifs" title="EPA" /></a></li>
+                            <li><a href="http://acwi.gov/monitoring/"><img src="{{ STATIC_URL }}images/nwqmc.png" title="NWQMC" /></a></li>
+                        </ul>
+                    </div>
+                    <div class=footer-legal>
+                        <h6>LEGAL</h6>
+                        <ul>
+                            <li><a href="{% url 'terms_of_use' %}">Terms of use</a></li>
+                            <li><a href="http://www.usgs.gov/laws/accessibility.html">Accessibility</a></li>
+                            <li><a href="http://www.usgs.gov/foia/">FOIA</a></li>
+                            <li><a href="http://www.usgs.gov/laws/privacy.html">Privacy</a></li>
+                            <li><a href="http://www.usgs.gov/laws/policies_notices.html">Policies and notices</a></li>
+                        </ul>
+                    </div>
+       		   {% endblock %}
+    		</div>
         </div>
 	</body>
 </html>	

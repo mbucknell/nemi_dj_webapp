@@ -63,4 +63,5 @@ urlpatterns = patterns('',
 urlpatterns += patterns('django.contrib.flatpages.views',
     url(r'^about/$', 'flatpage', {'url' : '/about/'}, name='about'),
     url(r'^glossary/$', 'flatpage', {'url' : '/glossary/'}, name='glossary'),
-    url(r'^faqs/$', 'flatpage', {'url' : '/faqs/'}, name='faqs'),)
+    url(r'^faqs/$', 'flatpage', {'url' : '/faqs/'}, name='faqs'),
+    url(r'^terms_of_use/$', 'flatpage', {'url' : '/terms_of_use/'}, name='terms_of_use'));

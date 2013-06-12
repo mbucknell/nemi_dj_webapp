@@ -7,25 +7,33 @@
 	}
 	ul {
 		@include no-style-or-margin-list;
-		font-size: 12px;
+		
+		a { 
+			font-size: 14px;
+			@include link-colors ($nemi-footer-link-color, 
+		          		          $nemi-footer-link-hover-color, 
+		                     	  $nemi-footer-link-hover-color,
+		                     	  $nemi-footer-link-color);	 
+		    text-decoration: none;	
+		}
 	}
-	a { 
-		@include link-colors ($nemi-footer-link-color, 
-		                      $nemi-footer-link-hover-color, 
-		                      $nemi-footer-link-hover-color);	 	
-	}
+	
 	.footer-who {
-		@include column(4);
+		@include column(6);
+		@include prepend(2);
 	}
-	.footer-workgroups {
-		@include column(4);
+	.footer-logos {
+		@include column(8);
+		text-align: center;	
+		
+		ul {
+			@include inline-block-list();
+		}	
 	}
 	.footer-legal {
-		@include column(4);
+		@include column(6, true);
+		@include prepend(2);
 	}
-	.footer-for-members {
-		@include column(4);
-	}		
 }
 .page-footer > div {
 	padding: 10px;
