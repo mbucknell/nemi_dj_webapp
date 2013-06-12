@@ -19,20 +19,26 @@
 	}
 	
 	.footer-who {
-		@include column(6);
+		@include column(4);
 		@include prepend(2);
 	}
 	.footer-logos {
-		@include column(8);
+		@include column(12);
 		text-align: center;	
 		
 		ul {
 			@include inline-block-list();
+			margin-top: 30px;
+			li {
+				padding-right: 50px;
+			}
+			li:last-child {
+				padding-right: 0px;
+			}
 		}	
 	}
 	.footer-legal {
-		@include column(6, true);
-		@include prepend(2);
+		@include column(4, true);
 	}
 }
 .page-footer > div {
