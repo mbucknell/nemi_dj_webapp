@@ -22,21 +22,17 @@ def execute_django_command(command, for_deployment=False, force_overwrite=False)
     temporary local_settings, perform the command and then remove the local_settings.
     The command parameter should be a string.
     '''
-    print("in execute_django_command for " + command)
     if for_deployment:
         local('echo "SECRET_KEY = \'temporary key\'" > nemi_project/local_settings.py')
     
     if force_overwrite and for_deployment:
         local('yes yes | env/bin/python manage.py ' + command)
     else:
-        print('Collecting static')
         local('env/bin/python manage.py ' + command)
-        print('Finish collecting static')
     
     if for_deployment:
         local('rm nemi_project/local_settings.*');
         
-    print('Finish execute_django_command')
         
 @task
 def build_virtualenv(for_deployment=False):
@@ -77,8 +73,8 @@ def build_project_env(for_deployment=False):
         local('./compass.sh compile')
         
     # Collect static files
-    execute_django_command('collectstatic --settings=nemi_project.settings', for_deployment, force_overwrite=True)
-    print('Finished build_project_env')
+    if for_deployment:
+        execute_django_command('collectstatic --settings=nemi_project.settings', for_deployment, force_overwrite=True)
 
 @task
 def run_jenkins_tests(for_deployment=False):
