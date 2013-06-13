@@ -1,0 +1,18 @@
+{% extends 'base_with_header.html' %}
+
+{% block title %}NEMI Glossary{% endblock %}
+
+{% block section_name %}Glossary{% endblock %}
+
+{% block content %}
+    <div id="glossary-content-div">
+        <ul>
+            {% for item in help_list %}
+                <li>
+                    <span class="help-header">{{ item.label }}</span>
+                    <span class="help-descr">{{ item.description|safe }}</span>
+                </li> 
+            {% endfor %}          
+        </ul>
+    </div>   
+{% endblock %}

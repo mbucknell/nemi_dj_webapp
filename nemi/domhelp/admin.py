@@ -14,7 +14,7 @@ class HelpContentForm(ModelForm):
         model = HelpContent
         widgets = {'description' : TinyMCE(attrs={'cols' : 100, 'rows': 10},
                                            mce_attrs={
-                                             'theme_advanced_buttons1' : "bold,italic,underline,strikethrough,link,unlink,sub,sup,bullist,numlist",
+                                             'theme_advanced_buttons1' : "bold,italic,underline,strikethrough,link,unlink,sub,sup,bullist,numlist,code",
                                              'theme_advanced_statusbar_location' : "none"  
                                            })
                    }

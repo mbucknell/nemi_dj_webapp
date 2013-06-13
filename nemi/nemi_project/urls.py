@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.contrib.sitemaps import FlatPageSitemap
 from django.views.generic import TemplateView
 
+import domhelp
 import methods.urls
 import sams.urls
 #import memo.urls
@@ -55,13 +56,15 @@ urlpatterns = patterns('',
     url(r'^home/', 
         views.HomeView.as_view(),
         name='home'),
-    url(r'method_entry/',
+    url(r'^method_entry/',
         views.MethodEntryView.as_view(),
         name='method_entry'),
+    url(r'^glossary/',
+        domhelp.views.GlossaryView.as_view(),
+        name='glossary'),
 )
 
 urlpatterns += patterns('django.contrib.flatpages.views',
     url(r'^about/$', 'flatpage', {'url' : '/about/'}, name='about'),
-    url(r'^glossary/$', 'flatpage', {'url' : '/glossary/'}, name='glossary'),
     url(r'^faqs/$', 'flatpage', {'url' : '/faqs/'}, name='faqs'),
     url(r'^terms_of_use/$', 'flatpage', {'url' : '/terms_of_use/'}, name='terms_of_use'));

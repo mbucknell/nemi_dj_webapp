@@ -1,4 +1,5 @@
 
+from django.views.generic import ListView
 from django.views.generic.base import ContextMixin
 
 from .models import HelpContent
@@ -25,3 +26,10 @@ class FieldHelpMixin(ContextMixin):
         context['field_help'] = dict([(c.field_name, c) for c in qs])
           
         return context
+    
+class GlossaryView(ListView):
+    
+    template_name = 'glossary.html'
+    queryset = HelpContent.objects.filter(description__isnull=False).values('label', 'description').distinct().order_by('label')
+    context_object_name = 'help_list'
+    
