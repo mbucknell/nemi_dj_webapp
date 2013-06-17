@@ -109,8 +109,8 @@
 					color: white;
 					background-color: $nemi-table-header-color;
 					border-right: solid 1px $nemi-table-border-color;
-					border-left: solid 1px $nemi-table-border-color;
 				}
+				
 				tbody>tr {
 					color: black;
 					&:nth-child(odd) {
@@ -124,9 +124,7 @@
 						padding-right: 6px;
 						padding-left: 6px;
 						border-right: solid 1px $nemi-table-border-color;
-						border-left: solid 1px $nemi-table-border-color;
 					}
-
 				}
 				ul {
 					@include no-bullets;
@@ -143,9 +141,18 @@
 					padding-bottom: 0px;
 				}
 			}
+			#analytes-tab .data-table {
+				th:last-child, td:last-child {
+					border-right: none;
+				}
+			}	
+			
 			#revision-tab .data-table {
 				margin-left: 30px;
 				width: span(16) - 24;
+				th:first-child, td:first-child {
+					border-left: solid 1px $nemi-table-border-color
+				}
 				
 			}	
 		}
