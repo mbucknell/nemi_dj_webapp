@@ -57,16 +57,12 @@ def _clean_name(name):
     return result
 
 def _clean_keyword(k):
-    ''' Returns keyword with special characters and quotes properly escaped. These cause the keyword
-    search to fail unless properly escaped
+    ''' Returns keyword with quotes properly escaped and the keyword surrounded by brackets. T
     '''
-    escape_pattern = re.compile(r'(?P<esc>[-\,])')
     quote_pattern = re.compile(r'(?P<quote>[\'\"])')
+    result = re.sub(quote_pattern, r'\g<quote>\g<quote>', k)
     
-    result = re.sub(escape_pattern, r'\\\g<esc>', k)
-    result = re.sub(quote_pattern, r'\g<quote>\g<quote>', result)
-    
-    return result
+    return '{' + result + '}';
 
 
 class AnalyteSelectView(View):
@@ -690,23 +686,25 @@ class KeywordResultsView(TemplateResponseMixin, View):
             
             else:
                 clean_keyword = _clean_keyword(keyword)
-                # Execute as raw query since  it uses a CONTAINS clause and context grammer.
-                cursor = connection.cursor() #@UndefinedVariable
-                cursor.execute('SELECT MAX(score(1)) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
+                
+                query = 'SELECT MAX(score(1)) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
 mf.link_to_full_method, mf.mimetype, mf.revision_id, mf.method_official_name, mf.method_descriptive_name, mf.method_source, mf.method_category \
 FROM nemi_data.method_fact mf, nemi_data.revision_join rj \
 WHERE mf.revision_id = rj.revision_id AND \
-(CONTAINS(mf.source_method_identifier, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + clean_keyword + '<progression> \
+(CONTAINS(mf.source_method_identifier, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + clean_keyword + '<progression>\
 <seq><rewrite>transform((TOKENS, "{", "}", " "))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", "AND"))</rewrite></seq>\
 </progression></textquery><score datatype="INTEGER" algorithm="COUNT"/></query>\', 1) > 1 \
-OR CONTAINS(rj.method_pdf, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + clean_keyword + '<progression> \
+OR CONTAINS(rj.method_pdf, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + clean_keyword + '<progression>\
 <seq><rewrite>transform((TOKENS, "{", "}", " "))</rewrite></seq>\
 <seq><rewrite>transform((TOKENS, "{", "}", "AND"))</rewrite></seq>\
 </progression></textquery><score datatype="INTEGER" algorithm="COUNT"/></query>\', 2) > 1) \
 GROUP BY mf.method_id, mf.source_method_identifier, mf.link_to_full_method, mf.mimetype, mf.revision_id, mf.method_official_name, \
 mf.method_descriptive_name, mf.method_source, mf.method_category \
-ORDER BY method_summary_score desc;')
+ORDER BY method_summary_score desc;'
+                # Execute as raw query since  it uses a CONTAINS clause and context grammer.
+                cursor = connection.cursor() #@UndefinedVariable
+                cursor.execute(query)
                 results_list = dictfetchall(cursor)
                 paginator = Paginator(results_list, 20)
                 
