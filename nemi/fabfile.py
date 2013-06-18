@@ -36,7 +36,8 @@ def execute_django_command(command, for_deployment=False, force_overwrite=False)
         
 @task
 def build_virtualenv(for_deployment=False):
-    '''Assumes code has been retrieved from SVN'
+    '''Create the project's virtualenv and install the project requirements.
+    Assumes code has been retrieved from SVN'
     '''
     if for_deployment:
         download_cache = os.environ['HOME'] + '/.pip/download_cache'
@@ -63,7 +64,8 @@ def build_virtualenv(for_deployment=False):
         
 @task
 def build_project_env(for_deployment=False):
-    '''Assumes code has already been retrieved from SVN and requirements installed in the virtualenv in env.
+    '''
+    Assumes code has already been retrieved from SVN and requirements installed in the virtualenv in env.
     '''
     # Install or update compass and compile sass files
     # Note that nemidjdev will always contain a copy of the latest css files in
@@ -99,6 +101,10 @@ def build(for_deployment=False):
 
 @task    
 def save_build_artifact(deployment_kind):
+    ''' Creates the build artifact for the deployment_kind.
+    Note that it's typically easier just to use the svn:copy command directly in Jenkins to build 
+    the artifact for test and prod since the fabric script is not available unless it is retrieved from the repository. 
+    '''
     date_tag = datetime.datetime.now().strftime("%d%b%Y-%H:%M")
     
     release_tag = ''
@@ -129,6 +135,9 @@ def save_build_artifact(deployment_kind):
         
 @task
 def deploy():
+    '''Deploy the project code at the current directory to the host. Typically this would be specified by specifying the appropriate
+    role on the command line when invoking this command.
+    '''
     local('rsync -avz --delete --exclude=nemi_project/local_settings.* --exclude=.svn ./ ' + env.host_string + ':/opt/django/webapps/nemi')
 
     with cd('/opt/django/wsgi'):
