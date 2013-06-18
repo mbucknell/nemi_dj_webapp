@@ -191,7 +191,7 @@
 				        </tr>
     			    	<tr>
 	    		    		<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'max_holding_time' %}</th>
-		    	    		<td>{{ method.details.max_holding_time }}</td>
+		    	    		<td>{{ method.details.max_holding_time|safe }}</td>
 			        	</tr>
 			        	<tr>
 			    	    	<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'relative_cost' %}</th>

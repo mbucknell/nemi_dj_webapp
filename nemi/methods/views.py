@@ -687,8 +687,8 @@ class KeywordResultsView(TemplateResponseMixin, View):
             else:
                 clean_keyword = _clean_keyword(keyword)
                 
-                query = 'SELECT MAX(score(1)) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
-mf.link_to_full_method, mf.mimetype, mf.revision_id, mf.method_official_name, mf.method_descriptive_name, mf.method_source, mf.method_category \
+                query = 'SELECT DISTINCT MAX(score(1)) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
+mf.link_to_full_method, mf.mimetype, mf.method_official_name, mf.method_descriptive_name, mf.method_source, mf.method_category \
 FROM nemi_data.method_fact mf, nemi_data.revision_join rj \
 WHERE mf.revision_id = rj.revision_id AND \
 (CONTAINS(mf.source_method_identifier, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + clean_keyword + '<progression>\
