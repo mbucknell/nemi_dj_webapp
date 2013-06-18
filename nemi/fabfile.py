@@ -1,6 +1,6 @@
 
 from fabric.api import local, task, abort, env, run
-from fabric.context_managers import lcd, shell_env, cd
+from fabric.context_managers import lcd, shell_env, cd, warn_only
 from fabric.contrib.console import confirm
 
 import datetime
@@ -65,11 +65,17 @@ def build_virtualenv(for_deployment=False):
 def build_project_env(for_deployment=False):
     '''Assumes code has already been retrieved from SVN and requirements installed in the virtualenv in env.
     '''
-    # Install compass and compile sass files
+    # Install or update compass and compile sass files
     # Note that nemidjdev will always contain a copy of the latest css files in
     # webapps/nemi/nemi_project/static/styles if you don't have Ruby installed.
     with lcd('compass'):
-        local('./install.sh')
+        with shell_env(GEM_HOME=os.environ.get('PWD', '') + '/compass/Gem'):
+            with warn_only():
+                available = local('gem list -i compass', capture=True)
+            if 'true' == available:
+                local('gem update -i Gem compass')
+            else:
+                local('gem install -i Gem compass')
         local('./compass.sh compile')
         
     # Collect static files
