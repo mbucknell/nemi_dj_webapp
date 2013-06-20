@@ -59,8 +59,8 @@ def _clean_name(name):
 def _clean_keyword(k):
     ''' Returns keyword with quotes properly escaped and the keyword surrounded by brackets. T
     '''
-    quote_pattern = re.compile(r'(?P<quote>[\'\"])')
-    result = re.sub(quote_pattern, r'\g<quote>\g<quote>', k)
+    double_pattern = re.compile(r'(?P<double>[\'\"%])')
+    result = re.sub(double_pattern, r'\g<double>\g<double>', k)
     
     return '{' + result + '}';
 
@@ -681,6 +681,10 @@ class KeywordResultsView(TemplateResponseMixin, View):
             # Form has been submitted.
             keyword = request.GET['keyword_search_field']
             if keyword.strip() == '':
+                #Render a blank form
+                return self.render_to_response({'error' : True})
+            
+            elif re.search('\w', keyword) == None:
                 #Render a blank form
                 return self.render_to_response({'error' : True})
             

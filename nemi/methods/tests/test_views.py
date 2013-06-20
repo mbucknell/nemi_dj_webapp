@@ -45,14 +45,6 @@ class CleanKeywordTestCase(unittest.TestCase):
         keyword='nitrate'
         self.assertEqual(_clean_keyword(keyword), '{nitrate}')
         
-    def test_with_one_dash(self):
-        keyword = 'ni-trate'
-        self.assertEqual(_clean_keyword(keyword), '{ni-trate}')
-        
-    def test_with_one_comma(self):
-        keyword = 'ni,trate'
-        self.assertEqual(_clean_keyword(keyword), '{ni,trate}')
-        
     def test_with_quote(self):
         keyword = "ni'trate"
         self.assertEqual(_clean_keyword(keyword), "{ni''trate}")
@@ -68,6 +60,17 @@ class CleanKeywordTestCase(unittest.TestCase):
     def test_with_two_double_quotes(self):
         keyword = 'ni"trate"chloride'
         self.assertEqual(_clean_keyword(keyword), '{ni""trate""chloride}')
-               
+        
+    def test_with_percent(self):
+        keyword = 'ni%trate'
+        self.assertEqual(_clean_keyword(keyword), '{ni%%trate}')
+        
+    def test_with_two_percents(self):
+        keyword = 'ni%trate%chloride'
+        self.assertEqual(_clean_keyword(keyword), '{ni%%trate%%chloride}')
+    
+    def test_with_percent_and_quote_chars(self):
+        keyword = 'ni"tr%ate'
+        self.assertEqual(_clean_keyword(keyword), '{ni""tr%%ate}')
         
        
