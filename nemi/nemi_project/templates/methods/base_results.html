@@ -65,6 +65,7 @@
 				var resort = true;
 				$('.results-table').trigger('update', [resort]);
 				Utils.setEnabled($('.full-results-button'), true);
+				Utils.setEnabled($('.compare-button'), false);
 			});
 			
 			// Update the select cell when clicked
@@ -89,9 +90,7 @@
 				}
 				else {
 					// Have to look at all visible checkboxes to see if any are set.
-					if (!$('.results-table input[type=checkbox]:visible').is(':checked')) {
-						Utils.setEnabled(compareBtn, false);
-					}
+					Utils.setEnabled(compareBtn, $('.results-table input[type=checkbox]:visible').is(':checked'));
 				}
 			});
 						

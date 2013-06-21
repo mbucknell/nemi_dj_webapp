@@ -2,15 +2,18 @@
 	margin-top: 15px;
 	@include section-header(40px, $nemi-page-header-color);
 	
-	.method-name {
-		color: $nemi-page-header-highlight-color;
-	}
-	.section-header, .section-header h1 {
-		font-size: 18px;
-		color: white;
-		
-		.method-info-div {
+	
+	.section-header {
+		h1 {
+			font-size: 18px;
+			color: white;
 			display: inline-block;
+		}
+		.method-name {
+			color: $nemi-page-header-highlight-color;
+		}
+		.method-descriptive-name {
+			font-weight: bold;
 		}
 		.method-header-button {
 			float: right;
