@@ -61,37 +61,33 @@
 			// Add code to limit visible results to selected rows if there 
 			// is a compare button.
 			$('.compare-button').click(function() {
-				$('.results-table input[type=checkbox]').not(':checked').parents('tr').hide();
+				$('.results-table td input[type=checkbox]').not(':checked').parents('tr').hide();
 				var resort = true;
 				$('.results-table').trigger('update', [resort]);
 				Utils.setEnabled($('.full-results-button'), true);
 				Utils.setEnabled($('.compare-button'), false);
 			});
 			
-			// Update the select cell when clicked
-			$('.results-table td input[type="checkbox"]').click(function() {
-			    $('.results-table').trigger('updateCell', [$(this).parent().get(), true]);
-			});
-			
 			// Add click handler for full results button.
 			$('.full-results-button').click(function() {
 				$('.results-table tr:hidden').show();
-				$('.results-table input[type=checkbox]:checked').removeAttr('checked');
 				Utils.setEnabled($('.full-results-button'), false);
-				Utils.setEnabled($('.compare-button'), false);
+				Utils.setEnabled($('.compare-button'), $('.results-table td input[type=checkbox]:visible').is(':checked')); 
 				
 			});
 			
-			// Add click handler for selecting methods to set the state of the operations buttons .
-			$('.results-table input[type=checkbox]').click(function() {
+			// Add click handler for selecting methods to set the state of the operations buttons and update the select cell .
+			$('.results-table td input[type=checkbox]').click(function() {
 				var compareBtn = $('.compare-button');
 				if ($(this).is(':checked')) {
 					Utils.setEnabled(compareBtn, true);
 				}
 				else {
 					// Have to look at all visible checkboxes to see if any are set.
-					Utils.setEnabled(compareBtn, $('.results-table input[type=checkbox]:visible').is(':checked'));
+					Utils.setEnabled(compareBtn, $('.results-table td input[type=checkbox]:visible').is(':checked'));
 				}
+				
+				$('.results-table').trigger('updateCell', [$(this).parent().get(), true]);
 			});
 						
 			// Hook up download-button. Make it invisible if no export_url was 
@@ -125,6 +121,17 @@
 			$('.results-table th a').bind('mousedown mouseup',function(event){
 				event.stopPropagation();
 				window.location=$(this).attr('href');
+				return false;
+			});
+			
+			// Forces a click on the select/deselect all button to set the column's checkboxes.
+			// the sort. We have to use mousedown mouseup because that's the event the tablesorter has bound an
+			// event handler too.
+			$('.results-table th input[type=checkbox]').bind('mousedown mouseup',function(event){
+				event.stopPropagation();
+				var checkAll = !($(this).prop('checked'));
+				$('.results-table td input[type=checkbox]:visible').prop('checked', checkAll);
+				Utils.setEnabled($('.compare-button'), false);
 				return false;
 			});
 			
