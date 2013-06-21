@@ -48,6 +48,10 @@ body {
 	div {
 		@include box-sizing(border-box);
 	}
+	p {
+		margin-bottom: 1em;
+		line-height: 1.2em;
+	}
 
 }
 button {
