@@ -1,5 +1,4 @@
 #glossary-content-div {
-	line-height:90%;
 	.help-header {
 		font-weight: bold;
 	}
@@ -11,12 +10,14 @@
 	.glossary-term-div {
 		@include column(3);
 		@include prepend(1);
-		padding-top: 4px;
+		line-height:100%;
+		padding-top: 3px;
 		padding-right: 6px;
 	}
 	
 	.glossary-definition-div {
 		@include column(15, true);
+		line-height: 100%;
 		padding-left: 10px;
 		padding-right: 10px;
 		margin-right: 10px;
