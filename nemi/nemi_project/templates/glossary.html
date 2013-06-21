@@ -6,13 +6,15 @@
 
 {% block content %}
     <div id="glossary-content-div">
-        <ul>
-            {% for item in help_list %}
-                <li>
+        {% for item in help_list %}
+            <div class="glossary-div">
+                <div class="glossary-term-div">
                     <span class="help-header">{{ item.label }}</span>
+                </div>
+                <div class="glossary-definition-div">
                     <span class="help-descr">{{ item.description|safe }}</span>
-                </li> 
-            {% endfor %}          
-        </ul>
+                </div>
+            </div>
+        {% endfor %}
     </div>   
 {% endblock %}
