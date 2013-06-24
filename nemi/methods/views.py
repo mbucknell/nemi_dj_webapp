@@ -318,6 +318,7 @@ class ExportBaseResultsView(View):
     
     export_fields = () # Note that both method id and link_to_method_summary (which is not in the model object) will get automatically added to the result set
     filename = None #Download field name string.
+    method_summary_url = '' # Counldn't get reverse to work so passing it in as an attribute
     
     def post(self, request, *args, **kwargs):
         if request.POST:
@@ -332,7 +333,9 @@ class ExportBaseResultsView(View):
             result_set = []
             for obj in vl_qs:
                 this_list = list(obj)
-                this_list.append('https://' + get_current_site(request).domain + '/' + reverse('methods-method_summary', args=[obj[0],]))
+                # This is not the "right way to get the url". However reverse is causing wsgi/nemi to be added on deployment.
+                # For now I am using an attribute to set the method_summary url this.
+                this_list.append('https://' + get_current_site(request).domain + self.method_summary_url +  str(this_list[0]))
                 result_set.append(this_list)
          
             fields.append('link_to_method_summary')
@@ -408,6 +411,7 @@ class ExportMethodResultsView(MethodResultsMixin, ExportBaseResultsView):
                      'relative_cost_symbol')
        
     filename = 'method_results'
+    method_summary_url = '/methods/method_summary/'
        
 
 class AnalyteResultsMixin(ResultsMixin):
@@ -542,7 +546,8 @@ class ExportAnalyteResultsView(AnalyteResultsMixin, ExportBaseResultsView):
                      'precision_descriptor_notes',
                      'relative_cost',
                      'relative_cost_symbol')
-    
+    method_summary_url = 'methods/method_summary/'
+
     filename = 'analyte_results'    
                
 class StatisticalResultsMixin(ResultsMixin):
@@ -609,7 +614,7 @@ class ExportStatisticalResultsView(StatisticalResultsMixin, ExportBaseResultsVie
                      'publication_year',
                      'sam_complexity',
                      )
-            
+    method_summary_url = '/methods/sams_method_summary/'       
     filename = 'statistical_method_results'
     
     
