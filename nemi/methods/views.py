@@ -4,11 +4,12 @@ NEMI methods pages.
 
 import re
 
+from django.contrib.sites.models import get_current_site
 from django.db import connection
 from django.db.models import Q
 from django.http import HttpResponse, Http404
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.views.generic import View, ListView, DetailView
 from django.views.generic.list import MultipleObjectMixin
 from django.views.generic.edit import TemplateResponseMixin
@@ -315,21 +316,34 @@ class ExportBaseResultsView(View):
     mixin containing a get_queryset method.
     '''
     
-    export_fields = () #Define fields to be written to the download field. Tuple of strings.
+    export_fields = () # Note that both method id and link_to_method_summary (which is not in the model object) will get automatically added to the result set
     filename = None #Download field name string.
     
     def post(self, request, *args, **kwargs):
         if request.POST:
-            HEADINGS = [name.replace('_', ' ').title() for name in self.export_fields]
-            export_type = kwargs.get('export', 'xls')
+            # Check to see if method id is in export_fields and add link_to_method_summary
+            fields = list(self.export_fields)
+            fields.insert(0, 'method_id')
             
-            vl_qs = self.get_queryset().filter(method_id__in=self.request.POST.getlist('method_id', [])).values_list(*self.export_fields)
+            method_ids = self.request.POST.getlist('method_id', [])
+            vl_qs = self.get_queryset().filter(method_id__in= method_ids).values_list(*fields)
+            
+            # Get list of method summary urls in same order as values query set
+            result_set = []
+            for obj in vl_qs:
+                this_list = list(obj)
+                this_list.append('https://' + get_current_site(request).domain + reverse('methods-method_summary', args=[obj[0],]))
+                result_set.append(this_list)
          
+            fields.append('link_to_method_summary')
+            HEADINGS = [name.replace('_', ' ').title() for name in fields]
+            
+            export_type = kwargs.get('export', 'xls')
             if export_type == 'tsv':
-                return tsv_response(HEADINGS, vl_qs, self.filename)
+                return tsv_response(HEADINGS, result_set, self.filename)
                     
             elif export_type == 'xls':
-                return xls_response(HEADINGS, vl_qs, self.filename)
+                return xls_response(HEADINGS, result_set, self.filename)
             
             else:
                 raise Http404
@@ -380,8 +394,7 @@ class ExportMethodResultsView(MethodResultsMixin, ExportBaseResultsView):
     Extend MethodResultsMixin and ExportBaseResultsView to implement the download method results view.
     '''
     
-    export_fields = ('method_id', 
-                     'source_method_identifier',
+    export_fields = ('source_method_identifier',
                      'method_descriptive_name', 
                      'media_name', 
                      'method_source',
@@ -501,8 +514,7 @@ class ExportAnalyteResultsView(AnalyteResultsMixin, ExportBaseResultsView):
     Extend AnalyteResultsMixin and ExportBaseResultsView to implement the download method results by analyte.
     '''
 
-    export_fields = ('method_id',
-                     'method_descriptive_name',
+    export_fields = ('method_descriptive_name',
                      'method_subcategory',
                      'method_category',
                      'method_source_id',
@@ -587,8 +599,7 @@ class ExportStatisticalResultsView(StatisticalResultsMixin, ExportBaseResultsVie
     Extend StatisticalResultsMixin and ExportBaseResultsView to implement the download statistical method results.
     '''
 
-    export_fields = ('method_id',
-                     'method_descriptive_name',
+    export_fields = ('method_descriptive_name',
                      'method_subcategory',
                      'method_category',
                      'method_source',
@@ -650,7 +661,6 @@ class ExportRegulatoryResultsView(RegulatoryResultsMixin, ExportBaseResultsView)
                      'reg_location',
                      'method_source',
                      'source_method_identifier',
-                     'method_id',
                      'method_descriptive_name',
                      'revision_information',
                      'dl_value',

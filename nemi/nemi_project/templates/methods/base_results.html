@@ -106,9 +106,15 @@
 					
 					downloadInputDivEl.html('');
 					var inputHtml = '';
-					$('.results-table tbody tr:visible td input[type=checkbox]:checked').each(function() {
-						var methodRow = $(this).parents('tr');
-						inputHtml += '<input type="hidden" name="method_id" value="' + $(this).parents('tr').attr('id') + '" />';
+					var methodRows = {};
+					if ($('.results-table thead th input').is('[type=checkbox]')) {
+						methodRows = $('.results-table tbody tr:visible td input[type=checkbox]:checked').parents('tr');
+					}
+					else {
+						methodRows = $('.results-table tbody tr');
+					}
+					methodRows.each(function() {
+						inputHtml += '<input type="hidden" name="method_id" value="' + $(this).attr('id') + '" />';
 					});
 					downloadInputDivEl.html(inputHtml);
 					downloadFormEl.submit();
