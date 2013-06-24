@@ -332,7 +332,7 @@ class ExportBaseResultsView(View):
             result_set = []
             for obj in vl_qs:
                 this_list = list(obj)
-                this_list.append('https://' + get_current_site(request).domain + reverse('methods-method_summary', args=[obj[0],]))
+                this_list.append('https://' + get_current_site(request).domain + '/' + reverse('methods-method_summary', args=[obj[0],]))
                 result_set.append(this_list)
          
             fields.append('link_to_method_summary')
