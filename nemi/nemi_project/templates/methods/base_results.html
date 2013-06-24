@@ -60,31 +60,35 @@
 
 			// Add code to limit visible results to selected rows if there 
 			// is a compare button.
-			$('.compare-button').click(function() {
+			$('.view-selected-button').click(function() {
 				$('.results-table td input[type=checkbox]').not(':checked').parents('tr').hide();
 				var resort = true;
 				$('.results-table').trigger('update', [resort]);
 				Utils.setEnabled($('.full-results-button'), true);
-				Utils.setEnabled($('.compare-button'), false);
+				Utils.setEnabled($('.view-selected-button'), false);
 			});
 			
 			// Add click handler for full results button.
 			$('.full-results-button').click(function() {
 				$('.results-table tr:hidden').show();
 				Utils.setEnabled($('.full-results-button'), false);
-				Utils.setEnabled($('.compare-button'), $('.results-table td input[type=checkbox]:visible').is(':checked')); 
+				Utils.setEnabled($('.view-selected-button'), $('.results-table td input[type=checkbox]:visible').is(':checked')); 
 				
 			});
 			
 			// Add click handler for selecting methods to set the state of the operations buttons and update the select cell .
 			$('.results-table td input[type=checkbox]').click(function() {
-				var compareBtn = $('.compare-button');
+				var viewSelectedBtn = $('.view-selected-button'); 
+				var downloadBtn = $('.download-button');
 				if ($(this).is(':checked')) {
-					Utils.setEnabled(compareBtn, true);
+					Utils.setEnabled(viewSelectedBtn, true);
+					Utils.setEnabled(downloadBtn, true);
 				}
 				else {
 					// Have to look at all visible checkboxes to see if any are set.
-					Utils.setEnabled(compareBtn, $('.results-table td input[type=checkbox]:visible').is(':checked'));
+					var anyChecked = $('.results-table td input[type=checkbox]:visible').is(':checked');
+					Utils.setEnabled(viewSelectedBtn, anyChecked);
+					Utils.setEnabled(downloadBtn, anyChecked);
 				}
 				
 				$('.results-table').trigger('updateCell', [$(this).parent().get(), true]);
@@ -102,8 +106,9 @@
 					
 					downloadInputDivEl.html('');
 					var inputHtml = '';
-					$('.results-table tbody tr:visible').each(function() {
-						inputHtml += '<input type="hidden" name="method_id" value="' + $(this).attr('id') + '" />';
+					$('.results-table tbody tr:visible td input[type=checkbox]:checked').each(function() {
+						var methodRow = $(this).parents('tr');
+						inputHtml += '<input type="hidden" name="method_id" value="' + $(this).parents('tr').attr('id') + '" />';
 					});
 					downloadInputDivEl.html(inputHtml);
 					downloadFormEl.submit();
@@ -131,7 +136,8 @@
 				event.stopPropagation();
 				var checkAll = !($(this).prop('checked'));
 				$('.results-table td input[type=checkbox]:visible').prop('checked', checkAll);
-				Utils.setEnabled($('.compare-button'), false);
+				Utils.setEnabled($('.view-selected-button'), false);
+				Utils.setEnabled($('.download-button'), checkAll);
 				return false;
 			});
 			
@@ -152,9 +158,9 @@
         <div id="top-results-actions">
             <div class="results-action-div">
                 {% block top_results_actions %}                
-                    <input type="button" class="compare-button disabled" disabled="disabled" value="Compare selected results" />
-			        <input type="button" class="full-results-button disabled" disabled="disabled" value="Show full results" />
-			        <input type="button" class="download-button" value="Download results"/>
+                    <input type="button" class="view-selected-button disabled" disabled="disabled" value="View selected results" />
+			        <input type="button" class="full-results-button disabled" disabled="disabled" value="View full results" />
+			        <input type="button" class="download-button disabled" disabled="disabled" value="Download selected results"/>
    		        {% endblock %}
    		    </div>
 	    </div>
@@ -210,9 +216,9 @@
 	    <div id="bottom-results-actions">
             <div class="results-action-div">		        				    
                 {% block bottom_results_actions %}
-		            <input type="button" class="compare-button disabled" disabled="disabled" value="Compare selected results" />
-			        <input type="button" class="full-results-button disabled" disabled="disabled" value="Show full results" />
-				    <input type="button" class="download-button " value="Download results"/>
+		            <input type="button" class="view-selected-button disabled" disabled="disabled" value="View selected results" />
+			        <input type="button" class="full-results-button disabled" disabled="disabled" value="View full results" />
+				    <input type="button" class="download-button disabled" disabled="disabled" value="Download selected results"/>
 		        {% endblock %}
 		    </div>
 	    </div>
