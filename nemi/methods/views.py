@@ -335,7 +335,7 @@ class ExportBaseResultsView(View):
                 this_list = list(obj)
                 # This is not the "right way to get the url". However reverse is causing wsgi/nemi to be added on deployment.
                 # For now I am using an attribute to set the method_summary url this.
-                this_list.append('https://' + get_current_site(request).domain + self.method_summary_url +  str(this_list[0]))
+                this_list.append('https://' + get_current_site(request).domain + self.method_summary_url +  str(this_list[0]) + '/')
                 result_set.append(this_list)
          
             fields.append('link_to_method_summary')
