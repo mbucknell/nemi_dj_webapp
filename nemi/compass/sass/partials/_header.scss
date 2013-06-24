@@ -15,10 +15,15 @@
 		padding: 0px;
 		margin: 0px;
 		background-color: $nemi-bottom-header-color;
-		
+		.home-link {
+			float: left;
+			padding: 10px;
+		}
 		.header-links {
 			float: right;
 			padding: 10px;
+		}
+		.home-link, .header-links {
 			ul {
 				@include horizontal-list(20px, right);
 				

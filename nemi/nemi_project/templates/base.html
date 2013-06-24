@@ -51,6 +51,13 @@
         			</div>
                     <div class="bottom-header-banner">
                         {% block page_header %}
+                            {% block link_to_home %}
+                                <div class="home-link">
+                                    <ul>
+                                        <li><a href="{% url 'home' %}">Home</a></li>
+                                    </ul>
+                                </div>
+                            {% endblock %}
                             {% block header_links %}
                                 <div class="header-links">
                                     <ul>
