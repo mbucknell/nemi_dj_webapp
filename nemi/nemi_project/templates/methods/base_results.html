@@ -71,6 +71,7 @@
 			// Add click handler for full results button.
 			$('.full-results-button').click(function() {
 				$('.results-table tr:hidden').show();
+				$('.results-table').trigger('updateAll', [true]);
 				Utils.setEnabled($('.full-results-button'), false);
 				Utils.setEnabled($('.view-selected-button'), $('.results-table td input[type=checkbox]:visible').is(':checked')); 
 				
