@@ -59,7 +59,7 @@
 			});
 
 			// Add code to limit visible results to selected rows if there 
-			// is a compare button.
+			// is a view selected button.
 			$('.view-selected-button').click(function() {
 				$('.results-table td input[type=checkbox]').not(':checked').parents('tr').hide();
 				var resort = true;
@@ -141,7 +141,10 @@
 			$('.results-table th input[type=checkbox]').bind('mousedown mouseup',function(event){
 				event.stopPropagation();
 				var checkAll = !($(this).prop('checked'));
-				$('.results-table td input[type=checkbox]:visible').prop('checked', checkAll);
+				$('.results-table td input[type=checkbox]:visible').each(function() {
+					$(this).prop('checked', checkAll);
+					$('.results-table').trigger('updateCell', [$(this).parent().get(), true]);
+				});
 				Utils.setEnabled($('.view-selected-button'), false);
 				Utils.setEnabled($('.download-button'), checkAll);
 				return false;
