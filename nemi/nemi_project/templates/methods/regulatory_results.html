@@ -13,7 +13,9 @@
 	</div>
 {% endblock %}
 
-{% block customize_dialog %}{% endblock %} 
+{% block customize_dialog %}{% endblock %}
+
+{% block top_results_header_actions %}{% endblock %} 
 
 {% load data_format %} <!-- Imports decimal_format tag -->
 
@@ -70,6 +72,8 @@
 		</tbody>
 	</table>
 {% endblock %}
+
+{% block bottom_results_header_actions %}{% endblock %}
 
 {% block bottom_results_actions %}
 	<div id="bottom-results-actions" class="results-actions">
