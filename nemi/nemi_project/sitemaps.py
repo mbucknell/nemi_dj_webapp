@@ -33,7 +33,7 @@ class StatisticalMethodSitemap(Sitemap):
 class StaticSitemap(Sitemap):
     
     def items(self):
-        return ['/methods/browse/', '/home/', '/glossary/']
+        return ['/methods/browse_methods/', '/home/', '/glossary/']
     
     def location(self, item):
         return item
