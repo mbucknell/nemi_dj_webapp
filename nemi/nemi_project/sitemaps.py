@@ -12,7 +12,7 @@ class MethodSitemap(Sitemap):
         return Method.objects.all().exclude(method_subcategory_id__in=[16, 17])
     
     def location(self, obj):
-        return reverse('methods-method_summary', args=[obj.method_id])
+        return '/methods/method_summary/' + str(obj.method_id) +'/'
     
     def lastmod(self, obj):
         return obj.last_update_date
@@ -25,7 +25,7 @@ class StatisticalMethodSitemap(Sitemap):
         return Method.objects.all().filter(method_subcategory_id__in=[16,17])
     
     def location(self, obj):
-        return reverse('methods-sam_method_summary', args=[obj.method_id])
+        return '/methods/method-sam_method_summary/' + str(obj.method_id) + '/'
     
     def lastmod(self, obj):
         return obj.last_update_date
@@ -33,8 +33,8 @@ class StatisticalMethodSitemap(Sitemap):
 class StaticSitemap(Sitemap):
     
     def items(self):
-        return ['methods-browse', 'home', 'glossary']
+        return ['/methods/browse/', '/home/', '/glossary/']
     
     def location(self, item):
-        return reverse(item)
+        return item
     
