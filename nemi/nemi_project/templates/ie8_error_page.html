@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}NEMI{% endblock %}
+
+{% block page-content %}
+    <p>This web site is optimized for modern browsers. Please use IE9+, Chrome, or Safari to
+    access all of the search features. 
+    If you are using IE8 or lower, you will only be able to access methods through the 
+    <a href="{% urls 'methods-browse' %}">Browse Methods</a> page.
+{% endblock %}

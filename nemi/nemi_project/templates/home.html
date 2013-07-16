@@ -13,7 +13,7 @@
 {% block page_script %}
     <script type="text/javascript">
     	if (document.all && !document.addEventListener) {
-    		window.location.href = "{% url 'methods-browse' %}";
+    		window.location.href = "{% url 'ie8_error_page' %}";
     	}
     </script>
 	<script src="{{ STATIC_URL }}lib/select2-master/select2.js"></script>

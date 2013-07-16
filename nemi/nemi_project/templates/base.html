@@ -24,7 +24,12 @@
 			});
 		</script>
 		{% block page_script %}<!-- Put page specific script here -->{% endblock %}
-        	
+        
+        <script type="text/javascript">
+        	if (document.all && !document.addEventListener) {
+        		$('.home-link').hide();
+        	}
+        </script>	
 		<script type="text/javascript">
 			var ENABLE_GOOGLE_ANALYTICS = location.hostname.search('nemi.gov') != -1;
 			if (ENABLE_GOOGLE_ANALYTICS) {

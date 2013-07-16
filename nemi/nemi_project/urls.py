@@ -28,6 +28,9 @@ urlpatterns = patterns('',
     url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
     url(r'^robots\.txt$', 
         TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
+    url(r'^ie3_error/$', 
+        TemplateView.as_view(template_name='ie8_error_page.html'),
+        name='ie8_error_page'),
     
     url(r'^tinymce/', include('tinymce.urls')),
     
