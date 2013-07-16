@@ -11,6 +11,11 @@
 {% endblock %}
 
 {% block page_script %}
+    <script type="text/javascript">
+    	if (document.all && !document.addEventListener) {
+    		window.location.href = "{% url 'methods-browse' %}";
+    	}
+    </script>
 	<script src="{{ STATIC_URL }}lib/select2-master/select2.js"></script>
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
 	<script src="{{ STATIC_URL }}script/Utils.js"></script>
