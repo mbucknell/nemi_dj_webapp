@@ -1,4 +1,4 @@
-https://www.djangoproject.com/m/releases/1.5/Django-1.5.1.tar.gz
+Django==1.5.4
 coverage==3.6
 cx-Oracle==5.1.2
 django-braces==1.0.0
