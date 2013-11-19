@@ -89,7 +89,7 @@ AnalyteSelect = {
 		function initDynamicSelect (kind /* String */, results /* Function (see select2 docs) */) {
 			selectEl[kind].select2({
 				width: 'off',
-				minimumInputLength: 3,
+				minimumInputLength: 2,
 				maximumSelectionSize : options.maxSelectionSize,
 				multiple: options.maxSelectionSize > 1,
 				separator: '|',
