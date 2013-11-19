@@ -10,7 +10,7 @@ env.svn_repo = "https://cida-svn.er.usgs.gov/repos/dev/usgs/nemi/search/"
 
 env.roledefs = {
     'dev' : ['django@cida-eros-nemidjdev.er.usgs.gov'],
-    'test' : ['django@cida-eros-nemidjtest.er.usgs.gov'],
+    'test' : ['django@cida-eros-nemidjqa.er.usgs.gov'],
     'prod' : ['django@cida-eros-nemidjprod.er.usgs.gov']
     }
 
