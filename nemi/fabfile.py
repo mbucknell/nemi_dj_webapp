@@ -1,6 +1,6 @@
 
 from fabric.api import local, task, abort, env, run
-from fabric.context_managers import lcd, shell_env, cd, warn_only
+from fabric.context_managers import lcd, shell_env, cd, warn_only, prefix
 from fabric.contrib.console import confirm
 
 import datetime
@@ -42,7 +42,8 @@ def build_virtualenv(for_deployment=False):
     if for_deployment:
         download_cache = os.environ['HOME'] + '/.pip/download_cache'
         oracle_home = ''
-        local('source /etc/profile.d/oracle.sh')
+        with prefix('source /etc/profile.d/oracle.sh'):
+            oracle_home = os.environ['ORACLE_HOME']
         
     else:
         download_cache = os.environ.get('PIP_DOWNLOAD_CACHE', '')
@@ -52,8 +53,9 @@ def build_virtualenv(for_deployment=False):
           
         if oracle_home == '':  
             abort('Must define ORACLE_HOME which should point to the oracle client directory.')
-
+            
     local('virtualenv --no-site-packages --python=python2.6 env')
+        
     if for_deployment:
         # this is needed so that the link to lib64 is relative rather than absolute
         local('rm env/lib64')
