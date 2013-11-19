@@ -9,8 +9,8 @@ import os
 env.svn_repo = "https://cida-svn.er.usgs.gov/repos/dev/usgs/nemi/search/"
 
 env.roledefs = {
-    'dev' : ['django@cida-wiwsc-nemidjdev.er.usgs.gov'],
-    'test' : ['django@cida-wiwsc-nemidjtest.er.usgs.gov'],
+    'dev' : ['django@cida-eros-nemidjdev.er.usgs.gov'],
+    'test' : ['django@cida-eros-nemidjtest.er.usgs.gov'],
     'prod' : ['django@cida-eros-nemidjprod.er.usgs.gov']
     }
 
@@ -41,7 +41,8 @@ def build_virtualenv(for_deployment=False):
     '''
     if for_deployment:
         download_cache = os.environ['HOME'] + '/.pip/download_cache'
-        oracle_home = '/usr/oracle/app/oracle/product/11.2.0/client_1'
+        oracle_home = ''
+        local('source /etc/profile.d/oracle.sh')
         
     else:
         download_cache = os.environ.get('PIP_DOWNLOAD_CACHE', '')
