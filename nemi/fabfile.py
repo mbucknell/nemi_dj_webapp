@@ -143,6 +143,7 @@ def deploy():
     '''
     local('rsync -avz --delete --exclude=nemi_project/local_settings.* --exclude=.svn ./ ' + env.host_string + ':/opt/django/webapps/nemi')
 
+    run('sudo service cida-httpd restart')
     with cd('/opt/django/wsgi'):
         run('touch nemi')   
         
