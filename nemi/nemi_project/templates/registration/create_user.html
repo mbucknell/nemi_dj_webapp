@@ -10,7 +10,7 @@
 		<table>
 			{% for field in form %}
 				<tr>
-					<th style="white-space:nowrap;">{{ field.label_tag }}:
+					<th style="white-space:nowrap;">{{ field.label_tag }}
 						{% for e in field.errors %}
 							<br /><span style="color:red;">{{ e }}</span>
 						{% endfor %}
