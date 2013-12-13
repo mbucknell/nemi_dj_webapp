@@ -440,8 +440,6 @@ class MethodOnline(MethodAbstract):
     insert_person_name2 = models.CharField(max_length=100, 
                                            blank=True) # Don't use this field for SAMS methods
     delete_after_load = models.CharField(max_length=1)
-    wqsa_category_cd = models.IntegerField(null=True, 
-                                           blank=True)
     
     class Meta:
         db_table = u'method_online'
@@ -457,8 +455,6 @@ class MethodStg(MethodAbstract):
     ready_for_review = models.CharField(max_length=1, 
                                         default='N')
     date_loaded = models.DateField()
-    wqsa_category_cd = models.IntegerField(null=True, 
-                                           blank=True)
     
     class Meta:
         db_table = u'method_stg'
