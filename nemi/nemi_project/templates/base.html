@@ -39,6 +39,12 @@
 				    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 				  })();
 			}
+			
+			function trackGAEvent(category, actions, labels, values) {
+				if (ENABLE_GOOGLE_ANALYTICS) {
+					_gaq.push(['trackEvent', category, actions, labels, values]);
+				}
+			}
 		</script>
 	</head>
 	

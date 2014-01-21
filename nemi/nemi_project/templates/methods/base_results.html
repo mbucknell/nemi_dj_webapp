@@ -66,6 +66,8 @@
 				$('.results-table').trigger('update', [resort]);
 				Utils.setEnabled($('.full-results-button'), true);
 				Utils.setEnabled($('.view-selected-button'), false);
+
+                trackGAEvent('Results','View selected results');
 			});
 			
 			// Add click handler for full results button.
@@ -73,8 +75,9 @@
 				$('.results-table tr:hidden').show();
 				$('.results-table').trigger('updateAll', [true]);
 				Utils.setEnabled($('.full-results-button'), false);
-				Utils.setEnabled($('.view-selected-button'), $('.results-table td input[type=checkbox]:visible').is(':checked')); 
-				
+				Utils.setEnabled($('.view-selected-button'), $('.results-table td input[type=checkbox]:visible').is(':checked'));
+
+                trackGAEvent('Results', 'View all results');				
 			});
 			
 			// Add click handler for selecting methods to set the state of the operations buttons and update the select cell .
@@ -102,6 +105,7 @@
 			}
 			else {
 				$('.download-button').click(function() {
+                    trackGAEvent('Results', 'Download');
 					var downloadFormEl = $('#download-form-div form');
 					var downloadInputDivEl = downloadFormEl.find('#download-form-input-div');
 					
@@ -157,6 +161,7 @@
 				
 				$('.customize-button').click(function() {
 					CustomHeaderDialog.show();
+                    trackGAEvent('Results', 'Customize header');
 				});
 			}
 		});

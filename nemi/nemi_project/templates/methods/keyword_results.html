@@ -2,6 +2,22 @@
 
 {% block title %}NEMI Keyword Search Results{% endblock %}
 
+{% block page_script %}
+    {{ block.super }}
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Add google analytics to track getting method
+            $('.download-method').click(function() {
+                trackGAEvent('Method', 'Download', $(this).attr('href'));
+            });
+            $('.link-to-method').click(function() {
+                trackGAEvent('Method', 'Link to method', $(this).attr('href'));
+            });           
+        });
+    </script>    
+{% endblock %}
+
 {% block top_results_actions %}
     <form class="keyword-results-actions" action="{% url 'methods-keyword' %}" method="get">
 		 <label for="keyword-search-text">Modify your search:</label>
@@ -44,15 +60,15 @@
 					>{{ r.METHOD_NUMBER|safe}}</a></td>
 					<td>{{ r.METHOD_SOURCE}}</td>
 					<td>{{ r.METHOD_DESCRIPTIVE_NAME }}</td>
-					<td>
+					<td class="get-method-column">
 						{% if r.MIMETYPE %}
-							<a href="{% url 'methods-pdf' method_id=r.METHOD_ID %}" 
+							<a class="download-method" href="{% url 'methods-pdf' method_id=r.METHOD_ID %}" 
 								title="Click to download PDF version of this method's documentation">
 								<img src="{{ STATIC_URL }}images/pdf_icon_nowhite_20px.png" alt="Adobe Acrobat (pdf) icon">&nbsp;Download full method now (PDF file)
 							</a>
 						{% elif r.LINK_TO_FULL_METHOD %}				
 							This is a proprietary method. Go to 
-							<a href="{{  r.LINK_TO_FULL_METHOD }}" target="_blank"
+							<a class="link-to-method" href="{{  r.LINK_TO_FULL_METHOD }}" target="_blank"
 							title="Link to method owner's method documentation (in a new window)">
 							method owner's site</a>								
 						{% else %}

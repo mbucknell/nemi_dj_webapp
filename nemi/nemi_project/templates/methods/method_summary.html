@@ -11,7 +11,11 @@
 	<script src="{{ STATIC_URL }}script/HelpDialog.js"></script>
 	
 	<script type="text/javascript">
-	    function openWindow(url) {
+	    function openWindow(url, event_category, event_action) {
+            if ((event_category) && (event_action)) {
+                trackGAEvent(event_category, event_action, url);
+            }
+            
 	        window.open(url);
 	        return false;
 	    };
@@ -66,16 +70,16 @@
 			
 			$('.download-button').click(function() {
         		{% if method.details.mimetype %}
-        		    window.open("{% url 'methods-pdf' method_id=method.details.method_id %}");
+                    openWindow("{% url 'methods-pdf' method_id=method.details.method_id %}", 'Method', 'Download');
 			
 		        {% elif method.details.link_to_full_method %}
-		            window.open("{{ method.details.link_to_full_method }}");
+                    openWindow("{{ method.details.link_to_full_method }}", 'Method', 'Link to method');
 		        {% endif %}
 		    });
 		    
 		    // Add click handler for download analytes
 		    $('#analytes-button-div input[type="button"]').click(function() {
-		        window.open("{% url 'methods-method_analyte_export' method.details.method_id %}");
+                openWindow("{% url 'methods-method_analyte_export' method.details.method_id %}", 'Analytes', 'Download');
 		    });
 		    
 		    // See if the section header exceeds a character limit and if so shorten it and put the full description in the title attribute. 
@@ -279,9 +283,9 @@
     							<td>{{ method.latest_revision.revision_information }}</td>
 	    						<td>
 		    						{% if method.latest_revision.mimetype %}
-		    						    <input type="button" value="DOWNLOAD CURRENT REVISION" onclick="openWindow('{% url 'revision-pdf' method.latest_revision.revision_id %}')" />
+		    						    <input type="button" value="DOWNLOAD CURRENT REVISION" onclick="openWindow('{% url 'revision-pdf' method.latest_revision.revision_id %}', 'Revision', 'Download')" />
                                     {% elif method.details.link_to_full_method %}
-                                        <input type="button" value="GO TO METHOD SOURCE" onclick="openWindow('{{ method.details.link_to_full_method }}')" />   
+                                        <input type="button" value="GO TO METHOD SOURCE" onclick="openWindow('{{ method.details.link_to_full_method }}', 'Revision', 'Link to method')" />   
 							    	{% endif %}
     							</td>
 	    					</tr>
@@ -291,7 +295,7 @@
 					    				<td>{{ revision.revision_information }}</td>
 						    			<td>
 							    			{% if revision.mimetype %}
-        		    						    <input type="button" value="DOWNLOAD PDF" onclick="openWindow('{% url 'revision-pdf' revision.revision_id %}')" />
+        		    						    <input type="button" value="DOWNLOAD PDF" onclick="openWindow('{% url 'revision-pdf' revision.revision_id %}', 'Revision', Download')" />
     										{% endif %}
 	    								</td>
 		    						</tr>
