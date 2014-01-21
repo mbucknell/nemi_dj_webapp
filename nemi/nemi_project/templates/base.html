@@ -42,7 +42,7 @@
 			
 			function trackGAEvent(category, actions, labels, values) {
 				if (ENABLE_GOOGLE_ANALYTICS) {
-					_gaq.push(['trackEvent', category, actions, labels, values]);
+					_gaq.push(['_trackEvent', category, actions, labels, values]);
 				}
 			}
 		</script>
