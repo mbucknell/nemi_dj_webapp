@@ -214,10 +214,11 @@ TINYMCE_DEFAULT_CONFIG = {
 
 if os.getenv('JENKINS_URL', False):
     JENKINS_TASKS = (
+                    'django_jenkins.tasks.with_coverage'
                      'django_jenkins.tasks.run_pylint',
-                     'django_jenkins.tasks.with_coverage'
                      )
     JENKINS_TEST_RUNNER = 'nemi_project.test_jenkins_runner.ManagedModelTestRunner'
+    COVERAGE_EXCLUDES_FOLDERS = ('*/tests',)
     INSTALLED_APPS += ('django_jenkins',)
     PROJECT_APPS = ('common', 'methods', 'sams', 'newsfeed', 'domhelp')
     DATABASES['default'].update(dict(
