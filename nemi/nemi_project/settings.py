@@ -218,7 +218,11 @@ if os.getenv('JENKINS_URL', False):
                      'django_jenkins.tasks.run_pylint',
                      )
     JENKINS_TEST_RUNNER = 'nemi_project.test_jenkins_runner.ManagedModelTestRunner'
-    COVERAGE_EXCLUDES_FOLDERS = ('*/tests',)
+    COVERAGE_EXCLUDES_FOLDERS = ('common/tests',
+                                 'methods/tests',
+                                 'sams/tests',
+                                 'newsfeed/tests',
+                                 'domhelp/tests',)
     INSTALLED_APPS += ('django_jenkins',)
     PROJECT_APPS = ('common', 'methods', 'sams', 'newsfeed', 'domhelp')
     DATABASES['default'].update(dict(
