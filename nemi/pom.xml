@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	 <modelVersion>4.0.0</modelVersion>
+	 <groupId>gov.usgs.cida.nemi</groupId>
+	 <artifactId>nemi</artifactId>
+	 <version>1.0.1-SNAPSHOT</version>
+	 <packaging>pom</packaging>
+	 <name>NEMI</name>
+	
+	 <properties>
+	     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	 </properties>
+	 
+	 <url>https://www.nemi.gov</url>
+	 <inceptionYear>2013</inceptionYear>
+	 <organization>
+	     <name>Center for Integrated Data Analytics</name>
+	     <url>http://cida.usgs.gov</url>
+	 </organization>
+	
+	 <developers>
+	     <developer>
+	         <name>Mary Bucknell</name>
+	         <email>mbucknell@usgs.gov</email>
+	         <organization>Center for Integrated Data Analytics</organization>
+	         <organizationUrl>http://cida.usgs.gov</organizationUrl>
+	         <timezone>-6</timezone>
+	     </developer>
+	     <developer>
+	         <name>Kathryn Schoephoester</name>
+	         <email></email>kmschoep@usgs.gov</email>
+	         <organization>Center for Integrated Data Analytics</organization>
+	         <organizationUrl>http://cida.usgs.gov</organizationUrl>
+	         <timezone>-6</timezone>
+	     </developer>
+	 </developers>
+	
+	 <licenses>
+	     <license>
+	         <name>Public Domain</name>
+	         <url>http://water.usgs.gov/software/help/notice/</url>
+	         <comments>
+	             See the url or the 'LICENSE' file for details
+	         </comments>
+	     </license>
+	 </licenses>
+	
+	 <repositories>
+	     <repository>
+	         <id>public-releases</id>
+	         <url>http://internal.cida.usgs.gov/maven/content/groups/public/</url>
+	     </repository>
+	     <repository>
+	         <id>cida-public-releases</id>
+	         <url>http://internal.cida.usgs.gov/maven/content/groups/cida-public/</url>
+	     </repository>
+	     <repository>
+	         <id>cida-releases</id>
+	         <url>http://internal.cida.usgs.gov/maven/content/repositories/cida-releases/</url>
+	     </repository>
+	     <repository>
+	         <id>cida-snapshots</id>
+	         <url>http://internal.cida.usgs.gov/maven/content/groups/public-snapshots/</url>
+	     </repository>
+	     <repository>
+	         <id>cida-thirdparty</id>
+	         <url>http://internal.cida.usgs.gov/maven/content/repositories/cida-thirdparty/</url>
+	     </repository>
+	 </repositories>
+	
+	 <scm>
+	     <connection>scm:svn:https://cida-svn.er.usgs.gov/repos/dev/usgs/nemi/search/</connection>
+	     <developerConnection>https://cida-svn.er.usgs.gov/repos/dev/usgs/nemi/search/</developerConnection>
+	   	<tag>HEAD</tag>
+	</scm>
+	
+	<distributionManagement>
+	    <repository>
+	        <id>cida-releases</id>
+	        <name>CIDA Releases</name>
+	        <url>http://internal.cida.usgs.gov/maven/content/repositories/cida-releases</url>
+	    </repository>
+	    <snapshotRepository>
+	        <id>cida-snapshots</id>
+	        <name>CIDA Snapshots</name>
+	        <url>http://internal.cida.usgs.gov/maven/content/repositories/cida-snapshots</url>
+	    </snapshotRepository>
+	</distributionManagement>
+	<build>
+	  <plugins>
+	    <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-assembly-plugin</artifactId>
+	      <version>2.4</version>
+	      <executions>
+	        <execution>
+	          <id>create-distribution</id>
+	          <phase>package</phase>
+	          <goals>
+	            <goal>single</goal>
+	          </goals>
+	          <configuration>
+	            <descriptors>
+	              <descriptor>assembly/zip.xml</descriptor>
+	            </descriptors>
+	          </configuration>
+	        </execution>
+	      </executions>
+	    </plugin>
+	  </plugins>
+	</build>
+</project>
