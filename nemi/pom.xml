@@ -76,14 +76,14 @@
 	
 	<distributionManagement>
 	    <repository>
-	        <id>cida-releases</id>
-	        <name>CIDA Releases</name>
-	        <url>http://internal.cida.usgs.gov/maven/content/repositories/cida-releases</url>
+	        <id>cida-python-releases</id>
+	        <name>CIDA Python Releases</name>
+	        <url>http://internal.cida.usgs.gov/maven/content/repositories/cida-python-releases</url>
 	    </repository>
 	    <snapshotRepository>
-	        <id>cida-snapshots</id>
-	        <name>CIDA Snapshots</name>
-	        <url>http://internal.cida.usgs.gov/maven/content/repositories/cida-snapshots</url>
+	        <id>cida-python-snapshots</id>
+	        <name>CIDA Python Snapshots</name>
+	        <url>http://internal.cida.usgs.gov/maven/content/repositories/cida-python-snapshots</url>
 	    </snapshotRepository>
 	</distributionManagement>
 	<build>
