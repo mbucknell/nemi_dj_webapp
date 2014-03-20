@@ -1,6 +1,6 @@
 
 from fabric.api import local, task, abort, env, run
-from fabric.context_managers import lcd, shell_env, cd, warn_only, prefix
+from fabric.context_managers import lcd, shell_env, warn_only, prefix
 from fabric.contrib.console import confirm
 
 import datetime
