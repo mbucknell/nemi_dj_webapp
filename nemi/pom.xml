@@ -69,9 +69,11 @@
 	 </repositories>
 	
 	 <scm>
-	     <connection>scm:svn:https://cida-svn.er.usgs.gov/repos/dev/usgs/nemi/search/</connection>
-	     <developerConnection>https://cida-svn.er.usgs.gov/repos/dev/usgs/nemi/search/</developerConnection>
-	   	<tag>HEAD</tag>
+	 	<connection>scm:git:http://cida-eros-stash.er.usgs.gov:7990/stash/projects/NEMI/repos/nemi_dj_webapp</connection>
+        <developerConnection>scm:git:ssh://git@cida-eros-stash.er.usgs.gov:7999/nemi/nemi_dj_webapp.git</developerConnection>
+        <url>http://cida-eros-stash.er.usgs.gov:7990/stash/projects/NEMI/repos/nemi_dj_webapp</url>
+    	<tag>HEAD</tag>
+	     
 	</scm>
 	
 	<distributionManagement>
