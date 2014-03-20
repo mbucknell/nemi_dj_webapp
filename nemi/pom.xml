@@ -72,8 +72,7 @@
 	 	<connection>scm:git:http://cida-eros-stash.er.usgs.gov:7990/stash/projects/NEMI/repos/nemi_dj_webapp</connection>
         <developerConnection>scm:git:ssh://git@cida-eros-stash.er.usgs.gov:7999/nemi/nemi_dj_webapp.git</developerConnection>
         <url>http://cida-eros-stash.er.usgs.gov:7990/stash/projects/NEMI/repos/nemi_dj_webapp</url>
-    	<tag>nemi-1.0.3</tag>
-	     
+    	<tag>HEAD</tag>	     
 	</scm>
 	
 	<distributionManagement>
