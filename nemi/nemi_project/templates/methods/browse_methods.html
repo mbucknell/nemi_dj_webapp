@@ -182,7 +182,7 @@
                                                 <td><a title="View method details" href="{% url 'methods-method_summary' object.method_id %}">
                                                     {{ object.source_method_identifier|safe }}
                                                 </a></td>
-                                                <td>{{ object.method_descriptive_name }}</td>
+                                                <td>{{ object.method_descriptive_name | safe }}</td>
                                                 <td>{% include "methods/_method_source_details.html" with r=object %}</td>
                                             </tr>
                                         {% endfor %}

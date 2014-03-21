@@ -59,7 +59,7 @@
 						{% endif %}	
 					>{{ r.METHOD_NUMBER|safe}}</a></td>
 					<td>{{ r.METHOD_SOURCE}}</td>
-					<td>{{ r.METHOD_DESCRIPTIVE_NAME }}</td>
+					<td>{{ r.METHOD_DESCRIPTIVE_NAME | safe }}</td>
 					<td class="get-method-column">
 						{% if r.MIMETYPE %}
 							<a class="download-method" href="{% url 'methods-pdf' method_id=r.METHOD_ID %}" 

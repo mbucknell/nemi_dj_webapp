@@ -54,7 +54,7 @@
 							{% endif %}
 							<td><a href="{% url 'methods-method_summary' method.method_id %}">{{ method.source_method_identifier|safe }}</a></td>
 							<td>{{ method.revision_information }}</td>
-							<td>{{ method.method_descriptive_name }}</td>
+							<td>{{ method.method_descriptive_name | safe }}</td>
 							<td>
 								{% if method.dl_value.normalize == 999 %}
 									N/A

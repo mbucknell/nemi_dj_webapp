@@ -33,7 +33,7 @@
 						</a>
 					</td>
 					<td>{{ d.method_source }}</td>
-					<td>{{ d.method_descriptive_name }}</td>
+					<td>{{ d.method_descriptive_name | safe }}</td>
 					<td>{{ d.method_subcategory }}</td>
 					<td>{{ d.instrumentation_description }}</td>
 					<td>{{ d.media_name|lower|capfirst }}</td>
