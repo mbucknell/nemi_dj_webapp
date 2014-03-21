@@ -694,7 +694,7 @@ class KeywordResultsView(TemplateResponseMixin, View):
         '''
         if request.GET:
             # Form has been submitted.
-            keyword = request.GET['keyword_search_field']
+            keyword = request.GET.get('keyword_search_field', '')
             if keyword.strip() == '':
                 #Render a blank form
                 return self.render_to_response({'error' : True})
