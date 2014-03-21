@@ -1,9 +1,11 @@
-{% extends "base.html" %}
+{% extends "base_with_header.html" %}
 {% block title %} NEMI error page{% endblock %}
 
 {% block page_title %}NEMI page cannot be found{% endblock %}
 
-{% block page-content %}
+{% block section_name %}404 - Page Not Found{% endblock %}
+
+{% block content %}
 <p style="font-size: large;">You've landed here because you tried to use an outdated link or query to access NEMI. 
 Please use the "Home" button to navigate to the NEMI 4.0 home page to access the full functionality of NEMI.
 Let us know if you need further help (<a href="mailto:nemi@usgs.gov">contact NEMI</a>).
