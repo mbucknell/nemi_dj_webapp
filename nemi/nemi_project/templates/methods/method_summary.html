@@ -21,6 +21,29 @@
 	    };
 	
 		$(document).ready(function(){
+			// Make wqp head request to return result counts.
+			$.ajax({
+				url: '{{ wqp_url }}/Result/search',
+				data : {
+					analyticalmethod : 'http://www.nemi.gov{{ request.path_info }}',
+					mimeType : 'xml'
+				},
+				type : 'HEAD',
+				success : function(data, textStatus, jqXHR) {
+					var total_results = jqXHR.getResponseHeader('Total-Result-Count')
+					if (total_results) {
+						$('#wqp-results-count').html(total_results);
+					}
+					else {
+						$('#wqp-results-count').html('an unknown number of ')
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					$('#wqp-results-count').html('an unknown number of ')
+				}
+				
+		    });
+			
 			// Initialize header information dialogs 
 			HelpDialog.initialize($('#header-info'))
 			
@@ -28,6 +51,7 @@
 			$('#summary-tab-button').data('actionDivEl', $('#method-tab'));
 			$('#analytes-tab-button').data('actionDivEl', $('#analytes-tab'));
 			$('#revision-tab-button').data('actionDivEl', $('#revision-tab'));
+			$('#wqp-tab-button').data('actionDivEl', $('#wqp-tab'));
 			
 			$('.tab-button').click(function() {
 			    $(this).removeClass('not-active').addClass('active');
@@ -114,6 +138,7 @@
                     <li class="active tab-button" id="summary-tab-button">Summary</li>
                     <li class="not-active tab-button" id="analytes-tab-button">Analytes</li>
                     <li class="not-active tab-button" id="revision-tab-button">Revision{{ method.revisions|length|pluralize }}</li>
+ 					<li class="not-active tab-button" id="wqp-tab-button">WQP</li>
                 </ul>
             </div>
             <div class="summary-tab-contents">
@@ -304,6 +329,11 @@
 					    </tbody>	
     				</table>    
     	        </div>
+    	        <div id="wqp-tab" class="tab-contents" style="display: none;">
+    	        	<div id="wqp-header">
+    	        		The <a href="http://www.waterqualitydata.us">Water Quality Portal</a> contains
+    	        		<span id="wqp-results-count"></span> samples that use this method.
+    	        	</div>
     	     </div>
     	     
         </div>

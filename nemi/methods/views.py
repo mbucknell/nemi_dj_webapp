@@ -4,12 +4,13 @@ NEMI methods pages.
 
 import re
 
+from django.conf import settings
 from django.contrib.sites.models import get_current_site
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.core.urlresolvers import reverse_lazy
 from django.db import connection
 from django.db.models import Q
 from django.http import HttpResponse, Http404
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.core.urlresolvers import reverse_lazy
 from django.views.generic import View, ListView, DetailView
 from django.views.generic.list import MultipleObjectMixin
 from django.views.generic.edit import TemplateResponseMixin
@@ -822,6 +823,12 @@ class MethodSummaryView(FieldHelpMixin, DetailView):
             return result         
         else:
             raise Http404
+        
+    def get_context_data(self, **kwargs):
+        context = super(MethodSummaryView, self).get_context_data(**kwargs)
+        context['wqp_url'] = settings.WQP_URL
+        
+        return context
                
             
 class StatisticalMethodSummaryView(FieldHelpMixin, DetailView):
