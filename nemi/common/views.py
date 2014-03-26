@@ -19,7 +19,7 @@ class ChoiceJsonView(View):
         choices = ['{"value" : "' + value + '", "display_value" : "' + display_value + '"}' 
                    for (value, display_value) in self.get_choices(request, *args, **kwargs)]
         
-        return HttpResponse('{"choices" : [' + ','.join(choices) + ']}', mimetype='application/json')
+        return HttpResponse('{"choices" : [' + ','.join(choices) + ']}', content_type='application/json')
        
 class PdfView(View):
     '''
@@ -43,7 +43,7 @@ class PdfView(View):
         self.get_pdf_info()
         
         if self.mimetype and self.pdf:
-            response = HttpResponse(mimetype=self.mimetype)
+            response = HttpResponse(content_type=self.mimetype)
             response['Content-Disposition'] = 'attachment;filename=%s.pdf' % self.filename
             
             pdf_data = self.pdf.read()

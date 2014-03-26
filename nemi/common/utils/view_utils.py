@@ -21,7 +21,7 @@ def tsv_response(headings, vl_qs, filename):
     representing the values list query set, vl_qs, and using headings as the 
     column headers. filename will be the name of the file created with the suffix *.tsv
     '''
-    response = HttpResponse(mimetype='text/tab-separated-values')
+    response = HttpResponse(content_type='text/tab-separated-values')
     response['Content-Disposition'] = ('attachment; filename=%s.tsv' % filename)
 
     response.write('\t'.join(headings))
@@ -39,7 +39,7 @@ def xls_response(headings, vl_qs, filename):
     representing the values list query set, vl_qs, and using headings
     as the column headers. filename will be the name of the file created with the suffix *.xls
     '''
-    response = HttpResponse(mimetype='application/vnd.ms-excel')
+    response = HttpResponse(content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = ('attachment; filename=%s.xls' % filename)
     
     wb = Workbook()
