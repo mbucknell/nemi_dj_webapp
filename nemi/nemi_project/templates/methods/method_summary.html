@@ -61,6 +61,9 @@
 			    divToShow.show();
 			    divToShow.siblings(':visible').hide();
 			});
+			$('#wqp-tab-button').click(function() {
+				trackGAEvent('WQP', 'View tab', '{{ request.path_info }}');	
+			});
 			
 			// Add click event handler to all show/hide detail buttons 
 			$('.show-hide-detail-div').each(function(){
@@ -117,7 +120,7 @@
 		    // Add click handler for submit to update the form's action.
 		    var formEl = $('#wqp-download-data-form');
 		    formEl.submit(function() {
-			    var downloadUrl = '{{ wqp_url }}/' + $('#wqp-download-data-type-div input[name="dataType"]:checked').val() + '/search')
+			    var downloadUrl = '{{ wqp_url }}/' + $('#wqp-download-data-type-div input[name="dataType"]:checked').val() + '/search';
 			  
 				// Fill in mimeType and action
 				$(this).find('input[name="mimeType"]').val($('#wqp-download-file-format-div input[name="mimeType"]:checked').val());
