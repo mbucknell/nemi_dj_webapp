@@ -117,7 +117,7 @@
 		    	methodDescEl.html(methodDescText.substr(0, 80 - methodNameText.length) + ' ...').attr('title', methodDescText);	
 		    }
 
-		    // Add click handler for submit to update the form's action.
+		    // Add submit handler for submit to update the form's action.
 		    var formEl = $('#wqp-download-data-form');
 		    formEl.submit(function() {
 			    var downloadUrl = '{{ wqp_url }}/' + $('#wqp-download-data-type-div input[name="dataType"]:checked').val() + '/search';

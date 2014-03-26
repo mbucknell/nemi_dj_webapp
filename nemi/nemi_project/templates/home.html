@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block page_style %}
-	<link rel="stylesheet" href="{{ STATIC_URL }}lib/select2-master/select2.css" media="screen" type="text/css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}lib/select2-3.4.6/select2.css" media="screen" type="text/css" />
 {% endblock %}
 
 {% block page_script %}
@@ -16,7 +16,7 @@
     		window.location.href = "{% url 'ie8_error_page' %}";
     	}
     </script>
-	<script src="{{ STATIC_URL }}lib/select2-master/select2.js"></script>
+	<script src="{{ STATIC_URL }}lib/select2-3.4.6/select2.js"></script>
 	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
 	<script src="{{ STATIC_URL }}script/Utils.js"></script>
     <script src="{{ STATIC_URL }}script/AnalyteSelect.js"></script>
