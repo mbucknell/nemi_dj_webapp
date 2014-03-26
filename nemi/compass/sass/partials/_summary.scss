@@ -198,11 +198,35 @@
 		}
 	}
 	#wqp-tab {
-		#wqp-header {
+		div, form {
 			padding: 10px;
 		}
+		ul {
+			@include no-bullets;
+			margin-bottom: 0px;
+		}
+		button {
+			@include nemi-button($color: $nemi-summary-analyte-download-color, $text_color:black);
+		}
+		#wqp-download-header {
+			font-weight: bold;
+			font-size: 18px;
+			border-bottom: solid 2px $nemi-home-header-bg-color;
+		}
+		#wqp-form-parameters-div > div {
+			padding-top : 0px;
+			padding-bottom : 0px;
+			display: inline-block;
+		}
+		#wqp-download-data-type-div {
+			float: left;
+		}
+		.wqp-download-input-header {
+			font-weight: bold;
+		} 
 	}
 }
+
 #statistical-method-summary-page-content {
 	.summary-tab-contents {
 		@include column(20, true);
