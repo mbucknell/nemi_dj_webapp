@@ -117,10 +117,13 @@
 		    // Add click handler for submit to update the form's action.
 		    var formEl = $('#wqp-download-data-form');
 		    formEl.submit(function() {
+			    var downloadUrl = '{{ wqp_url }}/' + $('#wqp-download-data-type-div input[name="dataType"]:checked').val() + '/search')
+			  
 				// Fill in mimeType and action
 				$(this).find('input[name="mimeType"]').val($('#wqp-download-file-format-div input[name="mimeType"]:checked').val());
-				$(this).attr('action', 
-						'{{ wqp_url }}/' + $('#wqp-download-data-type-div input[name="dataType"]:checked').val() + '/search');	
+				$(this).attr('action', downloadUrl);
+
+				trackGAEvent('WQP', 'Download', downloadUrl)
 			});
 		});		
 	</script>

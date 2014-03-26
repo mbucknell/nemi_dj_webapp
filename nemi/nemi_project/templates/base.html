@@ -26,10 +26,10 @@
 		{% block page_script %}<!-- Put page specific script here -->{% endblock %}
         
 		<script type="text/javascript">
-			var ENABLE_GOOGLE_ANALYTICS = location.hostname.search('nemi.gov') != -1;
+			var ENABLE_GOOGLE_ANALYTICS = '{{ settings.GA_TRACKING_CODE }}' !== '';
 			if (ENABLE_GOOGLE_ANALYTICS) {
 				var _gaq = _gaq || [];
-				  _gaq.push(['_setAccount', 'UA-39958467-1']);
+				  _gaq.push(['_setAccount', '{{ settings.GA_TRACKING_CODE }}']);
 			      _gaq.push (['_gat._anonymizeIp']);
 				  _gaq.push(['_trackPageview']);
 

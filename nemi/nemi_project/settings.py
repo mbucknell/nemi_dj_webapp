@@ -99,6 +99,7 @@ TEMPLATE_CONTEXT_PROCESSORS = ("django.contrib.auth.context_processors.auth",
                                "django.core.context_processors.tz",
                                "django.contrib.messages.context_processors.messages",
                                "django.core.context_processors.request",
+                               "common.context_processors.project_settings",
 )
 
 # List of callables that know how to import templates from various sources.
@@ -186,6 +187,8 @@ SESSION_COOKIE_AGE = 28800 # In seconds, this is eight hours
 #NEMI defined settings
 NEW_ACCOUNT_NOTIFICATIONS = () # List of emails to send new account notifications to.
 WQP_URL = "http://www.waterqualitydata.us"
+# Code to be used for google analytics. If tracking is desired for a server, set to the track code in local_settings.py.
+GA_TRACKING_CODE = ''
 
 try:
     ADDITIONAL_APPS = ()
