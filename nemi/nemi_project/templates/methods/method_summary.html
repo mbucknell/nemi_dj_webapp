@@ -25,7 +25,7 @@
 			$.ajax({
 				url: '{{ wqp_url }}/Result/search',
 				data : {
-					analyticalmethod : 'http://www.nemi.gov{{ request.path_info }}',
+					analyticalmethod : 'https://www.nemi.gov{{ request.path_info }}',
 					mimeType : 'xml'
 				},
 				type : 'HEAD',
@@ -110,10 +110,18 @@
 			var methodDescEl = $('.method-descriptive-name');
 		    var methodDescText = methodDescEl.html();
 		    var methodNameText = $('.method-name').html();
-		    if (methodDescText.length +methodNameText.length > 80) {
-		    	methodDescEl.html(methodDescText.substr(0, 80 - methodNameText.length) + ' ...').attr('title', methodDescText);
-		    	
+		    if (methodDescText.length + methodNameText.length > 80) {
+		    	methodDescEl.html(methodDescText.substr(0, 80 - methodNameText.length) + ' ...').attr('title', methodDescText);	
 		    }
+
+		    // Add click handler for submit to update the form's action.
+		    var formEl = $('#wqp-download-data-form');
+		    formEl.submit(function() {
+				// Fill in mimeType and action
+				$(this).find('input[name="mimeType"]').val($('#wqp-download-file-format-div input[name="mimeType"]:checked').val());
+				$(this).attr('action', 
+						'{{ wqp_url }}/' + $('#wqp-download-data-type-div input[name="dataType"]:checked').val() + '/search');	
+			});
 		});		
 	</script>
 {% endblock %}
@@ -333,6 +341,47 @@
     	        	<div id="wqp-header">
     	        		The <a href="http://www.waterqualitydata.us">Water Quality Portal</a> contains
     	        		<span id="wqp-results-count"></span> samples that use this method.
+    	        	</div>
+    	        	<div id="wqp-download">
+    	        		<div id="wqp-download-header">Download WQP data</div>
+    	        			<div id="wqp-form-parameters-div">
+	    	        			<div id="wqp-download-data-type-div">
+	    	        				<span class="wqp-download-input-header">Select data:</span>
+	    	        				<ul>
+	    	        					<li>
+	    	        						<input type="radio" id="site-radio" name="dataType" value="Station" checked/>
+	    	        						<label for="site-radio">Sites only</label>
+	    	        					</li>
+	    	        					<li>
+	    	        						<input type="radio" id="result-radio" name="dataType" value="Result" />
+	    	        						<label for="result-radio">Sample results only</label>
+	    	        					</li>
+	    	        				</ul>
+	    	        			</div>
+	    	        			<div id="wqp-download-file-format-div">
+		    	        			<span class="wqp-download-input-header">File format:</span>
+		    	        			<ul>
+		    	        				<li>
+		    	        					<input type="radio" name="mimeType" value="csv" id="csv-radio" checked/>
+		    	        					<label for="csv-radio">Comma-separated</label>
+		    	        				</li>
+		    	        				<li>
+		    	        					<input type="radio" name="mimeType" value="tsv" id="tsv-radio"/>
+		    	        					<label for="tsv-radio">Tab-separated</label>
+		    	        				</li>
+		    	        				<li>
+		    	        					<input type="radio" name="mimeType" value="xlsx" id="xls-radio"/>
+		    	        					<label for="xls-radio">MS Excel 2007+</label>
+		    	        				</li>
+		    	        			</ul>
+		    	        		</div>
+		    	        	</div>
+		    	        	<form id="wqp-download-data-form" method="get">
+    	        				<input type="hidden" name="analyticalmethod" value="https://www.nemi.gov{{ request.path_info }}" />
+    	        				<button type="submit">Download</button>
+								<input type="hidden" name="mimeType" />
+    	        			</form>
+    	        		</div>
     	        	</div>
     	     </div>
     	     
