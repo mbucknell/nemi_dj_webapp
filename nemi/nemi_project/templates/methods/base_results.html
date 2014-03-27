@@ -11,9 +11,9 @@
 {% endblock %}
 
 {% block page_script %}
-	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.js"></script>
-	<script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.widgets.js"></script>
-	<script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
+	<script src="{{ STATIC_URL }}lib/jquery_tablesorter/jquery.tablesorter.js"></script>
+	<script src="{{ STATIC_URL }}lib/jquery_tablesorter/jquery.tablesorter.widgets.js"></script>
+	<script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
 	<script src="{{ STATIC_URL }}script/Utils.js"></script>
 	<script src="{{ STATIC_URL }}script/CustomHeaderDialog.js"></script>
 	<script src="{{ STATIC_URL }}script/HelpDialog.js"></script>
@@ -40,6 +40,7 @@
 			// The tables can be customized using meta data and class definitions
 			// See the jquery tablesorter documentation.
 			$('.results-table').tablesorter({
+				sortList: [[1,0]],
 			    theme: 'nemi',			    
 				widgets: ['zebra']
 			});

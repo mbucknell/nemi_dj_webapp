@@ -13,9 +13,9 @@
 {% endblock %}
                     
 {% block page_script %}
-    <script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.js"></script>
-    <script src="{{ STATIC_URL }}script/jquery_tablesorter/jquery.tablesorter.widgets.js"></script>
-    <script src="{{ STATIC_URL }}script/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
+    <script src="{{ STATIC_URL }}lib/jquery_tablesorter/jquery.tablesorter.js"></script>
+    <script src="{{ STATIC_URL }}lib/jquery_tablesorter/jquery.tablesorter.widgets.js"></script>
+    <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
 
 	<script type="text/javascript">
 		$(document).ready(function(){
@@ -24,6 +24,7 @@
 			});
 			
 			$('.browse-results-table').tablesorter({
+				sortList :[[0,0]],
 			    theme: 'nemi',			    
 				widgets: ['zebra']
 			});

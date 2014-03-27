@@ -210,7 +210,7 @@ SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
     
 # Set up TinyMCE configuration
-TINYMCE_JS_URL = STATIC_URL + 'script/tiny_mce/tiny_mce.js'
+TINYMCE_JS_URL = STATIC_URL + 'lib/tiny_mce/tiny_mce.js'
 
 TINYMCE_DEFAULT_CONFIG = {
     'theme' : "advanced",
