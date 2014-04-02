@@ -23,7 +23,7 @@
 		$(document).ready(function(){
 			// Make wqp head request to return result counts.
 			$.ajax({
-				url: '{{ wqp_url }}/Result/search',
+				url:"{% url 'wqp_proxy' 'Result/search' %}",
 				data : {
 					analyticalmethod : 'https://www.nemi.gov{{ request.path_info }}',
 					mimeType : 'xml'
@@ -134,7 +134,7 @@
 		    // Add submit handler for submit to update the form's action.
 		    var formEl = $('#wqp-download-data-form');
 		    formEl.submit(function() {
-			    var downloadUrl = '{{ wqp_url }}/' + $('#wqp-download-data-type-div input[name="dataType"]:checked').val() + '/search';
+		   		var downloadUrl = '{{ wqp_url }}/' + $('#wqp-download-data-type-div input[name="dataType"]:checked').val() + '/search';
 			  
 				// Fill in mimeType and action
 				$(this).find('input[name="mimeType"]').val($('#wqp-download-file-format-div input[name="mimeType"]:checked').val());

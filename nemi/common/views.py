@@ -1,4 +1,6 @@
 
+import requests
+
 from django.forms import Form
 from django.http import Http404, HttpResponse
 from django.views.generic import View
@@ -183,4 +185,37 @@ class ExportSearchView(View):
             
         else:
             raise Http404
+        
+class SimpleWebProxyView(View):
+    '''Extends the standard View to implement a simple web proxy. Currently only get and head methods
+    are proxied. The class should be extended by assigning a value to service_url.
+    '''
+    service_url = '' # Destination url
+    http_method_names = [u'get', u'head']# This should be a list of method strings. Currently only HEAD and GET are implemented
+    
+    def _target_url(self, request, **kwargs):
+        return '%s/%s?%s' % (self.service_url, kwargs.get('op', ''), request.META.get('QUERY_STRING')) 
+    
+    def get(self, request, *args, **kwargs):
+        resp = requests.get(self._target_url(request, **kwargs))
+        if resp.status_code == 200:
+            http_resp = HttpResponse(resp.text, content_type=resp.headers['content-type'], status=resp.status_code)
+            http_resp['Content-Disposition'] = resp.headers['content-disposition']
+        else:
+            http_resp = HttpResponse('Request failed', status=resp.status_code)
+            
+        
+        return http_resp
+    
+    def head(self, request, *args, **kwargs):
+        resp = requests.head(self._target_url(request, **kwargs))
+        if resp.status_code == 200:
+            http_resp = HttpResponse(resp.text, content_type=resp.headers['content-type'], status=resp.status_code)
+            for key in resp.headers:
+                http_resp[key] = resp.headers[key] 
+        else:
+            http_resp = HttpResponse('Request failed', status=resp.status_code)
+            
+        return http_resp
+    
                 
