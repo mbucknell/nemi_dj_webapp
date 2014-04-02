@@ -20,7 +20,7 @@ from common.models import MethodAnalyteVW, InstrumentationRef, StatisticalDesign
 from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics
 from common.models import StatAnalysisRel, SourceCitationRef, StatDesignRel, StatMediaRel, StatTopicRel, Method
 from common.utils.view_utils import dictfetchall, xls_response, tsv_response
-from common.views import PdfView, ChoiceJsonView
+from common.views import PdfView, ChoiceJsonView, SimpleWebProxyView
 
 from domhelp.views import FieldHelpMixin
 
@@ -81,7 +81,7 @@ class AnalyteSelectView(View):
                                                                                                                                flat=True).distinct()
                     qs_str = '[' + ', '.join('"%s"' % v for v in qs) + ']'
                 else:
-                    return HttpResponse('{"values_list" : ""}', mimetype="application/json")
+                    return HttpResponse('{"values_list" : ""}', content_type="application/json")
                 
             else:
                 category = request.GET.get('category', '')
@@ -95,14 +95,14 @@ class AnalyteSelectView(View):
                     qs = AnalyteCodeRel.objects.filter(analyte_name__icontains=request.GET['selection'])
                     
                 else:
-                    return HttpResponse('{"values_list" : ""}', mimetype="application/json")
+                    return HttpResponse('{"values_list" : ""}', content_type="application/json")
                     
                 qs = qs.values_list('analyte_name', 'analyte_code').distinct().order_by('analyte_name');
                 qs_str='[' +', '.join('["%s","%s"]' % (n, c) for (n, c) in qs) + ']'
             
-            return HttpResponse('{"values_list" : ' +  qs_str+ '}', mimetype="application/json")
+            return HttpResponse('{"values_list" : ' +  qs_str+ '}', content_type="application/json")
             
-        return HttpResponse('{"values_list" : ""}', mimetype="application/json")
+        return HttpResponse('{"values_list" : ""}', content_type="application/json")
  
         
 class MethodCountView(View):
@@ -111,7 +111,7 @@ class MethodCountView(View):
     '''
     
     def get(self, request, *args, **kwargs):
-        return HttpResponse('{"method_count" : "' + str(MethodVW.objects.count()) + '"}', mimetype="application/json");
+        return HttpResponse('{"method_count" : "' + str(MethodVW.objects.count()) + '"}', content_type="application/json");
 
   
 class MediaNameView(ChoiceJsonView):
@@ -880,7 +880,7 @@ class ExportMethodAnalyte(View):
                         'Spiking Level')
             qs = _analyte_value_qs(kwargs['method_id'])
         
-            response = HttpResponse(mimetype='text/tab-separated-values')
+            response = HttpResponse(content_type='text/tab-separated-values')
             response['Content-Disposition'] = 'attachment; filename=%s_analytes.tsv' % kwargs['method_id']
             
             response.write('\t'.join(HEADINGS))
@@ -956,3 +956,7 @@ class RevisionPdfView(PdfView):
             self.mimetype = results_list[0]['MIMETYPE'] 
             self.pdf = results_list[0]['METHOD_PDF']
             self.filename = self.kwargs['revision_id']
+            
+class WQPWebProxyView(SimpleWebProxyView):
+    service_url = settings.WQP_URL
+    http_method_names = [u'head'] # We are only proxying the head requests

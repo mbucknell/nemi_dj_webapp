@@ -8,9 +8,11 @@ django-jenkins==0.15.0
 django-tinymce==1.5.2
 logilab-astng==0.24.1
 logilab-common==0.61.0
+mock==1.0.1
 paramiko==1.10.1
 pycrypto==2.6
 pylint==1.1.0
+requests==2.2.1
 six==1.4.1
 unittest2==0.5.1
 wsgiref==0.1.2

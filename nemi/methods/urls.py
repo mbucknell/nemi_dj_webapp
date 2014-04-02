@@ -3,6 +3,7 @@
 '''
 
 from django.conf.urls import patterns, url
+import common.views
 import views
 
 urlpatterns = patterns("", 
@@ -98,4 +99,8 @@ urlpatterns = patterns("",
         url(r'^stat_special_topics/$',
             views.StatSpecialTopicsView.as_view(),
             name='methods-stat_special_topics'),
+                       
+        url(r'^wqp/(?P<op>[A-Za-z0-9-_/]*)/$',
+            views.WQPWebProxyView.as_view(),
+            name='wqp_proxy')
         )
