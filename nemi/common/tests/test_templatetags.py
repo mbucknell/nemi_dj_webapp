@@ -6,13 +6,13 @@ Created on Mar 14, 2012
 from django.conf import settings
 from django.contrib.auth.models import Group, User
 from django.forms import Form, CharField
-from django.utils import unittest
+from django.test import SimpleTestCase, TestCase
 
 from common.templatetags.data_format import decimal_format, clickable_links
 from common.templatetags.form_field_attr import tooltip
 from common.templatetags.user_auth import in_group
 
-class DecimalFormatTestCase(unittest.TestCase):
+class DecimalFormatTestCase(SimpleTestCase):
 
     def test_string(self):
         # Test with a string, should return back the string
@@ -34,7 +34,7 @@ class DecimalFormatTestCase(unittest.TestCase):
         #Test with a decimal number with no integer part
         self.assertEqual(decimal_format(.567), 0.567)
         
-class ClickableLinksTestCase(unittest.TestCase):
+class ClickableLinksTestCase(SimpleTestCase):
     def test_no_link(self):
         #Test with data that does not represent a link
         self.assertEqual(clickable_links('Hello'), 'Hello')
@@ -64,7 +64,7 @@ class ClickableLinksTestCase(unittest.TestCase):
         self.assertNotEqual(clickable_links(link1 + 'br>' + link2), result)
         self.assertNotEqual(clickable_links(link1 + '<br' + link2), result)
        
-class TooltipTestCase(unittest.TestCase):
+class TooltipTestCase(SimpleTestCase):
     
     def test_with_no_attributes(self):
         data = {'result1' : 1, 'result2' : 2}
@@ -86,7 +86,7 @@ class TooltipTestCase(unittest.TestCase):
         test_object = MyBoundObject()
         self.assertEqual(tooltip(test_object), 'Tooltip')
         
-class InGroupTestCase(unittest.TestCase):
+class InGroupTestCase(TestCase):
     
     def setUp(self):
         self.g1 = Group.objects.create(name='group1')
