@@ -6,11 +6,11 @@ Created on Aug 1, 2012
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils import unittest
+from django.test import TestCase
 
 from common.models import MethodAbstract, StatisticalItemType, MethodTypeRef
 
-class TestMethodGetInsertUser(unittest.TestCase):
+class TestMethodGetInsertUser(TestCase):
     
     class DummyMethod(MethodAbstract):
         dummyField = models.IntegerField()

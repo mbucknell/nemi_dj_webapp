@@ -3,12 +3,12 @@ import mock
 import StringIO
 
 from django.http import Http404
-from django.test import TestCase
+from django.test import SimpleTestCase
 from django.test.client import RequestFactory
 
 from ..views import ChoiceJsonView, PdfView, SimpleWebProxyView
 
-class CommonJsonViewTestCase(TestCase):
+class CommonJsonViewTestCase(SimpleTestCase):
 
     def test_response(self):
         class TestView(ChoiceJsonView):
@@ -33,7 +33,7 @@ class CommonJsonViewTestCase(TestCase):
         self.assertEqual(resp.content, '{"choices" : []}')
         
         
-class PdfViewTestCase(TestCase):
+class PdfViewTestCase(SimpleTestCase):
     def test_response_no_data(self):
         test_view = PdfView()
         request = ''
@@ -54,7 +54,7 @@ class PdfViewTestCase(TestCase):
         self.assertEquals(resp['content-disposition'],'attachment;filename=test.pdf')
         self.assertContains(resp,'Test PDF String')
             
-class SimpleWebProxyViewTestCase(TestCase):
+class SimpleWebProxyViewTestCase(SimpleTestCase):
     
     def setUp(self):
         self.factory = RequestFactory()

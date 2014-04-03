@@ -1,11 +1,11 @@
 
 from django.forms import CharField, IntegerField
-from django.utils import unittest
+from django.test import TestCase
 
 from ..forms import BaseDefinitionsForm
 from ..models import HelpContent
 
-class BaseDefinitionsFormTestCase(unittest.TestCase):
+class BaseDefinitionsFormTestCase(TestCase):
     
     def setUp(self):
         self.d1 = HelpContent.objects.create(field_name='one', label='One label', tooltip='One tooltip', description='One field help text')

@@ -1,9 +1,9 @@
 from django.core.exceptions import ValidationError
-from django.test import TestCase
+from django.test import SimpleTestCase
 
 from ..models import HelpContent
 
-class FieldNameValidatorTestCase(TestCase):
+class FieldNameValidatorTestCase(SimpleTestCase):
     
     def test_valid_field_name(self):
         c1 = HelpContent.objects.create(field_name='my1_name', label='My Name')

@@ -5,7 +5,7 @@ Created on Mar 15, 2012
 '''
 
 from django import forms 
-from django.utils import unittest
+from django.test import SimpleTestCase, TestCase
 
 from nemi_project.test_settings_mgr import TestSettingsManager
 
@@ -14,7 +14,7 @@ from ..utils.view_utils import tsv_response, xls_response
 from models import TestModel
 
 
-class GetCriteriaTestCase(unittest.TestCase):
+class GetCriteriaTestCase(SimpleTestCase):
     
     def test_choice_select_integer_value(self):
         class MyForm(forms.Form):
@@ -44,7 +44,7 @@ class GetCriteriaTestCase(unittest.TestCase):
         self.assertRaises(AttributeError, get_criteria, (test_form['char_field']))   
                 
         
-class GetCriteriaFromFieldDataTestCase(unittest.TestCase):
+class GetCriteriaFromFieldDataTestCase(TestCase):
     
     class MyForm(forms.Form):
         choice = forms.ModelChoiceField(queryset=TestModel.objects.all(), required=False)
@@ -106,7 +106,7 @@ class GetCriteriaFromFieldDataTestCase(unittest.TestCase):
     def tearDown(self):
         self.settings_manager.revert()
         
-class GetMultiChoiceTestCase(unittest.TestCase):
+class GetMultiChoiceTestCase(SimpleTestCase):
     
     def test_with_string_values(self):
         class MyForm(forms.Form):
@@ -140,7 +140,7 @@ class GetMultiChoiceTestCase(unittest.TestCase):
         my_form.is_valid()
         self.assertRaises(KeyError, get_multi_choice, my_form, 'another_field')
             
-class TsvResponseTestCase(unittest.TestCase):
+class TsvResponseTestCase(SimpleTestCase):
     
     def test_response(self):
         headings = ['A', 'B', 'C']
@@ -159,7 +159,7 @@ class TsvResponseTestCase(unittest.TestCase):
         self.assertEqual(response.content, expected_contents)
         self.assertEqual(response.status_code, 200) 
         
-class XlsResponseTestCase(unittest.TestCase):
+class XlsResponseTestCase(SimpleTestCase):
     
     def test_response(self):
         headings = ['A', 'B', 'C']
