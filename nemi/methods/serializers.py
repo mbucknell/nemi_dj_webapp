@@ -1,0 +1,53 @@
+from rest_framework import serializers
+
+from .models import MethodSummaryVW
+
+class MethodSummaryVWSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = MethodSummaryVW
+        fields = ('method_id',
+                  'revision_information',
+                  'source_method_identifier',
+                  'method_descriptive_name',
+                  'method_official_name',
+                  'brief_method_summary',
+                  'scope_and_application',
+                  'media_name',
+                  'dl_note',
+                  'applicable_conc_range',
+                  'conc_range_units',
+                  'interferences',
+                  'qc_requirements',
+                  'waterbody_type',
+                  'link_to_full_method',
+                  'sample_handling',
+                  'max_holding_time',
+                  'sample_prep_methods',
+                  'method_source',
+                  'method_source_name',
+                  'method_source_url',
+                  'precision_descriptor_notes',
+                  'method_category',
+                  'method_type_desc',
+                  'dl_type',
+                  'dl_type_description',
+                  'source_citation_name',
+                  'source_citation',
+                  'source_citation_information',
+                  'relative_cost_symbol',
+                  'relative_cost',
+                  'instrumentation_description',
+                  'collected_sample_amt_ml',
+                  'collected_sample_amt_g',
+                  'liquid_sample_flag',
+                  'analysis_amt_ml',
+                  'analysis_amt_g',
+                  'ph_of_analytical_sample',
+                  'calc_waste_amt',
+                  'quality_review_id',
+                  'pbt',
+                  'toxic',
+                  'corrosive',
+                  'waste',
+                  'assumptions_comments')
