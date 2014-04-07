@@ -15,6 +15,8 @@ from django.views.generic import View, ListView, DetailView
 from django.views.generic.list import MultipleObjectMixin
 from django.views.generic.edit import TemplateResponseMixin
 
+from rest_framework.viewsets import ReadOnlyModelViewSet
+
 # project specific packages
 from common.models import MethodAnalyteVW, InstrumentationRef, StatisticalDesignObjective, StatisticalItemType
 from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics
@@ -25,7 +27,7 @@ from common.views import PdfView, ChoiceJsonView, SimpleWebProxyView
 from domhelp.views import FieldHelpMixin
 
 from .models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, AnalyteCodeVW, RevisionJoin, RegQueryVW
-
+from .serializers import MethodSummaryVWSerializer
 
 def _analyte_value_qs(method_id):
     ''' Returns the analyte data values query set for the method_id.'''
@@ -956,7 +958,26 @@ class RevisionPdfView(PdfView):
             self.mimetype = results_list[0]['MIMETYPE'] 
             self.pdf = results_list[0]['METHOD_PDF']
             self.filename = self.kwargs['revision_id']
+
             
 class WQPWebProxyView(SimpleWebProxyView):
     service_url = settings.WQP_URL
     http_method_names = [u'head'] # We are only proxying the head requests
+
+    
+class MethodSummaryRestViewSet(ReadOnlyModelViewSet):
+    lookup_field = u'method_id'
+    serializer_class = MethodSummaryVWSerializer
+    
+    def get_queryset(self):
+        qs = MethodSummaryVW.objects.all();
+        categories = self.request.GET.getlist('method_category')
+        subcategories = self.request.GET.getlist('method_subcategory')
+        
+        if categories:
+            qs = qs.filter(method_category__in=categories)
+            
+        if subcategories:
+            qs = qs.filter(method_subcategory__in=subcategories)
+            
+        return qs

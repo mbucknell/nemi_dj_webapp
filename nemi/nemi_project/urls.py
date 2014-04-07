@@ -53,6 +53,7 @@ urlpatterns = patterns('',
         name="nemi_create_account_success"),
                        
     url(r'^methods/', include(methods.urls)),
+    
     url(r'^sams/', include(sams.urls)),
 #	url(r'^memo/', include(memo.urls)),
 
@@ -66,6 +67,8 @@ urlpatterns = patterns('',
         domhelp.views.GlossaryView.as_view(),
         name='glossary'),
 )
+
+urlpatterns += methods.urls.api_urlpatterns
 
 urlpatterns += patterns('django.contrib.flatpages.views',
     url(r'^about/$', 'flatpage', {'url' : '/about/'}, name='about'),
