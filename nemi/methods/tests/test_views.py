@@ -4,11 +4,14 @@ Created on Mar 13, 2012
 @author: mbucknel
 '''
 
-from django.utils import unittest
+from django.test import SimpleTestCase, TestCase
 
-from methods.views import _clean_name, _clean_keyword
+from factory.django import DjangoModelFactory
+from rest_framework.test import APIRequestFactory
 
-class CleanNameTestCase(unittest.TestCase):
+from methods.views import _clean_name, _clean_keyword, MethodSummaryRestViewSet
+
+class CleanNameTestCase(SimpleTestCase):
 
     def test_clean_name(self):
         name = 'a256&B*-_Z'
@@ -39,7 +42,7 @@ class CleanNameTestCase(unittest.TestCase):
         self.assertEqual('a343_ABC', _clean_name(name))
            
 
-class CleanKeywordTestCase(unittest.TestCase):
+class CleanKeywordTestCase(SimpleTestCase):
     
     def test_with_no_special_characters(self):
         keyword='nitrate'
@@ -72,5 +75,97 @@ class CleanKeywordTestCase(unittest.TestCase):
     def test_with_percent_and_quote_chars(self):
         keyword = 'ni"tr%ate'
         self.assertEqual(_clean_keyword(keyword), '{ni""tr%%ate}')
+ 
         
-       
+class MethodSummaryFactory(DjangoModelFactory):
+    FACTORY_FOR = 'methods.MethodSummaryVW'
+    
+    revision_id = 0
+    revision_information = ''
+    source_method_identifier = 'A'
+    method_descriptive_name = 'name'
+    method_official_name = 'official_name',
+    method_source_id = '1234'
+    source_citation_id =' 88'
+    brief_method_summary = 'A'
+    media_name = 'book'
+    method_source = 'USGS'
+    method_source_name = 'US Geological Survey'
+    method_subcategory_id = '1'
+    source_citation = 'A'
+    instrumentation_description = 'what'
+    
+               
+class MethodSummaryRestViewSetTestCase(TestCase):
+    
+    def setUp(self):
+        self.m1 = MethodSummaryFactory(method_id=1, method_category='A', method_subcategory='A1')
+        self.m2 = MethodSummaryFactory(method_id=2, method_category='A', method_subcategory='A1')
+        self.m3 = MethodSummaryFactory(method_id=3, method_category='A', method_subcategory='A2')
+        self.m4 = MethodSummaryFactory(method_id=4, method_category='A', method_subcategory='A3')
+        self.m5 = MethodSummaryFactory(method_id=5, method_category='B', method_subcategory='B1')
+        self.m6 = MethodSummaryFactory(method_id=6, method_category='C', method_subcategory='C1')
+        self.m7 = MethodSummaryFactory(method_id=7, method_category='C', method_subcategory='A2')
+        self.m8 = MethodSummaryFactory(method_id=8, method_category='C', method_subcategory='C2')
+
+        self.test_view = MethodSummaryRestViewSet()
+        self.factory = APIRequestFactory()
+        
+    def test_get_queryset_no_query_parameters(self):
+        self.test_view.request = self.factory.get('/api/methods/')
+        result = self.test_view.get_queryset()
+        
+        self.assertEqual(result.count(), 8)
+        
+    def test_get_queryset_category_parameters(self):
+        self.test_view.request = self.factory.get('/api/methods/', {'method_category' : 'A'})
+        result = self.test_view.get_queryset()
+        
+        self.assertEqual(result.count(), 4)
+        self.assertIsNotNone(result.get(method_id=1))
+        self.assertIsNotNone(result.get(method_id=2))
+        self.assertIsNotNone(result.get(method_id=3))
+        self.assertIsNotNone(result.get(method_id=4))
+        
+    def test_get_queryset_multiple_category_parameters(self):
+        self.test_view.request = self.factory.get('/api/methods/', {'method_category' : ['A', 'B']})
+        result = self.test_view.get_queryset()
+        
+        self.assertEqual(result.count(), 5)
+        self.assertIsNotNone(result.get(method_id=1))
+        self.assertIsNotNone(result.get(method_id=2))
+        self.assertIsNotNone(result.get(method_id=3))
+        self.assertIsNotNone(result.get(method_id=4))
+        self.assertIsNotNone(result.get(method_id=5))
+
+        
+    def test_get_queryset_subcategory_parameters(self):
+        self.test_view.request = self.factory.get('/api/methods', {'method_subcategory' : 'A2'})
+        result = self.test_view.get_queryset()
+        
+        self.assertEqual(result.count(), 2)
+        self.assertIsNotNone(result.get(method_id=3))
+        self.assertIsNotNone(result.get(method_id=7))
+        
+    def test_get_queryset_multiple_subcategory_parameters(self):
+        self.test_view.request = self.factory.get('/api/methods', {'method_subcategory' : ['A2', 'B1']})
+        result = self.test_view.get_queryset()
+        
+        self.assertEqual(result.count(), 3)
+        self.assertIsNotNone(result.get(method_id=3))
+        self.assertIsNotNone(result.get(method_id=5))
+        self.assertIsNotNone(result.get(method_id=7))
+        
+    def test_get_queryset_category_and_subcategory_parameters(self):
+        self.test_view.request = self.factory.get('/api/methods', {'method_category' : 'A', 'method_subcategory' : 'A2'})
+        result = self.test_view.get_queryset()
+        
+        self.assertEqual(result.count(), 1)
+        self.assertIsNotNone(result.get(method_id=3))
+        
+    def test_get_queryset_none_exists_parameters(self):
+        self.test_view.request = self.factory.get('/api/methods', {'method_category' : 'B', 'method_subcategory' : 'A2'})
+        result = self.test_view.get_queryset()
+        
+        self.assertEqual(result.count(), 0)
+    

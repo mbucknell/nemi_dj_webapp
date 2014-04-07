@@ -1,11 +1,15 @@
 Django==1.6.2
+Markdown==2.4
 astroid==1.0.1
 coverage==3.7.1
 cx-Oracle==5.1.2
 django-braces==1.2.2
 django-debug-toolbar==0.9.4
+django-filter==0.7
 django-jenkins==0.15.0
 django-tinymce==1.5.2
+djangorestframework=2.3.13
+factory-boy=2.3.1
 logilab-astng==0.24.1
 logilab-common==0.61.0
 mock==1.0.1

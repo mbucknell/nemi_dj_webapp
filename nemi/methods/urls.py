@@ -3,7 +3,10 @@
 '''
 
 from django.conf.urls import patterns, url
-import common.views
+
+from rest_framework import routers
+from rest_framework.urlpatterns import format_suffix_patterns
+
 import views
 
 urlpatterns = patterns("", 
@@ -102,5 +105,10 @@ urlpatterns = patterns("",
                        
         url(r'^wqp/(?P<op>[A-Za-z0-9-_/]*)/$',
             views.WQPWebProxyView.as_view(),
-            name='wqp_proxy')
+            name='wqp_proxy'),
         )
+
+router = routers.SimpleRouter()
+router.register(r'api/methods', views.MethodSummaryRestViewSet, 'method')
+
+api_urlpatterns = format_suffix_patterns(router.urls, allowed=['json', 'html'])
