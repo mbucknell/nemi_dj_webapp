@@ -18,7 +18,7 @@ class MethodSummaryVWSerializer(serializers.ModelSerializer):
                   'applicable_conc_range',
                   'conc_range_units',
                   'interferences',
-                  'method_source_contact'
+                  'method_source_contact',
                   'qc_requirements',
                   'waterbody_type',
                   'link_to_full_method',
