@@ -109,6 +109,6 @@ urlpatterns = patterns("",
         )
 
 router = routers.SimpleRouter()
-router.register(r'api/methods', views.MethodSummaryRestViewSet, 'method')
+router.register(r'api/methods', views.MethodRestViewSet, 'method')
 
 api_urlpatterns = format_suffix_patterns(router.urls, allowed=['json', 'html'])

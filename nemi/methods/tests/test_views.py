@@ -9,7 +9,7 @@ from django.test import SimpleTestCase, TestCase
 from factory.django import DjangoModelFactory
 from rest_framework.test import APIRequestFactory
 
-from methods.views import _clean_name, _clean_keyword, MethodSummaryRestViewSet
+from methods.views import _clean_name, _clean_keyword, MethodRestViewSet
 
 class CleanNameTestCase(SimpleTestCase):
 
@@ -78,22 +78,27 @@ class CleanKeywordTestCase(SimpleTestCase):
  
         
 class MethodSummaryFactory(DjangoModelFactory):
-    FACTORY_FOR = 'methods.MethodSummaryVW'
+    FACTORY_FOR = 'methods.MethodVW'
     
-    revision_id = 0
-    revision_information = ''
     source_method_identifier = 'A'
     method_descriptive_name = 'name'
     method_official_name = 'official_name',
     method_source_id = '1234'
+    sam_complexity = 'A'
     source_citation_id =' 88'
     brief_method_summary = 'A'
     media_name = 'book'
+    instrumentation_id = 1
     method_source = 'USGS'
     method_source_name = 'US Geological Survey'
     method_subcategory_id = '1'
     source_citation = 'A'
+    instrumentation = 'AA'
     instrumentation_description = 'what'
+    regs_only = 'n'
+    method_type_id = 1
+    publication_year = '1991'
+    author = 'A'
     
                
 class MethodSummaryRestViewSetTestCase(TestCase):
@@ -108,7 +113,7 @@ class MethodSummaryRestViewSetTestCase(TestCase):
         self.m7 = MethodSummaryFactory(method_id=7, method_category='C', method_subcategory='A2')
         self.m8 = MethodSummaryFactory(method_id=8, method_category='C', method_subcategory='C2')
 
-        self.test_view = MethodSummaryRestViewSet()
+        self.test_view = MethodRestViewSet()
         self.factory = APIRequestFactory()
         
     def test_get_queryset_no_query_parameters(self):

@@ -27,7 +27,7 @@ from common.views import PdfView, ChoiceJsonView, SimpleWebProxyView
 from domhelp.views import FieldHelpMixin
 
 from .models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, AnalyteCodeVW, RevisionJoin, RegQueryVW
-from .serializers import MethodSummaryVWSerializer
+from .serializers import MethodVWSerializer
 
 def _analyte_value_qs(method_id):
     ''' Returns the analyte data values query set for the method_id.'''
@@ -965,12 +965,12 @@ class WQPWebProxyView(SimpleWebProxyView):
     http_method_names = [u'head'] # We are only proxying the head requests
 
     
-class MethodSummaryRestViewSet(ReadOnlyModelViewSet):
+class MethodRestViewSet(ReadOnlyModelViewSet):
     lookup_field = u'method_id'
-    serializer_class = MethodSummaryVWSerializer
+    serializer_class = MethodVWSerializer
     
     def get_queryset(self):
-        qs = MethodSummaryVW.objects.all();
+        qs = MethodVW.objects.all();
         categories = self.request.GET.getlist('method_category')
         subcategories = self.request.GET.getlist('method_subcategory')
         

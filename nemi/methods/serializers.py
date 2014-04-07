@@ -1,16 +1,17 @@
 from rest_framework import serializers
 
-from .models import MethodSummaryVW
+from .models import MethodVW
 
-class MethodSummaryVWSerializer(serializers.ModelSerializer):
+class MethodVWSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = MethodSummaryVW
+        model = MethodVW
+        
         fields = ('method_id',
-                  'revision_information',
                   'source_method_identifier',
                   'method_descriptive_name',
                   'method_official_name',
+                  'sam_complexity',
                   'brief_method_summary',
                   'scope_and_application',
                   'media_name',
@@ -18,20 +19,22 @@ class MethodSummaryVWSerializer(serializers.ModelSerializer):
                   'applicable_conc_range',
                   'conc_range_units',
                   'interferences',
-                  'method_source_contact',
                   'qc_requirements',
-                  'waterbody_type',
                   'link_to_full_method',
                   'sample_handling',
                   'max_holding_time',
                   'sample_prep_methods',
+                  'precision_descriptor_notes',
+                  'screening',
+                  'rapidity',
+                  'waterbody_type',
+                  'matrix',
                   'method_source',
                   'method_source_name',
+                  'method_source_contact',
                   'method_source_url',
-                  'precision_descriptor_notes',
                   'method_category',
                   'method_subcategory',
-                  'method_type_desc',
                   'dl_type',
                   'dl_type_description',
                   'source_citation_name',
@@ -39,7 +42,13 @@ class MethodSummaryVWSerializer(serializers.ModelSerializer):
                   'source_citation_information',
                   'relative_cost_symbol',
                   'relative_cost',
+                  'cost_effort_key',
+                  'instrumentation',
                   'instrumentation_description',
+                  'regs_only',
+                  'method_type_desc',
+                  'publication_year',
+                  'author',
                   'collected_sample_amt_ml',
                   'collected_sample_amt_g',
                   'liquid_sample_flag',
