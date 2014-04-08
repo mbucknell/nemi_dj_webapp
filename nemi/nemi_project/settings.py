@@ -110,6 +110,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -144,6 +145,7 @@ INSTALLED_APPS = (
     # third party apps
     'tinymce',
     'rest_framework',
+    'corsheaders',
     
     # NEMI/CIDA specific apps
     'common',
@@ -184,6 +186,14 @@ LOGGING = {
 }
 
 SESSION_COOKIE_AGE = 28800 # In seconds, this is eight hours
+
+#Settings for corsheaders app
+CORS_ORIGIN_ALLOW_ALL = True
+#CORS_URLS_REGEX = r'^/api/.*$'
+#CORS_ALLOW_METHODS = (
+#    'GET',
+#)
+
 
 #NEMI defined settings
 NEW_ACCOUNT_NOTIFICATIONS = () # List of emails to send new account notifications to.
