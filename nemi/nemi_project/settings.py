@@ -110,7 +110,6 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -145,13 +144,13 @@ INSTALLED_APPS = (
     # third party apps
     'tinymce',
     'rest_framework',
-    'corsheaders',
     
     # NEMI/CIDA specific apps
     'common',
     'newsfeed',
     'domhelp',
     'methods',
+    'protocols',
     'sams',
 #	'memo',
 )
@@ -186,13 +185,6 @@ LOGGING = {
 }
 
 SESSION_COOKIE_AGE = 28800 # In seconds, this is eight hours
-
-#Settings for corsheaders app
-CORS_ORIGIN_ALLOW_ALL = True
-#CORS_URLS_REGEX = r'^/api/.*$'
-#CORS_ALLOW_METHODS = (
-#    'GET',
-#)
 
 
 #NEMI defined settings
@@ -233,7 +225,14 @@ if os.getenv('JENKINS_URL', False):
                      )
     JENKINS_TEST_RUNNER = 'nemi_project.test_jenkins_runner.ManagedModelTestRunner'
     INSTALLED_APPS += ('django_jenkins',)
-    PROJECT_APPS = ('common', 'methods', 'sams', 'newsfeed', 'domhelp')
+    PROJECT_APPS = (
+        'common', 
+        'methods', 
+        'protocols', 
+        'sams', 
+        'newsfeed', 
+        'domhelp',
+    )
     DATABASES['default'].update(dict(
             ENGINE=os.getenv('DBA_SQL_DJANGO_ENGINE'),
             USER=os.getenv('DBA_SQL_ADMIN'),

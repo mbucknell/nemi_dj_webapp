@@ -115,7 +115,7 @@ class MethodCountView(View):
     def get(self, request, *args, **kwargs):
         return HttpResponse('{"method_count" : "' + str(MethodVW.objects.count()) + '"}', content_type="application/json");
 
-  
+
 class MediaNameView(ChoiceJsonView):
     '''
     Extends the ChoiceJsonView to retrieve the media names as a json object

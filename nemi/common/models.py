@@ -110,6 +110,7 @@ class SourceCitationRefAbstract(models.Model):
     title = models.CharField(max_length=450)
     author = models.CharField(max_length=450) 
     table_of_contents = models.CharField(max_length=1000)
+    abstract_summary = models.CharField(max_length=2000)
     link = models.CharField(max_length=450, blank=True) 
     publication_year = models.IntegerField(max_length=4, 
                                            null=True)
@@ -119,6 +120,8 @@ class SourceCitationRefAbstract(models.Model):
                                       blank=True)
     sponser_type_note = models.CharField(max_length=50, 
                                          blank=True)
+    citation_type = models.CharField(max_length=50, 
+                                     blank=True)
     insert_date = models.DateField(auto_now_add=True)
     update_date = models.DateField(auto_now=True)
     insert_person_name = models.CharField(max_length=50, 
@@ -147,11 +150,17 @@ class SourceCitationStgRef(SourceCitationRefAbstract):
     class Meta:
         db_table = u'source_citation_stg_ref'
         managed = False
-      
+ 
+class ProtocolSourceCitationManager(models.Manager):
+    def get_queryset(self):
+        return super(ProtocolSourceCitationManager, self).get_queryset().filter(citation_type='PROTOCOL')    
         
 class SourceCitationRef(SourceCitationRefAbstract):
     
     source_citation_id = models.IntegerField(primary_key=True)
+    
+    objects = models.Manager()
+    protocol_objects = ProtocolSourceCitationManager()
     
     class Meta:
         db_table = u'source_citation_ref'
