@@ -1,6 +1,6 @@
-''' This module contain the model class defintions for the tables and views
+''' This module contain the model class definitions for the tables and views
 that are used to implement the NEMI search pages. All tables and views are read
-only and therefore have managed set to Fasle in each model's Meta data.
+only and therefore have managed set to False in each model's Meta data.
 '''
 
 from django.db import models
@@ -499,3 +499,4 @@ class RevisionJoin(models.Model):
     class Meta:
         db_table = 'revision_join'
         managed = False
+        

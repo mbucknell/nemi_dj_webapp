@@ -124,8 +124,9 @@
 		}
 	}
 	#general-action-div {
-		padding-top: 10px;
+		padding-top: 20px;
 		padding-bottom: 20px;
+		min-height: 135px;
 		
 		input[type=text] {
 			@include nemi-text-input;

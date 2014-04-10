@@ -1,5 +1,5 @@
 
-#browsepage-banner-header {
+#browsepage-banner-header, #protocol-browse-banner-header{
 	margin-top: 15px;
 	padding-left: 10px;
 	padding-bottom: 4px;
@@ -21,7 +21,7 @@
 		
 }
 
-#browse-methods-content-div {
+#browse-methods-content-div, #protocol-content-div{
 	@include container;
 	
 	@include section-header (34px, $nemi-browse-category-header-color, $nemi-home-header-border-color);
@@ -37,15 +37,19 @@
 		padding-left: 0px;
 		padding-right: 0px;
 	}
-	.method-category-content-div {
+	.category-content-div {
 		width: span(20) - 5;
 		margin-top: 1px;
 		@include main-box-shadow;
 	}
-	.method-subcategory-div {
+	.subcategory-div {
 		background-color: $nemi-primary-content-bg-color;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		padding-right: 10px;
+		padding-left: 40px;
 		
-		.method-subcategory-content-div {
+		.subcategory-content-div {
 			padding-right: 10px;
 			padding-bottom: 0px;
 	

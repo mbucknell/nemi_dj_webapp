@@ -8,7 +8,9 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.test import TestCase
 
-from common.models import MethodAbstract, StatisticalItemType, MethodTypeRef
+from factory.django import DjangoModelFactory
+
+from common.models import MethodAbstract, StatisticalItemType, MethodTypeRef, SourceCitationRef
 
 class TestMethodGetInsertUser(TestCase):
     
@@ -36,4 +38,33 @@ class TestMethodGetInsertUser(TestCase):
         def test_get_insert_user(self):
             self.assertEqual(self.m1.get_insert_user(), self.u1)
             self.assertEqual(self.m2.get_insert_user().username, 'Unknown')
+            
+
+class SourceCitationFactory(DjangoModelFactory):
+    
+    FACTORY_FOR = 'common.SourceCitationRef'
+    
+    source_citation_name = 'SOURCE NAME'
+    title = 'Title'
+    author = 'author',
+    table_of_contents = 'table of contents'
+
+
+class TestProtocoSourceCitationManagerTestCase(TestCase):
+    
+    def setUp(self):
+        self.statistical_item = StatisticalItemType.objects.create(stat_item_index=1, item='item')
+    
+        self.m1 = SourceCitationFactory(source_citation_id=1, item_type=self.statistical_item, citation_type='METHOD')
+        self.m2 = SourceCitationFactory(source_citation_id=2, item_type=self.statistical_item, citation_type='METHOD')
+        self.m3 = SourceCitationFactory(source_citation_id=3, item_type=self.statistical_item, citation_type='METHOD')
+        self.p1 = SourceCitationFactory(source_citation_id=4, item_type=self.statistical_item, citation_type='PROTOCOL')
+        self.ps = SourceCitationFactory(source_citation_id=5, item_type=self.statistical_item, citation_type='PROTOCOL')
+        
+    def test_protocol_objects_manager(self):
+        result = SourceCitationRef.protocol_objects.all();
+        
+        self.assertEqual(result.count(), 2)
+        self.assertIsNotNone(result.get(source_citation_id=4))
+        self.assertIsNotNone(result.get(source_citation_id=5))
         

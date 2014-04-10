@@ -4,7 +4,6 @@ astroid==1.0.1
 coverage==3.7.1
 cx-Oracle==5.1.2
 django-braces==1.2.2
-django-cors-headers==0.12
 django-debug-toolbar==0.9.4
 django-filter==0.7
 django-jenkins==0.15.0

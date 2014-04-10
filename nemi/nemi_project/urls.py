@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 
 import domhelp
 import methods.urls
+import protocols.urls
 import sams.urls
 #import memo.urls
 
@@ -53,6 +54,7 @@ urlpatterns = patterns('',
         name="nemi_create_account_success"),
                        
     url(r'^methods/', include(methods.urls)),
+    url(r'^protocols/', include(protocols.urls)),
     
     url(r'^sams/', include(sams.urls)),
 #	url(r'^memo/', include(memo.urls)),

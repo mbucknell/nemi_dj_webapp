@@ -3,7 +3,7 @@
 {% block title %}NEMI Browse Methods{% endblock %}
 
 {% block page_description %}
-    Lists all environmental methods, protocols, and procedures in NEMI grouped by category - subcategory:
+    Lists all environmental methods and procedures in NEMI grouped by category - subcategory:
     {% regroup object_list by method_category as objects_by_category %}{% for by_category in objects_by_category %}{{ by_category.grouper }} - ({% regroup by_category.list by method_subcategory as objects_by_subcategory %}{% for by_subcategory in objects_by_subcategory %}{{ by_subcategory.grouper }}{% if forloop.last %}){% else %},{% endif %}{% endfor %}
     {% endfor %}
 {% endblock %}
@@ -31,7 +31,7 @@
 						
 			// Set up the show/hide button for method categories 
 			$(".method-category-div").each(function(){
-				var subcatDiv = $(this).find(".method-subcategory-div");
+				var subcatDiv = $(this).find(".subcategory-div");
 				$(this).find('.category-button').click(function(){
 					var catImgEl = $(this).find('img');
 					if (catImgEl.attr('alt') == 'show') {
@@ -51,7 +51,7 @@
 				
 			});
 			// Set up the show/hide/ button for method subcategories 
-			$(".method-subcategory-div").each(function(){
+			$(".subcategory-div").each(function(){
 				var tableEl = $(this).find(".browse-results-table");
 				$(this).find('.subcategory-button').click(function(){
 					var imgEl = $(this).find('img');
@@ -127,7 +127,7 @@
     {% load data_format %}
     <div id="browsepage-banner-header">
         <h1 id="browse-page-name">
-            <span>BROWSE:&nbsp;</span>NEMI contains {{ object_list|length }} methods, protocols, and procedures.
+            <span>BROWSE:&nbsp;</span>NEMI contains {{ object_list|length }} methods and procedures.
         </h1>
         <input class="back-button" type="button" value="Back to search" />
     </div>
@@ -142,11 +142,11 @@
                         <img src="{{ STATIC_URL }}images/expand_browse.png" alt="show" />
                     </button>&nbsp;&nbsp;{{ by_category.grouper|lower|upper }} - {{ by_category.list|length}} methods</h3>
                 </div>
-                <div class="method-category-content-div">
+                <div class="category-content-div">
                 {% regroup by_category.list by method_subcategory as objects_by_subcategory %}
                     {% for by_subcategory in objects_by_subcategory %}
-                        <div class="method-subcategory-div" style="display: none;">
-                            <div class="method-subcategory-content-div">
+                        <div class="subcategory-div" style="display: none;">
+                            <div class="subcategory-content-div">
                             <h4><button id="subcategory-{{ by_subcategory.grouper }}" class="show-hide-toggle subcategory-button" title="Show methods" type="button"><img src="{{ STATIC_URL }}images/expand_summary.png" alt="show" /></button>&nbsp;&nbsp;{{ by_subcategory.grouper }} - {{ by_subcategory.list|length }} methods</h4>              
                             <table class="browse-results-table" data-sortlist="[[0,0]]" style="display: none;">
                                 {% if by_category.grouper == 'STATISTICAL' %}

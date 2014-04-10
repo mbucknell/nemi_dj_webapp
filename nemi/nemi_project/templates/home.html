@@ -26,9 +26,18 @@
 			$.ajax({
 				url: '{% url "methods-method_count" %}',
 				success : function(resp) {
-					$('#browse-count-span').html('NEMI currently contains ' + resp.method_count + ' methods, protocols and procedures.');	
+					$('#browse-count-span').html('NEMI currently contains ' + resp.method_count + ' methods and procedures.');	
 				}
 			});
+		}
+
+		function updateProtocolCount() {
+			$.ajax({
+				url : '{% url "protocols-protocol_count" %}',
+				success: function(resp) {
+					$('#protocol-count-span').html('NEMI currently contains ' + resp.protocol_count + ' protocols.');
+				}
+			})
 		}
 		
 		function getCheckboxListHtml(choices /* array [Objects] */, fieldName /* String */, choiceIdBase /* String */) {
@@ -325,8 +334,8 @@
 			// Associate the id of the div to show/hide for each subcategory button and set show callback if necessary 
 			$('#keyword-search-button').data('actionDivId', $('#keyword-search-div'));
 			$('#number-search-button').data('actionDivId', $('#number-search-div'));
-			$('#browse-search-button').data('actionDivId', $('#browse-methods-div'));
-			$('#browse-search-button').data('showCallback', updateBrowseMethodCount);
+			$('#browse-search-button').data('actionDivId', $('#browse-methods-div')).data('showCallback', updateBrowseMethodCount);
+			$('#protocol-browse-button').data('actionDivId', $('#browse-protocols-div')).data('showCallback', updateProtocolCount);
 			
 			// In addition to actionDivId and showCallback (as needed), the filtered search buttons should set headerId to the
 			// correct header, set the form's action url (actionUrl), and set category and subcategory to the button's category/subcategory.
@@ -439,8 +448,12 @@
 				}
 			});
 			
-			// Preprocess the Browse submit to set sessionStorage to clear any visible divs on browse results page.
+			// Preprocess the Browse and Protocol submit to set sessionStorage to clear any visible divs on browse results page.
 			$('#browse-methods-div form').submit(function() {
+				sessionStorage.clearBrowsePage = 'true';
+				return true;
+			});
+			$('#browse-protocols-div form').submit(function() {
 				sessionStorage.clearBrowsePage = 'true';
 				return true;
 			});
@@ -511,6 +524,7 @@
 					<li class="active subcategory-button" id="keyword-search-button">Keyword</li>
 					<li class="not-active subcategory-button" id="number-search-button">Number</li>
 					<li class="not-active subcategory-button" id="browse-search-button">Browse</li>
+					<li class="not-active subcategory-button" id="protocol-browse-button">Protocols</li>
 				</ul>
 			</div>
 			<div id="general-action-div" class="subcategory-action-div">
@@ -534,12 +548,20 @@
             	</div>		
             	<div id="browse-methods-div" class="input-section-div" style="display: none;">
             		<form action="{% url 'methods-browse' %}" method="get">
-                        <label>Browse the entire database:&nbsp;<span id="browse-count-span"></span></label>
+                        <label>Browse all methods:&nbsp;<span id="browse-count-span"></span></label>
 	            		<div class="search-button-div">
 	            			<input class="search-button" type="submit" value="BROWSE" />
 	            		</div>
 	            	</form>
-            	</div>				
+            	</div>
+            	<div id="browse-protocols-div" class="input-section-div" style="display: none;">
+            		<form action="{% url 'protocols-browse' %}" method="get">
+                        <label>Browse all protocols:&nbsp;<span id="protocol-count-span"></span></label>
+	            		<div class="search-button-div">
+	            			<input class="search-button" type="submit" value="BROWSE" />
+	            		</div>
+	            	</form>
+            	</div>							
 			</div>
 		</div>
 	</div>
