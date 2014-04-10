@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}NEMI Browse Protocols{% endblock %}
+
+{% block page_description %}
+	Lists all protocols in the National Environmental Methods Index group. For each protocol
+	the list of methods that comprise that protocol can also be viewed.
+{% endblock %}
+
+{% block page_style %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}styles/tablesorter.css" media="screen" type="text/css" />
+{% endblock %}
+
+{% block page_script %}
+    <script src="{{ STATIC_URL }}lib/jquery_tablesorter/jquery.tablesorter.js"></script>
+    <script src="{{ STATIC_URL }}lib/jquery_tablesorter/jquery.tablesorter.widgets.js"></script>
+    <script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('.back-button').click(function() {
+				window.location.assign("{% url 'home' %}");
+			});
+			
+			$('.browse-results-table').tablesorter({
+				sortList :[[0,0]],
+			    theme: 'nemi',			    
+				widgets: ['zebra']
+			});
+						
+			// Set up the show/hide/ button for protocols
+			$(".subcategory-div").each(function(){
+				var tableEl = $(this).find(".browse-results-table");
+				$(this).find('.show-hide-toggle').click(function(){
+					var imgEl = $(this).find('img');
+					if (imgEl.attr('alt') == 'show') {
+						imgEl.attr('src', "{{ STATIC_URL }}/images/collapse_summary.png");
+						imgEl.attr('alt', 'hide');
+						imgEl.attr('title', 'Hide methods');
+						
+						// After showing the table trigger and update to force the styling for zebra rows to activate.
+						// This styling doesn't show when the table is not initially visible. 
+						tableEl.show();
+						tableEl.trigger('update', [true]);
+					}
+					else{
+						imgEl.attr('src', "{{ STATIC_URL }}/images/expand_summary.png");
+						imgEl.attr('alt', 'show');
+						imgEl.attr('title', 'Show methods');
+						tableEl.hide();
+					}
+					sessionStorage[$(this).attr('id')] = imgEl.attr('alt');
+				});
+			});
+			// Set show/hide button for method details 
+			$(".show-hide-detail-div").each(function(){
+				var detailsDiv = $(this).find(".hidden-details-div");
+				$(this).find('button').click(function(){
+					var detailsImgEl = $(this).find('img');
+					if (detailsImgEl.attr('alt') == 'show') {
+						detailsImgEl.attr('src', "{{ STATIC_URL }}/images/collapse_summary.png");
+						detailsImgEl.attr('alt', 'hide');
+						detailsImgEl.attr('title', 'Hide details');
+						detailsDiv.show();
+					}
+					else{
+						detailsImgEl.attr('src', "{{ STATIC_URL }}/images/expand_summary.png");
+						detailsImgEl.attr('alt', 'show');
+						detailsImgEl.attr('title', 'Show details');
+						detailsDiv.hide();
+					}						
+				});
+			});
+			
+			// Initialize state of visible elements.
+			if (sessionStorage.clearBrowsePage == 'true') {
+				$('.show-hide-toggle').each(function() {
+					sessionStorage[$(this).attr('id')] = 'show';
+				});
+			}
+			else {
+				$('.show-hide-toggle').each(function() {
+					if (sessionStorage[$(this).attr('id')] == 'hide') {
+						// Need to make the category visible so send a click event 
+						$(this).click();
+					}
+				});
+			}
+			sessionStorage.clearBrowsePage = 'false';
+		});
+	</script>
+{% endblock %}
+
+{% block page-content %}
+	<div id="protocol-browse-banner-header">
+		<h1 id="protocol_browse-page-name">
+			<span>BROWSE PROTOCOLS:&nbsp;</span>NEMI contains {{ object_list.count }} protocols
+		</h1>
+	</div>
+	
+	<div id="protocol-content-div">
+		<div class="category-content-div">
+		{% for protocol in object_list %}
+			<div class="subcategory-div">
+				<div class="subcategory-content-div">
+					<h4>
+						<button class="show-hide-toggle" title="Show methods" 
+							type="button"><img src="{{ STATIC_URL }}images/expand_summary.png" alt="show" />
+						</button>
+						<a href="{% url 'protocols-summary' protocol.source_citation_id %}">{{ protocol.source_citation }}</a> - {{ protocol.source_citation_name }}
+					</h4>
+					<table class="browse-results-table" data-sortlist="[[0,0]]" style="display: none;">
+	                	<thead>
+	                    	<tr>
+	                        	<th class="sorter-text">Method Id</th>
+	                            <th>Method Descriptive Name</th>
+	                            <th>Method Source</th>
+	                        </tr>
+	                     </thead>
+	                     <tbody>
+						 {% for rel in protocol.protocolmethodrel_set.all %}
+						 	<tr>
+	                        	<td><a title="View method details" href="{% url 'methods-method_summary' rel.method.method_id %}">
+	                            	{{ rel.method.source_method_identifier|safe }}
+	                            </a></td>
+	                            <td>{{ rel.method.method_descriptive_name | safe }}</td>
+	                            <td>{% include "methods/_method_source_details.html" with r=rel.method %}</td>
+	                        </tr>
+	                     {% endfor %}
+	                     </tbody>
+	                  </table>
+	             </div>			
+			</div>
+		{% endfor %}
+		</div>
+	</div>	
+{% endblock %}
