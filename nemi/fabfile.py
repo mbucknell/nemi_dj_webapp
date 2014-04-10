@@ -42,8 +42,8 @@ def build_virtualenv(for_deployment=False):
     if for_deployment:
         download_cache = os.environ['HOME'] + '/.pip/download_cache'
         oracle_home = ''
-        with prefix('source /etc/profile.d/oracle.sh'):
-            oracle_home = os.environ['ORACLE_HOME']
+        local('source /etc/profile.d/oracle.sh')
+        oracle_home = os.environ['ORACLE_HOME']
         
     else:
         download_cache = os.environ.get('PIP_DOWNLOAD_CACHE', '')
