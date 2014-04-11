@@ -59,4 +59,4 @@ class CorsMiddleware(object):
             
             
     def is_enabled(self, request):
-            return re.match(CORS_URLS_REGEX, request.path)            
+            return re.match(CORS_URLS_REGEX, request.path_info)            
