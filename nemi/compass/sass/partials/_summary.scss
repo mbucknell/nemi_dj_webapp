@@ -228,7 +228,7 @@
 	}
 }
 
-#statistical-method-summary-page-content {
+#statistical-method-summary-page-content, #protocol-summary-page-content {
 	.summary-tab-contents {
 		@include column(20, true);
 		width: span(20) - 6;
