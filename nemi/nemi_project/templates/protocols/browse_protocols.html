@@ -31,7 +31,7 @@
 			// Set up the show/hide/ button for protocols
 			$(".subcategory-div").each(function(){
 				var tableEl = $(this).find(".browse-results-table");
-				$(this).find('.show-hide-toggle').click(function(){
+				$(this).find('.method-button').click(function(){
 					var imgEl = $(this).find('img');
 					if (imgEl.attr('alt') == 'show') {
 						imgEl.attr('src', "{{ STATIC_URL }}/images/collapse_summary.png");
@@ -74,12 +74,12 @@
 			
 			// Initialize state of visible elements.
 			if (sessionStorage.clearBrowsePage == 'true') {
-				$('.show-hide-toggle').each(function() {
+				$('.method-button').each(function() {
 					sessionStorage[$(this).attr('id')] = 'show';
 				});
 			}
 			else {
-				$('.show-hide-toggle').each(function() {
+				$('.method-button').each(function() {
 					if (sessionStorage[$(this).attr('id')] == 'hide') {
 						// Need to make the category visible so send a click event 
 						$(this).click();
@@ -96,6 +96,7 @@
 		<h1 id="protocol_browse-page-name">
 			<span>BROWSE PROTOCOLS:&nbsp;</span>NEMI contains {{ object_list.count }} protocols
 		</h1>
+        <input class="back-button" type="button" value="Back to search" />
 	</div>
 	
 	<div id="protocol-content-div">
@@ -104,7 +105,7 @@
 			<div class="subcategory-div">
 				<div class="subcategory-content-div">
 					<h4>
-						<button class="show-hide-toggle" title="Show methods" 
+						<button id="protocol-{{ protocol.id }}" class="show-hide-toggle method-button" title="Show methods" 
 							type="button"><img src="{{ STATIC_URL }}images/expand_summary.png" alt="show" />
 						</button>
 						<a href="{% url 'protocols-summary' protocol.source_citation_id %}">{{ protocol.source_citation }}</a> - {{ protocol.source_citation_name }}
@@ -124,7 +125,7 @@
 	                            	{{ rel.method.source_method_identifier|safe }}
 	                            </a></td>
 	                            <td>{{ rel.method.method_descriptive_name | safe }}</td>
-	                            <td>{% include "methods/_method_source_details.html" with r=rel.method %}</td>
+	                            <td>{% include "methods/_method_source_details.html" with r=rel.method.method_source %}</td>
 	                        </tr>
 	                     {% endfor %}
 	                     </tbody>
