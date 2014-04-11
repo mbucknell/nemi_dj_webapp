@@ -1,0 +1,12 @@
+{% extends "rest_framework/base.html" %}
+
+{% block title %}NEMI Public Webservice{% endblock %}
+
+{% block style %}
+	{{ block.super }}
+	<link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.png" type="image/vnd.microsoft.icon">
+{% endblock %}
+
+{% block branding %}
+	<a class='brand' href="{% url 'home' %}"><img class="img-responsive" src="{{ STATIC_URL }}images/NEMI_header.png" alt="NEMI Logo"></img></a>
+{% endblock %}
