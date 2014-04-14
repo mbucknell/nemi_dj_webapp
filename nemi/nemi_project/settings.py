@@ -145,6 +145,7 @@ INSTALLED_APPS = (
     # third party apps
     'tinymce',
     'rest_framework',
+    'djangojs',
     
     # NEMI/CIDA specific apps
     'common',
@@ -225,9 +226,10 @@ if os.getenv('JENKINS_URL', False):
                     'django_jenkins.tasks.with_coverage',
                      )
     JENKINS_TEST_RUNNER = 'nemi_project.test_jenkins_runner.ManagedModelTestRunner'
-    INSTALLED_APPS += ('django_jenkins',)
+    INSTALLED_APPS += ('django_jenkins', 'jasmine',)
     PROJECT_APPS = (
         'common', 
+        'jasmine',
         'methods', 
         'protocols', 
         'sams', 
