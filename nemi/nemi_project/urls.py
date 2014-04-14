@@ -1,11 +1,13 @@
 ''' Module includes all urls confs for the nemi project '''
 
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.contrib.sitemaps import FlatPageSitemap
 from django.views.generic import TemplateView
 
 import domhelp
+from jasmine.test_urls import ProjectJasmineView
 import methods.urls
 import protocols.urls
 import sams.urls
@@ -34,6 +36,8 @@ urlpatterns = patterns('',
         name='ie8_error_page'),
     
     url(r'^tinymce/', include('tinymce.urls')),
+    
+    url(r'^djangojs/', include('djangojs.urls')),
     
     url(r'^accounts/login/$', 
         'django.contrib.auth.views.login', 
@@ -69,6 +73,9 @@ urlpatterns = patterns('',
         domhelp.views.GlossaryView.as_view(),
         name='glossary'),
 )
+
+if 'jasmine' in settings.INSTALLED_APPS:
+    urlpatterns += patterns('', url(r'^jasmine/$', ProjectJasmineView.as_view()))
 
 urlpatterns += methods.urls.api_urlpatterns
 
