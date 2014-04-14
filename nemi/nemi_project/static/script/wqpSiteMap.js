@@ -52,8 +52,8 @@ WQP_MAP.siteMap = function(spec) {
 	spec.mapOptions = spec.mapOptions || {};
 	
 	var DEFAULT_MAP_OPTIONS = {
-			center : [48.2, -85.5],
-			zoom : 13,
+			center : [49.2, -90.5],
+			zoom : 3,
 			attributionControl : false,
 			layers : [L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.png')]
 	};

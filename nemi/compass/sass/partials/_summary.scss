@@ -199,7 +199,7 @@
 	}
 	#wqp-tab {
 		min-height : 150px;
-		div, form {
+		>div {
 			padding: 10px;
 		}
 		ul {
@@ -209,7 +209,8 @@
 		button {
 			@include nemi-button($color: $nemi-summary-analyte-download-color, $text_color:black);
 		}
-		#wqp-download-header {
+		#wqp-download-header, #wqp-site-map-header {
+			padding: 10px;
 			font-weight: bold;
 			font-size: 18px;
 			border-bottom: solid 2px $nemi-home-header-bg-color;
@@ -224,6 +225,15 @@
 		}
 		.wqp-download-input-header {
 			font-weight: bold;
+		}
+		#wqp-download {
+			div, form {
+				padding: 10px;
+			}
+		}
+		#wqp-site-map {
+			margin-top : 10px;
+			height: 500px;
 		} 
 	}
 }
