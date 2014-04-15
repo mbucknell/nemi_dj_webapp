@@ -1,14 +1,21 @@
 {% extends "base.html" %}
 
 {% load helpcontent %}
+{% load js %}
 
 {% block title %}NEMI Method Summary - {{ method.details.source_method_identifier|safe }}{% endblock %}
 
 {% block page_description %}{{ method.details.method_official_name }}{% endblock %}
 
+{% block page_style %}
+	{% css "lib/leaflet-0.7.2/leaflet.css" %}
+{% endblock %}
+
 {% block page_script %}
-	<script src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
-	<script src="{{ STATIC_URL }}script/HelpDialog.js"></script>
+	{% js "lib/jquery-ui/jquery-ui-1.10.0.custom.js" %}
+	{% js "lib/leaflet-0.7.2/leaflet.js" %}
+	{% js "script/HelpDialog.js" %}
+	{% js "script/wqpSiteMap.js" %}
 	
 	<script type="text/javascript">
 	    function openWindow(url, event_category, event_action) {
@@ -75,8 +82,26 @@
 			    divToShow.show();
 			    divToShow.siblings(':visible').hide();
 			});
+			
 			$('#wqp-tab-button').click(function() {
-				trackGAEvent('WQP', 'View tab', '{{ request.path_info }}');	
+				trackGAEvent('WQP', 'View tab', '{{ request.path_info }}');
+
+				if (!($('#wqp-site-map').hasClass('leaflet-container'))) {
+					var siteMap = WQP_MAP.siteMap('wqp-site-map');
+					var sitesLayer = WQP_MAP.wqpSitesLayer({
+						serviceURL : "{% url 'wqp_proxy' '/simplestation/search' %}",
+						data : {
+							analyticalmethod : 'https://www.nemi.gov{{ request.path_info }}',
+						},
+						successHandler : function(jqXHR, textStatus, error) {
+							$('#wqp-loading-div').hide();
+						},
+						errorHandler : function(data, textStatus, jqXHR) {
+							$('#wqp-loading-div>div').html('Unable to retrieve layer from WQP<br/>' + data.status + ' - ' + data.statusText); 
+						}
+					});
+					siteMap.addLayer(sitesLayer);
+				}	
 			});
 			
 			// Add click event handler to all show/hide detail buttons 
@@ -363,10 +388,6 @@
     	        		<span id="wqp-results-count"></span> sample results from 
     	        		<span id="wqp-site-count"></span> sites that use this method.
     	        	</div>
-    	        	<div id="wqp-site-map-div">
-    	        		<div id="wqp-site-map-header">WQP Sites Map</div>
-    	        		<div id="wqp-site-map"></div>
-    	        	</div>
     	        	<div id="wqp-download">
     	        		<div id="wqp-download-header">Download WQP data</div>
    	        			<div id="wqp-form-parameters-div">
@@ -406,6 +427,13 @@
    	        				<button type="submit">Download</button>
 							<input type="hidden" name="mimeType" />
    	        			</form>
+    	        	</div>
+    	        	<div id="wqp-site-map-div">
+    	        		<div id="wqp-site-map-header">WQP Site Map</div>
+    	        		<div id="wqp-site-map-and-loading-divs">
+	    	        		<div id="wqp-site-map"></div>
+	    	        		<div id="wqp-loading-div"><div>Loading Sites ...</div></div>
+	    	        	</div>
     	        	</div>
     	     	</div> 
     		</div> 	     
