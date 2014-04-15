@@ -49,25 +49,29 @@ describe('Tests for WQP.wqpSitesLayer', function() {
 		expect(siteLayer instanceof L.GeoJSON).toBeTruthy();
 		expect(siteLayer.options.serviceURL).toBeDefined();
 		expect(siteLayer.options.data).toEqual({});
+		expect(siteLayer.options.successHandler).toBeDefined();
 		expect(siteLayer.options.errorHandler).toBeDefined();
 		expect(siteLayer.options.popupHtmlFromProperty).toBeDefined();
 		expect(siteLayer.options.onEachFeature).toBeDefined();
 	});
 	
 	it('Expects WQP_Map.wqpSitesLayer to merge specified options rather than using defaults', function() {
+		var successHandlerSpy = jasmine.createSpy('successHandlerSpy');
 		var errorHandlerSpy = jasmine.createSpy('errorHandler');
 		var popupHtmlFromPropertySpy = jasmine.createSpy('popupHtmlFromProperty');
 		var onEachFeatureSpy = jasmine.createSpy('onEachFeature');
 		var siteLayer = WQP_MAP.wqpSitesLayer({
-			serviceURL : 'http://www.test.com/SimpleStation',
+			serviceURL : 'http://www.test.com/simplestation',
 			data : {param1 : 'value2'},
+			successHandler : successHandlerSpy,
 			errorHandler : errorHandlerSpy,
 			popupHtmlFromProperty : popupHtmlFromPropertySpy,
 			onEachFeature : onEachFeatureSpy
 		});
 		
-		expect(siteLayer.options.serviceURL).toEqual('http://www.test.com/SimpleStation');
+		expect(siteLayer.options.serviceURL).toEqual('http://www.test.com/simplestation');
 		expect(siteLayer.options.data).toEqual({param1 : 'value2'});
+		expect(siteLayer.options.successHandler).toBe(successHandlerSpy);
 		expect(siteLayer.options.errorHandler).toBe(errorHandlerSpy);
 		expect(siteLayer.options.popupHtmlFromProperty).toBe(popupHtmlFromPropertySpy);
 		expect(siteLayer.options.onEachFeature).toBe(onEachFeatureSpy);
@@ -87,33 +91,51 @@ describe('Tests for WQP.wqpSitesLayer', function() {
 	
 	it('Expects creating a wqpSitesLayer triggers an ajax call to the serviceURL', function() {
 		var siteLayer = WQP_MAP.wqpSitesLayer({
-			serviceURL : 'http://test.com/SimpleStations',
+			serviceURL : 'http://test.com/simplestations',
 			data : {param1 : 'value1'}
 		});
 		
 		expect(server.requests.length).toBe(1);
-		expect(server.requests[0].url).toMatch('http://test.com/SimpleStations');
+		expect(server.requests[0].url).toMatch('http://test.com/simplestations');
 		expect(server.requests[0].url).toMatch('param1=value1');
 	});
 	
-	it('Expects a successful service call to add the data to the layer', function() {
+	it('Expects mimeType equal to json to be appended to query params', function() {
 		var siteLayer = WQP_MAP.wqpSitesLayer();
+		expect(server.requests[0].url).toMatch('mimeType=json');
+		
+		siteLayer = WQP_MAP.wqpSitesLayer({
+			data : 'param1=value1'
+		});
+		expect(server.requests[1].url).toMatch('param1=value1&mimeType=json');
+		
+		siteLayer = WQP_MAP.wqpSitesLayer({
+			data : {
+				param1 : 'value1'
+			}
+		});
+		expect(server.requests[2].url).toMatch('param1=value1&mimeType=json');
+	});
+	
+	it('Expects a successful service call to add the data to the layer and to call the successHandler', function() {
+		var successHandlerSpy = jasmine.createSpy('successHandlerSpy');
+		var siteLayer = WQP_MAP.wqpSitesLayer({
+			successHandler : successHandlerSpy
+		});
 		spyOn(siteLayer, 'addData');
 		server.requests[0].respond(200, {"Content-Type" : "application/json"}, layerData);
 		expect(siteLayer.addData).toHaveBeenCalled();
+		expect(successHandlerSpy).toHaveBeenCalled();
 	});
 	
-	it('Expects an unsuccessful service call to not call addData', function() {
-		var siteLayer = WQP_MAP.wqpSitesLayer();
+	it('Expects an unsuccessful service call to not call addData and to call the errorHandler', function() {
+		var errorSpy = jasmine.createSpy('errorSpy');
+		var siteLayer = WQP_MAP.wqpSitesLayer({
+			errorHandler : errorSpy
+		});
 		spyOn(siteLayer, 'addData');
 		server.requests[0].respond(500, 'Bad data');
 		expect(siteLayer.addData).not.toHaveBeenCalled();
-	});
-	
-	it('Expects the specified errorHandler to be called on an error', function() {
-		var errorSpy = jasmine.createSpy('errorSpy');
-		var siteLayer = WQP_MAP.wqpSitesLayer({errorHandler : errorSpy});
-		server.requests[0].respond(500, 'Bad data');
 		expect(errorSpy).toHaveBeenCalled();		
 	});
 });
