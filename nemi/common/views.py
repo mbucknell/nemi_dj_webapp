@@ -210,7 +210,7 @@ class SimpleWebProxyView(View):
     def head(self, request, *args, **kwargs):
         resp = requests.head(self._target_url(request, **kwargs))
         if resp.status_code == 200:
-            http_resp = HttpResponse(resp.text, content_type=resp.headers['content-type'], status=resp.status_code)
+            http_resp = HttpResponse(resp.text, status=resp.status_code)
             for key in resp.headers:
                 http_resp[key] = resp.headers[key] 
         else:
