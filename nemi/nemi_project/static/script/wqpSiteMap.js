@@ -32,7 +32,7 @@ WQP_MAP.WQPSitesLayer = L.GeoJSON.extend({
 		options = options || {};
 		if (!(options.onEachFeature)) {
 			options.onEachFeature = function(feature, layer) {
-				layer.bindPopup(options.popupHtmlFromProperty(feature.properties))
+				layer.bindPopup(this.popupHtmlFromProperty(feature.properties))
 			}
 		}
 		L.GeoJSON.prototype.initialize.call(this, [], options);

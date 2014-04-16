@@ -13,7 +13,7 @@
 
 {% block page_script %}
 	{% js "lib/jquery-ui/jquery-ui-1.10.0.custom.js" %}
-	{% js "lib/leaflet-0.7.2/leaflet.js" %}
+	{% js "lib/leaflet-0.7.2/leaflet-src.js" %}
 	{% js "script/HelpDialog.js" %}
 	{% js "script/wqpSiteMap.js" %}
 	
@@ -42,6 +42,7 @@
 
 					if ((!(total_sites) && !(total_results)) || ((total_sites === '0') && (total_results === '0'))) {
 						$('#wqp-download').hide();
+						$('#wqp-site-map-div').hide();
 					}
 					if (total_results) {
 						$('#wqp-results-count').html(total_results);
@@ -61,6 +62,7 @@
 					$('#wqp-results-count').html('an unknown number of ');
 					$('#wqp-site-count').html('an unknown number of ');
 					$('#wqp-download').hide();
+					$('#wqp-site-map-div').hide();
 				}
 				
 		    });
@@ -89,7 +91,7 @@
 				if (!($('#wqp-site-map').hasClass('leaflet-container'))) {
 					var siteMap = WQP_MAP.siteMap('wqp-site-map');
 					var sitesLayer = WQP_MAP.wqpSitesLayer({
-						serviceURL : "{% url 'wqp_proxy' '/simplestation/search' %}",
+						serviceURL : '{{ wqp_url }}/simplestation/search',
 						data : {
 							analyticalmethod : 'https://www.nemi.gov{{ request.path_info }}',
 						},
@@ -98,7 +100,17 @@
 						},
 						errorHandler : function(data, textStatus, jqXHR) {
 							$('#wqp-loading-div>div').html('Unable to retrieve layer from WQP<br/>' + data.status + ' - ' + data.statusText); 
-						}
+						},
+						pointToLayer : function(feature, latlng) {
+							return L.circleMarker(latlng, {
+								radius: 8,
+								title : feature.properties.MonitoringLocationIdentifier
+							});
+						},
+						style : {
+							color : 'darkblue',
+						},
+						onEachFeature : function() { return; }// Disables automatic popup 
 					});
 					siteMap.addLayer(sitesLayer);
 				}	
@@ -429,7 +441,7 @@
    	        			</form>
     	        	</div>
     	        	<div id="wqp-site-map-div">
-    	        		<div id="wqp-site-map-header">WQP Site Map</div>
+    	        		<div id="wqp-site-map-header">Sites where this method was used</div>
     	        		<div id="wqp-site-map-and-loading-divs">
 	    	        		<div id="wqp-site-map"></div>
 	    	        		<div id="wqp-loading-div"><div>Loading Sites ...</div></div>
