@@ -46,35 +46,48 @@ class CleanKeywordTestCase(SimpleTestCase):
     
     def test_with_no_special_characters(self):
         keyword='nitrate'
-        self.assertEqual(_clean_keyword(keyword), '{nitrate}')
+        self.assertEqual(_clean_keyword(keyword), '%nitrate%')
         
     def test_with_quote(self):
         keyword = "ni'trate"
-        self.assertEqual(_clean_keyword(keyword), "{ni''trate}")
+        self.assertEqual(_clean_keyword(keyword), "%ni''trate%")
         
     def test_with_two_quotes(self):
         keyword = "ni'trate'chloride"
-        self.assertEqual(_clean_keyword(keyword), "{ni''trate''chloride}")
+        self.assertEqual(_clean_keyword(keyword), "%ni''trate''chloride%")
         
     def test_with_double_quotes(self):
         keyword = 'ni"trate'
-        self.assertEqual(_clean_keyword(keyword), '{ni""trate}')
+        self.assertEqual(_clean_keyword(keyword), '%ni""trate%')
         
     def test_with_two_double_quotes(self):
         keyword = 'ni"trate"chloride'
-        self.assertEqual(_clean_keyword(keyword), '{ni""trate""chloride}')
+        self.assertEqual(_clean_keyword(keyword), '%ni""trate""chloride%')
         
     def test_with_percent(self):
         keyword = 'ni%trate'
-        self.assertEqual(_clean_keyword(keyword), '{ni%%trate}')
+        self.assertEqual(_clean_keyword(keyword), '%ni\%trate%')
         
     def test_with_two_percents(self):
         keyword = 'ni%trate%chloride'
-        self.assertEqual(_clean_keyword(keyword), '{ni%%trate%%chloride}')
+        self.assertEqual(_clean_keyword(keyword), '%ni\%trate\%chloride%')
     
     def test_with_percent_and_quote_chars(self):
         keyword = 'ni"tr%ate'
-        self.assertEqual(_clean_keyword(keyword), '{ni""tr%%ate}')
+        self.assertEqual(_clean_keyword(keyword), '%ni""tr\%ate%')
+        
+    def test_with_dash(self):
+        keyword = 'ni-trate'
+        self.assertEqual(_clean_keyword(keyword), '%ni\-trate%')
+        
+    def test_with_plus_sign(self):
+        keyword = 'ni+trate'
+        self.assertEqual(_clean_keyword(keyword), '%ni\+trate%')
+        
+    def test_with_comma_and_quote(self):
+        keyword = "ni,tr'ate"
+        result = _clean_keyword(keyword)
+        self.assertEqual(_clean_keyword(keyword), "%ni\,tr''ate%")
  
         
 class MethodSummaryFactory(DjangoModelFactory):
