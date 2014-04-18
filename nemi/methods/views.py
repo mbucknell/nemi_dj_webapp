@@ -63,10 +63,12 @@ def _clean_name(name):
 def _clean_keyword(k):
     ''' Returns keyword with quotes properly escaped and the keyword surrounded by brackets. T
     '''
-    double_pattern = re.compile(r'(?P<double>[\'\"%])')
-    result = re.sub(double_pattern, r'\g<double>\g<double>', k)
+    double_pattern = re.compile(r'(?P<double>[\'\"])')
+    special_char_pattern = re.compile(r'(?P<special>[^a-zA-Z0-9\'\"])')
+    result = re.sub(special_char_pattern, r'\\\g<special>', k)
+    result = re.sub(double_pattern, r'\g<double>\g<double>', result)
     
-    return '{' + result + '}';
+    return '%' + result + '%';
 
 
 class AnalyteSelectView(View):
@@ -709,21 +711,16 @@ class KeywordResultsView(TemplateResponseMixin, View):
             else:
                 clean_keyword = _clean_keyword(keyword)
                 
-                query = 'SELECT DISTINCT MAX(score(1)) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
+                query = "SELECT DISTINCT MAX(score(1)) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
 mf.link_to_full_method, mf.mimetype, mf.method_official_name, mf.method_descriptive_name, mf.method_source, mf.method_category \
 FROM nemi_data.method_fact mf, nemi_data.revision_join rj \
 WHERE mf.revision_id = rj.revision_id (+) AND \
-(CONTAINS(mf.source_method_identifier, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + clean_keyword + '<progression>\
-<seq><rewrite>transform((TOKENS, "{", "}", " "))</rewrite></seq>\
-<seq><rewrite>transform((TOKENS, "{", "}", "AND"))</rewrite></seq>\
-</progression></textquery><score datatype="INTEGER" algorithm="COUNT"/></query>\', 1) > 1 \
-OR CONTAINS(rj.method_pdf, \'<query><textquery lang="ENGLISH" grammar="CONTEXT">' + clean_keyword + '<progression>\
-<seq><rewrite>transform((TOKENS, "{", "}", " "))</rewrite></seq>\
-<seq><rewrite>transform((TOKENS, "{", "}", "AND"))</rewrite></seq>\
-</progression></textquery><score datatype="INTEGER" algorithm="COUNT"/></query>\', 2) > 1) \
+(CONTAINS(mf.source_method_identifier, '" + clean_keyword + "', 1) > 0 \
+OR CONTAINS(rj.method_pdf, '" + clean_keyword + "', 2) > 0) \
 GROUP BY mf.method_id, mf.source_method_identifier, mf.link_to_full_method, mf.mimetype, mf.revision_id, mf.method_official_name, \
 mf.method_descriptive_name, mf.method_source, mf.method_category \
-ORDER BY method_summary_score desc;'
+ORDER BY method_summary_score desc;"
+
                 # Execute as raw query since  it uses a CONTAINS clause and context grammer.
                 cursor = connection.cursor() #@UndefinedVariable
                 cursor.execute(query)
