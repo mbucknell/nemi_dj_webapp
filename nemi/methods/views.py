@@ -370,7 +370,7 @@ class MethodResultsMixin(ResultsMixin):
         data = super(MethodResultsMixin, self).get_queryset()
         
         if 'method_number' in self.request.GET:
-            data = data.filter(source_method_identifier__contains=self.request.GET.get('method_number'))
+            data = data.filter(source_method_identifier__icontains=self.request.GET.get('method_number'))
         
         matrix = self.request.GET.get('matrix', '')
         if matrix != '':
