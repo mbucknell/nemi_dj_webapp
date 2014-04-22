@@ -87,7 +87,7 @@
 			
 			$('#wqp-tab-button').click(function() {
 				trackGAEvent('WQP', 'View tab', '{{ request.path_info }}');
-
+				return; // NOTE TEMPORARY DISABLING OF WQP SITE MAP
 				if (!($('#wqp-site-map').hasClass('leaflet-container'))) {
 					var siteMap = WQP_MAP.siteMap('wqp-site-map');
 					var sitesLayer = WQP_MAP.wqpSitesLayer({
@@ -440,7 +440,7 @@
 							<input type="hidden" name="mimeType" />
    	        			</form>
     	        	</div>
-    	        	<div id="wqp-site-map-div">
+    	        	<div id="wqp-site-map-div" style="display:none;">
     	        		<div id="wqp-site-map-header">Sites where this method was used</div>
     	        		<div id="wqp-site-map-and-loading-divs">
 	    	        		<div id="wqp-site-map"></div>
