@@ -87,7 +87,6 @@
 			
 			$('#wqp-tab-button').click(function() {
 				trackGAEvent('WQP', 'View tab', '{{ request.path_info }}');
-				return; // NOTE TEMPORARY DISABLING OF WQP SITE MAP
 				if (!($('#wqp-site-map').hasClass('leaflet-container'))) {
 					var siteMap = WQP_MAP.siteMap('wqp-site-map');
 					var sitesLayer = WQP_MAP.wqpSitesLayer({
@@ -385,7 +384,7 @@
 					    				<td>{{ revision.revision_information }}</td>
 						    			<td>
 							    			{% if revision.mimetype %}
-        		    						    <input type="button" value="DOWNLOAD PDF" onclick="openWindow('{% url 'revision-pdf' revision.revision_id %}', 'Revision', Download')" />
+        		    						    <input type="button" value="DOWNLOAD PDF" onclick="openWindow('{% url 'revision-pdf' revision.revision_id %}', 'Revision', 'Download')" />
     										{% endif %}
 	    								</td>
 		    						</tr>
@@ -440,7 +439,7 @@
 							<input type="hidden" name="mimeType" />
    	        			</form>
     	        	</div>
-    	        	<div id="wqp-site-map-div" style="display:none;">
+    	        	<div id="wqp-site-map-div">
     	        		<div id="wqp-site-map-header">Sites where this method was used</div>
     	        		<div id="wqp-site-map-and-loading-divs">
 	    	        		<div id="wqp-site-map"></div>
