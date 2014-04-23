@@ -108,6 +108,74 @@
 	        </execution>
 	      </executions>
 	    </plugin>
+	    <plugin>
+		     <groupId>com.github.searls</groupId>
+		     <artifactId>jasmine-maven-plugin</artifactId>
+		     <version>1.3.1.4</version>
+		     <executions>
+		          <execution>
+		              <goals>
+		                  <goal>test</goal>
+		              </goals>
+		          </execution>
+		     </executions>
+		    <configuration>
+		         <keepServerAlive>true</keepServerAlive> <!-- Needed to allow the saga-maven-plugin to run the tests -->
+		         <jsSrcDir>${project.basedir}/nemi_project/static</jsSrcDir>
+		         <jsTestSrcDir>${project.basedir}/nemi_project/static/script/tests</jsTestSrcDir>
+		         <preloadSources>
+		            <!-- This will be different for each project -->
+		              <source>lib/jquery-1.11.0.min.js</source>
+		              <source>lib/leaflet-0.7.2/leaflet.js</source>
+		         </preloadSources>
+		         <sourceIncludes> <!-- Varies for each project -->
+		               <include>script/*.js</include>
+		         </sourceIncludes>
+		     </configuration>
+		</plugin>
+     <plugin>
+          <groupId>com.github.timurstrekalov</groupId>
+          <artifactId>saga-maven-plugin</artifactId>
+          <version>1.5.3</version>
+          <executions>
+               <execution>
+               		<phase>verify</phase>
+                    <goals>
+                         <goal>coverage</goal>
+                    </goals>
+                </execution>
+          </executions>
+          <configuration>
+          	<baseDir>http://localhost:${jasmine.serverPort}</baseDir>
+          	<outputDir>${project.build.directory}/coverage</outputDir>
+          	<noInstrumentPatterns>
+                <pattern>.+/.+spec\.js</pattern>
+                <pattern>.+/lib/.+\.js</pattern>
+                <!-- Add patterns for files that don't need to be analyzed such as library files -->
+          	</noInstrumentPatterns>
+     	</configuration>
+ 	</plugin>
+ <plugin>
+      <groupId>com.github.goldin</groupId>
+      <artifactId>copy-maven-plugin</artifactId>
+      <version>0.2.5</version>
+      <configuration>      <!-- use copy:copy to run-->
+          <failIfNotFound>false</failIfNotFound>
+          <resource>
+          <targetPath>${project.build.directory}/jasmine</targetPath>
+              <file>${project.build.directory}/coverage/total-coverage.dat</file>
+              <destFileName>total-coverage.dat</destFileName>
+              <replaces>
+                    <replace>
+                        <from>src/</from>
+                        <!-- Regex to replace src/ with correct path name -->
+                        <to>${project.basedir}/nemi_project/</to>
+                        <!-- Replacement String to my JS src files -->
+                    </replace>
+              </replaces>
+         </resource>
+     </configuration>
+ </plugin>
 	  </plugins>
 	</build>
 </project>

@@ -229,7 +229,6 @@ if os.getenv('JENKINS_URL', False):
     INSTALLED_APPS += ('django_jenkins', 'jasmine',)
     PROJECT_APPS = (
         'common', 
-        'jasmine',
         'methods', 
         'protocols', 
         'sams', 
