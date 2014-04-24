@@ -70,7 +70,7 @@ Utils = {
                     data : selectData,
                     placeholder : 'All',
                     allowClear : true,
-                    minimumResultsForSearch : 15,
+                    minimumResultsForSearch : 15
                 });
 
                 var enableFn = select2El.data('enableFn');
@@ -95,4 +95,4 @@ Utils = {
         return '<input type="hidden" name="' + name + '" value="' + value
                 + '" />';
     }
-}
+};
