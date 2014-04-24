@@ -8,7 +8,6 @@ AnalyteSelect = {
          * Number of selections allowed. setSearchButtonState : Function which
          * sets the Search button state based on the contents of the analyte
          * selects as they change. Used in the select's change handler.
-         * 
          */
         var selectEl = {
             'name' : analyteDivEl.find('input[name="analyte_name"]'),
@@ -110,7 +109,7 @@ AnalyteSelect = {
                             subcategory : analyteDivEl.find(
                                     'input[name="subcategory"]').val(),
                             selection : term
-                        }
+                        };
                     },
                     dataType : 'json',
                     quietMillis : 500,
@@ -169,7 +168,7 @@ AnalyteSelect = {
                         tokenSeparators : [ '|' ],
                         formatSelection : function(object, container) {
                             return object.id;
-                        },
+                        }
                     });
                     selectEl[kind].on('change', function(e) {
                         changeHandler(kind, e, options.setSearchButtonState);
@@ -180,13 +179,12 @@ AnalyteSelect = {
                     setEnabledStateFromSession(kind);
                 }
             });
-        }
-        ;
+        };
 
         function nameResults(data, page) {
             var r = {
                 'results' : []
-            }
+            };
             for ( var i = 0; i < data.values_list.length; i++) {
                 r.results.push({
                     id : data.values_list[i][0].toLowerCase(),
@@ -195,13 +193,12 @@ AnalyteSelect = {
                 });
             }
             return r;
-        }
-        ;
+        };
 
         function codeResults(data, page) {
             var r = {
                 'results' : []
-            }
+            };
             for ( var i = 0; i < data.values_list.length; i++) {
                 r.results.push({
                     id : data.values_list[i].toLowerCase(),
@@ -209,8 +206,7 @@ AnalyteSelect = {
                 });
             }
             return r;
-        }
-        ;
+        };
 
         // Initialize name then code which are always dynamic.
         if (options.dynamic) {
@@ -219,6 +215,5 @@ AnalyteSelect = {
             initStaticSelect('name', nameResults);
         }
         initDynamicSelect('code', codeResults);
-
     }
-}
+};

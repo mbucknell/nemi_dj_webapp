@@ -1,7 +1,7 @@
 HelpDialog = {
     dialogEl : {},
     initialize : function(el /* jquery element */) {
-        HelpDialog.dialogEl = el
+        HelpDialog.dialogEl = el;
         el.dialog({
             autoOpen : false,
             title : 'Basic Dialog',
@@ -26,4 +26,4 @@ HelpDialog = {
             HelpDialog.dialogEl.dialog('open');
         }
     }
-}
+};
