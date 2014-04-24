@@ -172,7 +172,7 @@
   			<outputFile>${project.build.directory}/jasmine/total-coverage.dat</outputFile>
   			<regex>false</regex>
   			<token>src/</token>
-  			<value>${project.basedir}/nemi_project/</value>
+  			<value>${project.basedir}/nemi_project/static/</value>
   		</configuration>
   	</plugin>
 	  </plugins>
