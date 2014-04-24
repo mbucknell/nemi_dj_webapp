@@ -3,13 +3,13 @@
 var WQP_MAP = WQP_MAP || {};
 
 /* New options defined are:
- * 	   serviceURL : String containing the url to be used to fetch the site geoJSON data
+ *     serviceURL : String containing the url to be used to fetch the site geoJSON data
  * 	   data : String or Object containg the query parameter to be used in the ajax call. Does not need to include the mimeType
  *            as it is assumed to be json.
  *     popupHtmlFromProperty : function(props(Object)) returns html string to be used for the identify popup
  *	   successHandler : function to execute if the ajax loading call succeeds. Defaults to null function.
  *     errorHandler : function to execute if the ajax loading call fails. Defauls to null function.
- * Other options that are defaulted   
+ * Other options that are defaulted
  *     onEachFeature : function(feature, layer). By default this binds a popup to each feature. Can be overriden.
  */
 WQP_MAP.WQPSitesLayer = L.GeoJSON.extend({
@@ -24,7 +24,7 @@ WQP_MAP.WQPSitesLayer = L.GeoJSON.extend({
 			'<tr><th>Site type:</th><td>' + props.ResolvedMonitoringLocationTypeName + '</td></tr>/' +
 			'<tr><th>Data source:</th><td>' + props.ProviderName + '</td></tr></table>';
 			return result;
-		},
+		}
 	},
 	initialize : function(options) {
 		var queryParams;
@@ -32,11 +32,11 @@ WQP_MAP.WQPSitesLayer = L.GeoJSON.extend({
 		options = options || {};
 		if (!(options.onEachFeature)) {
 			options.onEachFeature = function(feature, layer) {
-				layer.bindPopup(this.popupHtmlFromProperty(feature.properties))
-			}
+				layer.bindPopup(this.popupHtmlFromProperty(feature.properties));
+			};
 		}
 		L.GeoJSON.prototype.initialize.call(this, [], options);
-		
+	
 		if (typeof(this.options.data) === 'string') {
 			queryParams = this.options.data;
 		}
@@ -77,5 +77,5 @@ WQP_MAP.SiteMap = L.Map.extend({
 });
 
 WQP_MAP.siteMap = function(mapDivId, options) {
-	return new WQP_MAP.SiteMap(mapDivId, options)
-}
+	return new WQP_MAP.SiteMap(mapDivId, options);
+};
