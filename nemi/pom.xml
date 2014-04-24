@@ -155,27 +155,26 @@
           	</noInstrumentPatterns>
      	</configuration>
  	</plugin>
- <plugin>
-      <groupId>com.github.goldin</groupId>
-      <artifactId>copy-maven-plugin</artifactId>
-      <version>0.2.5</version>
-      <configuration>      <!-- use copy:copy to run-->
-          <failIfNotFound>false</failIfNotFound>
-          <resource>
-          <targetPath>${project.build.directory}/jasmine</targetPath>
-              <file>${project.build.directory}/coverage/total-coverage.dat</file>
-              <destFileName>total-coverage.dat</destFileName>
-              <replaces>
-                    <replace>
-                        <from>src/</from>
-                        <!-- Regex to replace src/ with correct path name -->
-                        <to>${project.basedir}/nemi_project/</to>
-                        <!-- Replacement String to my JS src files -->
-                    </replace>
-              </replaces>
-         </resource>
-     </configuration>
- </plugin>
+  	<plugin>
+  		<groupId>com.google.code.maven-replacer-plugin</groupId>
+  		<artifactId>replacer</artifactId>
+  		<version>1.5.3</version>
+  		<executions>
+  			<execution>
+  				<phase>verify</phase>
+  				<goals>
+  					<goal>replace</goal>
+  				</goals>
+  			</execution>
+  		</executions>
+  		<configuration>
+  			<file>${project.build.directory}/coverage/total-coverage.dat</file>
+  			<outputFile>${project.build.directory}/jasmine/total-coverage.dat</outputFile>
+  			<regex>false</regex>
+  			<token>src/</token>
+  			<value>${project.basedir}/nemi_project/</value>
+  		</configuration>
+  	</plugin>
 	  </plugins>
 	</build>
 </project>
