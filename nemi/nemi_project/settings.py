@@ -23,12 +23,12 @@ MANAGERS = ADMINS
 # The real database should be defined in local_settings.py
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'sqlite.db',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'sqlite.db',  # Or path to database file if using sqlite3.
+        'USER': '',  # Not used with sqlite3.
+        'PASSWORD': '',  # Not used with sqlite3.
+        'HOST': '',  # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',  # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -141,12 +141,12 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'django.contrib.flatpages',
-    
+
     # third party apps
     'tinymce',
     'rest_framework',
     'djangojs',
-    
+
     # NEMI/CIDA specific apps
     'common',
     'newsfeed',
@@ -154,7 +154,7 @@ INSTALLED_APPS = (
     'methods',
     'protocols',
     'sams',
-#	'memo',
+# 	'memo',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -186,11 +186,11 @@ LOGGING = {
     }
 }
 
-SESSION_COOKIE_AGE = 28800 # In seconds, this is eight hours
+SESSION_COOKIE_AGE = 28800  # In seconds, this is eight hours
 
 
-#NEMI defined settings
-NEW_ACCOUNT_NOTIFICATIONS = () # List of emails to send new account notifications to.
+# NEMI defined settings
+NEW_ACCOUNT_NOTIFICATIONS = ()  # List of emails to send new account notifications to.
 WQP_URL = "http://www.waterqualitydata.us"
 # Code to be used for google analytics. If tracking is desired for a server, set to the track code in local_settings.py.
 GA_TRACKING_CODE = ''
@@ -206,14 +206,14 @@ except ImportError:
 # Add any apps and middleware classes defined in local_settings
 if ADDITIONAL_APPS:
     INSTALLED_APPS += ADDITIONAL_APPS
-    
+
 if ADDITIONAL_MW_CLASSES:
     MIDDLEWARE_CLASSES += ADDITIONAL_MW_CLASSES
 
 # Set security based on whether DEBUG is on
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
-    
+
 # Set up TinyMCE configuration
 TINYMCE_JS_URL = STATIC_URL + 'lib/tiny_mce/tiny_mce.js'
 
@@ -226,13 +226,13 @@ if os.getenv('JENKINS_URL', False):
                     'django_jenkins.tasks.with_coverage',
                      )
     JENKINS_TEST_RUNNER = 'nemi_project.test_jenkins_runner.ManagedModelTestRunner'
-    INSTALLED_APPS += ('django_jenkins', 'jasmine',)
+    INSTALLED_APPS += ('django_jenkins',)
     PROJECT_APPS = (
-        'common', 
-        'methods', 
-        'protocols', 
-        'sams', 
-        'newsfeed', 
+        'common',
+        'methods',
+        'protocols',
+        'sams',
+        'newsfeed',
         'domhelp',
     )
     DATABASES['default'].update(dict(
@@ -242,4 +242,3 @@ if os.getenv('JENKINS_URL', False):
             HOST=os.getenv('DBA_SQL_HOST'),
             PORT=os.getenv('DBA_SQL_PORT')
             ))
-    
