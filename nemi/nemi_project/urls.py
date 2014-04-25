@@ -7,11 +7,10 @@ from django.contrib.sitemaps import FlatPageSitemap
 from django.views.generic import TemplateView
 
 import domhelp
-from jasmine.test_urls import ProjectJasmineView
 import methods.urls
 import protocols.urls
 import sams.urls
-#import memo.urls
+# import memo.urls
 
 import sitemaps
 import views
@@ -27,43 +26,43 @@ sitemaps = {
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
-    
+
     url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
-    url(r'^robots\.txt$', 
+    url(r'^robots\.txt$',
         TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
-    url(r'^ie8_error/$', 
+    url(r'^ie8_error/$',
         TemplateView.as_view(template_name='ie8_error_page.html'),
         name='ie8_error_page'),
-    
+
     url(r'^tinymce/', include('tinymce.urls')),
-    
+
     url(r'^djangojs/', include('djangojs.urls')),
-    
-    url(r'^accounts/login/$', 
-        'django.contrib.auth.views.login', 
-        {}, 
+
+    url(r'^accounts/login/$',
+        'django.contrib.auth.views.login',
+        {},
         name='nemi_login'),
-    url(r'^accounts/logout/$', 
-        'django.contrib.auth.views.logout', 
-        {'redirect_field_name' : 'redirect_url'}, 
+    url(r'^accounts/logout/$',
+        'django.contrib.auth.views.logout',
+        {'redirect_field_name' : 'redirect_url'},
         name="nemi_logout"),
     url(r'^accounts/password_change/$',
         views.PasswordChangeView.as_view(),
         name='nemi_change_password'),
-    url(r'^accounts/create_account/$', 
-        views.CreateUserView.as_view(), 
+    url(r'^accounts/create_account/$',
+        views.CreateUserView.as_view(),
         name='nemi_create_account'),
-    url(r'^accounts/create_account_success$', 
-        TemplateView.as_view(template_name="registration/create_account_success.html"), 
+    url(r'^accounts/create_account_success$',
+        TemplateView.as_view(template_name="registration/create_account_success.html"),
         name="nemi_create_account_success"),
-                       
+
     url(r'^methods/', include(methods.urls)),
     url(r'^protocols/', include(protocols.urls)),
-    
-    url(r'^sams/', include(sams.urls)),
-#	url(r'^memo/', include(memo.urls)),
 
-    url(r'^home/', 
+    url(r'^sams/', include(sams.urls)),
+# 	url(r'^memo/', include(memo.urls)),
+
+    url(r'^home/',
         views.HomeView.as_view(),
         name='home'),
     url(r'^method_entry/',
@@ -73,9 +72,6 @@ urlpatterns = patterns('',
         domhelp.views.GlossaryView.as_view(),
         name='glossary'),
 )
-
-if 'jasmine' in settings.INSTALLED_APPS:
-    urlpatterns += patterns('', url(r'^jasmine/$', ProjectJasmineView.as_view()))
 
 urlpatterns += methods.urls.api_urlpatterns
 
