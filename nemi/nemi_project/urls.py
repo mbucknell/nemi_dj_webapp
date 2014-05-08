@@ -20,6 +20,7 @@ sitemaps = {
     'flatpages' : FlatPageSitemap,
     'staticpages' : sitemaps.StaticSitemap,
     'methods' : sitemaps.MethodSitemap,
+    'protocols' : sitemaps.ProtocolSitemap,
     'statisticalmethods' : sitemaps.StatisticalMethodSitemap
     }
 
