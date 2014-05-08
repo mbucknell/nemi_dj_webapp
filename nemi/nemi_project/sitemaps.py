@@ -24,7 +24,7 @@ class ProtocolSitemap(Sitemap):
         return SourceCitationRef.protocol_objects.all()
 
     def location(self, obj):
-        return '/protocols/protocol_sumary/' + str(obj.source_citation_id) + '/'
+        return '/protocols/protocol_summary/' + str(obj.source_citation_id) + '/'
 
     def lastmod(self, obj):
         return obj.update_date
