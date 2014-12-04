@@ -42,12 +42,12 @@
 		        <table class="info-table">
 		        <!-- Not currently using the domhelp app to define these. They would
 		        need to be added to that table -->
-			        <tr><th>Protocol Name</th><td>{{ protocol.source_citation_name }}</td></tr>
-			        <tr><th>Citation Information</th><td>{{ protocol.source_citation_information }}<td></td></tr>
-			        <tr><th>Title</th><td>{{ protocol.title }}</td></tr>
-			        <tr><th>Author</th><td>{{ protocol.author }}</td></tr>
-			        <tr><th>Publication Year</th><td>{{ protocol.publication_year }}</td></tr>
-			        <tr><th>Abstract</th><td>{{ protocol.abstract_summary}}</td></tr>
+			        <tr><th>Protocol Name</th><td>{{ protocol.source_citation_name|safe }}</td></tr>
+			        <tr><th>Citation Information</th><td>{{ protocol.source_citation_information|safe }}<td></td></tr>
+			        <tr><th>Title</th><td>{{ protocol.title|safe }}</td></tr>
+			        <tr><th>Author</th><td>{{ protocol.author|safe }}</td></tr>
+			        <tr><th>Publication Year</th><td>{{ protocol.publication_year|safe }}</td></tr>
+			        <tr><th>Abstract</th><td>{{ protocol.abstract_summary|safe }}</td></tr>
 			        <tr><th>Table of Contents</th><td>{{ protocol.table_of_contents|safe }}</td></tr>
 			    </table>
 				<div id="bottom-method-download-div">
