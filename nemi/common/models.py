@@ -66,8 +66,8 @@ class StatisticalMediaNameManager(models.Manager):
     '''Extends the Manager class to provide a query set that returns valid media for statistical methods.
     '''
     
-    def get_query_set(self):
-        return super(StatisticalMediaNameManager, self).get_query_set().exclude(
+    def get_queryset(self):
+        return super(StatisticalMediaNameManager, self).get_queryset().exclude(
             media_name__iexact='Various').exclude(media_name__iexact='Water').exclude(media_name__iexact='Sediment')
         
 class MediaNameDOM(models.Model):
@@ -293,8 +293,8 @@ class StatisticalMethodManager(models.Manager):
     '''Extends the Manager class to provide a query set that returns a data which has a method category of "STATISTICAL"
     '''
     
-    def get_query_set(self):
-        return super(StatisticalMethodManager, self).get_query_set().filter(method_subcategory__method_category__exact='STATISTICAL')
+    def get_queryset(self):
+        return super(StatisticalMethodManager, self).get_queryset().filter(method_subcategory__method_category__exact='STATISTICAL')
 
 
 class MethodAbstract(models.Model):    

@@ -12,6 +12,7 @@ class NewsItemForm(ModelForm):
     
     class Meta:
         model = NewsItem
+        fields = '__all__'
         widgets = {'headline' : TinyMCE(attrs={'cols': 40, 'rows': 4},
                                         mce_attrs={
                                             'theme_advanced_buttons1' : "bold, italic,underline,strikethrough,link,unlink,sub,sup",

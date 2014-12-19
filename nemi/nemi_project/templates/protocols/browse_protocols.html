@@ -34,7 +34,7 @@
 				$(this).find('.method-button').click(function(){
 					var imgEl = $(this).find('img');
 					if (imgEl.attr('alt') == 'show') {
-						imgEl.attr('src', "{{ STATIC_URL }}/images/collapse_summary.png");
+						imgEl.attr('src', "{{ STATIC_URL }}images/collapse_summary.png");
 						imgEl.attr('alt', 'hide');
 						imgEl.attr('title', 'Hide methods');
 						
@@ -44,7 +44,7 @@
 						tableEl.trigger('update', [true]);
 					}
 					else{
-						imgEl.attr('src', "{{ STATIC_URL }}/images/expand_summary.png");
+						imgEl.attr('src', "{{ STATIC_URL }}images/expand_summary.png");
 						imgEl.attr('alt', 'show');
 						imgEl.attr('title', 'Show methods');
 						tableEl.hide();
@@ -58,13 +58,13 @@
 				$(this).find('button').click(function(){
 					var detailsImgEl = $(this).find('img');
 					if (detailsImgEl.attr('alt') == 'show') {
-						detailsImgEl.attr('src', "{{ STATIC_URL }}/images/collapse_summary.png");
+						detailsImgEl.attr('src', "{{ STATIC_URL }}images/collapse_summary.png");
 						detailsImgEl.attr('alt', 'hide');
 						detailsImgEl.attr('title', 'Hide details');
 						detailsDiv.show();
 					}
 					else{
-						detailsImgEl.attr('src', "{{ STATIC_URL }}/images/expand_summary.png");
+						detailsImgEl.attr('src', "{{ STATIC_URL }}images/expand_summary.png");
 						detailsImgEl.attr('alt', 'show');
 						detailsImgEl.attr('title', 'Show details');
 						detailsDiv.hide();

@@ -122,13 +122,13 @@
 					var imgEl = $(this).find('img');
 					
 					if (imgEl.attr('alt') == 'show'){
-						imgEl.attr('src', "{{ STATIC_URL }}/images/collapse_summary.png");
+						imgEl.attr('src', "{{ STATIC_URL }}images/collapse_summary.png");
 						imgEl.attr('alt', 'hide');
 						imgEl.attr('title', 'Hide details');
 						hiddenDivEl.show();
 					}
 					else{
-						imgEl.attr('src', "{{ STATIC_URL }}/images/expand_summary.png");
+						imgEl.attr('src', "{{ STATIC_URL }}images/expand_summary.png");
 						imgEl.attr('alt', 'show');
 						imgEl.attr('title', 'Show details');
 						hiddenDivEl.hide();
