@@ -52,7 +52,7 @@ def build_virtualenv(for_deployment=False):
         if oracle_home == '':  
             abort('Must define ORACLE_HOME which should point to the oracle client directory.')
             
-    local('virtualenv --no-site-packages --python=python2.6 env')
+    local('virtualenv --no-site-packages --python=python2.7 env')
         
     if for_deployment:
         # this is needed so that the link to lib64 is relative rather than absolute
