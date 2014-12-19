@@ -804,11 +804,11 @@ class MethodSummaryView(FieldHelpMixin, DetailView):
             for r in analyte_qs:
                 name = r['analyte_name'].lower()
                 code = r['analyte_code'].lower()
-                inner_qs = AnalyteCodeRel.objects.filter(Q(analyte_name__iexact=name) | Q(analyte_code__iexact=code)).values_list('analyte_code', flat=True).distinct()
-                qs = AnalyteCodeRel.objects.all().filter(analyte_code__in=inner_qs).order_by('analyte_name').values('analyte_name')
+                inner_qs = AnalyteCodeVW.objects.filter(Q(ac_analyte_name__iexact=name) | Q(analyte_analyte_code__iexact=code)).values_list('analyte_analyte_code', flat=True).distinct()
+                qs = AnalyteCodeVW.objects.all().filter(analyte_analyte_code__in=inner_qs).order_by('ac_analyte_name').values('ac_analyte_name')
                 syn = []
                 for a in qs:
-                    syn.append(a['analyte_name'])
+                    syn.append(a['ac_analyte_name'])
 
                 result['analytes'].append({'r' : r, 'syn' : syn})
 
