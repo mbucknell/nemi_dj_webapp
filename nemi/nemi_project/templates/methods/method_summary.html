@@ -258,6 +258,12 @@
 	    					    {% endif %}
 		    			    </td>
 			    	    </tr>
+			    	    {% if method.details.protocol %}
+			    	     <tr>
+				    	    <th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'protocol' %}</th>
+    			    		<td><a href="{% url 'protocols-summary' method.details.protocol_id %}">{{ method.details.protocol }}</a> - {{ method.details.protocol_name }}</td>
+	    			    </tr>
+	    			    {% endif %}
 				        <tr>
 				        	<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'brief_method_summary' %}</th>
 				    	    <td>{{ method.details.brief_method_summary|safe }}</td>
