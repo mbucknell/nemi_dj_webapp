@@ -49,6 +49,14 @@
 			        <tr><th>Publication Year</th><td>{{ protocol.publication_year|safe }}</td></tr>
 			        <tr><th>Abstract</th><td>{{ protocol.abstract_summary|safe }}</td></tr>
 			        <tr><th>Table of Contents</th><td>{{ protocol.table_of_contents|safe }}</td></tr>
+					<tr><th>Methods in Protocol</th><td><ul>
+					{% for rel in protocol.protocolmethodrel_set.all %}
+	                <li><a title="View method details" href="{% url 'methods-method_summary' rel.method.method_id %}">
+	                            	{{ rel.method.source_method_identifier|safe }}</a>: {{ rel.method.method_descriptive_name | safe }}</li>
+	                {% endfor %}
+	                </ul>
+	                </td>
+	                </tr>
 			    </table>
 				<div id="bottom-method-download-div">
     	            <input type="button" class="download-button" value="LINK TO PROTOCOL" />
