@@ -72,6 +72,11 @@ class MethodVW(models.Model):
     corrosive = models.CharField(max_length=1, blank=True)
     waste = models.CharField(max_length=1, blank=True)
     assumptions_comments = models.CharField(max_length=2000, blank=True)
+    protocol_name = models.CharField(max_length=450, blank=True)
+    protocol = models.CharField(max_length=30, blank=True)
+    protocol_info = models.CharField(max_length=1500, blank=True)
+    protocol_title = models.CharField(max_length=450, blank=True)
+    protocol_id = models.IntegerField()
     
     class Meta:
         db_table = u'method_vw'
@@ -139,6 +144,11 @@ class MethodSummaryVW(models.Model):
     corrosive = models.CharField(max_length=1, blank=True)
     waste = models.CharField(max_length=1, blank=True)
     assumptions_comments = models.CharField(max_length=2000, blank=True)
+    protocol_name = models.CharField(max_length=450, blank=True)
+    protocol = models.CharField(max_length=30, blank=True)
+    protocol_info = models.CharField(max_length=1500, blank=True)
+    protocol_title = models.CharField(max_length=450, blank=True)
+    protocol_id = models.IntegerField()
      
     class Meta:
         db_table = u'method_summary_vw'
