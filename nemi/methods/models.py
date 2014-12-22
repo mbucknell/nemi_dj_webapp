@@ -76,7 +76,7 @@ class MethodVW(models.Model):
     protocol = models.CharField(max_length=30, blank=True)
     protocol_info = models.CharField(max_length=1500, blank=True)
     protocol_title = models.CharField(max_length=450, blank=True)
-    protocol_id = models.IntegerField()
+    protocol_id = models.IntegerField(null=True)
     
     class Meta:
         db_table = u'method_vw'
@@ -148,7 +148,7 @@ class MethodSummaryVW(models.Model):
     protocol = models.CharField(max_length=30, blank=True)
     protocol_info = models.CharField(max_length=1500, blank=True)
     protocol_title = models.CharField(max_length=450, blank=True)
-    protocol_id = models.IntegerField()
+    protocol_id = models.IntegerField(null=True)
      
     class Meta:
         db_table = u'method_summary_vw'
