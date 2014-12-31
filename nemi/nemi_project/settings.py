@@ -148,12 +148,12 @@ INSTALLED_APPS = (
     'djangojs',
 
     # NEMI/CIDA specific apps
-    'common',
-    'newsfeed',
-    'domhelp',
-    'methods',
-    'protocols',
-    'sams',
+    'common.apps.CommonConfig',
+    'newsfeed.apps.NewsFeedConfig',
+    'domhelp.apps.DomHelpConfig',
+    'methods.apps.MethodsConfig',
+    'protocols.apps.ProtocolsConfig',
+    'sams.apps.SamsConfig',
 # 	'memo',
 )
 
