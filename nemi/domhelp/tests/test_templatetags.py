@@ -45,5 +45,5 @@ class GetHelpContentTestCase(TestCase):
         m2 = HelpContent.objects.create(field_name='name_2', label='Django Name 2')
         
         self.assertEqual(get_help_content({'name_1': m1, 'name_2': m2}, 'this_name'), 
-                         HelpContent(field_name='name1', label='This Name'))  
-                         '''
+                         HelpContent(field_name='name1', label='This Name'))
+                         '''  
