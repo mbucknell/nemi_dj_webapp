@@ -6,7 +6,7 @@ from fabric.contrib.console import confirm
 import datetime
 import os
 
-env.svn_repo = "https://cida-svn.er.usgs.gov/repos/dev/usgs/nemi/search/"
+#REPO_URL = "ssh://git@cida-eros-stash.er.usgs.gov:7999/nemi/nemi_dj_webapp.git"
 
 env.roledefs = {
     'dev' : ['django@cida-eros-nemidjdev.er.usgs.gov'],
