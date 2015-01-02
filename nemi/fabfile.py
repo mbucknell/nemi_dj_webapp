@@ -78,7 +78,7 @@ def build_project_env(for_deployment=False):
             if 'true' == available:
                 local('gem update -i Gem compass')
             else:
-                local('gem install -i Gem compass')
+                local('gem install -i Gem compass -v 0.12.7')
         local('./compass.sh compile')
         
     # Collect static files
