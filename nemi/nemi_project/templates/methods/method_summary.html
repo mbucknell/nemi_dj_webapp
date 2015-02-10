@@ -329,7 +329,7 @@
 					    			{% if a.r.dl_value == 999 %}
 						    			N/A
 						    		{% else %}
-							    		{{ a.r.dl_value|floatformat:2 }} <span class="abbrev" title="{{ a.r.dl_units_description }}">{{ a.r.dl_units }}</span>
+							    		{{ a.r.dl_value|floatformat:3 }} <span class="abbrev" title="{{ a.r.dl_units_description }}">{{ a.r.dl_units }}</span>
 								    {% endif %}
        							</td>
 		   						<td>
