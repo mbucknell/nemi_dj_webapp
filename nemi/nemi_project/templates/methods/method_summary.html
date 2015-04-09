@@ -18,7 +18,8 @@
 	{% js "script/wqpSiteMap.js" %}
 	
 	<script type="text/javascript">
-	    function openWindow(url, event_category, event_action) {
+		var map_ok;
+		function openWindow(url, event_category, event_action) {
             if ((event_category) && (event_action)) {
                 trackGAEvent(event_category, event_action, url);
             }
@@ -39,11 +40,19 @@
 				success : function(data, textStatus, jqXHR) {
 					var total_results = jqXHR.getResponseHeader('Total-Result-Count');
 					var total_sites = jqXHR.getResponseHeader('Total-Site-Count');
+					if (parseInt(total_sites) <= 1000) {
+						map_ok = true;
+					} 
 
 					if ((!(total_sites) && !(total_results)) || ((total_sites === '0') && (total_results === '0'))) {
 						$('#wqp-download').hide();
 						$('#wqp-site-map-div').hide();
 					}
+					
+					if (map_ok!==true) {
+						$('#wqp-site-map-div').hide();
+					}
+					
 					if (total_results) {
 						$('#wqp-results-count').html(total_results);
 					}
@@ -88,6 +97,7 @@
 			$('#wqp-tab-button').click(function() {
 				trackGAEvent('WQP', 'View tab', '{{ request.path_info }}');
 				if (!($('#wqp-site-map').hasClass('leaflet-container'))) {
+					if (map_ok===true) {  
 					var siteMap = WQP_MAP.siteMap('wqp-site-map');
 					var sitesLayer = WQP_MAP.wqpSitesLayer({
 						serviceURL : "{% url 'wqp_proxy' 'simplestation/search' %}",
@@ -112,7 +122,8 @@
 						onEachFeature : function() { return; }// Disables automatic popup 
 					});
 					siteMap.addLayer(sitesLayer);
-				}	
+					}	
+				}
 			});
 			
 			// Add click event handler to all show/hide detail buttons 
