@@ -18,7 +18,7 @@
 	{% js "script/wqpSiteMap.js" %}
 	
 	<script type="text/javascript">
-		var map_ok;
+		var map_ok = false;
 		function openWindow(url, event_category, event_action) {
             if ((event_category) && (event_action)) {
                 trackGAEvent(event_category, event_action, url);
@@ -40,16 +40,15 @@
 				success : function(data, textStatus, jqXHR) {
 					var total_results = jqXHR.getResponseHeader('Total-Result-Count');
 					var total_sites = jqXHR.getResponseHeader('Total-Site-Count');
-					if (parseInt(total_sites) <= 1000) {
-						map_ok = true;
-					} 
+					map_ok = parseInt(total_sites) <= 1000;
 
 					if ((!(total_sites) && !(total_results)) || ((total_sites === '0') && (total_results === '0'))) {
 						$('#wqp-download').hide();
 						$('#wqp-site-map-div').hide();
 					}
 					
-					if (map_ok!==true) {
+					if (!(map_ok)) {
+						$('#wqp-no-site-map').html('There are too many sites to be mapped.  The site and result data are available for download.').append();
 						$('#wqp-site-map-div').hide();
 					}
 					
@@ -97,7 +96,7 @@
 			$('#wqp-tab-button').click(function() {
 				trackGAEvent('WQP', 'View tab', '{{ request.path_info }}');
 				if (!($('#wqp-site-map').hasClass('leaflet-container'))) {
-					if (map_ok===true) {  
+					if (map_ok) {  
 					var siteMap = WQP_MAP.siteMap('wqp-site-map');
 					var sitesLayer = WQP_MAP.wqpSitesLayer({
 						serviceURL : "{% url 'wqp_proxy' 'simplestation/search' %}",
@@ -455,6 +454,7 @@
    	        				<button type="submit">Download</button>
 							<input type="hidden" name="mimeType" />
    	        			</form>
+   	        			<div id="wqp-no-site-map"></div>
     	        	</div>
     	        	<div id="wqp-site-map-div">
     	        		<div id="wqp-site-map-header">Sites where this method was used</div>
