@@ -364,7 +364,7 @@ class MethodResultsMixin(ResultsMixin):
     Extend ResultsMixin to implement the querying part of the results view for methods.
     '''
 
-    queryset = MethodVW.objects.all()
+    queryset = MethodVW.objects.all();
 
     def get_queryset(self):
         data = super(MethodResultsMixin, self).get_queryset()
