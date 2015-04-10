@@ -8,7 +8,7 @@ class MethodSitemap(Sitemap):
     changefreq = 'monthly'
 
     def items(self):
-        return Method.objects.all().exclude(method_subcategory_id__in=[16, 17])
+        return Method.objects.all().exclude(method_subcategory_id__in=[16, 17]).exclude(regs_only='Y')
 
     def location(self, obj):
         return '/methods/method_summary/' + str(obj.method_id) + '/'

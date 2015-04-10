@@ -104,10 +104,10 @@ class MethodSummaryFactory(DjangoModelFactory):
     method_source = 'USGS'
     method_source_name = 'US Geological Survey'
     method_subcategory_id = '1'
+    regs_only = 'N'
     source_citation = 'A'
     instrumentation = 'AA'
     instrumentation_description = 'what'
-    regs_only = 'n'
     method_type_id = 1
     publication_year = '1991'
     author = 'A'
@@ -185,3 +185,4 @@ class MethodSummaryRestViewSetTestCase(TestCase):
         result = self.test_view.get_queryset()
 
         self.assertEqual(result.count(), 0)
+        
