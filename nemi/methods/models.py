@@ -489,7 +489,7 @@ class RegulatoryMethodReport(models.Model):
         db_table = 'regulatory_method_report'
         managed = False
         
-class RevisionJoin(models.Model):
+class RevisionSummaryVw(models.Model):
     revision_id = models.IntegerField(primary_key=True)
     method_id = models.IntegerField()
     revision_information = models.CharField(max_length=100)
@@ -505,6 +505,6 @@ class RevisionJoin(models.Model):
     date_loaded = models.DateField()
     
     class Meta:
-        db_table = 'revision_join'
+        db_table = 'revision_summary_vw'
         managed = False
         
