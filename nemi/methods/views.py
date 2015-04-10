@@ -26,7 +26,7 @@ from common.views import PdfView, ChoiceJsonView, SimpleWebProxyView
 
 from domhelp.views import FieldHelpMixin
 
-from .models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, AnalyteCodeVW, RevisionJoin, RegQueryVW
+from .models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, AnalyteCodeVW, RevisionSummaryVw, RegQueryVW
 from .serializers import MethodVWSerializer
 
 def _analyte_value_qs(method_id):
@@ -816,8 +816,8 @@ class MethodSummaryView(FieldHelpMixin, DetailView):
             result['notes'] = MethodAnalyteVW.objects.filter(method_id__exact=self.kwargs['method_id']).values('precision_descriptor_notes', 'dl_note').distinct()
 
             # Get revision information
-            result['latest_revision'] = RevisionJoin.objects.get(revision_id=result['details'].revision_id)
-            result['revisions'] = RevisionJoin.objects.filter(method_id__exact=self.kwargs['method_id']).order_by('-revision_id')
+            result['latest_revision'] = RevisionSummaryVw.objects.get(revision_id=result['details'].revision_id)
+            result['revisions'] = RevisionSummaryVw.objects.filter(method_id__exact=self.kwargs['method_id']).order_by('-revision_id')
 
             return result
         else:
@@ -948,7 +948,7 @@ class RevisionPdfView(PdfView):
     '''
     def get_pdf_info(self):
         cursor = connection.cursor()
-        cursor.execute('SELECT mimetype, method_pdf, revision_information from nemi_data.revision_join where revision_id=%s', [self.kwargs['revision_id']])
+        cursor.execute('SELECT mimetype, method_pdf, revision_information from nemi_data.revision_summary_vw where revision_id=%s', [self.kwargs['revision_id']])
         results_list = dictfetchall(cursor)
 
         if results_list:
