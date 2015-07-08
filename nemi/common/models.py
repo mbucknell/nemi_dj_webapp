@@ -634,6 +634,30 @@ class StatMediaRel(StatMediaRelAbstract):
         ordering = ['media_name']
   
 
+class AnalyteSummaryVW(models.Model):
+    dl_units = models.CharField(max_length=5, blank=True)
+    dl_value = models.DecimalField(max_digits=15, decimal_places=6, null=True)
+    accuracy = models.DecimalField(max_digits=15, decimal_places=6, null=True)
+    accuracy_units = models.CharField(max_length=40, blank=True)
+    precision = models.DecimalField(max_digits=15, decimal_places=6, null=True)
+    precision_units = models.CharField(max_length=30, blank=True)
+    prec_acc_conc_used = models.DecimalField(max_digits=15, decimal_places=6, null=True)
+    false_positive_value = models.IntegerField(null=True)
+    false_negative_value = models.IntegerField(null=True)
+    analyte_code = models.CharField(max_length=20, blank=True)
+    analyte_name = models.CharField(max_length=240, blank=True)
+    dl_units_description = models.CharField(max_length=60, blank=True)
+    precision_units_description = models.CharField(max_length=100, blank=True)
+    accuracy_units_description = models.CharField(max_length=50, blank=True)
+    precision_descriptor_notes = models.CharField(max_length=3000, blank=True)
+    dl_note = models.CharField(max_length=2000, blank=True)
+    preferred = models.IntegerField(blank=True)
+    method_id = models.IntegerField(null=True)
+ 
+    class Meta:
+        db_table = u'analyte_summary_vw'
+        managed = False
+        
 class MethodAnalyteVW(models.Model):
 
     sample_handling = models.CharField(max_length=3000, blank=True)

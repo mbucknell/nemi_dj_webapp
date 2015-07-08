@@ -225,8 +225,9 @@
 		    	    		<td><b>{{ method.details.method_official_name|safe }}</b></td>
 		    	    	</tr>
 		    	    	<tr>
-		    	    	    <th>{% include "methods/_field_def.html" with help=feld_help|get_help_content:'current_revision' %}
-		    	    	    <td>{{ method.details.revision_information }}</td>
+		    	    	    <th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'current_revision' %}
+		    	    	    <td>{{ method.details.revision_information }}{% if method.details.archive_note %}<br>{{ method.details.archive_note }}{% endif %}</td>
+		    	    	</tr>		    	    	
 		    	    	<tr>
 		        			<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'media_name' %}</th>
 		        			<td>{{ method.details.media_name }}
@@ -238,6 +239,7 @@
 			        	<tr>
 			           		<th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'instrumentation_description' %}</th>
 			        		<td>{{ method.details.instrumentation_description }}</td>
+			    	    </tr>
 			    	    <tr>
 				    	    <th>{% include "methods/_field_def.html" with help=field_help|get_help_content:'method_subcategory' %}</th>
     			    		<td>{{ method.details.method_subcategory }}</td>

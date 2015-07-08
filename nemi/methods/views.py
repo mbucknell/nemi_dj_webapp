@@ -18,7 +18,7 @@ from django.views.generic.edit import TemplateResponseMixin
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 # project specific packages
-from common.models import MethodAnalyteVW, InstrumentationRef, StatisticalDesignObjective, StatisticalItemType
+from common.models import MethodAnalyteVW, InstrumentationRef, StatisticalDesignObjective, StatisticalItemType, AnalyteSummaryVW
 from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics
 from common.models import StatAnalysisRel, SourceCitationRef, StatDesignRel, StatMediaRel, StatTopicRel, Method
 from common.utils.view_utils import dictfetchall, xls_response, tsv_response
@@ -32,7 +32,7 @@ from .serializers import MethodVWSerializer
 def _analyte_value_qs(method_id):
     ''' Returns the analyte data values query set for the method_id.'''
 
-    analyte_data = MethodAnalyteVW.objects.filter(preferred__exact= -1, method_id__exact=method_id).order_by('analyte_name')
+    analyte_data = AnalyteSummaryVW.objects.filter(preferred__exact= -1, method_id__exact=method_id).order_by('analyte_name')
     return analyte_data.values('analyte_name',
                                'analyte_code',
                                'dl_value',
@@ -783,7 +783,8 @@ class MethodSummaryView(FieldHelpMixin, DetailView):
                    'sample_handling',
                    'max_holding_time',
                    'relative_cost',
-                   'sample_prep_methods']
+                   'sample_prep_methods',
+                   'archive_note']
 
     def get_object(self):
         ''' Override get_object to return the method details, method analytes, and method notes.
@@ -813,7 +814,7 @@ class MethodSummaryView(FieldHelpMixin, DetailView):
                 result['analytes'].append({'r' : r, 'syn' : syn})
 
             # Get description notes
-            result['notes'] = MethodAnalyteVW.objects.filter(method_id__exact=self.kwargs['method_id']).values('precision_descriptor_notes', 'dl_note').distinct()
+            result['notes'] = AnalyteSummaryVW.objects.filter(method_id__exact=self.kwargs['method_id']).values('precision_descriptor_notes', 'dl_note').distinct()
 
             # Get revision information
             result['latest_revision'] = RevisionSummaryVw.objects.get(revision_id=result['details'].revision_id)
