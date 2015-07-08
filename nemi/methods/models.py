@@ -149,6 +149,7 @@ class MethodSummaryVW(models.Model):
     protocol_info = models.CharField(max_length=1500, blank=True)
     protocol_title = models.CharField(max_length=450, blank=True)
     protocol_id = models.IntegerField(null=True)
+    archive_note = models.CharField(max_length=450, blank=True)
      
     class Meta:
         db_table = u'method_summary_vw'
@@ -163,7 +164,7 @@ class AnalyteCodeRel(models.Model):
     class Meta:
         db_table = u'analyte_code_rel'
         managed = False
-
+        
 class MethodAnalyteAllVW(models.Model):
     
     analysis_amt_g = models.CharField(max_length=10, blank=True)
