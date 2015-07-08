@@ -1,5 +1,4 @@
-
-from django.utils import unittest
+import unittest
 
 import test_models
 import test_templatetags

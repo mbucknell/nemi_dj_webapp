@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 
 {% load helpcontent %}
-{% load js %}
+{% load static %}
 
 {% block title %}NEMI Method Summary - {{ method.details.source_method_identifier|safe }}{% endblock %}
 
 {% block page_description %}{{ method.details.method_official_name }}{% endblock %}
 
 {% block page_style %}
-	{% css "lib/leaflet-0.7.2/leaflet.css" %}
+	<link rel="stylesheet" type="text/css" href="{% static 'lib/leaflet-0.7.2/leaflet.css' %}" />
 {% endblock %}
 
 {% block page_script %}
-	{% js "lib/jquery-ui/jquery-ui-1.10.0.custom.js" %}
-	{% js "lib/leaflet-0.7.2/leaflet.js" %}
-	{% js "script/HelpDialog.js" %}
-	{% js "script/wqpSiteMap.js" %}
+	<script type="text/javascript" src="{% static 'lib/jquery-ui/jquery-ui-1.10.0.custom.js' %}"></script>
+	<script type="text/javascript" src="{% static 'lib/leaflet-0.7.2/leaflet.js' %}"></script>
+	<script type="text/javascript" src="{% static 'script/HelpDialog.js' %}"></script>
+	<script type="text/javascript" src="{% static 'script/wqpSiteMap.js' %}"></script>
 	
 	<script type="text/javascript">
 		var map_ok = false;

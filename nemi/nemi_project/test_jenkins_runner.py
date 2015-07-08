@@ -13,7 +13,8 @@ class ManagedModelTestRunner(CITestSuiteRunner):
     to execute the SQL manually to create them.
     """
     def setup_test_environment(self, *args, **kwargs):
-        from django.db.models.loading import get_models
+        from django.apps import apps
+        get_models = apps.get_models
         self.unmanaged_models = [m for m in get_models(include_auto_created=True)
                                  if not m._meta.managed]
         for m in self.unmanaged_models:
