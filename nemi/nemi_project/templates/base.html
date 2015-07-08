@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-	{% load js %}
+{% load static %}
 	<head>
         <title>
             {% block title %}National Environmental Methods Index{% endblock %}
@@ -14,8 +14,8 @@
         <link href="{{ STATIC_URL }}styles/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
         <link href="{{ STATIC_URL }}styles/print.css" media="print" rel="stylesheet" type="text/css" />     
         {% block page_style %}<!-- Put page specific style here -->{% endblock %}   
-		 
-		{% js "lib/jquery-1.11.0.min.js" %}
+		
+		<script type="text/javascript" src="{% static 'lib/jquery-1.11.0.min.js' %}"></script> 
 		
  		<script type="text/javascript">
 			$(document).ready(function(){

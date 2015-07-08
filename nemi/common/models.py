@@ -112,8 +112,7 @@ class SourceCitationRefAbstract(models.Model):
     table_of_contents = models.CharField(max_length=1000)
     abstract_summary = models.CharField(max_length=2000)
     link = models.CharField(max_length=450, blank=True) 
-    publication_year = models.IntegerField(max_length=4, 
-                                           null=True)
+    publication_year = models.IntegerField(null=True)
     country = models.CharField(max_length=100, blank=True)
     item_type = models.ForeignKey(StatisticalItemType)
     item_type_note = models.CharField(max_length=50, 

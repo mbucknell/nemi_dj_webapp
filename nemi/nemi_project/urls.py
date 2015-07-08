@@ -36,8 +36,6 @@ urlpatterns = patterns('',
 
     url(r'^tinymce/', include('tinymce.urls')),
 
-    url(r'^djangojs/', include('djangojs.urls')),
-
     url(r'^accounts/login/$',
         'django.contrib.auth.views.login',
         {},

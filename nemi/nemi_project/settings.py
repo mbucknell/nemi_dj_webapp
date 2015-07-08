@@ -117,17 +117,36 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.transaction.TransactionMiddleware',
+    #'django.middleware.transaction.TransactionMiddleware',
 )
 
 ROOT_URLCONF = 'nemi_project.urls'
 
-TEMPLATE_DIRS = (
-                 os.path.join (PROJECT_HOME, 'templates'),
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
+TEMPLATES = [
+    {
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+                os.path.join (PROJECT_HOME, 'templates'),
+        ],
+        'APP_DIRS': False,
+        'OPTIONS': {
+            'context_processors': [
+                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+                # list if you haven't customized them:
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+            'debug': [
+                      'DEBUG',
+            ],
+        },
+    },
+]
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -145,8 +164,6 @@ INSTALLED_APPS = (
     # third party apps
     'tinymce',
     'rest_framework',
-    'djangojs',
-
     # NEMI/CIDA specific apps
     'common',
     'newsfeed',
