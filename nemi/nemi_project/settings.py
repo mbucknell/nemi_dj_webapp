@@ -12,7 +12,6 @@ PROJECT_HOME = os.path.dirname(__file__)
 SITE_HOME = os.path.split(PROJECT_HOME)[0]
 
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (('Mary Bucknell', 'mbucknell@usgs.gov'),
     # ('Your Name', 'your_email@example.com'),
@@ -91,6 +90,7 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
+'''
 TEMPLATE_CONTEXT_PROCESSORS = ("django.contrib.auth.context_processors.auth",
                                "django.core.context_processors.debug",
                                "django.core.context_processors.i18n",
@@ -108,8 +108,9 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
 #     'django.template.loaders.eggs.Loader',
 )
-
+'''
 MIDDLEWARE_CLASSES = (
+    'django.middleware.security.SecurityMiddleware',
     'nemi_project.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -128,7 +129,7 @@ TEMPLATES = [
         'DIRS': [
                 os.path.join (PROJECT_HOME, 'templates'),
         ],
-        'APP_DIRS': False,
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
@@ -142,7 +143,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
             'debug': [
-                      'DEBUG',
+                      DEBUG,
             ],
         },
     },
@@ -230,6 +231,9 @@ if ADDITIONAL_MW_CLASSES:
 # Set security based on whether DEBUG is on
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
+
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Set up TinyMCE configuration
 TINYMCE_JS_URL = STATIC_URL + 'lib/tiny_mce/tiny_mce.js'
