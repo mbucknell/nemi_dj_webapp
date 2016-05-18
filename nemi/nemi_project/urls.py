@@ -12,6 +12,7 @@ import sams.urls
 # import memo.urls
 
 import sitemaps
+from django.contrib.sitemaps.views import sitemap
 import views
 
 admin.autodiscover()
@@ -27,7 +28,7 @@ sitemaps = {
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     url(r'^robots\.txt$',
         TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
     url(r'^ie8_error/$',
