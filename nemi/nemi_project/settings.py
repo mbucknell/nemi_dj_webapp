@@ -141,6 +141,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'common.context_processors.project_settings',
             ],
             'debug': [
                       DEBUG,
@@ -210,23 +211,9 @@ SESSION_COOKIE_AGE = 28800  # In seconds, this is eight hours
 # NEMI defined settings
 NEW_ACCOUNT_NOTIFICATIONS = ()  # List of emails to send new account notifications to.
 WQP_URL = "http://www.waterqualitydata.us"
+
 # Code to be used for google analytics. If tracking is desired for a server, set to the track code in local_settings.py.
-GA_TRACKING_CODE = ''
-
-try:
-    ADDITIONAL_APPS = ()
-    ADDITIONAL_MW_CLASSES = ()
-    from local_settings import *
-except ImportError:
-    # add apps to this variable for this specific server configuration
-    pass
-
-# Add any apps and middleware classes defined in local_settings
-if ADDITIONAL_APPS:
-    INSTALLED_APPS += ADDITIONAL_APPS
-
-if ADDITIONAL_MW_CLASSES:
-    MIDDLEWARE_CLASSES += ADDITIONAL_MW_CLASSES
+#GA_TRACKING_CODE = ''
 
 # Set security based on whether DEBUG is on
 SESSION_COOKIE_SECURE = not DEBUG
@@ -263,3 +250,18 @@ if os.getenv('JENKINS_URL', False):
             HOST=os.getenv('DBA_SQL_HOST'),
             PORT=os.getenv('DBA_SQL_PORT')
             ))
+    
+try:
+    ADDITIONAL_APPS = ()
+    ADDITIONAL_MW_CLASSES = ()
+    from local_settings import *
+except ImportError:
+    # add apps to this variable for this specific server configuration
+    pass
+
+# Add any apps and middleware classes defined in local_settings
+if ADDITIONAL_APPS:
+    INSTALLED_APPS += ADDITIONAL_APPS
+
+if ADDITIONAL_MW_CLASSES:
+    MIDDLEWARE_CLASSES += ADDITIONAL_MW_CLASSES
