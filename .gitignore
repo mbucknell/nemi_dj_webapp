@@ -1,0 +1,4 @@
+*.pyc
+nemi/compass/.sass-cache
+nemi/nemi_project/local_settings.py
+nemi/nemi_project/static/styles
