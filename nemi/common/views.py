@@ -42,7 +42,6 @@ class PdfView(View):
          '''
         pass
 
-
     def get(self, request, *args, **kwargs):
         self.get_pdf_info()
 
