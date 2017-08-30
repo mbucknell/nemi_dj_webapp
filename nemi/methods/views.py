@@ -5,7 +5,7 @@ NEMI methods pages.
 import re
 
 from django.conf import settings
-from django.contrib.sites.models import get_current_site
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse_lazy
 from django.db import connection
@@ -265,8 +265,8 @@ class StatSpecialTopicsView(ChoiceJsonView):
 
 class ResultsMixin(MultipleObjectMixin):
     '''
-    Extends the MultipleObjectMixin to implement the standard filters for method result searches. 
-    This can be mixed with other classes which provide the response handling. The queryset attribute 
+    Extends the MultipleObjectMixin to implement the standard filters for method result searches.
+    This can be mixed with other classes which provide the response handling. The queryset attribute
     should be specified when extending this class.
     '''
 
@@ -625,7 +625,7 @@ class ExportStatisticalResultsView(StatisticalResultsMixin, ExportBaseResultsVie
 
 class RegulatoryResultsMixin(ResultsMixin):
     '''
-    Extends the Results Mixin to implement regulatory method search. 
+    Extends the Results Mixin to implement regulatory method search.
     '''
 
     queryset = RegQueryVW.objects.exclude(method_subcategory__in=['SAMPLE/PREPARATION', 'GENERAL'])
@@ -694,7 +694,7 @@ class KeywordResultsView(TemplateResponseMixin, View):
 
     def get(self, request, *args, **kwargs):
         '''Returns the http response for the keyword search form. If the form is bound
-        validate the form and the execute a raw SQL query to return matching methods. The resulting 
+        validate the form and the execute a raw SQL query to return matching methods. The resulting
         query set will be shown using pagination and in score order.
         '''
         if request.GET:
@@ -752,7 +752,7 @@ ORDER BY method_summary_score desc;"
 
 class BrowseMethodsView(ListView):
     '''
-    Extends ListView to implement the browse all methods page. Methods are sorted by category, subcategory, 
+    Extends ListView to implement the browse all methods page. Methods are sorted by category, subcategory,
     and identifier.
     '''
     template_name = 'methods/browse_methods.html'
@@ -762,7 +762,7 @@ class BrowseMethodsView(ListView):
 
 class MethodSummaryView(FieldHelpMixin, DetailView):
     '''
-    Extends the DetailView to provide the method summary view. 
+    Extends the DetailView to provide the method summary view.
     '''
 
     template_name = 'methods/method_summary.html'
@@ -927,7 +927,7 @@ class ExportMethodAnalyte(View):
 
 
 class MethodPdfView(PdfView):
-    ''' 
+    '''
     Extends the PdfView to serve a method's pdf file if it it exists in the database.
     '''
 
