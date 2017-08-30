@@ -9,6 +9,7 @@ from django.views.generic.edit import TemplateResponseMixin
 from .models import DefinitionsDOM
 from .utils.view_utils import xls_response, tsv_response
 
+
 class ChoiceJsonView(View):
     ''' Extends the standard View to return a JSON object representing a list of choices
     '''
@@ -22,6 +23,7 @@ class ChoiceJsonView(View):
                    for (value, display_value) in self.get_choices(request, *args, **kwargs)]
 
         return HttpResponse('{"choices" : [' + ','.join(choices) + ']}', content_type='application/json')
+
 
 class PdfView(View):
     '''
@@ -52,10 +54,8 @@ class PdfView(View):
             response.write(pdf_data)
 
             return response
-        else:
-            return Http404
 
-
+        return Http404
 
 
 class FilterFormMixin(object):
@@ -64,7 +64,7 @@ class FilterFormMixin(object):
     return the query set.
     The method, get_context_data, returns context data generated from the form.
     '''
-
+    #pylint: disable=R0201
     form_class = Form
 
     def get_qs(self, form):
@@ -72,6 +72,7 @@ class FilterFormMixin(object):
 
     def get_context_data(self, form):
         return {}
+
 
 class SearchResultView(View, TemplateResponseMixin):
     ''' This class extends the standard view and template response mixin. This class
@@ -85,7 +86,7 @@ class SearchResultView(View, TemplateResponseMixin):
     # that they will appear on the screen
 
     def get_header_defs(self):
-        ''' Returns a list of DefinitionsDOM objects matching the definition_abbrev using abbrev_set. 
+        ''' Returns a list of DefinitionsDOM objects matching the definition_abbrev using abbrev_set.
         The objects will only have the definition_name and definition_description field set.
         The objects will be in the same order as abbrev_set and if an object is missing or there are multiple
         in the DefinitionsDOM table, then the name in abbrev_set is used with spaces replacing underscores and words
@@ -132,15 +133,13 @@ class SearchResultView(View, TemplateResponseMixin):
 
                 return self.render_to_response(context)
 
-            else:
-                return self.render_to_response({'search_form' : form,
-                                        'hide_search' : False,
-                                        'show_results' : False})
-
-        else:
-            return self.render_to_response({'search_form' : self.form_class(),
+            return self.render_to_response({'search_form' : form,
                                             'hide_search' : False,
                                             'show_results' : False})
+
+        return self.render_to_response({'search_form' : self.form_class(),
+                                        'hide_search' : False,
+                                        'show_results' : False})
 
 
 class ExportSearchView(View):
@@ -186,6 +185,7 @@ class ExportSearchView(View):
         else:
             raise Http404
 
+
 class SimpleWebProxyView(View):
     '''Extends the standard View to implement a simple web proxy. Currently only get and head methods
     are proxied. The class should be extended by assigning a value to service_url.
@@ -217,4 +217,3 @@ class SimpleWebProxyView(View):
             http_resp = HttpResponse('Request failed', status=resp.status_code)
 
         return http_resp
-
