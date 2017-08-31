@@ -42,20 +42,19 @@ class PdfView(View):
          '''
         pass
 
-
     def get(self, request, *args, **kwargs):
         self.get_pdf_info()
 
-        if self.mimetype and self.pdf:
-            response = HttpResponse(content_type=self.mimetype)
-            response['Content-Disposition'] = 'attachment;filename=%s.pdf' % self.filename
+        if not self.mimetype or not self.pdf:
+            return Http404
 
-            pdf_data = self.pdf.read()
-            response.write(pdf_data)
+        response = HttpResponse(content_type=self.mimetype)
+        response['Content-Disposition'] = 'attachment;filename=%s.pdf' % self.filename
 
-            return response
+        pdf_data = self.pdf.read()
+        response.write(pdf_data)
 
-        return Http404
+        return response
 
 
 class FilterFormMixin(object):
