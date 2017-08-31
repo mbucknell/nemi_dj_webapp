@@ -324,10 +324,9 @@ class MethodAbstract(models.Model):
         max_length=30, unique=True, verbose_name='method number/identifier')
     method_descriptive_name = models.CharField(max_length=450, blank=True)
     method_official_name = models.CharField(max_length=250)
-    # FIXME: in the database, media_name is only required if
-    # method_subcategory_id is in (16, 17). This is enforced with a contraint.
     media_name = models.ForeignKey(MediaNameDOM,
-                                   #null=True, blank=True,
+                                   null=True,
+                                   blank=True,
                                    db_column='media_name')
     brief_method_summary = models.CharField(max_length=4000)
     scope_and_application = models.CharField(max_length=2000, blank=True)

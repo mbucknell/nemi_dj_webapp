@@ -1,11 +1,11 @@
-To install dependencies required to build the Compass project:
+Use fabric task to install compass, or manually into the `Gem` directory:
 
 ```
-gem install compass compass-blueprint
+gem install -i Gem compass -v 0.12.7
 ```
 
 To develop, use:
 
 ```
-compass watch
+./compass.sh watch
 ```
