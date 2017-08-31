@@ -68,7 +68,3 @@ class TestProtocoSourceCitationManagerTestCase(TestCase):
         self.assertEqual(result.count(), 2)
         self.assertIsNotNone(result.get(source_citation_id=4))
         self.assertIsNotNone(result.get(source_citation_id=5))
-
-
-class MethodCreateTestCase(TestCase):
-    pass
