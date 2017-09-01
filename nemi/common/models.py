@@ -17,7 +17,7 @@ class DefinitionsDOM(models.Model):
         db_table = 'definitions_dom'
         managed = False
 
-    def __unicode__(self):
+    def __str__(self):
         return self.definition_name
 
 
@@ -31,7 +31,7 @@ class MethodSubcategoryRef(models.Model):
         db_table = 'method_subcategory_ref'
         managed = False
 
-    def __unicode__(self):
+    def __str__(self):
         return self.method_subcategory
 
 
@@ -49,7 +49,7 @@ class MethodSourceRef(models.Model):
         managed = False
         ordering = ['method_source']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.method_source
 
 
@@ -62,7 +62,7 @@ class StatisticalItemType(models.Model):
         db_table = 'statistical_item_type'
         ordering = ['item']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.item
 
 
@@ -88,7 +88,7 @@ class MediaNameDOM(models.Model):
         ordering = ['media_name']
         managed = False
 
-    def __unicode__(self):
+    def __str__(self):
         return self.media_name.lower().title()
 
 
@@ -101,7 +101,7 @@ class StatisticalSourceType(models.Model):
         db_table = 'statistical_source_type'
         ordering = ['source']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.source
 
 
@@ -134,7 +134,7 @@ class SourceCitationRefAbstract(models.Model):
     class Meta:
         abstract = True
 
-    def __unicode__(self):
+    def __str__(self):
         return self.source_citation
 
 
@@ -181,7 +181,7 @@ class PublicationSourceRelAbstract(models.Model):
     class Meta:
         abstract = True
 
-    def __unicode__(self):
+    def __str__(self):
         return unicode(self.source)
 
 
@@ -214,7 +214,7 @@ class DlRef(models.Model):
         db_table = 'dl_ref'
         managed = False
 
-    def __unicode__(self):
+    def __str__(self):
         return self.dl_type
 
 
@@ -226,7 +226,7 @@ class DlUnitsDom(models.Model):
         db_table = 'dl_units_dom'
         managed = False
 
-    def __unicode__(self):
+    def __str__(self):
         return self.dl_units
 
 
@@ -241,7 +241,7 @@ class RelativeCostRef(models.Model):
         db_table = 'relative_cost_ref'
         managed = False
 
-    def __unicode__(self):
+    def __str__(self):
         return self.relative_cost
 
 
@@ -255,7 +255,7 @@ class InstrumentationRef(models.Model):
         db_table = 'instrumentation_ref'
         managed = False
 
-    def __unicode__(self):
+    def __str__(self):
         return self.instrumentation
 
 
@@ -268,7 +268,7 @@ class WaterbodyTypeRef(models.Model):
         db_table = 'waterbody_type_ref'
         managed = False
 
-    def __unicode__(self):
+    def __str__(self):
         return self.waterbody_type_desc
 
 
@@ -281,7 +281,7 @@ class MethodTypeRef(models.Model):
         db_table = 'method_type_ref'
         managed = False
 
-    def __unicode__(self):
+    def __str__(self):
         return self.method_type_desc
 
 
@@ -451,7 +451,7 @@ class MethodAbstract(models.Model):
     class Meta:
         abstract = True
 
-    def __unicode__(self):
+    def __str__(self):
         return self.source_method_identifier
 
     def get_insert_user(self):
@@ -525,7 +525,7 @@ class StatisticalAnalysisType(models.Model):
         db_table = 'statistical_analysis_type'
         ordering = ['analysis_type']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.analysis_type
 
 
@@ -538,7 +538,7 @@ class StatisticalDesignObjective(models.Model):
         db_table = 'statistical_design_objective'
         ordering = ['objective']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.objective
 
 
@@ -551,7 +551,7 @@ class StatisticalTopics(models.Model):
         db_table = 'statistical_topics'
         ordering = ['stat_special_topic']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.stat_special_topic
 
 
@@ -562,7 +562,7 @@ class StatAnalysisRelAbstract(models.Model):
     class Meta:
         abstract = True
 
-    def __unicode__(self):
+    def __str__(self):
         return unicode(self.analysis_type)
 
 
@@ -591,7 +591,7 @@ class StatDesignRelAbstract(models.Model):
     class Meta:
         abstract = True
 
-    def __unicode__(self):
+    def __str__(self):
         return unicode(self.design_objective)
 
 
@@ -620,7 +620,7 @@ class StatTopicRelAbstract(models.Model):
     class Meta:
         abstract = True
 
-    def __unicode__(self):
+    def __str__(self):
         return unicode(self.topic)
 
 
@@ -649,7 +649,7 @@ class StatMediaRelAbstract(models.Model):
     class Meta:
         abstract = True
 
-    def __unicode__(self):
+    def __str__(self):
         return unicode(self.media_name)
 
 
