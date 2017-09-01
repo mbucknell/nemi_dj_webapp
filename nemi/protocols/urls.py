@@ -1,11 +1,12 @@
 
 ''' This module contains the url conf for the NEMI protocol services and pages.
 '''
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
-import views
+from . import views
 
-urlpatterns = patterns("",
+
+urlpatterns = [
     url(r'^browse/$',
         views.BrowseProtocolsView.as_view(),
         name='protocols-browse'),
@@ -15,4 +16,4 @@ urlpatterns = patterns("",
     url(r'^protocol_summary/(?P<pk>\d+)/$',
         views.ProtocolSummaryView.as_view(),
         name='protocols-summary'),
-)
+]

@@ -1,8 +1,11 @@
 ''' Module includes all urls confs for the nemi project '''
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
-from django.contrib.sitemaps import FlatPageSitemap
+import django.contrib.auth.views
+from django.contrib.flatpages.sitemaps import FlatPageSitemap
+from django.contrib.flatpages.views import flatpage as flatpage_view
+from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 
 import domhelp
@@ -11,9 +14,9 @@ import protocols.urls
 import sams.urls
 # import memo.urls
 
-import sitemaps
-from django.contrib.sitemaps.views import sitemap
-import views
+from . import sitemaps
+from . import views
+
 
 admin.autodiscover()
 
@@ -25,7 +28,7 @@ sitemaps = {
     'statisticalmethods' : sitemaps.StatisticalMethodSitemap
     }
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
@@ -38,13 +41,13 @@ urlpatterns = patterns('',
     url(r'^tinymce/', include('tinymce.urls')),
 
     url(r'^accounts/login/$',
-        'django.contrib.auth.views.login',
+        django.contrib.auth.views.login,
         {},
         name='nemi_login'),
     url(r'^accounts/logout/$',
-        'django.contrib.auth.views.logout',
+        django.contrib.auth.views.logout,
         {'redirect_field_name' : 'redirect_url'},
-        name="nemi_logout"),
+        name='nemi_logout'),
     url(r'^accounts/password_change/$',
         views.PasswordChangeView.as_view(),
         name='nemi_change_password'),
@@ -59,7 +62,7 @@ urlpatterns = patterns('',
     url(r'^protocols/', include(protocols.urls)),
 
     url(r'^sams/', include(sams.urls)),
-# 	url(r'^memo/', include(memo.urls)),
+    # url(r'^memo/', include(memo.urls)),
 
     url(r'^home/',
         views.HomeView.as_view(),
@@ -70,12 +73,13 @@ urlpatterns = patterns('',
     url(r'^glossary/',
         domhelp.views.GlossaryView.as_view(),
         name='glossary'),
-)
+]
 
 urlpatterns += methods.urls.api_urlpatterns
 
-urlpatterns += patterns('django.contrib.flatpages.views',
-    url(r'^about/$', 'flatpage', {'url' : '/about/'}, name='about'),
-    url(r'^faqs/$', 'flatpage', {'url' : '/faqs/'}, name='faqs'),
-    url(r'^submit_method/$', 'flatpage', {'url' : '/submit_method/'}, name='submit_method'),
-    url(r'^terms_of_use/$', 'flatpage', {'url' : '/terms_of_use/'}, name='terms_of_use'));
+urlpatterns += [
+    url(r'^about/$', flatpage_view, {'url' : '/about/'}, name='about'),
+    url(r'^faqs/$', flatpage_view, {'url' : '/faqs/'}, name='faqs'),
+    url(r'^submit_method/$', flatpage_view, {'url' : '/submit_method/'}, name='submit_method'),
+    url(r'^terms_of_use/$', flatpage_view, {'url' : '/terms_of_use/'}, name='terms_of_use')
+]
