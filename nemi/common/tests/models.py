@@ -5,11 +5,11 @@ Created on Jul 25, 2012
 '''
 from django.db.models import Model, CharField
 
+
 class TestModel(Model):
     ''' Extends the base model to create a model used for running tests'''
-    
+
     name = CharField(max_length=20, blank=False)
-    
-    def __unicode__(self):
-        return self.name    
-        
+
+    def __str__(self):
+        return self.name

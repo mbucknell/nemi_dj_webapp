@@ -18,7 +18,7 @@ from django.views.generic.edit import TemplateResponseMixin
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 # project specific packages
-from common.models import MethodAnalyteVW, InstrumentationRef, StatisticalDesignObjective, StatisticalItemType, AnalyteSummaryVW
+from common.models import InstrumentationRef, StatisticalDesignObjective, StatisticalItemType, AnalyteSummaryVW
 from common.models import StatisticalAnalysisType, StatisticalSourceType, MediaNameDOM, StatisticalTopics
 from common.models import StatAnalysisRel, SourceCitationRef, StatDesignRel, StatMediaRel, StatTopicRel, Method
 from common.utils.view_utils import dictfetchall, xls_response, tsv_response
@@ -32,7 +32,7 @@ from .serializers import MethodVWSerializer
 def _analyte_value_qs(method_id):
     ''' Returns the analyte data values query set for the method_id.'''
 
-    analyte_data = AnalyteSummaryVW.objects.filter(preferred__exact= -1, method_id__exact=method_id).order_by('analyte_name')
+    analyte_data = AnalyteSummaryVW.objects.filter(preferred__exact=-1, method_id__exact=method_id).order_by('analyte_name')
     return analyte_data.values('analyte_name',
                                'analyte_code',
                                'dl_value',
@@ -68,7 +68,7 @@ def _clean_keyword(k):
     result = re.sub(special_char_pattern, r'\\\g<special>', k)
     result = re.sub(double_pattern, r'\g<double>\g<double>', result)
 
-    return '%' + result + '%';
+    return '%' + result + '%'
 
 
 class AnalyteSelectView(View):
@@ -101,7 +101,7 @@ class AnalyteSelectView(View):
                 else:
                     return HttpResponse('{"values_list" : ""}', content_type="application/json")
 
-                qs = qs.values_list('analyte_name', 'analyte_code').distinct().order_by('analyte_name');
+                qs = qs.values_list('analyte_name', 'analyte_code').distinct().order_by('analyte_name')
                 qs_str = '[' + ', '.join('["%s","%s"]' % (n, c) for (n, c) in qs) + ']'
 
             return HttpResponse('{"values_list" : ' + qs_str + '}', content_type="application/json")
@@ -115,7 +115,7 @@ class MethodCountView(View):
     '''
 
     def get(self, request, *args, **kwargs):
-        return HttpResponse('{"method_count" : "' + str(MethodVW.objects.count()) + '"}', content_type="application/json");
+        return HttpResponse('{"method_count" : "' + str(MethodVW.objects.count()) + '"}', content_type="application/json")
 
 
 class MediaNameView(ChoiceJsonView):
@@ -150,11 +150,11 @@ class SourceView(ChoiceJsonView):
         # # Need to do the next step because sc_qs is a ValuesListQuerySet and does not have an append method.
         source_choices = [(source, name) for (source, name) in sc_qs]
         if qs.filter(method_source__contains='EPA').exists():
-            source_choices.append((u'EPA', u'US Environmental Protection Agency'))
+            source_choices.append(('EPA', 'US Environmental Protection Agency'))
         if qs.filter(method_source__contains='USGS').exists():
-            source_choices.append((u'USGS', u'US Geological Survey'))
+            source_choices.append(('USGS', 'US Geological Survey'))
         if qs.filter(method_source__startswith=u'DOE').exists():
-            source_choices.append((u'DOE', u'US Department of Energy'))
+            source_choices.append(('DOE', 'US Department of Energy'))
 
         source_choices.sort(cmp=_choice_cmp)
         return source_choices
@@ -174,7 +174,7 @@ class MethodTypeView(ChoiceJsonView):
     Extends the ChoiceJsonView to retrieve the method type choices as a json object.
     '''
     def get_choices(self, request, *args, **kwargs):
-        qs = MethodVW.objects.all();
+        qs = MethodVW.objects.all()
         if 'category' in request.GET:
             qs = qs.filter(method_category__iexact=request.GET['category'])
         qs = qs.values_list('method_type_desc').distinct().order_by('method_type_desc')
@@ -364,7 +364,7 @@ class MethodResultsMixin(ResultsMixin):
     Extend ResultsMixin to implement the querying part of the results view for methods.
     '''
 
-    queryset = MethodVW.objects.all();
+    queryset = MethodVW.objects.all()
 
     def get_queryset(self):
         data = super(MethodResultsMixin, self).get_queryset()
@@ -680,7 +680,7 @@ class ExportRegulatoryResultsView(RegulatoryResultsMixin, ExportBaseResultsView)
                      'instrumentation_description',
                      'relative_cost_symbol',
                      'relative_cost'
-                     );
+                     )
 
     filename = 'regulatory_method_results'
 
@@ -790,7 +790,7 @@ class MethodSummaryView(FieldHelpMixin, DetailView):
         ''' Override get_object to return the method details, method analytes, and method notes.
         The returned object is a dictionary.
         '''
-        result = {};
+        result = {}
         if 'method_id' in self.kwargs:
             try:
                 result['details'] = MethodSummaryVW.objects.get(method_id=self.kwargs['method_id'])
@@ -960,15 +960,15 @@ class RevisionPdfView(PdfView):
 
 class WQPWebProxyView(SimpleWebProxyView):
     service_url = settings.WQP_URL
-    http_method_names = [u'head', u'get']
+    http_method_names = ['head', 'get']
 
 
 class MethodRestViewSet(ReadOnlyModelViewSet):
-    lookup_field = u'method_id'
+    lookup_field = 'method_id'
     serializer_class = MethodVWSerializer
 
     def get_queryset(self):
-        qs = MethodVW.objects.all();
+        qs = MethodVW.objects.all()
         categories = self.request.GET.getlist('method_category')
         subcategories = self.request.GET.getlist('method_subcategory')
 

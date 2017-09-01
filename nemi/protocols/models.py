@@ -9,7 +9,7 @@ class ProtocolMethodRel(models.Model):
                                         db_column='source_citation_id')
     method = models.ForeignKey(Method,
                                db_column='method_id')
-    
+
     class Meta:
-        db_table = u'protocol_method_rel'
+        db_table = 'protocol_method_rel'
         managed = False

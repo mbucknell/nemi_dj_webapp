@@ -28,5 +28,3 @@ class ManagedModelTestRunner(DiscoverRunner):
         # reset unmanaged models
         for m in self.unmanaged_models:
             m._meta.managed = False
-    
-    

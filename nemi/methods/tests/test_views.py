@@ -5,11 +5,12 @@ Created on Mar 13, 2012
 '''
 
 from django.test import SimpleTestCase, TestCase
-
 from factory.django import DjangoModelFactory
 from rest_framework.test import APIRequestFactory
 
+from methods.models import MethodVW
 from methods.views import _clean_name, _clean_keyword, MethodRestViewSet
+
 
 class CleanNameTestCase(SimpleTestCase):
 
@@ -90,7 +91,8 @@ class CleanKeywordTestCase(SimpleTestCase):
 
 
 class MethodSummaryFactory(DjangoModelFactory):
-    FACTORY_FOR = 'methods.MethodVW'
+    class Meta:
+        model = MethodVW
 
     source_method_identifier = 'A'
     method_descriptive_name = 'name'
@@ -185,4 +187,4 @@ class MethodSummaryRestViewSetTestCase(TestCase):
         result = self.test_view.get_queryset()
 
         self.assertEqual(result.count(), 0)
-        
+
