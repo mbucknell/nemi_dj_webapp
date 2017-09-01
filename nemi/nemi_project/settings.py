@@ -13,7 +13,8 @@ SITE_HOME = os.path.split(PROJECT_HOME)[0]
 
 DEBUG = False
 
-ADMINS = (('Mary Bucknell', 'mbucknell@usgs.gov'),
+ADMINS = (
+    ('Mary Bucknell', 'mbucknell@usgs.gov'),
     # ('Your Name', 'your_email@example.com'),
 )
 
@@ -76,7 +77,8 @@ STATIC_ROOT = os.path.join(SITE_HOME, 'static/')
 STATIC_URL = '/static/'
 
 # Additional locations of static files
-STATICFILES_DIRS = ((os.path.join(PROJECT_HOME, 'static'),)
+STATICFILES_DIRS = (
+    (os.path.join(PROJECT_HOME, 'static'),)
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -87,47 +89,27 @@ STATICFILES_DIRS = ((os.path.join(PROJECT_HOME, 'static'),)
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-'''
-TEMPLATE_CONTEXT_PROCESSORS = ("django.contrib.auth.context_processors.auth",
-                               "django.core.context_processors.debug",
-                               "django.core.context_processors.i18n",
-                               "django.core.context_processors.media",
-                               "django.core.context_processors.static",
-                               "django.core.context_processors.tz",
-                               "django.contrib.messages.context_processors.messages",
-                               "django.core.context_processors.request",
-                               "common.context_processors.project_settings",
-)
-
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
-)
-'''
 MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     'nemi_project.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    #'django.middleware.transaction.TransactionMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 ROOT_URLCONF = 'nemi_project.urls'
 
 TEMPLATES = [
     {
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-                os.path.join (PROJECT_HOME, 'templates'),
+            os.path.join(PROJECT_HOME, 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -144,7 +126,7 @@ TEMPLATES = [
                 'common.context_processors.project_settings',
             ],
             'debug': [
-                      DEBUG,
+                DEBUG,
             ],
         },
     },
@@ -173,7 +155,7 @@ INSTALLED_APPS = (
     'methods',
     'protocols',
     'sams',
-# 	'memo',
+    #'memo',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -231,8 +213,8 @@ TINYMCE_DEFAULT_CONFIG = {
 
 if os.getenv('JENKINS_URL', False):
     JENKINS_TASKS = (
-                    'django_jenkins.tasks.with_coverage',
-                     )
+        'django_jenkins.tasks.with_coverage',
+    )
     JENKINS_TEST_RUNNER = 'nemi_project.test_jenkins_runner.ManagedModelTestRunner'
     INSTALLED_APPS += ('django_jenkins',)
     PROJECT_APPS = (
@@ -243,18 +225,18 @@ if os.getenv('JENKINS_URL', False):
         'newsfeed',
         'domhelp',
     )
-    DATABASES['default'].update(dict(
-            ENGINE=os.getenv('DBA_SQL_DJANGO_ENGINE'),
-            USER=os.getenv('DBA_SQL_ADMIN'),
-            PASSWORD=os.getenv('DBA_SQL_ADMIN_PASSWORD'),
-            HOST=os.getenv('DBA_SQL_HOST'),
-            PORT=os.getenv('DBA_SQL_PORT')
-            ))
-    
+    DATABASES['default'].update({
+        'ENGINE': os.getenv('DBA_SQL_DJANGO_ENGINE'),
+        'USER': os.getenv('DBA_SQL_ADMIN'),
+        'PASSWORD': os.getenv('DBA_SQL_ADMIN_PASSWORD'),
+        'HOST': os.getenv('DBA_SQL_HOST'),
+        'PORT': os.getenv('DBA_SQL_PORT')
+    })
+
 try:
     ADDITIONAL_APPS = ()
     ADDITIONAL_MW_CLASSES = ()
-    from local_settings import *
+    from .local_settings import *
 except ImportError:
     # add apps to this variable for this specific server configuration
     pass

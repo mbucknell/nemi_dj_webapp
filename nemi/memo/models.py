@@ -10,15 +10,15 @@ class DistinctManager(models.Manager):
 class AnalyteListACT(models.Model):
 	analyte_name = models.CharField(max_length=240)
 	analyte_id = models.IntegerField(primary_key=True)
-	
+
 	class Meta:
-		db_table = u'ANALYTE_LIST_ACT'
+		db_table = 'ANALYTE_LIST_ACT'
 		managed = False
-		
+
 	def __unicode__(self):
 		return self.analyte_name
-	
-class SensorInfoVw(models.Model):	
+
+class SensorInfoVw(models.Model):
 	name = models.CharField(max_length=4000, blank=True)
 	model_name = models.CharField(max_length=2000, blank=True)
 	model_number = models.CharField(max_length=2000, blank=True)
@@ -34,14 +34,14 @@ class SensorInfoVw(models.Model):
 	analyte_name = models.CharField(max_length=240)
 	method_no = models.CharField(max_length=4000, blank=True)
 	method_id = models.IntegerField(null=True)
-	
+
 	class Meta:
-		db_table = u'SENSOR_INFO_VW'
+		db_table = 'SENSOR_INFO_VW'
 		managed = False
-		
+
 	def __unicode__(self):
 		return self.name
-		
+
 class MethodAnalyteACT(models.Model):
 	method_descriptive_name = models.CharField(max_length=450, blank=True)
 	method_official_name = models.CharField(max_length=250)
@@ -60,40 +60,40 @@ class MethodAnalyteACT(models.Model):
 	sample_rate = models.CharField(max_length=2000, blank=True)
 	mfrcompany = models.CharField(max_length=2000, blank=True)
 	fm_pk_sensorid = models.IntegerField(null=True)
-	
+
 	class Meta:
-		db_table = u'METHOD_ANALYTE_ACT'
+		db_table = 'METHOD_ANALYTE_ACT'
 		managed = False
-		
+
 	def __unicode__(self):
 		return self.method_official_name
-		
+
 class MethodSensorAnalyteListACT(models.Model):
 	analyte_name = models.CharField(max_length=240)
 	analyte_id = models.IntegerField(primary_key=True)
 	method_id = models.IntegerField(null=True)
-	
+
 	class Meta:
-		db_table = u'METHOD_SENSOR_ANALYTE_LIST_ACT'
+		db_table = 'METHOD_SENSOR_ANALYTE_LIST_ACT'
 		managed = False
-	
+
 	def __unicode__(self):
 		return self.analyte_name
-		
+
 	objects = DistinctManager()
 
 class MethodSensorListACT(models.Model):
 	method_no = models.CharField(max_length=2000, blank=True)
 	method_id = models.IntegerField(primary_key=True)
 	analyte_id = models.IntegerField(null=True)
-	
+
 	class Meta:
-		db_table = u'METHOD_SENSOR_LIST_ACT'
+		db_table = 'METHOD_SENSOR_LIST_ACT'
 		managed = False
-		
+
 	def __unicode__(self):
 		return self.method_no
-		
+
 	objects = DistinctManager()
 
 class SensorsACT(models.Model):
@@ -124,23 +124,23 @@ class SensorsACT(models.Model):
 	mfrtelephone = models.CharField(max_length=2000, blank=True)
 	mfrfax = models.CharField(max_length=2000, blank=True)
 	mfrwebsite = models.CharField(max_length=2000, blank=True)
-	
+
 	class Meta:
-		db_table = u'SENSORS_ACT'
+		db_table = 'SENSORS_ACT'
 		managed = False
-		
+
 	def __unicode__(self):
 		return self.model_name
-		
+
 	objects = DistinctManager()
-		
+
 class AnalyteInfo(models.Model):
 	analyte_id = models.IntegerField(primary_key=True)
 	description = models.CharField(max_length=4000)
-	
+
 	class Meta:
-		db_table = u'ANALYTE_INFO'
+		db_table = 'ANALYTE_INFO'
 		managed = False
-		
+
 	def __unicode__(self):
 		return self.description

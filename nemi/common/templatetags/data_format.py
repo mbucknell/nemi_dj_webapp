@@ -37,7 +37,7 @@ def clickable_links(data):
     second way is that data can contain more than one link as long as they are separated by
     "<br /> tag. The returned string will insert the <br /> tag between the clickable links.
     '''
-    
+
     # The following line will find any <br> or <br/> tag with spaces within the tag and replace those varients with <br/>
     urlstr = re.sub('<br(>|/>)','<br/>', data.replace(' ', ''))
     urls = urlstr.split('<br/>')

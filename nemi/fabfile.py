@@ -1,10 +1,9 @@
+import os
 
-from fabric.api import local, task, abort, env, run
-from fabric.context_managers import lcd, shell_env, warn_only, prefix
+from fabric.api import local, task, abort, env
+from fabric.context_managers import lcd, shell_env, warn_only
 from fabric.contrib.console import confirm
 
-import datetime
-import os
 
 #REPO_URL = "ssh://git@cida-eros-stash.er.usgs.gov:7999/nemi/nemi_dj_webapp.git"
 
@@ -24,16 +23,16 @@ def execute_django_command(command, for_deployment=False, force_overwrite=False)
     '''
     if for_deployment:
         local('echo "SECRET_KEY = \'temporary key\'" > nemi_project/local_settings.py')
-    
+
     if force_overwrite and for_deployment:
         local('yes yes | env/bin/python manage.py ' + command)
     else:
         local('env/bin/python manage.py ' + command)
-    
+
     if for_deployment:
-        local('rm nemi_project/local_settings.*');
-        
-        
+        local('rm nemi_project/local_settings.*')
+
+
 @task
 def build_virtualenv(for_deployment=False):
     '''Create the project's virtualenv and install the project requirements.
@@ -42,27 +41,27 @@ def build_virtualenv(for_deployment=False):
     if for_deployment:
         download_cache = os.environ['HOME'] + '/.pip/download_cache'
         oracle_home = os.environ['ORACLE_HOME']
-        
+
     else:
         download_cache = os.environ.get('PIP_DOWNLOAD_CACHE', '')
         oracle_home = os.environ.get('ORACLE_HOME', '')
         if download_cache == '' and not confirm('PIP_DOWNLOAD_CACHE not defined. Continue anyway?'):
             abort('Aborting')
-          
-        if oracle_home == '':  
+
+        if oracle_home == '':
             abort('Must define ORACLE_HOME which should point to the oracle client directory.')
-            
-    local('virtualenv --no-site-packages --python=python2.7 env')
-        
+
+    local('virtualenv --no-site-packages --python=python3.6 env')
+
     if for_deployment:
         # this is needed so that the link to lib64 is relative rather than absolute
         local('rm env/lib64')
         local('ln -s lib env/lib64')
-        
+
     with shell_env(PIP_DOWNLOAD_CACHE=download_cache, ORACLE_HOME=oracle_home):
         local('env/bin/pip --timeout=120 install -r requirements.txt')
 
-        
+
 @task
 def build_project_env(for_deployment=False):
     '''
@@ -75,30 +74,31 @@ def build_project_env(for_deployment=False):
         with shell_env(GEM_HOME=os.environ.get('PWD', '') + '/compass/Gem'):
             with warn_only():
                 available = local('gem list -i compass', capture=True)
-            if 'true' == available:
+            if available == 'true':
                 local('gem update -i Gem compass')
             else:
                 local('gem install -i Gem compass -v 0.12.7')
         local('./compass.sh compile')
-        
+
     # Collect static files
     if for_deployment:
         execute_django_command('collectstatic --settings=nemi_project.settings', for_deployment, force_overwrite=True)
+
 
 @task
 def run_jenkins_tests(for_deployment=False):
     if not for_deployment:
         abort('Can\'t run jenkins test on local development server')
-                    
-    with shell_env(DBA_SQL_DJANGO_ENGINE='django.db.backends.sqlite3', 
+
+    with shell_env(DBA_SQL_DJANGO_ENGINE='django.db.backends.sqlite3',
                    PATH='$HOME/bin:$PATH'):
         local('echo $PATH')
         execute_django_command('jenkins', for_deployment)
-           
+
+
 @task
 def build(for_deployment=False):
     build_virtualenv(for_deployment)
-    
-    # Create dummy local_settings.py if for_deployment  
-    build_project_env(for_deployment)
 
+    # Create dummy local_settings.py if for_deployment
+    build_project_env(for_deployment)

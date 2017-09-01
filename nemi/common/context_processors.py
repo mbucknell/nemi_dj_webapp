@@ -9,6 +9,9 @@ def project_settings(request):
 
     # Specify which settings you want exposed.
     exposed_settings = ('GA_TRACKING_CODE',)
-    settings_dict = dict((key, getattr(settings, key)) if hasattr(settings, key) else (key, '') for key in exposed_settings)
+    settings_dict = {
+        key: getattr(settings, key) if hasattr(settings, key) else (key, '')
+        for key in exposed_settings
+    }
 
     return {'settings': settings_dict}

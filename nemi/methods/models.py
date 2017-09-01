@@ -5,9 +5,9 @@ only and therefore have managed set to False in each model's Meta data.
 
 from django.db import models
 
-    
+
 class MethodVW(models.Model):
-    
+
     method_id = models.IntegerField(primary_key=True)
     source_method_identifier = models.CharField(max_length=30)
     method_descriptive_name = models.CharField(max_length=250)
@@ -77,13 +77,13 @@ class MethodVW(models.Model):
     protocol_info = models.CharField(max_length=1500, blank=True)
     protocol_title = models.CharField(max_length=450, blank=True)
     protocol_id = models.IntegerField(null=True)
-    
+
     class Meta:
-        db_table = u'method_vw'
+        db_table = 'method_vw'
         managed = False
-                
+
 class MethodSummaryVW(models.Model):
-    
+
     revision_id = models.IntegerField()
     revision_information = models.CharField(max_length=100)
     revision_flag = models.IntegerField(null=True)
@@ -91,7 +91,7 @@ class MethodSummaryVW(models.Model):
 #    mydoc -- Unused
 #    method_pdf -- Unused
     pdf_size  = models.IntegerField(null=True)
-    method_id = models.IntegerField(primary_key=True) 
+    method_id = models.IntegerField(primary_key=True)
     source_method_identifier = models.CharField(max_length=30)
     method_descriptive_name = models.CharField(max_length=250)
     method_official_name = models.CharField(max_length=250)
@@ -150,23 +150,23 @@ class MethodSummaryVW(models.Model):
     protocol_title = models.CharField(max_length=450, blank=True)
     protocol_id = models.IntegerField(null=True)
     archive_note = models.CharField(max_length=450, blank=True)
-     
+
     class Meta:
-        db_table = u'method_summary_vw'
+        db_table = 'method_summary_vw'
         managed = False
 
 class AnalyteCodeRel(models.Model):
-    
+
     analyte_code = models.CharField(max_length=20)
     analyte_name = models.CharField(max_length=240, primary_key=True)
     preferred = models.IntegerField(null=True)
-    
+
     class Meta:
-        db_table = u'analyte_code_rel'
+        db_table = 'analyte_code_rel'
         managed = False
-        
+
 class MethodAnalyteAllVW(models.Model):
-    
+
     analysis_amt_g = models.CharField(max_length=10, blank=True)
     ph_of_analytical_sample = models.CharField(max_length=10, blank=True)
     calc_waste_amt = models.DecimalField(max_digits=9, decimal_places=2, null=True)
@@ -247,27 +247,27 @@ class MethodAnalyteAllVW(models.Model):
     precision = models.DecimalField(max_digits=21, decimal_places=6, null=True)
     sub_precision = models.CharField(max_length=40, blank=True)
     precision_units = models.CharField(max_length=30, blank=True)
-    
+
     class Meta:
         db_table = 'method_analyte_all_vw'
         managed = False
-        
+
 class AnalyteCodeVW(models.Model):
-    
+
     analyte_analyte_id = models.IntegerField(primary_key=True)
     analyte_analyte_code = models.CharField(max_length=20)
     ac_analyte_code = models.CharField(max_length=20, blank=True)
     ac_analyte_name = models.CharField(max_length=240, blank=True)
     ac_preferred = models.IntegerField(null=True)
     ac_analyte_type = models.CharField(max_length=50, blank=True)
-    
+
     class Meta:
         db_table = 'analyte_code_vw'
         managed = False
-        
-        
+
+
 class MethodAnalyteJnStgVW(models.Model):
-    
+
     matrix = models.CharField(max_length=12, blank=True)
     method_source = models.CharField(max_length=20)
     method_source_name = models.CharField(max_length=150)
@@ -329,13 +329,13 @@ class MethodAnalyteJnStgVW(models.Model):
     max_holding_time = models.CharField(max_length=300, blank=True)
     sample_prep_methods = models.CharField(max_length=100, blank=True)
     relative_cost_id = models.IntegerField(null=True)
-    
+
     class Meta:
         db_table = 'method_analyte_jn_stg_vw'
         managed = False
-        
+
 class MethodStgSummaryVw(models.Model):
-    
+
     revision_id = models.IntegerField()
     revision_information = models.CharField(max_length=100)
     revision_flag = models.IntegerField(null=True)
@@ -375,24 +375,24 @@ class MethodStgSummaryVw(models.Model):
     relative_cost_symbol = models.CharField(max_length=7, blank=True)
     relative_cost = models.CharField(max_length=40, blank=True)
     method_type_desc = models.CharField(max_length=100, blank=True)
-    
+
     class Meta:
         db_table = 'method_stg_summary_vw'
         managed = False
-        
+
 class RegulationRef(models.Model):
     regulation_id = models.IntegerField(primary_key=True)
     regulation = models.CharField(max_length=10)
     regulation_name = models.CharField(max_length=60)
     reg_location = models.CharField(max_length=30)
     reg_location_2 = models.CharField(max_length=30, blank=True)
-    
+
     class Meta:
         db_table = 'regulation_ref'
         managed = False
-        
+
 class RegQueryVW(models.Model):
-    
+
     conc_range_units = models.CharField(max_length=20, blank=True)
     interferences = models.CharField(max_length=3000, blank=True)
     analyte_method_id = models.IntegerField()
@@ -462,13 +462,13 @@ class RegQueryVW(models.Model):
     dl_type_id = models.IntegerField(null=True)
     dl_note = models.CharField(max_length=2000, blank=True)
     applicable_conc_range = models.CharField(max_length=300, blank=True)
-    
+
     class Meta:
         db_table = 'reg_query_vw'
         managed = False
-        
+
 class RegulatoryMethodReport(models.Model):
-    
+
     analyte_name = models.CharField(max_length=240, primary_key=True)
     epa_id = models.IntegerField(null=True)
     epa_rev_id = models.IntegerField(null=True)
@@ -485,11 +485,11 @@ class RegulatoryMethodReport(models.Model):
     other_id = models.IntegerField(null=True)
     other_rev_id = models.IntegerField(null=True)
     other = models.CharField(max_length=143, blank=True)
-    
+
     class Meta:
         db_table = 'regulatory_method_report'
         managed = False
-        
+
 class RevisionSummaryVw(models.Model):
     revision_id = models.IntegerField(primary_key=True)
     method_id = models.IntegerField()
@@ -504,8 +504,8 @@ class RevisionSummaryVw(models.Model):
     pdf_insert_date = models.DateField()
     revision_flag = models.IntegerField()
     date_loaded = models.DateField()
-    
+
     class Meta:
         db_table = 'revision_summary_vw'
         managed = False
-        
+

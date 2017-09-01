@@ -14,7 +14,7 @@ class DefinitionsDOM(models.Model):
     column_help = models.CharField(max_length=4000, blank=True)
 
     class Meta:
-        db_table = u'definitions_dom'
+        db_table = 'definitions_dom'
         managed = False
 
     def __unicode__(self):
@@ -84,7 +84,7 @@ class MediaNameDOM(models.Model):
     stat_media = StatisticalMediaNameManager()
 
     class Meta:
-        db_table = u'media_name_dom'
+        db_table = 'media_name_dom'
         ordering = ['media_name']
         managed = False
 
@@ -143,7 +143,7 @@ class SourceCitationOnlineRef(SourceCitationRefAbstract):
     source_citation_id = models.AutoField(primary_key=True)
 
     class Meta:
-        db_table = u'source_citation_online_ref'
+        db_table = 'source_citation_online_ref'
         managed = False
 
 
@@ -152,7 +152,7 @@ class SourceCitationStgRef(SourceCitationRefAbstract):
     source_citation_id = models.IntegerField(primary_key=True)
 
     class Meta:
-        db_table = u'source_citation_stg_ref'
+        db_table = 'source_citation_stg_ref'
         managed = False
 
 
@@ -169,7 +169,7 @@ class SourceCitationRef(SourceCitationRefAbstract):
     protocol_objects = ProtocolSourceCitationManager()
 
     class Meta:
-        db_table = u'source_citation_ref'
+        db_table = 'source_citation_ref'
         managed = False
 
 
@@ -190,7 +190,7 @@ class PublicationSourceRelStg(PublicationSourceRelAbstract):
     source_citation_ref_id = models.IntegerField(db_column='sourcecitationref_id')
 
     class Meta:
-        db_table = u'publication_source_rel_stg'
+        db_table = 'publication_source_rel_stg'
         ordering = ['source']
 
 
@@ -200,7 +200,7 @@ class PublicationSourceRel(PublicationSourceRelAbstract):
                                             db_column='sourcecitationref_id')
 
     class Meta:
-        db_table = u'publication_source_rel'
+        db_table = 'publication_source_rel'
         ordering = ['source']
 
 
@@ -211,7 +211,7 @@ class DlRef(models.Model):
     dl_type_description = models.CharField(max_length=50, unique=True)
 
     class Meta:
-        db_table = u'dl_ref'
+        db_table = 'dl_ref'
         managed = False
 
     def __unicode__(self):
@@ -223,7 +223,7 @@ class DlUnitsDom(models.Model):
     dl_units = models.CharField(max_length=20, primary_key=True, unique=True)
     dl_units_description = models.CharField(max_length=60, blank=True)
     class Meta:
-        db_table = u'dl_units_dom'
+        db_table = 'dl_units_dom'
         managed = False
 
     def __unicode__(self):
@@ -265,7 +265,7 @@ class WaterbodyTypeRef(models.Model):
     waterbody_type_desc = models.CharField(max_length=100, unique=True)
 
     class Meta:
-        db_table = u'waterbody_type_ref'
+        db_table = 'waterbody_type_ref'
         managed = False
 
     def __unicode__(self):
@@ -278,7 +278,7 @@ class MethodTypeRef(models.Model):
     method_type_desc = models.CharField(max_length=100)
 
     class Meta:
-        db_table = u'method_type_ref'
+        db_table = 'method_type_ref'
         managed = False
 
     def __unicode__(self):
@@ -286,14 +286,14 @@ class MethodTypeRef(models.Model):
 
 
 COMPLEXITY_CHOICES = [
-    (u'Low', u'Low'),
-    (u'Medium', u'Medium'),
-    (u'High', u'High')]
+    ('Low', 'Low'),
+    ('Medium', 'Medium'),
+    ('High', 'High')]
 
 LEVEL_OF_TRAINING_CHOICES = [
-    (u'Basic', u'Basic'),
-    (u'Intermediate', u'Intermediate'),
-    (u'Advanced', u'Advanced')]
+    ('Basic', 'Basic'),
+    ('Intermediate', 'Intermediate'),
+    ('Advanced', 'Advanced')]
 
 YES_NO_CHOICES = (
     ('N', 'No'),
@@ -480,7 +480,7 @@ class MethodOnline(MethodAbstract):
                                          default='Y')
 
     class Meta:
-        db_table = u'method_online'
+        db_table = 'method_online'
         managed = False
         verbose_name = 'method (online)'
         verbose_name_plural = 'methods (online)'
@@ -498,7 +498,7 @@ class MethodStg(MethodAbstract):
     date_loaded = models.DateField()
 
     class Meta:
-        db_table = u'method_stg'
+        db_table = 'method_stg'
         managed = False
         verbose_name = 'method (staging)'
         verbose_name_plural = 'methods (staging)'
@@ -511,7 +511,7 @@ class Method(MethodAbstract):
     date_loaded = models.DateField(auto_now_add=True)
 
     class Meta:
-        db_table = u'method'
+        db_table = 'method'
         managed = False
         verbose_name = 'method'
 
@@ -535,7 +535,7 @@ class StatisticalDesignObjective(models.Model):
     objective = models.CharField(max_length=200)
 
     class Meta:
-        db_table = u'statistical_design_objective'
+        db_table = 'statistical_design_objective'
         ordering = ['objective']
 
     def __unicode__(self):
@@ -548,7 +548,7 @@ class StatisticalTopics(models.Model):
     stat_special_topic = models.CharField(max_length=200)
 
     class Meta:
-        db_table = u'statistical_topics'
+        db_table = 'statistical_topics'
         ordering = ['stat_special_topic']
 
     def __unicode__(self):
@@ -571,7 +571,7 @@ class StatAnalysisRelStg(StatAnalysisRelAbstract):
     method_id = models.IntegerField()
 
     class Meta:
-        db_table = u'stat_analysis_rel_stg'
+        db_table = 'stat_analysis_rel_stg'
         ordering = ['analysis_type']
 
 
@@ -580,7 +580,7 @@ class StatAnalysisRel(StatAnalysisRelAbstract):
     method = models.ForeignKey(Method)
 
     class Meta:
-        db_table = u'stat_analysis_rel'
+        db_table = 'stat_analysis_rel'
         ordering = ['analysis_type']
 
 
@@ -600,7 +600,7 @@ class StatDesignRelStg(StatDesignRelAbstract):
     method_id = models.IntegerField()
 
     class Meta:
-        db_table = u'stat_design_rel_stg'
+        db_table = 'stat_design_rel_stg'
         ordering = ['design_objective']
 
 
@@ -609,7 +609,7 @@ class StatDesignRel(StatDesignRelAbstract):
     method = models.ForeignKey(Method)
 
     class Meta:
-        db_table = u'stat_design_rel'
+        db_table = 'stat_design_rel'
         ordering = ['design_objective']
 
 
@@ -629,7 +629,7 @@ class StatTopicRelStg(StatTopicRelAbstract):
     method_id = models.IntegerField()
 
     class Meta:
-        db_table = u'stat_topic_rel_stg'
+        db_table = 'stat_topic_rel_stg'
         ordering = ['topic']
 
 
@@ -638,7 +638,7 @@ class StatTopicRel(StatTopicRelAbstract):
     method = models.ForeignKey(Method)
 
     class Meta:
-        db_table = u'stat_topic_rel'
+        db_table = 'stat_topic_rel'
         ordering = ['topic']
 
 
@@ -658,7 +658,7 @@ class StatMediaRelStg(StatMediaRelAbstract):
     method_id = models.IntegerField()
 
     class Meta:
-        db_table = u'stat_media_rel_stg'
+        db_table = 'stat_media_rel_stg'
         ordering = ['media_name']
 
 
@@ -667,7 +667,7 @@ class StatMediaRel(StatMediaRelAbstract):
     method = models.ForeignKey(Method)
 
     class Meta:
-        db_table = u'stat_media_rel'
+        db_table = 'stat_media_rel'
         ordering = ['media_name']
 
 
@@ -692,7 +692,7 @@ class AnalyteSummaryVW(models.Model):
     method_id = models.IntegerField(null=True)
 
     class Meta:
-        db_table = u'analyte_summary_vw'
+        db_table = 'analyte_summary_vw'
         managed = False
 
 
@@ -761,4 +761,4 @@ class MethodAnalyteVW(models.Model):
     link_to_full_method = models.CharField(max_length=240, blank=True)
 
     class Meta:
-        db_table = u'method_analyte_vw'
+        db_table = 'method_analyte_vw'

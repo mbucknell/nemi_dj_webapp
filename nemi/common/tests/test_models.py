@@ -50,8 +50,8 @@ class TestMethodGetInsertUser(TestCase):
 
 
 class SourceCitationFactory(DjangoModelFactory):
-
-    FACTORY_FOR = 'common.SourceCitationRef'
+    class Meta:
+        model = SourceCitationRef
 
     source_citation_name = 'SOURCE NAME'
     title = 'Title'

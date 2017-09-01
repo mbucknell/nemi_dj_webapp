@@ -190,7 +190,7 @@ class SimpleWebProxyView(View):
     are proxied. The class should be extended by assigning a value to service_url.
     '''
     service_url = ''  # Destination url
-    http_method_names = [u'get', u'head']  # This should be a list of method strings. Currently only HEAD and GET are implemented
+    http_method_names = ['get', 'head']  # This should be a list of method strings. Currently only HEAD and GET are implemented
 
     def _target_url(self, request, **kwargs):
         return '%s/%s?%s' % (self.service_url, kwargs.get('op', ''), request.META.get('QUERY_STRING'))
