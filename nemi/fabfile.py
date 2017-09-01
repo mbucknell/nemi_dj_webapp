@@ -93,7 +93,7 @@ def run_jenkins_tests(for_deployment=False):
     with shell_env(DBA_SQL_DJANGO_ENGINE='django.db.backends.sqlite3',
                    PATH='$HOME/bin:$PATH'):
         local('echo $PATH')
-        execute_django_command('jenkins', for_deployment)
+        execute_django_command('jenkins --enable-coverage', for_deployment)
 
 
 @task
