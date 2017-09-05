@@ -1,0 +1,3 @@
+include *.md
+recursive-include nemi/nemi_project/static *
+global-exclude .gitignore
