@@ -77,7 +77,7 @@ def identify_data_files(directory_names):
 
 
 setup(
-    name='nemi_dj_webapp',
+    name='usgs_nemi_ui',
     version=get_package_version(),
     description='National Environmental Methods Index User Interface',
     author='James Kreft, Mary Bucknell, Kathryn Schoephoester, Daniel Naab, Laura De Cicco, Andrew Yan, Matt Myers',
