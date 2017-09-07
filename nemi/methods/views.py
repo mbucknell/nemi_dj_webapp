@@ -2,6 +2,7 @@
 NEMI methods pages.
 '''
 
+from functools import cmp_to_key
 import re
 
 from django.conf import settings
@@ -29,6 +30,7 @@ from domhelp.views import FieldHelpMixin
 from .models import MethodVW, MethodSummaryVW, AnalyteCodeRel, MethodAnalyteAllVW, AnalyteCodeVW, RevisionSummaryVw, RegQueryVW
 from .serializers import MethodVWSerializer
 
+
 def _analyte_value_qs(method_id):
     ''' Returns the analyte data values query set for the method_id.'''
 
@@ -48,6 +50,7 @@ def _analyte_value_qs(method_id):
                                'false_negative_value',
                                'prec_acc_conc_used').distinct()
 
+
 def _clean_name(name):
     ''' Returns name with characters removed or substituted to produce a name suitable
     to be saved as a file with an extension.
@@ -59,6 +62,7 @@ def _clean_name(name):
     result = replace_pattern.sub('_', result)
 
     return result
+
 
 def _clean_keyword(k):
     ''' Returns keyword with quotes properly escaped and the keyword surrounded by brackets. T
@@ -141,8 +145,7 @@ class SourceView(ChoiceJsonView):
                 return -1
             elif a[1] > b[1]:
                 return 1
-            else:
-                return 0
+            return 0
 
         qs = MethodVW.objects.all()
 
@@ -156,7 +159,7 @@ class SourceView(ChoiceJsonView):
         if qs.filter(method_source__startswith=u'DOE').exists():
             source_choices.append(('DOE', 'US Department of Energy'))
 
-        source_choices.sort(cmp=_choice_cmp)
+        source_choices.sort(key=cmp_to_key(_choice_cmp))
         return source_choices
 
 
@@ -261,8 +264,6 @@ class StatSpecialTopicsView(ChoiceJsonView):
         return [(str(m.stat_topic_index), m.stat_special_topic) for m in StatisticalTopics.objects.all()]
 
 
-
-
 class ResultsMixin(MultipleObjectMixin):
     '''
     Extends the MultipleObjectMixin to implement the standard filters for method result searches.
@@ -272,7 +273,7 @@ class ResultsMixin(MultipleObjectMixin):
 
     context_object_name = 'data'
 
-    def get_queryset (self):
+    def get_queryset(self):
         data = self.queryset
 
         if 'category' in self.request.GET and self.request.GET.get('category'):
@@ -386,15 +387,15 @@ class MethodResultsView(MethodResultsMixin, FieldHelpMixin, BaseResultsView):
     template_name = 'methods/method_results.html'
     export_url = reverse_lazy('methods-export_results')
     field_names = ['source_method_identifier',
-                 'method_source',
-                 'method_descriptive_name',
-                 'method_subcategory',
-                 'instrumentation_description',
-                 'media_name',
-                 'method_category',
-                 'method_type_desc',
-                 'matrix',
-                 'relative_cost_symbol']
+                   'method_source',
+                   'method_descriptive_name',
+                   'method_subcategory',
+                   'instrumentation_description',
+                   'media_name',
+                   'method_category',
+                   'method_type_desc',
+                   'matrix',
+                   'relative_cost_symbol']
 
 
 class ExportMethodResultsView(MethodResultsMixin, ExportBaseResultsView):
@@ -427,70 +428,72 @@ class AnalyteResultsMixin(ResultsMixin):
     queryset = MethodAnalyteAllVW.objects.all()
 
     def get_queryset(self):
-            data = super(AnalyteResultsMixin, self).get_queryset()
+        data = super(AnalyteResultsMixin, self).get_queryset()
 
-            if 'analyte_name' in self.request.GET and self.request.GET.get('analyte_name'):
-                names = self.request.GET.getlist('analyte_name')
-                data = data.filter(analyte_name__iregex=r'(' + '|'.join(['^' + re.escape(n) + '$' for n in names]) + ')')
+        if 'analyte_name' in self.request.GET and self.request.GET.get('analyte_name'):
+            names = self.request.GET.getlist('analyte_name')
+            data = data.filter(analyte_name__iregex=r'(' + '|'.join(['^' + re.escape(n) + '$' for n in names]) + ')')
 
-            elif 'analyte_code' in self.request.GET and self.request.GET.get('analyte_code'):
-                codes = self.request.GET.getlist('analyte_code')
-                data = data.filter(analyte_code__iregex=r'(' + '|'.join(['^' + re.escape(c) + '$' for c in codes]) + '$)')
+        elif 'analyte_code' in self.request.GET and self.request.GET.get('analyte_code'):
+            codes = self.request.GET.getlist('analyte_code')
+            data = data.filter(analyte_code__iregex=r'(' + '|'.join(['^' + re.escape(c) + '$' for c in codes]) + '$)')
 
-            else:
-                data = data.filter(preferred__exact= -1)  # Only get the method for the preferred analyte
-                analyte_type = self.request.GET.get('analyte_type', '')
-                waterbody_type = self.request.GET.get('waterbody_type', '')
-                gear_type = self.request.GET.get('gear_type', '')
+        else:
+            data = data.filter(preferred__exact=-1)  # Only get the method for the preferred analyte
+            analyte_type = self.request.GET.get('analyte_type', '')
+            waterbody_type = self.request.GET.get('waterbody_type', '')
+            gear_type = self.request.GET.get('gear_type', '')
 
-                if analyte_type != '':
-                    data = data.filter(analyte_type__exact=analyte_type)
-                if waterbody_type != '':
-                    data = data.filter(waterbody_type__exact=waterbody_type)
-                if gear_type != '':
-                    data = data.filter(instrumentation_id__exact=gear_type)
+            if analyte_type != '':
+                data = data.filter(analyte_type__exact=analyte_type)
+            if waterbody_type != '':
+                data = data.filter(waterbody_type__exact=waterbody_type)
+            if gear_type != '':
+                data = data.filter(instrumentation_id__exact=gear_type)
 
-            return data.values('method_source_id',
-                         'method_id',
-                         'source_method_identifier',
-                         'method_source',
-                         'method_descriptive_name',
-                         'method_subcategory',
-                         'method_source_id',
-                         'method_source_contact',
-                         'method_source_url',
-                         'method_type_desc',
-                         'method_descriptive_name',
-                         'media_name',
-                         'waterbody_type',
-                         'dl_value',
-                         'dl_units_description',
-                         'dl_type_description',
-                         'dl_type',
-                         'accuracy',
-                         'accuracy_units_description',
-                         'accuracy_units',
-                         'precision',
-                         'precision_units_description',
-                         'precision_units',
-                         'prec_acc_conc_used',
-                         'false_positive_value',
-                         'false_negative_value',
-                         'dl_units',
-                         'instrumentation_description',
-                         'instrumentation',
-                         'relative_cost',
-                         'relative_cost_symbol',
-                         'cost_effort_key',
-                         'matrix',
-                         'pbt',
-                         'toxic',
-                         'corrosive',
-                         'waste',
-                         'assumptions_comments',
-                         'analyte_name',
-                         'analyte_code',
-                         ).distinct()
+        return data.values(
+            'method_source_id',
+            'method_id',
+            'source_method_identifier',
+            'method_source',
+            'method_descriptive_name',
+            'method_subcategory',
+            'method_source_id',
+            'method_source_contact',
+            'method_source_url',
+            'method_type_desc',
+            'method_descriptive_name',
+            'media_name',
+            'waterbody_type',
+            'dl_value',
+            'dl_units_description',
+            'dl_type_description',
+            'dl_type',
+            'accuracy',
+            'accuracy_units_description',
+            'accuracy_units',
+            'precision',
+            'precision_units_description',
+            'precision_units',
+            'prec_acc_conc_used',
+            'false_positive_value',
+            'false_negative_value',
+            'dl_units',
+            'instrumentation_description',
+            'instrumentation',
+            'relative_cost',
+            'relative_cost_symbol',
+            'cost_effort_key',
+            'matrix',
+            'pbt',
+            'toxic',
+            'corrosive',
+            'waste',
+            'assumptions_comments',
+            'analyte_name',
+            'analyte_code',
+        ).distinct()
+
 
 class AnalyteResultsView(AnalyteResultsMixin, FieldHelpMixin, BaseResultsView):
     '''
@@ -555,6 +558,7 @@ class ExportAnalyteResultsView(AnalyteResultsMixin, ExportBaseResultsView):
 
     filename = 'analyte_results'
 
+
 class StatisticalResultsMixin(ResultsMixin):
     '''
     Extend ResultsMixin to implement the querying part of the results for statistical methods.
@@ -590,6 +594,7 @@ class StatisticalResultsMixin(ResultsMixin):
 
         return data
 
+
 class StatisticalResultsView(StatisticalResultsMixin, FieldHelpMixin, BaseResultsView):
     '''
     Extends StatisticalResultsMixin and BaseResultsView to implement the statistical method results page.
@@ -604,6 +609,7 @@ class StatisticalResultsView(StatisticalResultsMixin, FieldHelpMixin, BaseResult
                    'method_source',
                    'link_to_full_method']
 
+
 class ExportStatisticalResultsView(StatisticalResultsMixin, ExportBaseResultsView):
     '''
     Extend StatisticalResultsMixin and ExportBaseResultsView to implement the download statistical method results.
@@ -617,8 +623,7 @@ class ExportStatisticalResultsView(StatisticalResultsMixin, ExportBaseResultsVie
                      'method_official_name',
                      'author',
                      'publication_year',
-                     'sam_complexity',
-                     )
+                     'sam_complexity')
     method_summary_url = '/methods/sams_method_summary/'
     filename = 'statistical_method_results'
 
@@ -637,9 +642,10 @@ class RegulatoryResultsMixin(ResultsMixin):
             data = data.filter(analyte_name__iexact=self.request.GET.get('analyte_name'))
 
         elif 'analyte_code' in self.request.GET and self.request.GET.get('analyte_code'):
-            data = data.filter(preferred= -1).filter(analyte_code__iexact=self.request.GET.get('analyte_code'))
+            data = data.filter(preferred=-1).filter(analyte_code__iexact=self.request.GET.get('analyte_code'))
 
         return data.order_by('regulation', 'method_source', 'source_method_identifier')
+
 
 class RegulatoryResultsView(RegulatoryResultsMixin, FieldHelpMixin, BaseResultsView):
     '''Extends the mixins to implement the regulatory results view.
@@ -657,8 +663,7 @@ class RegulatoryResultsView(RegulatoryResultsMixin, FieldHelpMixin, BaseResultsV
                    'dl_value',
                    'dl_type',
                    'instrumentation_description',
-                   'relative_cost'
-                   ]
+                   'relative_cost']
 
 
 class ExportRegulatoryResultsView(RegulatoryResultsMixin, ExportBaseResultsView):
@@ -679,8 +684,7 @@ class ExportRegulatoryResultsView(RegulatoryResultsMixin, ExportBaseResultsView)
                      'instrumentation',
                      'instrumentation_description',
                      'relative_cost_symbol',
-                     'relative_cost'
-                     )
+                     'relative_cost')
 
     filename = 'regulatory_method_results'
 
@@ -704,14 +708,13 @@ class KeywordResultsView(TemplateResponseMixin, View):
                 # Render a blank form
                 return self.render_to_response({'error' : True})
 
-            elif re.search('\w', keyword) == None:
+            elif re.search(r'\w', keyword) is None:
                 # Render a blank form
                 return self.render_to_response({'error' : True})
 
-            else:
-                clean_keyword = _clean_keyword(keyword)
+            clean_keyword = _clean_keyword(keyword)
 
-                query = "SELECT DISTINCT MAX(score(1)) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
+            query = "SELECT DISTINCT MAX(score(1)) method_summary_score, mf.method_id, mf.source_method_identifier method_number, \
 mf.link_to_full_method, mf.mimetype, mf.method_official_name, mf.method_descriptive_name, mf.method_source, mf.method_category \
 FROM nemi_data.method_fact mf, nemi_data.revision_join rj \
 WHERE mf.revision_id = rj.revision_id (+) AND \
@@ -721,34 +724,34 @@ GROUP BY mf.method_id, mf.source_method_identifier, mf.link_to_full_method, mf.m
 mf.method_descriptive_name, mf.method_source, mf.method_category \
 ORDER BY method_summary_score desc;"
 
-                # Execute as raw query since  it uses a CONTAINS clause and context grammer.
-                cursor = connection.cursor()  # @UndefinedVariable
-                cursor.execute(query)
-                results_list = dictfetchall(cursor)
-                paginator = Paginator(results_list, 20)
+            # Execute as raw query since  it uses a CONTAINS clause and context grammer.
+            cursor = connection.cursor()  # @UndefinedVariable
+            cursor.execute(query)
+            results_list = dictfetchall(cursor)
+            paginator = Paginator(results_list, 20)
 
-                try:
-                    page = int(request.GET.get('page', '1'))
-                except ValueError:
-                    page = 1
+            try:
+                page = int(request.GET.get('page', '1'))
+            except ValueError:
+                page = 1
 
-                # If page request is out of range, deliver last page of results.
-                try:
-                    results = paginator.page(page)
-                except (EmptyPage, InvalidPage):
-                    results = paginator.page(paginator.num_pages)
+            # If page request is out of range, deliver last page of results.
+            try:
+                results = paginator.page(page)
+            except (EmptyPage, InvalidPage):
+                results = paginator.page(paginator.num_pages)
 
-                path = request.get_full_path()
-                # Remove the &page parameter.
-                current_url = path.rsplit('&page=')[0]
-                return self.render_to_response({'keyword': keyword,
-                                                'current_url' : current_url,
-                                                'results' : results,
-                                                'total_found' : len(results_list)})
+            path = request.get_full_path()
+            # Remove the &page parameter.
+            current_url = path.rsplit('&page=')[0]
+            return self.render_to_response({'keyword': keyword,
+                                            'current_url' : current_url,
+                                            'results' : results,
+                                            'total_found' : len(results_list)})
 
-        else:
-            # Render a blank form
-            return self.render_to_response({})
+        # Render a blank form
+        return self.render_to_response({})
+
 
 class BrowseMethodsView(ListView):
     '''
@@ -854,8 +857,7 @@ class StatisticalMethodSummaryView(FieldHelpMixin, DetailView):
                    'sam_complexity',
                    'media_emphasized',
                    'media_subcategory',
-                   'special_topics'
-                   ]
+                   'special_topics']
 
 
 class ExportMethodAnalyte(View):
@@ -904,13 +906,13 @@ class ExportMethodAnalyte(View):
                 else:
                     response.write('%.2f %s\t' % (row['precision'], row['precision_units']))
 
-                if row['false_positive_value'] == None:
+                if row['false_positive_value'] is None:
                     response.write('\t')
 
                 else:
                     response.write('%s\t' % row['false_positive_value'])
 
-                if row['false_negative_value'] == None:
+                if row['false_negative_value'] is None:
                     response.write('\t')
                 else:
                     response.write('%s\t' % row['false_negative_value'])
