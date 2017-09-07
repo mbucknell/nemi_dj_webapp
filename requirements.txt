@@ -5,8 +5,9 @@ astroid==1.0.1
 bumpversion==0.5.3
 coverage==4.4.1
 cx-Oracle==5.2
+dj-database-url==0.4.2
 django-braces==1.2.2
-django-debug-toolbar==0.9.4
+django-debug-toolbar==1.8
 django-filter==0.7
 django-jenkins==0.110.0
 django-tinymce==2.6.0

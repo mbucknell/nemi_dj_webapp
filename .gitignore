@@ -1,4 +1,5 @@
 *.pyc
 nemi/compass/.sass-cache
-nemi/nemi_project/local_settings.py
+nemi/compass/Gem
+nemi/nemi_project/settings/local.py
 nemi/nemi_project/static/styles
