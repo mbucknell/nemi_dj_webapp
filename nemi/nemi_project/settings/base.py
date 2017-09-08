@@ -158,7 +158,8 @@ INSTALLED_APPS = (
     'domhelp',
     'methods',
     'protocols',
-    'sams'
+    'sams',
+    'legacy',
 )
 
 # A sample logging configuration. The only tangible logging
