@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django_object_actions import (
+    DjangoObjectActions, takes_instance_or_queryset)
 
 from nemi_project.admin import method_admin
 from common import models
@@ -34,7 +36,14 @@ class AbstractMethodAdmin(admin.ModelAdmin):
         return False
 
 
-class MethodOnlineAdmin(AbstractMethodAdmin):
+class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
+    exclude = (
+        'insert_person_name', 'insert_person_name2', 'insert_date',
+        'last_update_date', 'last_update_person_name', 'approved',
+        'approved_date', 'reviewer_name')
+    actions = ('submit_for_review',)
+    change_actions = actions
+
     class Meta:
         model = models.MethodOnline
 
@@ -49,13 +58,40 @@ class MethodOnlineAdmin(AbstractMethodAdmin):
             obj.insert_person_name == request.user.username and
             obj.ready_for_review == 'N')
 
+    @takes_instance_or_queryset
+    def submit_for_review(self, request, queryset):
+        rows_updated = queryset.update(ready_for_review='Y')
+        self.message_user(request, 'submitted %d method%s for review' % (
+            rows_updated, 's' if rows_updated > 1 else ''))
 
-class MethodStgAdmin(AbstractMethodAdmin):
+    submit_for_review.label = 'Submit for review'
+    submit_for_review.short_description = 'Submit method for review'
+
+    def save_model(self, request, obj, form, change):
+        # If adding a new instance, set `insert_person_name` to current user.
+        if not change:
+            obj.insert_person_name = request.user.username
+        return super(MethodOnlineAdmin, self).save_model(request, obj, form, change)
+
+
+class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
     class Meta:
         model = models.MethodStg
 
+    actions = ('publish',)
+    change_actions = actions
+
     def has_change_permission(self, request, obj=None):
         return obj is None
+
+    @takes_instance_or_queryset
+    def publish(self, request, queryset):
+        rows_updated = queryset.update(approved='Y')
+        self.message_user(request, 'published %d method%s' % (
+            rows_updated, 's' if rows_updated > 1 else ''))
+
+    publish.label = 'Publish'
+    publish.short_description = 'Publish the selected methods'
 
 
 class MethodAdmin(AbstractMethodAdmin):

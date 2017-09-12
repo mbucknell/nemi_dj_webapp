@@ -149,8 +149,9 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
 
     # Third party apps
-    'tinymce',
+    'django_object_actions',
     'rest_framework',
+    'tinymce',
 
     # NEMI/CIDA specific apps
     'common',
