@@ -1,56 +1,71 @@
 from django.contrib import admin
-from django.contrib.flatpages.models import FlatPage
-from django.forms import ModelForm
-from tinymce.widgets import TinyMCE
 
-from . import models
+from nemi_project.admin import method_admin
+from common import models
 
 
-class FlatPageForm(ModelForm):
-
+class AbstractMethodAdmin(admin.ModelAdmin):
     class Meta:
-        model = FlatPage
         fields = '__all__'
-        widgets = {'content': TinyMCE(attrs={'cols': 100, 'rows': 50})}
+        abstract = True
 
-
-class FlatPageAdmin(admin.ModelAdmin):
-
-    form = FlatPageForm
-
-
-class MethodAdmin(admin.ModelAdmin):
     list_display = (
         'method_official_name', 'insert_date', 'last_update_date',
         'approved', 'approved_date'
     )
-    class Meta:
-        model = models.Method
-        fields = '__all__'
+
+    def get_queryset(self, request):
+        queryset = super(AbstractMethodAdmin, self).get_queryset(request)
+        if not request.user.is_superuser:
+            queryset = queryset.filter(insert_person_name=request.user.username)
+        return queryset
+
+    def has_module_permission(self, request):
+        # All active users have method
+        return request.user.is_active
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
-class MethodOnlineAdmin(admin.ModelAdmin):
-    list_display = (
-        'method_official_name', 'insert_date', 'last_update_date',
-        'approved', 'approved_date'
-    )
+class MethodOnlineAdmin(AbstractMethodAdmin):
     class Meta:
         model = models.MethodOnline
-        fields = '__all__'
+
+    def has_add_permission(self, request):
+        # Anyone may submit new methods for review
+        return request.user.is_active
+
+    def has_change_permission(self, request, obj=None):
+        # Users may edit their own submissions, if it hasn't already been
+        # submitted for review.
+        return obj is None or (
+            obj.insert_person_name == request.user.username and
+            obj.ready_for_review == 'N')
 
 
-class MethodStgAdmin(admin.ModelAdmin):
-    list_display = (
-        'method_official_name', 'insert_date', 'last_update_date',
-        'approved', 'approved_date'
-    )
+class MethodStgAdmin(AbstractMethodAdmin):
     class Meta:
         model = models.MethodStg
-        fields = '__all__'
+
+    def has_change_permission(self, request, obj=None):
+        return obj is None
 
 
-admin.site.unregister(FlatPage)
-admin.site.register(FlatPage, FlatPageAdmin)
-admin.site.register(models.Method, MethodAdmin)
-admin.site.register(models.MethodOnline, MethodOnlineAdmin)
-admin.site.register(models.MethodStg, MethodStgAdmin)
+class MethodAdmin(AbstractMethodAdmin):
+    class Meta:
+        model = models.Method
+
+    def has_change_permission(self, request, obj=None):
+        return obj is None
+
+
+method_admin.register(models.MethodOnline, MethodOnlineAdmin)
+method_admin.register(models.MethodStg, MethodStgAdmin)
+method_admin.register(models.Method, MethodAdmin)

@@ -482,8 +482,7 @@ class MethodOnline(MethodAbstract):
     class Meta:
         db_table = 'method_online'
         managed = False
-        verbose_name = 'method (online)'
-        verbose_name_plural = 'methods (online)'
+        verbose_name = 'pending method'
 
 
 class MethodStg(MethodAbstract):
@@ -500,8 +499,7 @@ class MethodStg(MethodAbstract):
     class Meta:
         db_table = 'method_stg'
         managed = False
-        verbose_name = 'method (staging)'
-        verbose_name_plural = 'methods (staging)'
+        verbose_name = 'in-review method'
 
 
 class Method(MethodAbstract):
@@ -513,7 +511,7 @@ class Method(MethodAbstract):
     class Meta:
         db_table = 'method'
         managed = False
-        verbose_name = 'method'
+        verbose_name = 'published method'
 
 
 class StatisticalAnalysisType(models.Model):
@@ -762,3 +760,37 @@ class MethodAnalyteVW(models.Model):
 
     class Meta:
         db_table = 'method_analyte_vw'
+
+
+class UserRole(models.Model):
+    role_name = models.CharField(primary_key=True, max_length=400)
+    role_description = models.CharField(max_length=400, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'user_roles'
+
+
+class LegacyUserAccount(models.Model):
+    """
+    Legacy user account that was used for method submission.
+    """
+    user_seq = models.FloatField(primary_key=True)
+    user_name = models.CharField(unique=True, max_length=100)
+    user_password = models.TextField(blank=True, null=True)  # This field type is a guess.
+    user_role = models.ForeignKey(UserRole, db_column='user_role')
+    email = models.CharField(unique=True, max_length=200)
+    forgot_pw_flag = models.CharField(max_length=1)
+    data_entry_name = models.CharField(max_length=100)
+    data_entry_date = models.DateField()
+    last_update_name = models.CharField(max_length=100, blank=True, null=True)
+    last_update_date = models.DateField(blank=True, null=True)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=200)
+    organization = models.CharField(max_length=1000, blank=True, null=True)
+    last_login = models.DateField(blank=True, null=True)
+    user_status = models.CharField(max_length=40)
+
+    class Meta:
+        managed = False
+        db_table = 'user_account'

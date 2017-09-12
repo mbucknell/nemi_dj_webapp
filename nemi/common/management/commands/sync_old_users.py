@@ -5,9 +5,9 @@ already exist. New accounts will have a random password assigned, and should
 use the "forgot password" tool to create a new password.
 """
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 
-from legacy import models
+from ... import models
 
 
 class Command(BaseCommand):
@@ -16,6 +16,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         new_users = set()
         existing_users = set()
+
+        roles = {
+            'admin': Group.objects.get_or_create(name='method_admin')[0],
+            'data_entry': Group.objects.get_or_create(name='method_data_entry')[0],
+            'reviewer': Group.objects.get_or_create(name='method_reviewer')[0],
+        }
+
         for account in models.LegacyUserAccount.objects.all():
             user, created = User.objects.get_or_create(
                 username=account.user_name,
@@ -29,6 +36,11 @@ class Command(BaseCommand):
                     'last_login': account.last_login,
                 },
             )
+
+            # Ensure the user has the appropriate group.
+            user.groups.add(roles[account.user_role_id])
+            user.save()
+
             if created:
                 new_users.add(user)
                 user.set_password(User.objects.make_random_password())

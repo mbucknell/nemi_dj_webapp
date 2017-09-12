@@ -12,8 +12,8 @@ import domhelp
 import methods.urls
 import protocols.urls
 import sams.urls
-# import memo.urls
 
+from .admin import method_admin
 from . import sitemaps
 from . import views
 
@@ -26,10 +26,11 @@ sitemaps = {
     'methods' : sitemaps.MethodSitemap,
     'protocols' : sitemaps.ProtocolSitemap,
     'statisticalmethods' : sitemaps.StatisticalMethodSitemap
-    }
+}
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^method-submission/', include(method_admin.urls)),
 
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     url(r'^robots\.txt$',

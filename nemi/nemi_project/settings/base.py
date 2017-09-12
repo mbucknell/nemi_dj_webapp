@@ -159,7 +159,6 @@ INSTALLED_APPS = (
     'methods',
     'protocols',
     'sams',
-    'legacy',
 )
 
 # A sample logging configuration. The only tangible logging
