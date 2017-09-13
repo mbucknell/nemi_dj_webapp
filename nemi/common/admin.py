@@ -1,9 +1,96 @@
+from django import forms
 from django.contrib import admin
+from django.core.exceptions import ValidationError
+from django.forms.models import BaseInlineFormSet
+import PyPDF2
+
 from django_object_actions import (
     DjangoObjectActions, takes_instance_or_queryset)
 
 from nemi_project.admin import method_admin
 from common import models
+
+
+class AbstractRevisionInline(admin.TabularInline):
+    extra = 1
+    class Meta:
+        fields = '__all__'
+        abstract = True
+
+
+class RevisionOnlineForm(forms.ModelForm):
+    class Meta:
+        model = models.RevisionJoinOnline
+        fields = (
+            'revision_flag', 'revision_information', 'source_citation',
+            'pdf_file',
+            #'reviewer_name'
+        )
+
+    pdf_file = forms.FileField(required=False)
+
+    def clean_pdf_file(self):
+        if self.cleaned_data['pdf_file']:
+            # To validate the PDF, try to read it with PyPDF2.
+            try:
+                PyPDF2.PdfFileReader(self.cleaned_data['pdf_file'])
+            except PyPDF2.utils.PdfReadError:
+                raise ValidationError('Please upload a valid PDF file.')
+
+    def save(self, commit=True):
+        instance = super(RevisionOnlineForm, self).save(commit=False)
+
+        if self.cleaned_data['pdf_file']:
+            instance.method_pdf = self.cleaned_data['pdf_file'].read()
+            instance.mimetype = 'application/pdf'
+
+        if commit:
+            instance.save()
+
+        return instance
+
+
+class RevisionInlineFormSet(BaseInlineFormSet):
+    def clean(self):
+        super(RevisionInlineFormSet, self).clean()
+
+        # If more than one revision has `revision_flag` set, error.
+        if sum(f.cleaned_data.get('revision_flag') or 0 for f in self.forms) > 1:
+            msg = 'There may not be more than one active revision per method.'
+            raise ValidationError(msg)
+
+
+class RevisionOnlineAdmin(AbstractRevisionInline):
+    model = models.RevisionJoinOnline
+    form = RevisionOnlineForm
+    formset = RevisionInlineFormSet
+
+    def pdf_file(self):
+        # If we have a method_pdf, use the revision name as the PDF label.
+        print('%s.pdf' % self.revision_information if self.method_pdf else None)
+        return '%s.pdf' % self.revision_information if self.method_pdf else None
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.insert_person_name = request.user.username
+        obj.last_update_person_name = request.user.username
+        return super(RevisionOnlineAdmin, self).save_model(request, obj, form, change)
+
+    def has_add_permission(self, request):
+        # As an inline, we defer to the parent permissions
+        return True
+
+    def has_change_permission(self, request, obj=None):
+        # As an inline, we defer to the parent permissions
+        return True
+
+
+class RevisionStgAdmin(AbstractRevisionInline):
+    model = models.RevisionJoinStg
+
+
+class RevisionAdmin(AbstractRevisionInline):
+    model = models.RevisionJoin
 
 
 class AbstractMethodAdmin(admin.ModelAdmin):
@@ -41,6 +128,7 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
         'insert_person_name', 'insert_person_name2', 'insert_date',
         'last_update_date', 'last_update_person_name', 'approved',
         'approved_date', 'reviewer_name')
+    inlines = (RevisionOnlineAdmin,)
     actions = ('submit_for_review',)
     change_actions = actions
 
@@ -78,6 +166,7 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
     class Meta:
         model = models.MethodStg
 
+    inlines = (RevisionStgAdmin,)
     actions = ('publish',)
     change_actions = actions
 
@@ -97,6 +186,8 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
 class MethodAdmin(AbstractMethodAdmin):
     class Meta:
         model = models.Method
+
+    inlines = (RevisionAdmin,)
 
     def has_change_permission(self, request, obj=None):
         return obj is None

@@ -46,7 +46,7 @@ class PdfView(View):
         self.get_pdf_info()
 
         if not self.mimetype or not self.pdf:
-            return Http404
+            raise Http404
 
         response = HttpResponse(content_type=self.mimetype)
         response['Content-Disposition'] = 'attachment;filename=%s.pdf' % self.filename

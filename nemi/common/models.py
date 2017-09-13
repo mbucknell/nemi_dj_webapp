@@ -794,3 +794,63 @@ class LegacyUserAccount(models.Model):
     class Meta:
         managed = False
         db_table = 'user_account'
+
+
+class AbstractRevision(models.Model):
+    revision_id = models.AutoField(primary_key=True)
+
+    revision_flag = models.BooleanField(db_column='revision_flag')
+    revision_information = models.CharField(max_length=100)
+
+    insert_date = models.DateField(
+        blank=True, null=True, auto_now_add=True, editable=False)
+    insert_person_name = models.CharField(
+        max_length=50, blank=True, null=True, editable=False)
+    last_update_date = models.DateField(blank=True, null=True, auto_now=True)
+    last_update_person_name = models.CharField(
+        max_length=50, blank=True, null=True, editable=False)
+
+    pdf_insert_person = models.CharField(max_length=20, blank=True, null=True)
+    pdf_insert_date = models.DateField(blank=True, null=True)
+    method_pdf = models.BinaryField(blank=True, null=True)
+    mimetype = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.revision_information
+
+
+class RevisionJoin(AbstractRevision):
+    method = models.ForeignKey(Method, models.DO_NOTHING, blank=True, null=True)
+    source_citation = models.ForeignKey(SourceCitationRef, models.DO_NOTHING, blank=True, null=True)
+    date_loaded = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'revision_join'
+        unique_together = (('method', 'revision_information', 'source_citation'),)
+
+
+class RevisionJoinOnline(AbstractRevision):
+    #method_id = models.IntegerField()
+    method = models.ForeignKey(MethodOnline, models.DO_NOTHING, blank=True, null=True)
+    source_citation = models.ForeignKey(SourceCitationOnlineRef, models.DO_NOTHING, blank=True, null=True)
+    reviewer_name = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'revision_join_online'
+        unique_together = (('method', 'revision_information'),)
+
+
+class RevisionJoinStg(AbstractRevision):
+    method = models.ForeignKey(MethodStg, models.DO_NOTHING, blank=True, null=True)
+    source_citation = models.ForeignKey(SourceCitationStgRef, models.DO_NOTHING, blank=True, null=True)
+    date_loaded = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'revision_join_stg'
+        unique_together = (('method', 'revision_information', 'source_citation'),)
