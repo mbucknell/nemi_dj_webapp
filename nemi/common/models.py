@@ -344,6 +344,8 @@ class MethodAbstract(models.Model):
         MethodSourceRef,
         null=True, blank=True,
         help_text='The "Method source" is the organization that publishes a method.\nIF a method has a publication source THEN include it ELSE do not include method in database')
+    source_citation = models.ForeignKey(
+        SourceCitationRef, help_text='The "Source citation" is a reference to the publication/volume that contains the method. Choose the appropriate source citation (e.g., ASTM_11_01 - ASTM Vol. 11.01, MCAWW - Methods of Chemical Analysis for Water and Waste) from the list of values.\nIf your method does not fit into the available citations, contact the NEMI manager at jsulliv@usgs.gov.\nNOTE: Source citation acroynms are not always obvious -- always consult the Source citation list prior to selection one.')
     brief_method_summary = models.CharField(
         max_length=4000,
         help_text='Develop the "Brief method summary" using the Method Summary Section of the method. For example:\nSample, blanks and standards in sealed tubes are heated in an oven or block digestor in the presence of dichromate at 150 C. After two hours, the tubes are removed from the oven or digestor, cooled and measured spectrophotometrically at 600 nm.\nSome details in the summary are fine, but do not make it overly technical. The objective of the summary is to give the NEMI user an idea of how the method works and what it will take to run it, not how to run it.')
@@ -490,14 +492,11 @@ class MethodAbstract(models.Model):
         return User(username='Unknown')
 
 
-SOURCE_CITATION_HELP_TEXT = 'The "Source citation" is a reference to the publication/volume that contains the method. Choose the appropriate source citation (e.g., ASTM_11_01 - ASTM Vol. 11.01, MCAWW - Methods of Chemical Analysis for Water and Waste) from the list of values.\nIf your method does not fit into the available citations, contact the NEMI manager at jsulliv@usgs.gov.\nNOTE: Source citation acroynms are not always obvious -- always consult the Source citation list prior to selection one.'
 COMMENTS_HELP_TEXT = 'This field is only to be used to communicate method entry status to the NEMI data review team, for example, if you will be entering 10 methods, you can report that in this field, "Method 1 of 10", "Method 2 of 10", etc. It would be particularly helpful to notify the team when you have entered the last of your batch of methods using this field so that they know to start reviewing the methods.'
 
 class MethodOnline(MethodAbstract):
 
     method_id = models.AutoField(primary_key=True)
-    source_citation = models.ForeignKey(
-        SourceCitationOnlineRef, help_text=SOURCE_CITATION_HELP_TEXT)
     comments = models.CharField(
         max_length=2000, blank=True, help_text=COMMENTS_HELP_TEXT)
     ready_for_review = models.CharField(max_length=1,
@@ -518,8 +517,6 @@ class MethodOnline(MethodAbstract):
 class MethodStg(MethodAbstract):
 
     method_id = models.IntegerField(primary_key=True)
-    source_citation = models.ForeignKey(
-        SourceCitationStgRef, help_text=SOURCE_CITATION_HELP_TEXT)
     comments = models.CharField(
         max_length=2000, blank=True, help_text=COMMENTS_HELP_TEXT)
     ready_for_review = models.CharField(max_length=1,
@@ -536,8 +533,6 @@ class MethodStg(MethodAbstract):
 class Method(MethodAbstract):
 
     method_id = models.IntegerField(primary_key=True)
-    source_citation = models.ForeignKey(
-        SourceCitationRef, help_text=SOURCE_CITATION_HELP_TEXT)
     date_loaded = models.DateField(auto_now_add=True)
 
     class Meta:

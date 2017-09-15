@@ -164,8 +164,8 @@ class AbstractMethodAdmin(admin.ModelAdmin):
             'fields': (
                 'source_method_identifier', 'method_descriptive_name',
                 'method_type', 'method_subcategory', 'no_analyte_flag',
-                'method_source', 'brief_method_summary', 'media_name',
-                'method_official_name', 'instrumentation',
+                'method_source', 'source_citation', 'brief_method_summary',
+                'media_name', 'method_official_name', 'instrumentation',
                 'waterbody_type', 'scope_and_application', 'dl_type',
                 'dl_note', 'applicable_conc_range', 'conc_range_units',
                 'interferences', 'precision_descriptor_notes',
@@ -223,7 +223,6 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
         ('Submission-Specific Fields', {
             'fields': (
                 ('ready_for_review', 'delete_after_load'),
-                ('source_citation',),
                 ('comments',),
             )
         }),
