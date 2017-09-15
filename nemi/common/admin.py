@@ -24,6 +24,9 @@ class ReadOnlyMixin:
         # Blunt force, return every field on the model.
         return [field.name for field in self.model._meta.fields]
 
+    def has_add_permission(self, request):
+        return False
+
     def has_delete_permission(self, request, obj=None):
         return False
 
@@ -126,7 +129,7 @@ class RevisionOnlineAdmin(AbstractRevisionInline):
 
     def get_readonly_fields(self, request, obj=None):
         # Owners can edit any field when in the "online" tables.
-        if obj.insert_person_name == request.user.username:
+        if obj and obj.insert_person_name == request.user.username:
             return ()
         return super(RevisionOnlineAdmin, self).get_readonly_fields(request, obj=obj)
 
@@ -254,7 +257,7 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         # Owners can edit any field when in the "online" tables.
-        if obj.insert_person_name == request.user.username:
+        if obj and obj.insert_person_name == request.user.username:
             return ()
         return super(MethodOnlineAdmin, self).get_readonly_fields(request, obj=obj)
 
