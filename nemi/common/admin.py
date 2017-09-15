@@ -51,6 +51,9 @@ class RevisionOnlineForm(forms.ModelForm):
 
 
 class RevisionInlineFormSet(BaseInlineFormSet):
+    class Meta:
+        fields = '__all__'
+
     def clean(self):
         super(RevisionInlineFormSet, self).clean()
 
@@ -95,12 +98,42 @@ class RevisionAdmin(AbstractRevisionInline):
 
 class AbstractMethodAdmin(admin.ModelAdmin):
     class Meta:
-        fields = '__all__'
         abstract = True
 
     list_display = (
         'method_official_name', 'insert_date', 'last_update_date',
         'approved', 'approved_date'
+    )
+    fieldsets = (
+        ('General Fields', {
+            #'classes': ('collapse',),
+            'fields': (
+                'source_method_identifier', 'method_descriptive_name',
+                'method_type', 'method_subcategory', 'no_analyte_flag',
+                'method_source', 'brief_method_summary', 'media_name',
+                'method_official_name', 'instrumentation',
+                'waterbody_type', 'scope_and_application', 'dl_type',
+                'dl_note', 'applicable_conc_range', 'conc_range_units',
+                'interferences', 'precision_descriptor_notes',
+                'qc_requirements', 'sample_handling', 'max_holding_time',
+                'sample_prep_methods', 'relative_cost',
+                'link_to_full_method', 'regs_only', 'reviewer_name',
+            ),
+        }),
+        ('CBR-only fields', {
+            'fields': (('rapidity', 'screening', 'cbr_only'),)
+        }),
+        ('Greenness profile fields', {
+            'fields': (
+                ('collected_sample_amt_ml', 'collected_sample_amt_g'),
+                ('analysis_amt_ml', 'analysis_amt_g'),
+                'liquid_sample_flag', 'ph_of_analytical_sample', 'calc_waste_amt',
+                'quality_review_id', 'pbt', 'toxic', 'corrosive', 'waste',
+                'assumptions_comments', 'matrix', 'technique', 'etv_link',
+                'sam_complexity', 'level_of_training',
+                'media_emphasized_note', 'media_subcategory', 'notes'
+            )
+        }),
     )
 
     def get_queryset(self, request):
@@ -124,16 +157,21 @@ class AbstractMethodAdmin(admin.ModelAdmin):
 
 
 class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
-    exclude = (
-        'insert_person_name', 'insert_person_name2', 'insert_date',
-        'last_update_date', 'last_update_person_name', 'approved',
-        'approved_date', 'reviewer_name')
+    class Meta:
+        model = models.MethodOnline
+
     inlines = (RevisionOnlineAdmin,)
     actions = ('submit_for_review',)
     change_actions = actions
-
-    class Meta:
-        model = models.MethodOnline
+    fieldsets = (
+        ('Submission-Specific Fields', {
+            'fields': (
+                ('ready_for_review', 'delete_after_load'),
+                ('source_citation',),
+                ('comments',),
+            )
+        }),
+    ) + AbstractMethodAdmin.fieldsets
 
     def has_add_permission(self, request):
         # Anyone may submit new methods for review
