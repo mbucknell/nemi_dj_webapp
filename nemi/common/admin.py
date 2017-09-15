@@ -138,7 +138,9 @@ class AbstractMethodAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         queryset = super(AbstractMethodAdmin, self).get_queryset(request)
-        if not request.user.is_superuser:
+        # This is currently a role-based check, but will possibly be changed
+        # to a more granular permission.
+        if not request.user.groups.filter(name='method_admin').exists():
             queryset = queryset.filter(insert_person_name=request.user.username)
         return queryset
 

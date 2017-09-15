@@ -6,7 +6,6 @@ from . import test_utils
 from . import test_views
 from . import test_context_processors
 from . import test_method_admin
-from . import test_fields
 
 
 def suite():
@@ -17,7 +16,6 @@ def suite():
         unittest.TestLoader().loadTestsFromModule(test_views),
         unittest.TestLoader().loadTestsFromModule(test_context_processors),
         unittest.TestLoader().loadTestsFromModule(test_method_admin),
-        unittest.TestLoader().loadTestsFromModule(test_fields),
     ])
 
 
