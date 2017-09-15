@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from django.core.exceptions import ValidationError
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.forms.models import BaseInlineFormSet
 import PyPDF2
 
@@ -11,14 +11,50 @@ from nemi_project.admin import method_admin
 from common import models
 
 
-class AbstractRevisionInline(admin.TabularInline):
-    extra = 1
-    class Meta:
-        fields = '__all__'
-        abstract = True
+class ReadOnlyMixin:
+    """
+    Since the admin interface does not include read-only functionality, here
+    we provide a workaround that may be used with the change view on any
+    `ModelAdmin`.
+
+    This mixin will make each field readonly, disable save
+    buttons in the template, and disable the save-on-POST.
+    """
+    def get_readonly_fields(self, request, obj=None):
+        # Blunt force, return every field on the model.
+        return [field.name for field in self.model._meta.fields]
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        # This is just to enable the change view in the interface.
+        # The rest of the class disables actual change actions.
+        return True
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        context = {
+            'show_save': False,
+            'show_delete_link': False,
+            'show_save_as_new': False,
+            'show_save_and_add_another': False,
+            'show_save_and_continue': False,
+        }
+        context.update(extra_context or {})
+
+        return super(ReadOnlyMixin, self).change_view(
+            request,
+            object_id,
+            form_url=form_url,
+            extra_context=context
+        )
+
+    def save_model(self, request, obj, form, change):
+        raise PermissionDenied
 
 
 class RevisionOnlineForm(forms.ModelForm):
+    extra = 1
     class Meta:
         model = models.RevisionJoinOnline
         fields = (
@@ -51,8 +87,11 @@ class RevisionOnlineForm(forms.ModelForm):
 
 
 class RevisionInlineFormSet(BaseInlineFormSet):
-    class Meta:
-        fields = '__all__'
+    fieldsets = (
+        (None, {
+            'fields': ('revision_flag', 'revision_information', 'source_citation')
+        })
+    )
 
     def clean(self):
         super(RevisionInlineFormSet, self).clean()
@@ -63,10 +102,16 @@ class RevisionInlineFormSet(BaseInlineFormSet):
             raise ValidationError(msg)
 
 
+class AbstractRevisionInline(ReadOnlyMixin, admin.TabularInline):
+    extra = 0
+    formset = RevisionInlineFormSet
+    class Meta:
+        abstract = True
+
+
 class RevisionOnlineAdmin(AbstractRevisionInline):
     model = models.RevisionJoinOnline
     form = RevisionOnlineForm
-    formset = RevisionInlineFormSet
 
     def pdf_file(self):
         # If we have a method_pdf, use the revision name as the PDF label.
@@ -78,6 +123,12 @@ class RevisionOnlineAdmin(AbstractRevisionInline):
             obj.insert_person_name = request.user.username
         obj.last_update_person_name = request.user.username
         return super(RevisionOnlineAdmin, self).save_model(request, obj, form, change)
+
+    def get_readonly_fields(self, request, obj=None):
+        # Owners can edit any field when in the "online" tables.
+        if obj.insert_person_name == request.user.username:
+            return ()
+        return super(RevisionOnlineAdmin, self).get_readonly_fields(request, obj=obj)
 
     def has_add_permission(self, request):
         # As an inline, we defer to the parent permissions
@@ -201,8 +252,14 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
             obj.insert_person_name = request.user.username
         return super(MethodOnlineAdmin, self).save_model(request, obj, form, change)
 
+    def get_readonly_fields(self, request, obj=None):
+        # Owners can edit any field when in the "online" tables.
+        if obj.insert_person_name == request.user.username:
+            return ()
+        return super(MethodOnlineAdmin, self).get_readonly_fields(request, obj=obj)
 
-class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
+
+class MethodStgAdmin(ReadOnlyMixin, DjangoObjectActions, AbstractMethodAdmin):
     class Meta:
         model = models.MethodStg
 
@@ -211,6 +268,8 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
     change_actions = actions
 
     def has_change_permission(self, request, obj=None):
+        #pylint: disable=W0101
+        return True
         return obj is None
 
     @takes_instance_or_queryset
@@ -223,14 +282,11 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
     publish.short_description = 'Publish the selected methods'
 
 
-class MethodAdmin(AbstractMethodAdmin):
+class MethodAdmin(ReadOnlyMixin, AbstractMethodAdmin):
     class Meta:
         model = models.Method
 
     inlines = (RevisionAdmin,)
-
-    def has_change_permission(self, request, obj=None):
-        return obj is None
 
 
 method_admin.register(models.MethodOnline, MethodOnlineAdmin)
