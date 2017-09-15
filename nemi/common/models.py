@@ -30,6 +30,7 @@ class MethodSubcategoryRef(models.Model):
     class Meta:
         db_table = 'method_subcategory_ref'
         managed = False
+        ordering = ('method_subcategory',)
 
     def __str__(self):
         return self.method_subcategory
@@ -316,118 +317,144 @@ class StatisticalMethodManager(models.Manager):
 
 
 class MethodAbstract(models.Model):
-    method_subcategory = models.ForeignKey(MethodSubcategoryRef,
-                                           null=True,
-                                           blank=True)
-    method_source = models.ForeignKey(MethodSourceRef, null=True, blank=True)
+    # Meta fields
+    insert_date = models.DateField(null=True, blank=True)
+    insert_person_name = models.CharField(max_length=50, blank=True)
+    last_update_date = models.DateField(null=True, blank=True)
+    last_update_person_name = models.CharField(max_length=50, blank=True)
+    approved = models.CharField(max_length=1, default='N', choices=YES_NO_CHOICES)
+    approved_date = models.DateField(null=True, blank=True)
+
+    # General fields
     source_method_identifier = models.CharField(
-        max_length=30, unique=True, verbose_name='method number/identifier')
-    method_descriptive_name = models.CharField(max_length=450, blank=True)
-    method_official_name = models.CharField(max_length=250)
-    media_name = models.ForeignKey(MediaNameDOM,
-                                   null=True,
-                                   blank=True,
-                                   db_column='media_name')
-    brief_method_summary = models.CharField(max_length=4000)
-    scope_and_application = models.CharField(max_length=2000, blank=True)
-    dl_type = models.ForeignKey(DlRef,
-                                null=True,
-                                blank=True,
-                                verbose_name='detection limit type')
-    dl_note = models.CharField(max_length=2000,
-                               blank=True,
-                               verbose_name='DL note')
-    applicable_conc_range = models.CharField(max_length=300,
-                                             blank=True)
+        verbose_name='method number/identifier', max_length=30, unique=True,
+        help_text='The method number / identifier can be numerical (e.g., 375.4), numerical w/text (e.g., 4500-SO4 C) or all text (e.g., Simplate). NOTE: If your method number ends in a "0" (e.g., 300.0), please contact the NEMI manager (entries ending in "0" are automatically truncated in Excel, and must be fixed by the NEMI manager).\nWhatever the format, you must choose a unique method number for your method. Also, keep things specific; do not use "Not Applicable," "Color Method" or something of that nature. If your method does not have a unique identifier, you must create one -- consider using a document number (e.g., EPA-XX-X-XXXX), product number, etc..\nIF a method has a published method number THEN include it ELSE create one',)
+    method_descriptive_name = models.CharField(
+        max_length=450, blank=True,
+        help_text='This field is designed to provide the user with a quick identification of a method, so include the analyte (ex: "nitrate") or group of analytes (ex; "nutrients"), the matrix (ex: "in water"), and instrumentation (ex: "using colorimetry"):\nEx. 1: Nitrate in Water by Colorimetry\nEx. 2: Anions in Water by CIE-UV\nNOTE: If the general method includes multiple procedures for different analytes, create a Method entry for each subpart.',)
+    method_type = models.ForeignKey(MethodTypeRef)
+    method_subcategory = models.ForeignKey(
+        MethodSubcategoryRef, null=True, blank=True,
+        help_text='The "Method subcategory" describes the class of analytes that are measured by the method. Choose the appropriate subcategory (e.g., INORGANIC, RADIOCHEMICAL, MICROBIOLOGICAL) from the list of values. If your method does not fit into the available subcategories, or if you have a question about the meaning of the subcategories, contact the NEMI manager.')
+    no_analyte_flag = models.CharField(
+        verbose_name='no analytes', max_length=4, blank=True, null=True,
+        choices=YES_NO_CHOICES,
+        help_text='Select if this method will not have analytes associated with it.',)
+    method_source = models.ForeignKey(
+        MethodSourceRef,
+        null=True, blank=True,
+        help_text='The "Method source" is the organization that publishes a method.\nIF a method has a publication source THEN include it ELSE do not include method in database')
+    brief_method_summary = models.CharField(
+        max_length=4000,
+        help_text='Develop the "Brief method summary" using the Method Summary Section of the method. For example:\nSample, blanks and standards in sealed tubes are heated in an oven or block digestor in the presence of dichromate at 150 C. After two hours, the tubes are removed from the oven or digestor, cooled and measured spectrophotometrically at 600 nm.\nSome details in the summary are fine, but do not make it overly technical. The objective of the summary is to give the NEMI user an idea of how the method works and what it will take to run it, not how to run it.')
+    media_name = models.ForeignKey(
+        MediaNameDOM,
+        null=True, blank=True, db_column='media_name',
+        help_text='The "Media" describes the basic form of the sample that is analyze (not the specific matrix-type such as drinking or ground water). Choose the appropriate media (e.g., AIR, WATER) from the list of values.\nSpecific information (e.g., the method is used for "drinking water and groundwater" analyses) should be provided in the "Scope and Application" section.')
+    method_official_name = models.CharField(
+        max_length=250,
+        help_text='This is the main heading of the method. For example for D2036: Standard Test Methods for Total Cyanides in Water After Distillation')
+    instrumentation = models.ForeignKey(
+        InstrumentationRef,
+        help_text='The "Instrument" describes the instrumention used in the method. Choose the appropriate instrumentation from the list of values.\nNOTE: Only one value can be chosen for each method. If your method contains performance information for 2 or more instruments (e.g., GC-ECD and GC-MS), you make separate methods for each instrument, noting the instrument using "( )" after the method number (e.g. 502.2 (GC-PID) and 502.2 (GC-ELCD)).')
+    waterbody_type = models.ForeignKey(
+        WaterbodyTypeRef,
+        null=True, db_column='waterbody_type',
+        blank=True)
+    scope_and_application = models.CharField(
+        max_length=2000, blank=True,
+        help_text='The "Scope and Application" field describes the (a) what is measured, and (b) under which conditions (e.g., matrices) the method can be used. For example:\nThis method covers the determination of acid semi-volatile compounds in surface waters, domestic and industrial wastes.')
+    dl_type = models.ForeignKey(
+        DlRef,
+        null=True, blank=True, verbose_name='detection limit type',
+        help_text='The "Detection limit type" describes the kind of detection (or quantitation) limit information that is found in the method (e.g., MDL, LOQ).\nNote: If separate detection and quantitation limits are provided, use detection limits.')
+    dl_note = models.CharField(
+        max_length=2000, blank=True, verbose_name='DL note',
+        help_text='The "DL note" describes the conditions under which the detection (or quantitation) limits were determined. For example, were the detection limits determined in reagent water? What conditions were used? How many samples were run? Is their a detailed reference to the detection limit study that was performed? Examples:\nThe EDLs are estimated 3-sigma instrumental detection limits that were described in "EPA Method Study 27, Method 200.7 Trace Metals by ICP" [November 1983] (Available from National Technical Information Service as PB 85-248-656).\n(1) The values given are the minimum level at which the entire GC/MS system must give recognizable mass spectra (background corrected) and acceptable calibration points. (2) The values given refer to one of three techniques for each compound: internal standard quantification, labeled compound quantification, and isotope dilution quantification. Consult Table 3 of the method for information on specific compounds.\nMDLs were determined using the standard deviation of replicate analyses of an analyte-fortified reagent water sample multiplied by the t-value for (# of samples - 1) degrees of freedom atthe 99% confidence level. Detailed instructions for how MDLs are determined are found at 40 CFR part 136, Appendix B.')
+    applicable_conc_range = models.CharField(
+        max_length=300, blank=True,
+        help_text='The "Applicable concentration range" field describes the effective range of the method (e.g., 0.02 - 1mg/L, > 0.037 Bq/L). Remember to (a) include units, and (b) include a range (e.g., if a radiochem method - with a detection limit (DL) but no effective upper end of the range - the range should be " > DL").\nNOTE: For multi-analyte methods, give a general range of applicability, noting an large deviations (e.g., all analytes are measured in the ug/L range except two, note the two in the different range).')
     conc_range_units = models.ForeignKey(
         DlUnitsDom,
-        null=True,
-        db_column='conc_range_units',
-        blank=True,
+        null=True, db_column='conc_range_units', blank=True,
         verbose_name='applicable concentration range')
-    interferences = models.CharField(max_length=3000,
-                                     blank=True)
-    qc_requirements = models.CharField(max_length=2000,
-                                       blank=True)
-    sample_handling = models.CharField(max_length=3000,
-                                       blank=True)
-    max_holding_time = models.CharField(max_length=300,
-                                        blank=True)
-    sample_prep_methods = models.CharField(max_length=100,
-                                           blank=True)
-    relative_cost = models.ForeignKey(RelativeCostRef,
-                                      null=True,
-                                      blank=True)
-    link_to_full_method = models.CharField(max_length=240,
-                                           blank=True)
-    insert_date = models.DateField(null=True,
-                                   blank=True)
-    insert_person_name = models.CharField(max_length=50,
-                                          blank=True)
-    last_update_date = models.DateField(null=True,
-                                        blank=True)
-    last_update_person_name = models.CharField(max_length=50,
-                                               blank=True)
-    approved = models.CharField(max_length=1,
-                                default='N',
-                                choices=YES_NO_CHOICES)
-    approved_date = models.DateField(null=True,
-                                     blank=True)
-    instrumentation = models.ForeignKey(InstrumentationRef)
-    precision_descriptor_notes = models.CharField(max_length=3000,
-                                                  blank=True)
-    rapidity = models.CharField(max_length=30,
-                                blank=True)
-    waterbody_type = models.ForeignKey(WaterbodyTypeRef,
-                                       null=True,
-                                       db_column='waterbody_type',
-                                       blank=True)
+    interferences = models.CharField(
+        max_length=3000, blank=True,
+        help_text='This field presents the potential interferences, along with remedies. For example:\n(A) Glassware contamination: Thoroughly clean glassware, including baking or solvent rinse.\n(B) Reagent contamination: Use high purity reagents.\n(C) Contamination from sample carryover: Rinsing apparatus with hexane and purging equipment between analyses can minimize contamination.\n(D) Extracted interferences: Interference from extracted non-target compounds, with retention times similar to target compounds, can be reduced by cleaning the extract or using confirmation analysis.\n(E) Variable solvents: Use the same solvent for each analysis.\n(F) Endrin degradation: The splitless injector may cause endrin degradation. Endrin can break down by reacting with the active sites on the port sleeve.\n(G) PCBs loss to glass surfaces: Rinse glass and minimize sample contact with glass to prevent adsorption loss of PCBs.\n(H) Oxidation of target compounds: Oxidation of compounds (specifically easily-oxidized aldrin, hexachlorocyclopentadiene, and methoxychlor) can be prevented by adding sodium thiosulfate at collection.\n(I) Phthalate interference: An unknown interference (possibly dibutyl phthalate) appears in heptachlors retention window.')
+    precision_descriptor_notes = models.CharField(
+        max_length=3000, blank=True,
+        help_text='The "Precision Descriptor Notes" describe how precision and accuracy data were determined (including references to the number of labs used, types of matrices, number of samples, citation to report, etc.). For example:\nSummarized data results are based on quantification by isotope dilution. Precision and accuracy data was obtained from "Interlaboratory Validation of U.S. Environmental Protection Agency Method 1625A" (July 1984). Study data was collected for samples analyzed at 11-13 laboratories, depending on compounds. Approximately twenty-three percent of laboratories could not quantify or detect compounds by isotope dilution, so these laboratories were excluded from method summaries (the need for these exclusions was primarily based on lack of experience with the method at the time of the 1984 study).\nNote: See Analyte Entry Form for information on how to select precision and accuracy data from the method.\nIF a method contains precision descriptor notes that vary by analyte, provide a general summary of the notes here that is applicable to all analytes in the method. If necessary, direct users to the full method for additional analyte-specific information.')
+    qc_requirements = models.CharField(
+        max_length=2000, blank=True, verbose_name='QC requirements')
+    sample_handling = models.CharField(max_length=3000, blank=True)
+    max_holding_time = models.CharField(max_length=300, blank=True)
+    sample_prep_methods = models.CharField(max_length=100, blank=True)
+    relative_cost = models.ForeignKey(RelativeCostRef, null=True, blank=True)
+    link_to_full_method = models.CharField(
+        max_length=240, blank=True,
+        verbose_name='Private Vendor URL (Do not enter URL for public methods)')
+    regs_only = models.CharField(
+        max_length=1, default='N', choices=YES_NO_CHOICES,
+        verbose_name='regulation only method?',
+        help_text='If you are reviewing this method, select your username from the list.')
+    reviewer_name = models.CharField(
+        max_length=100, blank=True,
+        verbose_name='If you are reviewing this method, select your username from the list.')
+
+    # CBR-only field
+    rapidity = models.CharField(max_length=30, blank=True)
+    screening = models.CharField(
+        max_length=8, blank=True, choices=YES_NO_MAYBE_CHOICES)
+    cbr_only = models.CharField(
+        max_length=1, default='N', choices=YES_NO_CHOICES, verbose_name='CBR only?')
+
+    # Greenness profile fields
+    collected_sample_amt_ml = models.CharField(
+        max_length=10, blank=True, verbose_name='collected sample amount (mL)')
+    collected_sample_amt_g = models.CharField(
+        max_length=10, blank=True, verbose_name='collected sample amount (g)')
+    liquid_sample_flag = models.CharField(max_length=1, blank=True)
+    analysis_amt_ml = models.CharField(
+        max_length=10, blank=True, verbose_name='analysis amount mL',
+        help_text='The quantity of sample material that is selected to be treated and prepared for instrumental analysis. It is not the quantity of sample material that is left after sample treatment/preparation.')
+    analysis_amt_g = models.CharField(
+        max_length=10, blank=True, verbose_name='analysis amount G',
+        help_text='The quantity of sample material that is selected to be treated and prepared for instrumental analysis. It is not the quantity of sample material that is left after sample treatment/preparation. If the analytical sample amount is given in mL, this is converted to grams, with the assumed density of 1 for water-based samples.')
+    ph_of_analytical_sample = models.CharField(
+        max_length=10, blank=True, verbose_name='pH of analytical sample',
+        help_text='The pH of the sample when analyzed.')
+    calc_waste_amt = models.DecimalField(
+        null=True, max_digits=7, decimal_places=2, blank=True,
+        verbose_name='calculated waste amount (g)',
+        help_text='The sum of the amounts (in g) of the analytical sample and all chemicals used to treat the analytical sample.')
+    quality_review_id = models.CharField(
+        max_length=100, blank=True, verbose_name='QA reviewer ID')
+    pbt = models.CharField(
+        max_length=1, blank=True, choices=YES_NO_CHOICES,
+        verbose_name='Does this method use a chemical considered to be PBT?',
+        help_text='PBT: A chemical used in the method is listed as "persistent, bioaccumulative, and toxic (PBT)", as defined by the EPA\'s Toxic Release Inventory. \nEmergency Planning and Community Right-to-Know Act; Section 313; Toxic Release Inventory (TRI), the most recent chemical list available in 2006 is for the reporting year 2004, (available on the internet at http://www.epa.gov/tri/chemical/). If this method uses a chemical considered to be PBT by the above definition, select \'Y\'.')
+    toxic = models.CharField(
+        max_length=1, blank=True, choices=YES_NO_CHOICES,
+        verbose_name="Does the method use a chemical listed on EPA's\nToxic Release Inventory (TRI) or RCRA's D, F, P, or U lists?",
+        help_text="If the method uses a chemical listed on EPA's Toxic Release Inventory (TRI) or RCRA's D, F, P, or U lists it fails the greenness test for toxics, so the user should select 'Y'.")
+    corrosive = models.CharField(
+        max_length=1, blank=True, choices=YES_NO_CHOICES,
+        verbose_name='Is the final pH of the sample less than 2 or greater than 12 (Corrosive)?',
+        help_text="If the pH is less than 2 or greater than 12 the method fails the greenness test for corrosivity, so the user should select 'Y'.")
+    waste = models.CharField(
+        max_length=1, blank=True, choices=YES_NO_CHOICES,
+        verbose_name='Is the waste from the method is greater than 50 grams?',
+        help_text="If the waste from the method is greater than 50 grams, it fails the greenness test for waste, and the user should select 'Y'.")
+    assumptions_comments = models.CharField(
+        max_length=2000, blank=True, verbose_name='assumptions/comments')
+
+
     matrix = models.CharField(max_length=12,
                               blank=True)
     technique = models.CharField(max_length=50,
                                  blank=True)
-    screening = models.CharField(max_length=8,
-                                 blank=True,
-                                 choices=YES_NO_MAYBE_CHOICES)
-    reviewer_name = models.CharField(max_length=100,
-                                     blank=True)
-    regs_only = models.CharField(max_length=1,
-                                 default='N',
-                                 choices=YES_NO_CHOICES)
-    method_type = models.ForeignKey(MethodTypeRef)
-    cbr_only = models.CharField(max_length=1,
-                                default='N',
-                                choices=YES_NO_CHOICES)
     etv_link = models.CharField(max_length=120,
                                 blank=True)
-    collected_sample_amt_ml = models.CharField(max_length=10,
-                                               blank=True)
-    collected_sample_amt_g = models.CharField(max_length=10,
-                                              blank=True)
-    liquid_sample_flag = models.CharField(max_length=1,
-                                          blank=True)
-    analysis_amt_ml = models.CharField(max_length=10,
-                                       blank=True)
-    analysis_amt_g = models.CharField(max_length=10,
-                                      blank=True)
-    ph_of_analytical_sample = models.CharField(max_length=10,
-                                               blank=True)
-    calc_waste_amt = models.DecimalField(null=True,
-                                         max_digits=7,
-                                         decimal_places=2,
-                                         blank=True)
-    quality_review_id = models.CharField(max_length=100,
-                                         blank=True)
-    pbt = models.CharField(max_length=1,
-                           blank=True)
-    toxic = models.CharField(max_length=1,
-                             blank=True)
-    corrosive = models.CharField(max_length=1,
-                                 blank=True)
-    waste = models.CharField(max_length=1,
-                             blank=True)
-    assumptions_comments = models.CharField(max_length=2000,
-                                            blank=True)
     sam_complexity = models.CharField(max_length=10,
                                       blank=True,
                                       choices=COMPLEXITY_CHOICES)
@@ -442,7 +469,6 @@ class MethodAbstract(models.Model):
 
     # FIXME: Should these be added?
     #wqsa_category_cd = models.ForeignKey(WqsaCategoryMap, db_column='wqsa_category_cd', blank=True, null=True)
-    #no_analyte_flag = models.CharField(max_length=4, blank=True, null=True, choices=YES_NO_CHOICES)
     #owner_editable = models.CharField(max_length=1, blank=True, null=True, choices=YES_NO_CHOICES)
 
     objects = models.Manager()
@@ -464,12 +490,16 @@ class MethodAbstract(models.Model):
         return User(username='Unknown')
 
 
+SOURCE_CITATION_HELP_TEXT = 'The "Source citation" is a reference to the publication/volume that contains the method. Choose the appropriate source citation (e.g., ASTM_11_01 - ASTM Vol. 11.01, MCAWW - Methods of Chemical Analysis for Water and Waste) from the list of values.\nIf your method does not fit into the available citations, contact the NEMI manager at jsulliv@usgs.gov.\nNOTE: Source citation acroynms are not always obvious -- always consult the Source citation list prior to selection one.'
+COMMENTS_HELP_TEXT = 'This field is only to be used to communicate method entry status to the NEMI data review team, for example, if you will be entering 10 methods, you can report that in this field, "Method 1 of 10", "Method 2 of 10", etc. It would be particularly helpful to notify the team when you have entered the last of your batch of methods using this field so that they know to start reviewing the methods.'
+
 class MethodOnline(MethodAbstract):
 
     method_id = models.AutoField(primary_key=True)
-    source_citation_id = models.IntegerField()
-    comments = models.CharField(max_length=2000,
-                                blank=True)
+    source_citation = models.ForeignKey(
+        SourceCitationOnlineRef, help_text=SOURCE_CITATION_HELP_TEXT)
+    comments = models.CharField(
+        max_length=2000, blank=True, help_text=COMMENTS_HELP_TEXT)
     ready_for_review = models.CharField(max_length=1,
                                         choices=YES_NO_CHOICES,
                                         default='N')
@@ -482,16 +512,16 @@ class MethodOnline(MethodAbstract):
     class Meta:
         db_table = 'method_online'
         managed = False
-        verbose_name = 'method (online)'
-        verbose_name_plural = 'methods (online)'
+        verbose_name = 'pending method'
 
 
 class MethodStg(MethodAbstract):
 
     method_id = models.IntegerField(primary_key=True)
-    source_citation_id = models.IntegerField()
-    comments = models.CharField(max_length=2000,
-                                blank=True)
+    source_citation = models.ForeignKey(
+        SourceCitationStgRef, help_text=SOURCE_CITATION_HELP_TEXT)
+    comments = models.CharField(
+        max_length=2000, blank=True, help_text=COMMENTS_HELP_TEXT)
     ready_for_review = models.CharField(max_length=1,
                                         default='N',
                                         choices=YES_NO_CHOICES)
@@ -500,20 +530,20 @@ class MethodStg(MethodAbstract):
     class Meta:
         db_table = 'method_stg'
         managed = False
-        verbose_name = 'method (staging)'
-        verbose_name_plural = 'methods (staging)'
+        verbose_name = 'in-review method'
 
 
 class Method(MethodAbstract):
 
     method_id = models.IntegerField(primary_key=True)
-    source_citation = models.ForeignKey(SourceCitationRef)
+    source_citation = models.ForeignKey(
+        SourceCitationRef, help_text=SOURCE_CITATION_HELP_TEXT)
     date_loaded = models.DateField(auto_now_add=True)
 
     class Meta:
         db_table = 'method'
         managed = False
-        verbose_name = 'method'
+        verbose_name = 'published method'
 
 
 class StatisticalAnalysisType(models.Model):
@@ -762,3 +792,97 @@ class MethodAnalyteVW(models.Model):
 
     class Meta:
         db_table = 'method_analyte_vw'
+
+
+class UserRole(models.Model):
+    role_name = models.CharField(primary_key=True, max_length=400)
+    role_description = models.CharField(max_length=400, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'user_roles'
+
+
+class LegacyUserAccount(models.Model):
+    """
+    Legacy user account that was used for method submission.
+    """
+    user_seq = models.FloatField(primary_key=True)
+    user_name = models.CharField(unique=True, max_length=100)
+    user_password = models.TextField(blank=True, null=True)  # This field type is a guess.
+    user_role = models.ForeignKey(UserRole, db_column='user_role')
+    email = models.CharField(unique=True, max_length=200)
+    forgot_pw_flag = models.CharField(max_length=1)
+    data_entry_name = models.CharField(max_length=100)
+    data_entry_date = models.DateField()
+    last_update_name = models.CharField(max_length=100, blank=True, null=True)
+    last_update_date = models.DateField(blank=True, null=True)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=200)
+    organization = models.CharField(max_length=1000, blank=True, null=True)
+    last_login = models.DateField(blank=True, null=True)
+    user_status = models.CharField(max_length=40)
+
+    class Meta:
+        managed = False
+        db_table = 'user_account'
+
+
+class AbstractRevision(models.Model):
+    revision_id = models.AutoField(primary_key=True)
+
+    revision_flag = models.BooleanField(db_column='revision_flag')
+    revision_information = models.CharField(max_length=100)
+
+    insert_date = models.DateField(
+        blank=True, null=True, auto_now_add=True, editable=False)
+    insert_person_name = models.CharField(
+        max_length=50, blank=True, null=True, editable=False)
+    last_update_date = models.DateField(blank=True, null=True, auto_now=True)
+    last_update_person_name = models.CharField(
+        max_length=50, blank=True, null=True, editable=False)
+
+    pdf_insert_person = models.CharField(max_length=20, blank=True, null=True)
+    pdf_insert_date = models.DateField(blank=True, null=True)
+    method_pdf = models.BinaryField(blank=True, null=True)
+    mimetype = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.revision_information
+
+
+class RevisionJoin(AbstractRevision):
+    method = models.ForeignKey(Method, models.DO_NOTHING, blank=True, null=True)
+    source_citation = models.ForeignKey(SourceCitationRef, models.DO_NOTHING, blank=True, null=True)
+    date_loaded = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'revision_join'
+        unique_together = (('method', 'revision_information', 'source_citation'),)
+
+
+class RevisionJoinOnline(AbstractRevision):
+    #method_id = models.IntegerField()
+    method = models.ForeignKey(MethodOnline, models.DO_NOTHING, blank=True, null=True)
+    source_citation = models.ForeignKey(SourceCitationOnlineRef, models.DO_NOTHING, blank=True, null=True)
+    reviewer_name = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'revision_join_online'
+        unique_together = (('method', 'revision_information'),)
+
+
+class RevisionJoinStg(AbstractRevision):
+    method = models.ForeignKey(MethodStg, models.DO_NOTHING, blank=True, null=True)
+    source_citation = models.ForeignKey(SourceCitationStgRef, models.DO_NOTHING, blank=True, null=True)
+    date_loaded = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'revision_join_stg'
+        unique_together = (('method', 'revision_information', 'source_citation'),)

@@ -5,18 +5,18 @@ from . import test_templatetags
 from . import test_utils
 from . import test_views
 from . import test_context_processors
+from . import test_method_admin
 
 
 def suite():
-    suite1 = unittest.TestLoader().loadTestsFromModule(test_utils)
-    suite2 = unittest.TestLoader().loadTestsFromModule(test_templatetags)
-    suite3 = unittest.TestLoader().loadTestsFromModule(test_models)
-    suite4 = unittest.TestLoader().loadTestsFromModule(test_views)
-    suite5 = unittest.TestLoader().loadTestsFromModule(test_context_processors)
-
-    alltests = unittest.TestSuite([suite1, suite2, suite3, suite4, suite5])
-
-    return alltests
+    return unittest.TestSuite([
+        unittest.TestLoader().loadTestsFromModule(test_utils),
+        unittest.TestLoader().loadTestsFromModule(test_templatetags),
+        unittest.TestLoader().loadTestsFromModule(test_models),
+        unittest.TestLoader().loadTestsFromModule(test_views),
+        unittest.TestLoader().loadTestsFromModule(test_context_processors),
+        unittest.TestLoader().loadTestsFromModule(test_method_admin),
+    ])
 
 
 def load_tests(loader, tests, pattern):

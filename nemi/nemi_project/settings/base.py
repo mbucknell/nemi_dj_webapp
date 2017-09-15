@@ -148,9 +148,11 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'django.contrib.flatpages',
 
-    # third party apps
-    'tinymce',
+    # Third party apps
+    'django_object_actions',
     'rest_framework',
+    'tinymce',
+
     # NEMI/CIDA specific apps
     'common',
     'newsfeed',
@@ -158,7 +160,6 @@ INSTALLED_APPS = (
     'methods',
     'protocols',
     'sams',
-    #'memo',
 )
 
 # A sample logging configuration. The only tangible logging
