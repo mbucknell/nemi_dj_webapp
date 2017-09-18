@@ -158,3 +158,25 @@ class InstrumentationRef(models.Model):
 
     def __str__(self):
         return '%s: %s' % (self.instrumentation, self.instrumentation_description)
+
+
+class MethodSourceRef(models.Model):
+    method_source_id = models.IntegerField(primary_key=True)
+    method_source = models.CharField(max_length=20)
+    method_source_url = models.CharField(max_length=200, blank=True, null=True)
+    method_source_name = models.CharField(max_length=150)
+    method_source_contact = models.CharField(max_length=450, blank=True, null=True)
+    method_source_email = models.CharField(max_length=100, blank=True, null=True)
+    data_entry_name = models.CharField(max_length=50, blank=True, null=True)
+    data_entry_date = models.DateField(blank=True, null=True)
+    update_name = models.CharField(max_length=50, blank=True, null=True)
+    update_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'method_source_ref'
+        unique_together = (('method_source', 'method_source_name'),)
+        verbose_name = 'method source'
+
+    def __str__(self):
+        return '%s: %s' % (self.method_source, self.method_source_name)

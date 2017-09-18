@@ -1,6 +1,8 @@
 from datetime import datetime
 
+from django import forms
 from django.contrib import admin
+from tinymce.widgets import TinyMCE
 
 from nemi_project.admin import method_admin
 
@@ -142,8 +144,30 @@ class InstrumentationRefAdmin(UserTimestampMixin, ReferenceTableAdmin):
     ) + UserTimestampMixin.readonly_fields
 
 
+class MethodSourceRefForm(forms.ModelForm):
+    class Meta:
+        model = models.MethodSourceRef
+        fields = '__all__'
+        widgets = {
+            'method_source_contact': TinyMCE(attrs={'cols': 100, 'rows': 50})
+        }
+
+
+class MethodSourceRefAdmin(UserTimestampMixin, ReferenceTableAdmin):
+    form = MethodSourceRefForm
+    list_display = (
+        'method_source', 'method_source_url', 'method_source_name',
+        'method_source_contact', 'method_source_email'
+    ) + UserTimestampMixin.readonly_fields
+    fields = (
+        'method_source', 'method_source_url', 'method_source_name',
+        'method_source_contact', 'method_source_email'
+    ) + UserTimestampMixin.readonly_fields
+
+
 method_admin.register(models.AccuracyUnitsDom, AccuracyUnitsDomAdmin)
 method_admin.register(models.AnalyteRef, AnalyteRefAdmin)
 method_admin.register(models.DlRef, DlRefAdmin)
 method_admin.register(models.DlUnitsDom, DlUnitsDomAdmin)
 method_admin.register(models.InstrumentationRef, InstrumentationRefAdmin)
+method_admin.register(models.MethodSourceRef, MethodSourceRefAdmin)
