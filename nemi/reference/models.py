@@ -137,3 +137,24 @@ class DlUnitsDom(models.Model):
 
     def __str__(self):
         return self.dl_units
+
+
+
+class InstrumentationRef(models.Model):
+    instrumentation_id = models.IntegerField(primary_key=True)
+    instrumentation = models.CharField(max_length=20)
+    instrumentation_description = models.CharField(unique=True, max_length=200)
+    data_entry_name = models.CharField(max_length=50, blank=True, null=True)
+    data_entry_date = models.DateField(blank=True, null=True)
+    update_name = models.CharField(max_length=50, blank=True, null=True)
+    update_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'instrumentation_ref'
+        unique_together = (('instrumentation', 'instrumentation_description'),)
+        verbose_name = 'instrumentation'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return '%s: %s' % (self.instrumentation, self.instrumentation_description)

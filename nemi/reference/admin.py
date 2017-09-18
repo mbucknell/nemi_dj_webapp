@@ -133,7 +133,17 @@ class DlUnitsDomAdmin(UserTimestampMixin, ReferenceTableAdmin):
         return readonly_fields
 
 
+class InstrumentationRefAdmin(UserTimestampMixin, ReferenceTableAdmin):
+    list_display = (
+        'instrumentation', 'instrumentation_description'
+    ) + UserTimestampMixin.readonly_fields
+    fields = (
+        'instrumentation', 'instrumentation_description'
+    ) + UserTimestampMixin.readonly_fields
+
+
 method_admin.register(models.AccuracyUnitsDom, AccuracyUnitsDomAdmin)
 method_admin.register(models.AnalyteRef, AnalyteRefAdmin)
 method_admin.register(models.DlRef, DlRefAdmin)
 method_admin.register(models.DlUnitsDom, DlUnitsDomAdmin)
+method_admin.register(models.InstrumentationRef, InstrumentationRefAdmin)
