@@ -101,3 +101,22 @@ class AnalyteCodeRel(models.Model):
 
     def __str__(self):
         return self.analyte_name
+
+
+class DlRef(models.Model):
+    dl_type_id = models.AutoField(primary_key=True)
+    dl_type = models.CharField(max_length=11, verbose_name='detection limit type')
+    dl_type_description = models.CharField(max_length=50, verbose_name='description')
+    data_entry_date = models.DateField(blank=True, null=True)
+    update_name = models.CharField(max_length=50, blank=True, null=True)
+    update_date = models.DateField(blank=True, null=True)
+    data_entry_name = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'dl_ref'
+        unique_together = (('dl_type', 'dl_type_description'),)
+        verbose_name = 'detection limit type'
+
+    def __str__(self):
+        return '%s - %s' % (self.dl_type, self.dl_type_description)

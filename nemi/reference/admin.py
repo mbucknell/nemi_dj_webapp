@@ -107,5 +107,17 @@ class AnalyteRefAdmin(UserTimestampMixin, ReferenceTableAdmin):
         formset.save_m2m()
 
 
+class DlRefAdmin(UserTimestampMixin, ReferenceTableAdmin):
+    class Meta:
+        model = models.DlRef
+
+    list_display = (
+        'dl_type_id', 'dl_type', 'dl_type_description'
+    ) + UserTimestampMixin.fields
+    fields = ('dl_type', 'dl_type_description') + UserTimestampMixin.fields
+    ordering = ('dl_type_id',)
+
+
 method_admin.register(models.AccuracyUnitsDom, AccuracyUnitsDomAdmin)
 method_admin.register(models.AnalyteRef, AnalyteRefAdmin)
+method_admin.register(models.DlRef, DlRefAdmin)
