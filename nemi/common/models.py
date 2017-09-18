@@ -511,7 +511,7 @@ class MethodOnline(MethodAbstract):
     class Meta:
         db_table = 'method_online'
         managed = False
-        verbose_name = 'pending method'
+        verbose_name = '#1 pending method'
 
 
 class MethodStg(MethodAbstract):
@@ -527,7 +527,7 @@ class MethodStg(MethodAbstract):
     class Meta:
         db_table = 'method_stg'
         managed = False
-        verbose_name = 'in-review method'
+        verbose_name = '#2 in-review method'
 
 
 class Method(MethodAbstract):
@@ -538,7 +538,7 @@ class Method(MethodAbstract):
     class Meta:
         db_table = 'method'
         managed = False
-        verbose_name = 'published method'
+        verbose_name = '#3 published method'
 
 
 class StatisticalAnalysisType(models.Model):
