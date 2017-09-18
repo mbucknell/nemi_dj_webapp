@@ -118,6 +118,22 @@ class DlRefAdmin(UserTimestampMixin, ReferenceTableAdmin):
     ordering = ('dl_type_id',)
 
 
+class DlUnitsDomAdmin(UserTimestampMixin, ReferenceTableAdmin):
+    class Meta:
+        model = models.DlUnitsDom
+
+    list_display = ('dl_units', 'dl_units_description') + UserTimestampMixin.fields
+    fields = ('dl_units', 'dl_units_description') + UserTimestampMixin.fields
+
+    def get_readonly_fields(self, request, obj=None):
+        readonly_fields = UserTimestampMixin.readonly_fields
+        # If we're editing, don't allow changing the primary key
+        if obj:
+            readonly_fields += ('dl_units',)
+        return readonly_fields
+
+
 method_admin.register(models.AccuracyUnitsDom, AccuracyUnitsDomAdmin)
 method_admin.register(models.AnalyteRef, AnalyteRefAdmin)
 method_admin.register(models.DlRef, DlRefAdmin)
+method_admin.register(models.DlUnitsDom, DlUnitsDomAdmin)

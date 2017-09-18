@@ -120,3 +120,20 @@ class DlRef(models.Model):
 
     def __str__(self):
         return '%s - %s' % (self.dl_type, self.dl_type_description)
+
+
+class DlUnitsDom(models.Model):
+    dl_units = models.CharField(primary_key=True, max_length=20, verbose_name='detection limit unit')
+    dl_units_description = models.CharField(max_length=60, blank=True, null=True, verbose_name='description')
+    data_entry_name = models.CharField(max_length=50, blank=True, null=True)
+    data_entry_date = models.DateField(blank=True, null=True)
+    update_name = models.CharField(max_length=50, blank=True, null=True)
+    update_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'dl_units_dom'
+        verbose_name = 'detection limit unit'
+
+    def __str__(self):
+        return self.dl_units
