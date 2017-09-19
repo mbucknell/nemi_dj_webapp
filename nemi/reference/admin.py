@@ -9,22 +9,21 @@ from nemi_project.admin import method_admin
 from . import models
 
 
-class UserTimestampMixin:
-    fields = (
-        'data_entry_name', 'data_entry_date', 'update_name', 'update_date'
+class ReferenceTableAdmin(admin.ModelAdmin):
+    class Meta:
+        abstract = True
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('data_entry_name', 'data_entry_date'),
+                ('update_name', 'update_date'),
+            ),
+        }),
     )
     readonly_fields = (
         'data_entry_name', 'data_entry_date', 'update_name', 'update_date'
     )
-
-    def save_model(self, request, obj, form, change):
-        self.audit_instance(request.user.username, obj)
-        return super(UserTimestampMixin, self).save_model(request, obj, form, change)
-
-
-class ReferenceTableAdmin(admin.ModelAdmin):
-    class Meta:
-        abstract = True
 
     def is_method_admin(self, request, *args, **kwargs):
         if not hasattr(self, '_admin'):
@@ -39,6 +38,10 @@ class ReferenceTableAdmin(admin.ModelAdmin):
             obj.data_entry_name = username
             obj.data_entry_date = obj.update_date
 
+    def save_model(self, request, obj, form, change):
+        self.audit_instance(request.user.username, obj)
+        return super(ReferenceTableAdmin, self).save_model(request, obj, form, change)
+
     has_module_permission = is_method_admin
     has_add_permission = is_method_admin
     has_change_permission = is_method_admin
@@ -50,50 +53,45 @@ class AccuracyUnitsDomAdmin(ReferenceTableAdmin):
         model = models.AccuracyUnitsDom
 
     list_display = (
-        'accuracy_units', 'accuracy_units_description', 'data_entry_name',
-        'data_entry_date', 'update_name', 'update_date'
-    )
-    readonly_fields = (
-        'data_entry_name', 'data_entry_date', 'update_name', 'update_date'
-    )
+        'accuracy_units', 'accuracy_units_description'
+    ) + ReferenceTableAdmin.readonly_fields
     fieldsets = (
         (None, {
             'fields': (
                 'accuracy_units',
                 'accuracy_units_description',
-                ('data_entry_name', 'data_entry_date'),
-                ('update_name', 'update_date'),
             ),
         }),
-    )
-
-    def save_model(self, request, obj, form, change):
-        self.audit_instance(request.user.username, obj)
-        return super(AccuracyUnitsDomAdmin, self).save_model(request, obj, form, change)
+    ) + ReferenceTableAdmin.fieldsets
 
 
-class AnalyteCodeRelAdmin(UserTimestampMixin, admin.TabularInline):
+class AnalyteCodeRelAdmin(admin.TabularInline):
     model = models.AnalyteCodeRel
     extra = 0
-    fields = ('analyte_name', 'preferred') + UserTimestampMixin.fields
+    fields = ('analyte_name', 'preferred') + ReferenceTableAdmin.readonly_fields
+    readonly_fields = ReferenceTableAdmin.readonly_fields
 
     def save_model(self, request, obj, form, change):
         self.audit_instance(request, obj, change)
         return super(AnalyteCodeRelAdmin, self).save_model(request, obj, form, change)
 
 
-class AnalyteRefAdmin(UserTimestampMixin, ReferenceTableAdmin):
+class AnalyteRefAdmin(ReferenceTableAdmin):
     class Meta:
         model = models.AnalyteRef
 
     inlines = (AnalyteCodeRelAdmin,)
     list_display = ('analyte_code', 'analyte_type', 'analyte_cbr')
-    fields = (
-        'analyte_code', 'analyte_type', 'analyte_cbr', 'usgs_pcode',
-        'analyte_code_cbr',
-        # These two are in the database but not in the APEX UI:
-        #'cbr_analyte_category', 'cbr_analyte_intro'
-    ) + UserTimestampMixin.fields
+    fieldsets = (
+        (None, {
+            'fields': (
+                'analyte_code', 'analyte_type', 'analyte_cbr', 'usgs_pcode',
+                'analyte_code_cbr',
+                # These two are in the database but not in the APEX UI:
+                #'cbr_analyte_category', 'cbr_analyte_intro'
+            ),
+        }),
+    ) + ReferenceTableAdmin.fieldsets
 
     def save_model(self, request, obj, form, change):
         self.audit_instance(request.user.username, obj)
@@ -109,39 +107,56 @@ class AnalyteRefAdmin(UserTimestampMixin, ReferenceTableAdmin):
         formset.save_m2m()
 
 
-class DlRefAdmin(UserTimestampMixin, ReferenceTableAdmin):
+class DlRefAdmin(ReferenceTableAdmin):
     class Meta:
         model = models.DlRef
 
     list_display = (
         'dl_type_id', 'dl_type', 'dl_type_description'
-    ) + UserTimestampMixin.fields
-    fields = ('dl_type', 'dl_type_description') + UserTimestampMixin.fields
+    ) + ReferenceTableAdmin.readonly_fields
+    fieldsets = (
+        (None, {
+            'fields': (
+                'dl_type', 'dl_type_description'
+            ),
+        }),
+    ) + ReferenceTableAdmin.fieldsets
     ordering = ('dl_type_id',)
 
 
-class DlUnitsDomAdmin(UserTimestampMixin, ReferenceTableAdmin):
+class DlUnitsDomAdmin(ReferenceTableAdmin):
     class Meta:
         model = models.DlUnitsDom
 
-    list_display = ('dl_units', 'dl_units_description') + UserTimestampMixin.fields
-    fields = ('dl_units', 'dl_units_description') + UserTimestampMixin.fields
+    list_display = (
+        'dl_units', 'dl_units_description') + ReferenceTableAdmin.readonly_fields
+    fieldsets = (
+        (None, {
+            'fields': (
+                'dl_units', 'dl_units_description'
+            ),
+        }),
+    ) + ReferenceTableAdmin.fieldsets
 
     def get_readonly_fields(self, request, obj=None):
-        readonly_fields = UserTimestampMixin.readonly_fields
+        readonly_fields = ReferenceTableAdmin.readonly_fields
         # If we're editing, don't allow changing the primary key
         if obj:
             readonly_fields += ('dl_units',)
         return readonly_fields
 
 
-class InstrumentationRefAdmin(UserTimestampMixin, ReferenceTableAdmin):
+class InstrumentationRefAdmin(ReferenceTableAdmin):
     list_display = (
         'instrumentation', 'instrumentation_description'
-    ) + UserTimestampMixin.readonly_fields
-    fields = (
-        'instrumentation', 'instrumentation_description'
-    ) + UserTimestampMixin.readonly_fields
+    ) + ReferenceTableAdmin.readonly_fields
+    fieldsets = (
+        (None, {
+            'fields': (
+                'instrumentation', 'instrumentation_description'
+            ),
+        }),
+    ) + ReferenceTableAdmin.fieldsets
 
 
 class MethodSourceRefForm(forms.ModelForm):
@@ -153,16 +168,20 @@ class MethodSourceRefForm(forms.ModelForm):
         }
 
 
-class MethodSourceRefAdmin(UserTimestampMixin, ReferenceTableAdmin):
+class MethodSourceRefAdmin(ReferenceTableAdmin):
     form = MethodSourceRefForm
     list_display = (
         'method_source', 'method_source_url', 'method_source_name',
         'method_source_contact', 'method_source_email'
-    ) + UserTimestampMixin.readonly_fields
-    fields = (
-        'method_source', 'method_source_url', 'method_source_name',
-        'method_source_contact', 'method_source_email'
-    ) + UserTimestampMixin.readonly_fields
+    ) + ReferenceTableAdmin.readonly_fields
+    fieldsets = (
+        (None, {
+            'fields': (
+                'method_source', 'method_source_url', 'method_source_name',
+                'method_source_contact', 'method_source_email'
+            ),
+        }),
+    ) + ReferenceTableAdmin.fieldsets
 
 
 method_admin.register(models.AccuracyUnitsDom, AccuracyUnitsDomAdmin)

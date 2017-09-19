@@ -7,13 +7,19 @@ YES_NO_CHOICES = (
 )
 
 
-class AccuracyUnitsDom(models.Model):
-    accuracy_units = models.CharField(primary_key=True, max_length=50)
-    accuracy_units_description = models.CharField(max_length=50, blank=True, null=True)
+class AbstractReferenceModel(models.Model):
     data_entry_name = models.CharField(max_length=50, blank=True, null=True)
     data_entry_date = models.DateField(blank=True, null=True)
     update_name = models.CharField(max_length=50, blank=True, null=True)
     update_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+
+class AccuracyUnitsDom(AbstractReferenceModel):
+    accuracy_units = models.CharField(primary_key=True, max_length=50)
+    accuracy_units_description = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -34,7 +40,7 @@ class CbrAdvice(models.Model):
         db_table = 'cbr_advice'
 
 
-class AnalyteRef(models.Model):
+class AnalyteRef(AbstractReferenceModel):
     analyte_id = models.IntegerField(primary_key=True)
 
     analyte_code = models.CharField(unique=True, max_length=20)
@@ -60,11 +66,6 @@ class AnalyteRef(models.Model):
     cbr_analyte_category = models.ForeignKey(CbrAdvice, models.DO_NOTHING, db_column='cbr_analyte_category', blank=True, null=True)
     cbr_analyte_intro = models.CharField(max_length=4000, blank=True, null=True)
 
-    data_entry_name = models.CharField(max_length=50, blank=True, null=True)
-    data_entry_date = models.DateField(blank=True, null=True)
-    update_name = models.CharField(max_length=50, blank=True, null=True)
-    update_date = models.DateField(blank=True, null=True)
-
     class Meta:
         managed = False
         db_table = 'analyte_ref'
@@ -74,7 +75,7 @@ class AnalyteRef(models.Model):
         return self.analyte_code
 
 
-class AnalyteCodeRel(models.Model):
+class AnalyteCodeRel(AbstractReferenceModel):
     analyte_code_id = models.AutoField(primary_key=True)
     analyte = models.ForeignKey(AnalyteRef, models.DO_NOTHING)
 
@@ -87,11 +88,6 @@ class AnalyteCodeRel(models.Model):
     )
     analyte_type = models.CharField(max_length=50, blank=True, null=True)
 
-    data_entry_name = models.CharField(max_length=20, blank=True, null=True)
-    data_entry_date = models.DateField(blank=True, null=True)
-    update_name = models.CharField(max_length=50, blank=True, null=True)
-    update_date = models.DateField(blank=True, null=True)
-
     class Meta:
         managed = False
         db_table = 'analyte_code_rel'
@@ -103,14 +99,10 @@ class AnalyteCodeRel(models.Model):
         return self.analyte_name
 
 
-class DlRef(models.Model):
+class DlRef(AbstractReferenceModel):
     dl_type_id = models.AutoField(primary_key=True)
     dl_type = models.CharField(max_length=11, verbose_name='detection limit type')
     dl_type_description = models.CharField(max_length=50, verbose_name='description')
-    data_entry_date = models.DateField(blank=True, null=True)
-    update_name = models.CharField(max_length=50, blank=True, null=True)
-    update_date = models.DateField(blank=True, null=True)
-    data_entry_name = models.CharField(max_length=200, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -122,13 +114,9 @@ class DlRef(models.Model):
         return '%s - %s' % (self.dl_type, self.dl_type_description)
 
 
-class DlUnitsDom(models.Model):
+class DlUnitsDom(AbstractReferenceModel):
     dl_units = models.CharField(primary_key=True, max_length=20, verbose_name='detection limit unit')
     dl_units_description = models.CharField(max_length=60, blank=True, null=True, verbose_name='description')
-    data_entry_name = models.CharField(max_length=50, blank=True, null=True)
-    data_entry_date = models.DateField(blank=True, null=True)
-    update_name = models.CharField(max_length=50, blank=True, null=True)
-    update_date = models.DateField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -140,14 +128,10 @@ class DlUnitsDom(models.Model):
 
 
 
-class InstrumentationRef(models.Model):
+class InstrumentationRef(AbstractReferenceModel):
     instrumentation_id = models.IntegerField(primary_key=True)
     instrumentation = models.CharField(max_length=20)
     instrumentation_description = models.CharField(unique=True, max_length=200)
-    data_entry_name = models.CharField(max_length=50, blank=True, null=True)
-    data_entry_date = models.DateField(blank=True, null=True)
-    update_name = models.CharField(max_length=50, blank=True, null=True)
-    update_date = models.DateField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -160,17 +144,13 @@ class InstrumentationRef(models.Model):
         return '%s: %s' % (self.instrumentation, self.instrumentation_description)
 
 
-class MethodSourceRef(models.Model):
+class MethodSourceRef(AbstractReferenceModel):
     method_source_id = models.IntegerField(primary_key=True)
     method_source = models.CharField(max_length=20)
     method_source_url = models.CharField(max_length=200, blank=True, null=True)
     method_source_name = models.CharField(max_length=150)
     method_source_contact = models.CharField(max_length=450, blank=True, null=True)
     method_source_email = models.CharField(max_length=100, blank=True, null=True)
-    data_entry_name = models.CharField(max_length=50, blank=True, null=True)
-    data_entry_date = models.DateField(blank=True, null=True)
-    update_name = models.CharField(max_length=50, blank=True, null=True)
-    update_date = models.DateField(blank=True, null=True)
 
     class Meta:
         managed = False
