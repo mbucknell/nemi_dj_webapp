@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django import forms
 from django.contrib import admin
+from django.forms import model_to_dict
 from tinymce.widgets import TinyMCE
 
 from nemi_project.admin import method_admin
@@ -49,9 +50,6 @@ class ReferenceTableAdmin(admin.ModelAdmin):
 
 
 class AccuracyUnitsDomAdmin(ReferenceTableAdmin):
-    class Meta:
-        model = models.AccuracyUnitsDom
-
     list_display = (
         'accuracy_units', 'accuracy_units_description'
     ) + ReferenceTableAdmin.readonly_fields
@@ -77,9 +75,6 @@ class AnalyteCodeRelAdmin(admin.TabularInline):
 
 
 class AnalyteRefAdmin(ReferenceTableAdmin):
-    class Meta:
-        model = models.AnalyteRef
-
     inlines = (AnalyteCodeRelAdmin,)
     list_display = ('analyte_code', 'analyte_type', 'analyte_cbr')
     fieldsets = (
@@ -108,9 +103,6 @@ class AnalyteRefAdmin(ReferenceTableAdmin):
 
 
 class DlRefAdmin(ReferenceTableAdmin):
-    class Meta:
-        model = models.DlRef
-
     list_display = (
         'dl_type_id', 'dl_type', 'dl_type_description'
     ) + ReferenceTableAdmin.readonly_fields
@@ -125,9 +117,6 @@ class DlRefAdmin(ReferenceTableAdmin):
 
 
 class DlUnitsDomAdmin(ReferenceTableAdmin):
-    class Meta:
-        model = models.DlUnitsDom
-
     list_display = (
         'dl_units', 'dl_units_description') + ReferenceTableAdmin.readonly_fields
     fieldsets = (
@@ -184,9 +173,62 @@ class MethodSourceRefAdmin(ReferenceTableAdmin):
     ) + ReferenceTableAdmin.fieldsets
 
 
+class ClassicSourceCitationAdmin(admin.ModelAdmin):
+    list_display = (
+        'source_citation', 'source_citation_name',
+        'source_citation_information', 'insert_person_name', 'insert_date',
+        'update_date'
+    )
+    fields = (
+        'source_citation', 'source_citation_name',
+        'source_citation_information'
+    )
+
+    def get_queryset(self, request):
+        queryset = super(ClassicSourceCitationAdmin, self).get_queryset(request)
+        return queryset.filter(citation_type='METHOD')
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        formfield = super(ClassicSourceCitationAdmin, self).formfield_for_dbfield(
+            db_field, **kwargs)
+
+        # Multi-line widget for CharFields:
+        if db_field.name in ('source_citation_name',
+                             'source_citation_information'):
+            formfield.widget = forms.Textarea(attrs=formfield.widget.attrs)
+
+        return formfield
+
+    def save_model(self, request, obj, form, change):
+        obj.citation_type = 'METHOD'
+        obj.approved = 'Y'
+        obj.approved_date = datetime.now()
+
+        obj.update_date = obj.approved_date
+        if not obj.pk:
+            obj.insert_person_name = request.user.username
+            obj.insert_date = obj.update_date
+
+        # Save to the staging table
+        super(ClassicSourceCitationAdmin, self).save_model(
+            request, obj, form, change)
+
+        # Save a copy to the live table
+        values = model_to_dict(obj)
+        source_citation_id = values.pop('source_citation_id')
+        values['item_type_id'] = values.pop('item_type')
+        values.pop('owner_editable')
+        values.pop('ready_for_review')
+        models.SourceCitationRef.objects.update_or_create(
+            source_citation_id=source_citation_id,
+            defaults=values
+        )
+
+
 method_admin.register(models.AccuracyUnitsDom, AccuracyUnitsDomAdmin)
 method_admin.register(models.AnalyteRef, AnalyteRefAdmin)
 method_admin.register(models.DlRef, DlRefAdmin)
 method_admin.register(models.DlUnitsDom, DlUnitsDomAdmin)
 method_admin.register(models.InstrumentationRef, InstrumentationRefAdmin)
 method_admin.register(models.MethodSourceRef, MethodSourceRefAdmin)
+method_admin.register(models.ClassicSourceCitationStgRef, ClassicSourceCitationAdmin)

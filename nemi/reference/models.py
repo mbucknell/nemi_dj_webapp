@@ -41,7 +41,7 @@ class CbrAdvice(models.Model):
 
 
 class AnalyteRef(AbstractReferenceModel):
-    analyte_id = models.IntegerField(primary_key=True)
+    analyte_id = models.AutoField(primary_key=True)
 
     analyte_code = models.CharField(unique=True, max_length=20)
     analyte_type = models.CharField(max_length=100, blank=True, null=True)
@@ -127,9 +127,8 @@ class DlUnitsDom(AbstractReferenceModel):
         return self.dl_units
 
 
-
 class InstrumentationRef(AbstractReferenceModel):
-    instrumentation_id = models.IntegerField(primary_key=True)
+    instrumentation_id = models.AutoField(primary_key=True)
     instrumentation = models.CharField(max_length=20)
     instrumentation_description = models.CharField(unique=True, max_length=200)
 
@@ -160,3 +159,86 @@ class MethodSourceRef(AbstractReferenceModel):
 
     def __str__(self):
         return '%s: %s' % (self.method_source, self.method_source_name)
+
+
+class StatisticalItemType(models.Model):
+    stat_item_index = models.FloatField(primary_key=True)
+    item = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'statistical_item_type'
+
+
+class AbstractSourceCitationRef(models.Model):
+    source_citation_id = models.AutoField(primary_key=True)
+
+    insert_person_name = models.CharField(max_length=25, blank=True, null=True)
+    insert_date = models.DateField(blank=True, null=True)
+    update_date = models.DateField(blank=True, null=True)
+    approved = models.CharField(
+        max_length=1, blank=True, null=True, choices=YES_NO_CHOICES)
+    approved_date = models.DateField(blank=True, null=True)
+
+    citation_type = models.CharField(max_length=50, blank=True, null=True)
+    source_citation = models.CharField(max_length=30)
+    source_citation_name = models.CharField(max_length=450, blank=True, null=True)
+    source_citation_information = models.CharField(
+        max_length=1500, blank=True, null=True)
+
+    title = models.CharField(
+        max_length=450, blank=True, null=True, default=None)
+    author = models.CharField(
+        max_length=450, blank=True, null=True, default=None)
+    abstract_summary = models.CharField(
+        max_length=2000, blank=True, null=True, default=None)
+    table_of_contents = models.CharField(
+        max_length=3000, blank=True, null=True, default=None)
+    link = models.CharField(
+        max_length=450, blank=True, null=True, default=None)
+    notes = models.CharField(
+        max_length=600, blank=True, null=True, default=None)
+    publication_year = models.IntegerField(blank=True, null=True, default=None)
+    item_type = models.ForeignKey(
+        StatisticalItemType, models.DO_NOTHING, blank=True, null=True)
+    item_type_note = models.CharField(
+        max_length=50, blank=True, null=True, default=None)
+    country = models.CharField(
+        max_length=100, blank=True, null=True, default=None)
+    sponser_type_note = models.CharField(
+        max_length=50, blank=True, null=True, default=None)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.source_citation
+
+
+class SourceCitationRef(AbstractSourceCitationRef):
+    class Meta:
+        managed = False
+        db_table = 'source_citation_ref'
+
+
+class SourceCitationStgRef(AbstractSourceCitationRef):
+    ready_for_review = models.CharField(max_length=1, blank=True, null=True)
+    owner_editable = models.CharField(max_length=1, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'source_citation_stg_ref'
+
+
+class ClassicSourceCitationStgRef(SourceCitationStgRef):
+    class Meta:
+        managed = False
+        proxy = True
+        verbose_name = 'classic NEMI source citation'
+
+
+class ProtocolSourceCitationStgRef(SourceCitationStgRef):
+    class Meta:
+        managed = False
+        proxy = True
+        verbose_name = 'protocol source citation'
