@@ -3,6 +3,8 @@ from datetime import datetime
 from django import forms
 from django.contrib import admin
 from django.forms import model_to_dict
+from django_object_actions import (
+    DjangoObjectActions, takes_instance_or_queryset)
 from tinymce.widgets import TinyMCE
 
 from nemi_project.admin import method_admin
@@ -10,7 +12,23 @@ from nemi_project.admin import method_admin
 from . import models
 
 
-class ReferenceTableAdmin(admin.ModelAdmin):
+class AbstractMethodAdmin(admin.ModelAdmin):
+    class Meta:
+        abstract = True
+
+    def is_method_admin(self, request, *args, **kwargs):
+        if not hasattr(self, '_admin'):
+            self._is_admin = request.user.groups.filter(
+                name='method_admin').exists()
+        return self._is_admin
+
+    has_module_permission = is_method_admin
+    has_add_permission = is_method_admin
+    has_change_permission = is_method_admin
+    has_delete_permission = is_method_admin
+
+
+class AbstractReferenceAdmin(AbstractMethodAdmin):
     class Meta:
         abstract = True
 
@@ -26,12 +44,6 @@ class ReferenceTableAdmin(admin.ModelAdmin):
         'data_entry_name', 'data_entry_date', 'update_name', 'update_date'
     )
 
-    def is_method_admin(self, request, *args, **kwargs):
-        if not hasattr(self, '_admin'):
-            self._is_admin = request.user.groups.filter(
-                name='method_admin').exists()
-        return self._is_admin
-
     def audit_instance(self, username, obj):
         obj.update_name = username
         obj.update_date = datetime.now()
@@ -41,18 +53,13 @@ class ReferenceTableAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         self.audit_instance(request.user.username, obj)
-        return super(ReferenceTableAdmin, self).save_model(request, obj, form, change)
-
-    has_module_permission = is_method_admin
-    has_add_permission = is_method_admin
-    has_change_permission = is_method_admin
-    has_delete_permission = is_method_admin
+        return super(AbstractReferenceAdmin, self).save_model(request, obj, form, change)
 
 
-class AccuracyUnitsDomAdmin(ReferenceTableAdmin):
+class AccuracyUnitsDomAdmin(AbstractReferenceAdmin):
     list_display = (
         'accuracy_units', 'accuracy_units_description'
-    ) + ReferenceTableAdmin.readonly_fields
+    ) + AbstractReferenceAdmin.readonly_fields
     fieldsets = (
         (None, {
             'fields': (
@@ -60,21 +67,21 @@ class AccuracyUnitsDomAdmin(ReferenceTableAdmin):
                 'accuracy_units_description',
             ),
         }),
-    ) + ReferenceTableAdmin.fieldsets
+    ) + AbstractReferenceAdmin.fieldsets
 
 
 class AnalyteCodeRelAdmin(admin.TabularInline):
     model = models.AnalyteCodeRel
     extra = 0
-    fields = ('analyte_name', 'preferred') + ReferenceTableAdmin.readonly_fields
-    readonly_fields = ReferenceTableAdmin.readonly_fields
+    fields = ('analyte_name', 'preferred') + AbstractReferenceAdmin.readonly_fields
+    readonly_fields = AbstractReferenceAdmin.readonly_fields
 
     def save_model(self, request, obj, form, change):
         self.audit_instance(request, obj, change)
         return super(AnalyteCodeRelAdmin, self).save_model(request, obj, form, change)
 
 
-class AnalyteRefAdmin(ReferenceTableAdmin):
+class AnalyteRefAdmin(AbstractReferenceAdmin):
     inlines = (AnalyteCodeRelAdmin,)
     list_display = ('analyte_code', 'analyte_type', 'analyte_cbr')
     fieldsets = (
@@ -86,7 +93,7 @@ class AnalyteRefAdmin(ReferenceTableAdmin):
                 #'cbr_analyte_category', 'cbr_analyte_intro'
             ),
         }),
-    ) + ReferenceTableAdmin.fieldsets
+    ) + AbstractReferenceAdmin.fieldsets
 
     def save_model(self, request, obj, form, change):
         self.audit_instance(request.user.username, obj)
@@ -102,50 +109,50 @@ class AnalyteRefAdmin(ReferenceTableAdmin):
         formset.save_m2m()
 
 
-class DlRefAdmin(ReferenceTableAdmin):
+class DlRefAdmin(AbstractReferenceAdmin):
     list_display = (
         'dl_type_id', 'dl_type', 'dl_type_description'
-    ) + ReferenceTableAdmin.readonly_fields
+    ) + AbstractReferenceAdmin.readonly_fields
     fieldsets = (
         (None, {
             'fields': (
                 'dl_type', 'dl_type_description'
             ),
         }),
-    ) + ReferenceTableAdmin.fieldsets
+    ) + AbstractReferenceAdmin.fieldsets
     ordering = ('dl_type_id',)
 
 
-class DlUnitsDomAdmin(ReferenceTableAdmin):
+class DlUnitsDomAdmin(AbstractReferenceAdmin):
     list_display = (
-        'dl_units', 'dl_units_description') + ReferenceTableAdmin.readonly_fields
+        'dl_units', 'dl_units_description') + AbstractReferenceAdmin.readonly_fields
     fieldsets = (
         (None, {
             'fields': (
                 'dl_units', 'dl_units_description'
             ),
         }),
-    ) + ReferenceTableAdmin.fieldsets
+    ) + AbstractReferenceAdmin.fieldsets
 
     def get_readonly_fields(self, request, obj=None):
-        readonly_fields = ReferenceTableAdmin.readonly_fields
+        readonly_fields = AbstractReferenceAdmin.readonly_fields
         # If we're editing, don't allow changing the primary key
         if obj:
             readonly_fields += ('dl_units',)
         return readonly_fields
 
 
-class InstrumentationRefAdmin(ReferenceTableAdmin):
+class InstrumentationRefAdmin(AbstractReferenceAdmin):
     list_display = (
         'instrumentation', 'instrumentation_description'
-    ) + ReferenceTableAdmin.readonly_fields
+    ) + AbstractReferenceAdmin.readonly_fields
     fieldsets = (
         (None, {
             'fields': (
                 'instrumentation', 'instrumentation_description'
             ),
         }),
-    ) + ReferenceTableAdmin.fieldsets
+    ) + AbstractReferenceAdmin.fieldsets
 
 
 class MethodSourceRefForm(forms.ModelForm):
@@ -157,12 +164,12 @@ class MethodSourceRefForm(forms.ModelForm):
         }
 
 
-class MethodSourceRefAdmin(ReferenceTableAdmin):
+class MethodSourceRefAdmin(AbstractReferenceAdmin):
     form = MethodSourceRefForm
     list_display = (
         'method_source', 'method_source_url', 'method_source_name',
         'method_source_contact', 'method_source_email'
-    ) + ReferenceTableAdmin.readonly_fields
+    ) + AbstractReferenceAdmin.readonly_fields
     fieldsets = (
         (None, {
             'fields': (
@@ -170,10 +177,10 @@ class MethodSourceRefAdmin(ReferenceTableAdmin):
                 'method_source_contact', 'method_source_email'
             ),
         }),
-    ) + ReferenceTableAdmin.fieldsets
+    ) + AbstractReferenceAdmin.fieldsets
 
 
-class ClassicSourceCitationAdmin(admin.ModelAdmin):
+class ClassicSourceCitationAdmin(AbstractMethodAdmin):
     list_display = (
         'source_citation', 'source_citation_name',
         'source_citation_information', 'insert_person_name', 'insert_date',
@@ -189,15 +196,15 @@ class ClassicSourceCitationAdmin(admin.ModelAdmin):
         return queryset.filter(citation_type='METHOD')
 
     def formfield_for_dbfield(self, db_field, **kwargs):
-        formfield = super(ClassicSourceCitationAdmin, self).formfield_for_dbfield(
+        field = super(ClassicSourceCitationAdmin, self).formfield_for_dbfield(
             db_field, **kwargs)
 
         # Multi-line widget for CharFields:
         if db_field.name in ('source_citation_name',
                              'source_citation_information'):
-            formfield.widget = forms.Textarea(attrs=formfield.widget.attrs)
+            field.widget = forms.Textarea(attrs=field.widget.attrs)
 
-        return formfield
+        return field
 
     def save_model(self, request, obj, form, change):
         obj.citation_type = 'METHOD'
@@ -225,6 +232,95 @@ class ClassicSourceCitationAdmin(admin.ModelAdmin):
         )
 
 
+class ProtocolMethodInlineAdmin(admin.TabularInline):
+    model = models.ProtocolMethodStgRel
+    extra = 0
+    raw_id_fields = ('method',)
+
+
+class ProtocolSourceCitationAdmin(DjangoObjectActions, AbstractMethodAdmin):
+    inlines = (ProtocolMethodInlineAdmin,)
+    list_display = (
+        'source_citation', 'source_citation_name',
+        'source_citation_information', 'insert_person_name', 'insert_date',
+        'update_date', 'title', 'author', 'publication_year',
+        'ready_for_review', 'approved', 'approved_date'
+    )
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('insert_person_name',),
+                ('insert_date', 'update_date'),
+                ('ready_for_review',),
+                ('approved', 'approved_date'),
+            ),
+        }),
+        (None, {
+            'fields': (
+                'source_citation', 'source_citation_name',
+                'source_citation_information', 'title', 'author',
+                'abstract_summary', 'table_of_contents', 'publication_year',
+                'link', 'notes',
+            ),
+        }),
+    )
+    readonly_fields = (
+        'insert_person_name', 'insert_date', 'update_date', 'ready_for_review',
+        'approved', 'approved_date'
+    )
+    actions = ('submit_for_review', 'approve_protocol')
+    change_actions = actions
+
+    def get_queryset(self, request):
+        queryset = super(ProtocolSourceCitationAdmin, self).get_queryset(request)
+        return queryset.filter(citation_type='PROTOCOL')
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        field = super(ProtocolSourceCitationAdmin, self).formfield_for_dbfield(
+            db_field, **kwargs)
+
+        if db_field.name in ('source_citation', 'source_citation_name',
+                             'source_citation_information', 'title', 'author',
+                             'abstract_summary', 'publication_year'):
+            field.required = True
+
+        if db_field.name in ('source_citation_information', 'title', 'author',
+                             'abstract_summary', 'table_of_contents', 'notes'):
+            field.widget = forms.Textarea(attrs=field.widget.attrs)
+
+        return field
+
+    @takes_instance_or_queryset
+    def submit_for_review(self, request, queryset):
+        rows_updated = queryset.update(ready_for_review='Y')
+        self.message_user(request, 'submitted %d protocol%s for review' % (
+            rows_updated, 's' if rows_updated > 1 else ''))
+
+    submit_for_review.label = 'Submit for review'
+    submit_for_review.short_description = 'Submit this protocol for review'
+
+    @takes_instance_or_queryset
+    def approve_protocol(self, request, queryset):
+        rows_updated = queryset.update(approved='Y', approved_date=datetime.now())
+        self.message_user(request, 'submitted %d protocol%s for review' % (
+            rows_updated, 's' if rows_updated > 1 else ''))
+
+    approve_protocol.label = 'Approve'
+    approve_protocol.short_description = 'Approve and publish this protocol'
+
+    def save_model(self, request, obj, form, change):
+        obj.citation_type = 'PROTOCOL'
+
+        obj.update_date = obj.approved_date
+        if not obj.pk:
+            obj.insert_person_name = request.user.username
+            obj.insert_date = obj.update_date
+
+        # Save to the staging table
+        super(ProtocolSourceCitationAdmin, self).save_model(
+            request, obj, form, change)
+
+
 method_admin.register(models.AccuracyUnitsDom, AccuracyUnitsDomAdmin)
 method_admin.register(models.AnalyteRef, AnalyteRefAdmin)
 method_admin.register(models.DlRef, DlRefAdmin)
@@ -232,3 +328,4 @@ method_admin.register(models.DlUnitsDom, DlUnitsDomAdmin)
 method_admin.register(models.InstrumentationRef, InstrumentationRefAdmin)
 method_admin.register(models.MethodSourceRef, MethodSourceRefAdmin)
 method_admin.register(models.ClassicSourceCitationStgRef, ClassicSourceCitationAdmin)
+method_admin.register(models.ProtocolSourceCitationStgRef, ProtocolSourceCitationAdmin)

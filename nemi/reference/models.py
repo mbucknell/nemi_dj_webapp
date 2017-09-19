@@ -1,5 +1,7 @@
 from django.db import models
 
+from common.models import MethodStg
+
 
 YES_NO_CHOICES = (
     ('N', 'No'),
@@ -222,8 +224,10 @@ class SourceCitationRef(AbstractSourceCitationRef):
 
 
 class SourceCitationStgRef(AbstractSourceCitationRef):
-    ready_for_review = models.CharField(max_length=1, blank=True, null=True)
-    owner_editable = models.CharField(max_length=1, blank=True, null=True)
+    ready_for_review = models.CharField(
+        max_length=1, blank=True, null=True, choices=YES_NO_CHOICES)
+    owner_editable = models.CharField(
+        max_length=1, blank=True, null=True, choices=YES_NO_CHOICES)
 
     class Meta:
         managed = False
@@ -242,3 +246,16 @@ class ProtocolSourceCitationStgRef(SourceCitationStgRef):
         managed = False
         proxy = True
         verbose_name = 'protocol source citation'
+
+
+class ProtocolMethodStgRel(models.Model):
+    protocol_method_id = models.AutoField(primary_key=True)
+    source_citation = models.ForeignKey(SourceCitationStgRef, models.DO_NOTHING)
+    method = models.ForeignKey(MethodStg, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'protocol_method_stg_rel'
+
+    def __str__(self):
+        return str(self.method)
