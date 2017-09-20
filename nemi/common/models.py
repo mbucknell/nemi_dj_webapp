@@ -336,10 +336,6 @@ class MethodAbstract(models.Model):
     method_subcategory = models.ForeignKey(
         MethodSubcategoryRef, null=True, blank=True,
         help_text='The "Method subcategory" describes the class of analytes that are measured by the method. Choose the appropriate subcategory (e.g., INORGANIC, RADIOCHEMICAL, MICROBIOLOGICAL) from the list of values. If your method does not fit into the available subcategories, or if you have a question about the meaning of the subcategories, contact the NEMI manager.')
-    no_analyte_flag = models.CharField(
-        verbose_name='no analytes', max_length=4, blank=True, null=True,
-        choices=YES_NO_CHOICES,
-        help_text='Select if this method will not have analytes associated with it.',)
     method_source = models.ForeignKey(
         MethodSourceRef,
         null=True, blank=True,
@@ -497,6 +493,10 @@ COMMENTS_HELP_TEXT = 'This field is only to be used to communicate method entry 
 class MethodOnline(MethodAbstract):
 
     method_id = models.AutoField(primary_key=True)
+    no_analyte_flag = models.CharField(
+        verbose_name='no analytes', max_length=4, blank=True, null=True,
+        choices=YES_NO_CHOICES,
+        help_text='Select if this method will not have analytes associated with it.',)
     comments = models.CharField(
         max_length=2000, blank=True, help_text=COMMENTS_HELP_TEXT)
     ready_for_review = models.CharField(max_length=1,
@@ -517,6 +517,10 @@ class MethodOnline(MethodAbstract):
 class MethodStg(MethodAbstract):
 
     method_id = models.IntegerField(primary_key=True)
+    no_analyte_flag = models.CharField(
+        verbose_name='no analytes', max_length=4, blank=True, null=True,
+        choices=YES_NO_CHOICES,
+        help_text='Select if this method will not have analytes associated with it.',)
     comments = models.CharField(
         max_length=2000, blank=True, help_text=COMMENTS_HELP_TEXT)
     ready_for_review = models.CharField(max_length=1,
@@ -850,8 +854,11 @@ class AbstractRevision(models.Model):
 
 
 class RevisionJoin(AbstractRevision):
-    method = models.ForeignKey(Method, models.DO_NOTHING, blank=True, null=True)
-    source_citation = models.ForeignKey(SourceCitationRef, models.DO_NOTHING, blank=True, null=True)
+    method = models.ForeignKey(
+        Method, models.DO_NOTHING,
+        blank=True, null=True, related_name='revisions')
+    source_citation = models.ForeignKey(
+        SourceCitationRef, models.DO_NOTHING, blank=True, null=True)
     date_loaded = models.DateField(blank=True, null=True)
 
     class Meta:
@@ -862,8 +869,11 @@ class RevisionJoin(AbstractRevision):
 
 class RevisionJoinOnline(AbstractRevision):
     #method_id = models.IntegerField()
-    method = models.ForeignKey(MethodOnline, models.DO_NOTHING, blank=True, null=True)
-    source_citation = models.ForeignKey(SourceCitationOnlineRef, models.DO_NOTHING, blank=True, null=True)
+    method = models.ForeignKey(
+        MethodOnline, models.DO_NOTHING,
+        blank=True, null=True, related_name='revisions')
+    source_citation = models.ForeignKey(
+        SourceCitationOnlineRef, models.DO_NOTHING, blank=True, null=True)
     reviewer_name = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
@@ -873,8 +883,11 @@ class RevisionJoinOnline(AbstractRevision):
 
 
 class RevisionJoinStg(AbstractRevision):
-    method = models.ForeignKey(MethodStg, models.DO_NOTHING, blank=True, null=True)
-    source_citation = models.ForeignKey(SourceCitationStgRef, models.DO_NOTHING, blank=True, null=True)
+    method = models.ForeignKey(
+        MethodStg, models.DO_NOTHING,
+        blank=True, null=True, related_name='revisions')
+    source_citation = models.ForeignKey(
+        SourceCitationStgRef, models.DO_NOTHING, blank=True, null=True)
     date_loaded = models.DateField(blank=True, null=True)
 
     class Meta:
