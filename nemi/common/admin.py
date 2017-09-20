@@ -35,7 +35,8 @@ class ReadOnlyMixin:
     def has_change_permission(self, request, obj=None):
         # This is just to enable the change view in the interface.
         # The rest of the class disables actual change actions.
-        return True
+        # Currently, only admin.
+        return request.user.is_superuser
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         context = {
@@ -283,8 +284,8 @@ class AbstractMethodAdmin(admin.ModelAdmin):
         return obj.active_revision_count
 
     def has_module_permission(self, request):
-        # All active users have method
-        return request.user.is_active
+        # For now, only admins have access
+        return request.user.is_superuser
 
     def has_add_permission(self, request):
         return False
@@ -315,14 +316,14 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
     ) + AbstractMethodAdmin.fieldsets
 
     def has_add_permission(self, request):
-        # Anyone may submit new methods for review
-        return request.user.is_active
+        # For now, only admins have acesss.
+        return request.user.is_superuser
 
     def has_change_permission(self, request, obj=None):
         # Users may edit their own submissions, if it hasn't already been
         # submitted for review.
         # Currently, assume only admin users use the system.
-        return True
+        return request.user.is_superuser
 
     @takes_instance_or_queryset
     def submit_for_review(self, request, queryset):
@@ -372,7 +373,7 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
 
     def has_change_permission(self, request, obj=None):
         # Admin may only edit staging methods
-        return True
+        return request.user.is_superuser
 
 
 class MethodAdmin(ReadOnlyMixin, AbstractMethodAdmin):

@@ -30,6 +30,7 @@ class TestMethodGetInsertUser(TestCase):
         self.method_type = MethodTypeRef.objects.create(method_type_id=1, method_type_desc='method_type_desc')
 
         self.m1 = self.DummyMethod.objects.create(dummy_field=1,
+                                                  source_citation_id=1,
                                                   source_method_identifier='id1',
                                                   method_official_name='name1',
                                                   brief_method_summary='summary1',
@@ -37,6 +38,7 @@ class TestMethodGetInsertUser(TestCase):
                                                   method_type=self.method_type,
                                                   instrumentation=self.instrumentation)
         self.m2 = self.DummyMethod.objects.create(dummy_field=1,
+                                                  source_citation_id=1,
                                                   source_method_identifier='id2',
                                                   method_official_name='name2',
                                                   brief_method_summary='summary2',
