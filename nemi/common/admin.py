@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.db.models import Case, Count, Q, When
 from django.forms.models import BaseInlineFormSet
+from django.template.defaultfilters import slugify
 import PyPDF2
 
 from django_object_actions import (
@@ -33,7 +35,8 @@ class ReadOnlyMixin:
     def has_change_permission(self, request, obj=None):
         # This is just to enable the change view in the interface.
         # The rest of the class disables actual change actions.
-        return True
+        # Currently, only admin.
+        return request.user.is_superuser
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         context = {
@@ -56,16 +59,7 @@ class ReadOnlyMixin:
         raise PermissionDenied
 
 
-class RevisionOnlineForm(forms.ModelForm):
-    extra = 1
-    class Meta:
-        model = models.RevisionJoinOnline
-        fields = (
-            'revision_flag', 'revision_information', 'source_citation',
-            'pdf_file',
-            #'reviewer_name'
-        )
-
+class AbstractRevisionForm(forms.ModelForm):
     pdf_file = forms.FileField(required=False)
 
     def clean_pdf_file(self):
@@ -77,7 +71,7 @@ class RevisionOnlineForm(forms.ModelForm):
                 raise ValidationError('Please upload a valid PDF file.')
 
     def save(self, commit=True):
-        instance = super(RevisionOnlineForm, self).save(commit=False)
+        instance = super(AbstractRevisionForm, self).save(commit=False)
 
         if self.cleaned_data['pdf_file']:
             instance.method_pdf = self.cleaned_data['pdf_file'].read()
@@ -87,6 +81,26 @@ class RevisionOnlineForm(forms.ModelForm):
             instance.save()
 
         return instance
+
+
+class RevisionOnlineForm(AbstractRevisionForm):
+    class Meta:
+        model = models.RevisionJoinOnline
+        fields = (
+            'revision_flag', 'revision_information', 'source_citation',
+            'pdf_file',
+            #'reviewer_name'
+        )
+
+
+class RevisionStgForm(AbstractRevisionForm):
+    class Meta:
+        model = models.RevisionJoinStg
+        fields = (
+            'revision_flag', 'revision_information', 'source_citation',
+            'pdf_file',
+            #'reviewer_name'
+        )
 
 
 class RevisionInlineFormSet(BaseInlineFormSet):
@@ -112,9 +126,9 @@ class AbstractRevisionInline(ReadOnlyMixin, admin.TabularInline):
         abstract = True
 
 
-class RevisionOnlineAdmin(AbstractRevisionInline):
-    model = models.RevisionJoinOnline
-    form = RevisionOnlineForm
+class AbstractEditableRevisionInline(AbstractRevisionInline):
+    class Meta:
+        abstract = True
 
     def pdf_file(self):
         # If we have a method_pdf, use the revision name as the PDF label.
@@ -125,13 +139,16 @@ class RevisionOnlineAdmin(AbstractRevisionInline):
         if not change:
             obj.insert_person_name = request.user.username
         obj.last_update_person_name = request.user.username
-        return super(RevisionOnlineAdmin, self).save_model(request, obj, form, change)
+        return super(AbstractEditableRevisionInline, self).save_model(request, obj, form, change)
 
     def get_readonly_fields(self, request, obj=None):
         # Owners can edit any field when in the "online" tables.
-        if obj and obj.insert_person_name == request.user.username:
-            return ()
-        return super(RevisionOnlineAdmin, self).get_readonly_fields(request, obj=obj)
+        # if obj and obj.insert_person_name == request.user.username:
+        #     return ()
+        # return super(AbstractEditableRevisionInline, self).get_readonly_fields(request, obj=obj)
+
+        # For now, allow any admin to edit the online and staging tables.
+        return ()
 
     def has_add_permission(self, request):
         # As an inline, we defer to the parent permissions
@@ -142,12 +159,63 @@ class RevisionOnlineAdmin(AbstractRevisionInline):
         return True
 
 
-class RevisionStgAdmin(AbstractRevisionInline):
+class RevisionOnlineAdmin(AbstractEditableRevisionInline):
+    model = models.RevisionJoinOnline
+    form = RevisionOnlineForm
+
+
+class RevisionStgAdmin(AbstractEditableRevisionInline):
     model = models.RevisionJoinStg
+    form = RevisionStgForm
 
 
 class RevisionAdmin(AbstractRevisionInline):
     model = models.RevisionJoin
+
+
+class ActiveRevisionCountFilter(admin.SimpleListFilter):
+    title = 'active revision count'
+    parameter_name = 'active_revision_count'
+
+    def lookups(self, request, model_admin):
+        return (
+            (0, 'None'),
+            (1, 'One'),
+            (2, 'More than one')
+        )
+
+    def queryset(self, request, queryset):
+        try:
+            value = int(self.value())
+        except TypeError:
+            return queryset
+
+        if value > 1:
+            return queryset.filter(active_revision_count__gt=1)
+
+        return queryset.filter(active_revision_count=value)
+
+
+def list_q_filter(label, q_object):
+    class ListQFilter(admin.SimpleListFilter):
+        title = label
+        parameter_name = slugify(label)
+
+        def lookups(self, request, model_admin):
+            return (
+                ('1', 'Yes'),
+                ('0', 'No'),
+            )
+
+        def queryset(self, request, queryset):
+            if self.value() == '1':
+                return queryset.filter(q_object)
+            elif self.value() == '0':
+                return queryset.filter(~q_object)
+
+            return queryset
+
+    return ListQFilter
 
 
 class AbstractMethodAdmin(admin.ModelAdmin):
@@ -156,14 +224,23 @@ class AbstractMethodAdmin(admin.ModelAdmin):
 
     list_display = (
         'method_official_name', 'insert_date', 'last_update_date',
-        'approved', 'approved_date'
+        'approved', 'approved_date', 'active_revision_count'
+    )
+    list_filter = (
+        ActiveRevisionCountFilter,
+        list_q_filter(
+            'active revision has PDF',
+            Q(revisions__revision_flag=True) and Q(
+                revisions__method_pdf__isnull=False)
+        ),
+        'approved', 'insert_date', 'approved_date', 'insert_person_name'
     )
     fieldsets = (
         ('General Fields', {
             #'classes': ('collapse',),
             'fields': (
                 'source_method_identifier', 'method_descriptive_name',
-                'method_type', 'method_subcategory', 'no_analyte_flag',
+                'method_type', 'method_subcategory',
                 'method_source', 'source_citation', 'brief_method_summary',
                 'media_name', 'method_official_name', 'instrumentation',
                 'waterbody_type', 'scope_and_application', 'dl_type',
@@ -192,15 +269,23 @@ class AbstractMethodAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         queryset = super(AbstractMethodAdmin, self).get_queryset(request)
-        # This is currently a role-based check, but will possibly be changed
-        # to a more granular permission.
-        if not request.user.groups.filter(name='method_admin').exists():
-            queryset = queryset.filter(insert_person_name=request.user.username)
+
+        # Add annotation for the count of active revisions per method.
+        queryset = queryset.annotate(
+            active_revision_count=Count(Case(When(
+                revisions__revision_flag=True,
+                then=1
+            )))
+        )
+
         return queryset
 
+    def active_revision_count(self, obj):
+        return obj.active_revision_count
+
     def has_module_permission(self, request):
-        # All active users have method
-        return request.user.is_active
+        # For now, only admins have access
+        return request.user.is_superuser
 
     def has_add_permission(self, request):
         return False
@@ -216,12 +301,14 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
     class Meta:
         model = models.MethodOnline
 
+    list_filter = ('ready_for_review',) + AbstractMethodAdmin.list_filter
     inlines = (RevisionOnlineAdmin,)
     actions = ('submit_for_review',)
     change_actions = actions
     fieldsets = (
         ('Submission-Specific Fields', {
             'fields': (
+                ('no_analyte_flag',),
                 ('ready_for_review', 'delete_after_load'),
                 ('comments',),
             )
@@ -229,15 +316,14 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
     ) + AbstractMethodAdmin.fieldsets
 
     def has_add_permission(self, request):
-        # Anyone may submit new methods for review
-        return request.user.is_active
+        # For now, only admins have acesss.
+        return request.user.is_superuser
 
     def has_change_permission(self, request, obj=None):
         # Users may edit their own submissions, if it hasn't already been
         # submitted for review.
-        return obj is None or (
-            obj.insert_person_name == request.user.username and
-            obj.ready_for_review == 'N')
+        # Currently, assume only admin users use the system.
+        return request.user.is_superuser
 
     @takes_instance_or_queryset
     def submit_for_review(self, request, queryset):
@@ -261,18 +347,20 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
         return super(MethodOnlineAdmin, self).get_readonly_fields(request, obj=obj)
 
 
-class MethodStgAdmin(ReadOnlyMixin, DjangoObjectActions, AbstractMethodAdmin):
+class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
     class Meta:
         model = models.MethodStg
 
     inlines = (RevisionStgAdmin,)
     actions = ('publish',)
     change_actions = actions
-
-    def has_change_permission(self, request, obj=None):
-        #pylint: disable=W0101
-        return True
-        return obj is None
+    fieldsets = (
+        ('Review-Specific Fields', {
+            'fields': (
+                ('no_analyte_flag',),
+            )
+        }),
+    ) + AbstractMethodAdmin.fieldsets
 
     @takes_instance_or_queryset
     def publish(self, request, queryset):
@@ -282,6 +370,10 @@ class MethodStgAdmin(ReadOnlyMixin, DjangoObjectActions, AbstractMethodAdmin):
 
     publish.label = 'Publish'
     publish.short_description = 'Publish the selected methods'
+
+    def has_change_permission(self, request, obj=None):
+        # Admin may only edit staging methods
+        return request.user.is_superuser
 
 
 class MethodAdmin(ReadOnlyMixin, AbstractMethodAdmin):
