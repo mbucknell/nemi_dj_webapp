@@ -39,7 +39,7 @@ class ManagedModelTestRunner(DiscoverRunner):
 
         self.unmanaged_models = [
             max(models, key=field_count)
-            for _, models in models_by_table.items()
+            for models in models_by_table.values()
         ]
 
         for m in self.unmanaged_models:
