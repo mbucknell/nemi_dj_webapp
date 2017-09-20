@@ -58,16 +58,7 @@ class ReadOnlyMixin:
         raise PermissionDenied
 
 
-class RevisionOnlineForm(forms.ModelForm):
-    extra = 1
-    class Meta:
-        model = models.RevisionJoinOnline
-        fields = (
-            'revision_flag', 'revision_information', 'source_citation',
-            'pdf_file',
-            #'reviewer_name'
-        )
-
+class AbstractRevisionForm(forms.ModelForm):
     pdf_file = forms.FileField(required=False)
 
     def clean_pdf_file(self):
@@ -79,7 +70,7 @@ class RevisionOnlineForm(forms.ModelForm):
                 raise ValidationError('Please upload a valid PDF file.')
 
     def save(self, commit=True):
-        instance = super(RevisionOnlineForm, self).save(commit=False)
+        instance = super(AbstractRevisionForm, self).save(commit=False)
 
         if self.cleaned_data['pdf_file']:
             instance.method_pdf = self.cleaned_data['pdf_file'].read()
@@ -89,6 +80,26 @@ class RevisionOnlineForm(forms.ModelForm):
             instance.save()
 
         return instance
+
+
+class RevisionOnlineForm(AbstractRevisionForm):
+    class Meta:
+        model = models.RevisionJoinOnline
+        fields = (
+            'revision_flag', 'revision_information', 'source_citation',
+            'pdf_file',
+            #'reviewer_name'
+        )
+
+
+class RevisionStgForm(AbstractRevisionForm):
+    class Meta:
+        model = models.RevisionJoinStg
+        fields = (
+            'revision_flag', 'revision_information', 'source_citation',
+            'pdf_file',
+            #'reviewer_name'
+        )
 
 
 class RevisionInlineFormSet(BaseInlineFormSet):
@@ -114,9 +125,9 @@ class AbstractRevisionInline(ReadOnlyMixin, admin.TabularInline):
         abstract = True
 
 
-class RevisionOnlineAdmin(AbstractRevisionInline):
-    model = models.RevisionJoinOnline
-    form = RevisionOnlineForm
+class AbstractEditableRevisionInline(AbstractRevisionInline):
+    class Meta:
+        abstract = True
 
     def pdf_file(self):
         # If we have a method_pdf, use the revision name as the PDF label.
@@ -127,13 +138,16 @@ class RevisionOnlineAdmin(AbstractRevisionInline):
         if not change:
             obj.insert_person_name = request.user.username
         obj.last_update_person_name = request.user.username
-        return super(RevisionOnlineAdmin, self).save_model(request, obj, form, change)
+        return super(AbstractEditableRevisionInline, self).save_model(request, obj, form, change)
 
     def get_readonly_fields(self, request, obj=None):
         # Owners can edit any field when in the "online" tables.
-        if obj and obj.insert_person_name == request.user.username:
-            return ()
-        return super(RevisionOnlineAdmin, self).get_readonly_fields(request, obj=obj)
+        # if obj and obj.insert_person_name == request.user.username:
+        #     return ()
+        # return super(AbstractEditableRevisionInline, self).get_readonly_fields(request, obj=obj)
+
+        # For now, allow any admin to edit the online and staging tables.
+        return ()
 
     def has_add_permission(self, request):
         # As an inline, we defer to the parent permissions
@@ -144,8 +158,14 @@ class RevisionOnlineAdmin(AbstractRevisionInline):
         return True
 
 
-class RevisionStgAdmin(AbstractRevisionInline):
+class RevisionOnlineAdmin(AbstractEditableRevisionInline):
+    model = models.RevisionJoinOnline
+    form = RevisionOnlineForm
+
+
+class RevisionStgAdmin(AbstractEditableRevisionInline):
     model = models.RevisionJoinStg
+    form = RevisionStgForm
 
 
 class RevisionAdmin(AbstractRevisionInline):

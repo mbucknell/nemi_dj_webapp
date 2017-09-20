@@ -248,6 +248,15 @@ class ProtocolSourceCitationStgRef(SourceCitationStgRef):
         verbose_name = 'protocol source citation'
 
 
+class PrecisionUnitsDom(models.Model):
+    precision_units = models.CharField(primary_key=True, max_length=50)
+    precision_units_description = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'precision_units_dom'
+
+
 class ProtocolMethodStgRel(models.Model):
     protocol_method_id = models.AutoField(primary_key=True)
     source_citation = models.ForeignKey(SourceCitationStgRef, models.DO_NOTHING)

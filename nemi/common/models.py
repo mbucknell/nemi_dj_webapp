@@ -1,6 +1,7 @@
-
 from django.contrib.auth.models import User
 from django.db import models
+
+#from reference import models as refs
 
 
 class DefinitionsDOM(models.Model):
@@ -465,7 +466,7 @@ class MethodAbstract(models.Model):
                                          blank=True)
     notes = models.CharField(max_length=4000, blank=True)
 
-    # FIXME: Should these be added?
+    # Should these be added?
     #wqsa_category_cd = models.ForeignKey(WqsaCategoryMap, db_column='wqsa_category_cd', blank=True, null=True)
     #owner_editable = models.CharField(max_length=1, blank=True, null=True, choices=YES_NO_CHOICES)
 
@@ -894,3 +895,58 @@ class RevisionJoinStg(AbstractRevision):
         managed = False
         db_table = 'revision_join_stg'
         unique_together = (('method', 'revision_information', 'source_citation'),)
+
+"""
+class AbstractAnalyteMethodJn(models.Model):
+    class Meta:
+        abstract = True
+
+    analyte_method_id = models.IntegerField(primary_key=True)
+    analyte = models.ForeignKey(refs.AnalyteRef)
+    dl_value = models.DecimalField(max_digits=15, decimal_places=6, blank=True, null=True)
+    dl_units = models.ForeignKey(DlUnitsDom, models.DO_NOTHING, db_column='dl_units')
+    accuracy = models.DecimalField(max_digits=15, decimal_places=6, blank=True, null=True)
+    accuracy_units = models.ForeignKey(refs.AccuracyUnitsDom, models.DO_NOTHING, db_column='accuracy_units', blank=True, null=True)
+    false_positive_value = models.IntegerField(blank=True, null=True)
+    false_negative_value = models.IntegerField(blank=True, null=True)
+    precision = models.DecimalField(max_digits=15, decimal_places=6, blank=True, null=True)
+    precision_units = models.ForeignKey(refs.PrecisionUnitsDom, models.DO_NOTHING, db_column='precision_units', blank=True, null=True)
+    prec_acc_conc_used = models.DecimalField(max_digits=15, decimal_places=6, blank=True, null=True)
+    insert_date = models.DateField(blank=True, null=True)
+    insert_person_name = models.CharField(max_length=50, blank=True, null=True)
+    last_update_date = models.DateField(blank=True, null=True)
+    last_update_person_name = models.CharField(max_length=50, blank=True, null=True)
+    green_flag = models.CharField(max_length=1, blank=True, null=True)
+    yellow_flag = models.CharField(max_length=1, blank=True, null=True)
+    confirmatory = models.CharField(max_length=8, blank=True, null=True)
+
+
+class AnalyteMethodJn(AbstractAnalyteMethodJn):
+    method = models.ForeignKey('Method', models.DO_NOTHING)
+    date_loaded = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'analyte_method_jn'
+        unique_together = (('method', 'analyte'),)
+
+
+class AnalyteMethodJnOnline(AbstractAnalyteMethodJn):
+    method = models.ForeignKey('MethodOnline', models.DO_NOTHING)
+    reviewer_name = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'analyte_method_jn_online'
+        unique_together = (('method', 'analyte'),)
+
+
+class AnalyteMethodJnStg(AbstractAnalyteMethodJn):
+    method = models.ForeignKey('MethodStg', models.DO_NOTHING)
+    date_loaded = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'analyte_method_jn_stg'
+        unique_together = (('method', 'analyte'),)
+"""
