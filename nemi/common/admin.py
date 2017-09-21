@@ -132,7 +132,6 @@ class AbstractEditableRevisionInline(AbstractRevisionInline):
 
     def pdf_file(self):
         # If we have a method_pdf, use the revision name as the PDF label.
-        print('%s.pdf' % self.revision_information if self.method_pdf else None)
         return '%s.pdf' % self.revision_information if self.method_pdf else None
 
     def save_model(self, request, obj, form, change):
