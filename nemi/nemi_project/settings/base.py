@@ -11,7 +11,7 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Mary Bucknell', 'mbucknell@usgs.gov'),
+    #('Mary Bucknell', 'mbucknell@usgs.gov'),
     ('Daniel Naab', 'dnaab@usgs.gov'),
 )
 MANAGERS = ADMINS
