@@ -92,5 +92,5 @@ setup(
     test_suite='nose.collector',
     zip_safe=False,
     #py_modules=[],
-    data_files=identify_data_files(['static'])
+    data_files=identify_data_files(['nemi/static'])
 )
