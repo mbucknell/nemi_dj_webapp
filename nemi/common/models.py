@@ -326,6 +326,15 @@ class StatisticalMethodManager(models.Manager):
         return super(StatisticalMethodManager, self).get_queryset().filter(method_subcategory__method_category__exact='STATISTICAL')
 
 
+class WqsaCategoryMap(models.Model):
+    wqsa_category_cd = models.IntegerField(primary_key=True)
+    wqsa_category = models.CharField(max_length=2000, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'wqsa_category_map'
+
+
 class MethodAbstract(models.Model):
     # Meta fields
     insert_date = models.DateField(null=True, blank=True)
@@ -344,7 +353,7 @@ class MethodAbstract(models.Model):
         help_text='This field is designed to provide the user with a quick identification of a method, so include the analyte (ex: "nitrate") or group of analytes (ex; "nutrients"), the matrix (ex: "in water"), and instrumentation (ex: "using colorimetry"):\nEx. 1: Nitrate in Water by Colorimetry\nEx. 2: Anions in Water by CIE-UV\nNOTE: If the general method includes multiple procedures for different analytes, create a Method entry for each subpart.',)
     method_type = models.ForeignKey(MethodTypeRef)
     method_subcategory = models.ForeignKey(
-        MethodSubcategoryRef, null=True, blank=True,
+        MethodSubcategoryRef,
         help_text='The "Method subcategory" describes the class of analytes that are measured by the method. Choose the appropriate subcategory (e.g., INORGANIC, RADIOCHEMICAL, MICROBIOLOGICAL) from the list of values. If your method does not fit into the available subcategories, or if you have a question about the meaning of the subcategories, contact the NEMI manager.')
     method_source = models.ForeignKey(
         MethodSourceRef,
@@ -421,7 +430,7 @@ class MethodAbstract(models.Model):
         max_length=10, blank=True, verbose_name='collected sample amount (mL)')
     collected_sample_amt_g = models.CharField(
         max_length=10, blank=True, verbose_name='collected sample amount (g)')
-    liquid_sample_flag = models.CharField(max_length=1, blank=True)
+    liquid_sample_flag = models.CharField(max_length=1, blank=True, null=True, choices=YES_NO_CHOICES)
     analysis_amt_ml = models.CharField(
         max_length=10, blank=True, verbose_name='analysis amount mL',
         help_text='The quantity of sample material that is selected to be treated and prepared for instrumental analysis. It is not the quantity of sample material that is left after sample treatment/preparation.')
@@ -456,11 +465,16 @@ class MethodAbstract(models.Model):
     assumptions_comments = models.CharField(
         max_length=2000, blank=True, verbose_name='assumptions/comments')
 
-
-    matrix = models.CharField(max_length=12,
-                              blank=True)
-    technique = models.CharField(max_length=50,
-                                 blank=True)
+    # These fields are in the database, but not expose in the admin interface.
+    matrix = models.CharField(max_length=12, blank=True, choices=(
+        ('Freshwater', 'Freshwater'),
+        ('Saltwater', 'Saltwater'),
+        ('Both', 'Both'),
+    ))
+    technique = models.CharField(max_length=50, blank=True, choices=(
+        ('Test Procedure', 'Test Procedure'),
+        ('Sampling Procedure', 'Sampling Procedure'),
+    ))
     etv_link = models.CharField(max_length=120,
                                 blank=True)
     sam_complexity = models.CharField(max_length=10,
@@ -474,8 +488,6 @@ class MethodAbstract(models.Model):
     media_subcategory = models.CharField(max_length=150,
                                          blank=True)
     notes = models.CharField(max_length=4000, blank=True)
-
-    # Should these be added?
     #wqsa_category_cd = models.ForeignKey(WqsaCategoryMap, db_column='wqsa_category_cd', blank=True, null=True)
     #owner_editable = models.CharField(max_length=1, blank=True, null=True, choices=YES_NO_CHOICES)
 

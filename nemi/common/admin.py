@@ -260,12 +260,21 @@ class AbstractMethodAdmin(admin.ModelAdmin):
                 ('analysis_amt_ml', 'analysis_amt_g'),
                 'liquid_sample_flag', 'ph_of_analytical_sample', 'calc_waste_amt',
                 'quality_review_id', 'pbt', 'toxic', 'corrosive', 'waste',
-                'assumptions_comments', 'matrix', 'technique', 'etv_link',
-                'sam_complexity', 'level_of_training',
-                'media_emphasized_note', 'media_subcategory', 'notes'
+                'assumptions_comments',
             )
         }),
     )
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        field = super(AbstractMethodAdmin, self).formfield_for_dbfield(
+            db_field, **kwargs)
+
+        # Make fields required here rather than in DB models, so the
+        # statistical method forms' functionality won't be impacted.
+        if db_field.name in ('media_name', 'method_source', 'method_descriptive_name'):
+            field.required = True
+
+        return field
 
     def get_queryset(self, request):
         queryset = super(AbstractMethodAdmin, self).get_queryset(request)
