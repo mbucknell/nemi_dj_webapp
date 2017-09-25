@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.db import connection
 from django.db.models import Case, Count, Q, When
 from django.forms.models import BaseInlineFormSet
 from django.template.defaultfilters import slugify
@@ -351,7 +352,7 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
         model = models.MethodStg
 
     inlines = (RevisionStgAdmin,)
-    actions = ('publish',)
+    actions = ('publish', 'archive')
     change_actions = actions
     fieldsets = (
         ('Review-Specific Fields', {
@@ -369,6 +370,29 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
 
     publish.label = 'Publish'
     publish.short_description = 'Publish the selected methods'
+
+    @takes_instance_or_queryset
+    def archive(self, request, queryset):
+        method_ids = queryset.values_list('method_id', flat=True)
+        try:
+            cursor = connection.cursor()
+            for method_id in method_ids:
+                cursor.callproc(
+                    'archive_method', [
+                        method_id,
+                        'Y',  # DELETE_FLAG - remove from staging and production
+                        'Y',  # PUBLIC_FLAG - method should be public
+                    ]
+                )
+        finally:
+            cursor.close()
+
+        rows_updated = len(method_ids)
+        self.message_user(request, 'archived %d method%s' % (
+            rows_updated, 's' if rows_updated > 1 else ''))
+
+    archive.label = 'Archive'
+    archive.short_description = 'Archive the selected methods'
 
     def has_change_permission(self, request, obj=None):
         # Admin may only edit staging methods
