@@ -373,7 +373,6 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
 
     @takes_instance_or_queryset
     def archive(self, request, queryset):
-        #archive_method(:P7_METHOD_ID,:P7_DELETE_FLAG,:P7_PUBLIC_FLAG);
         method_ids = queryset.values_list('method_id', flat=True)
         try:
             cursor = connection.cursor()
