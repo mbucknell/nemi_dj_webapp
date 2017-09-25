@@ -263,8 +263,17 @@ class InstrumentationRef(models.Model):
 
 class WaterbodyTypeRef(models.Model):
 
-    waterbody_type_id = models.IntegerField(unique=True, primary_key=True)
-    waterbody_type_desc = models.CharField(max_length=100, unique=True)
+    # This table is unusual, in that the primary key is waterbody_type_id,
+    # but we reference it via waterbody_type_desc in the Method tables.
+    # So we cheat a bit, and treat `waterbody_type_desc` as the primary key.
+
+    # Columns, as reflected by inspectdb:
+    #waterbody_type_id = models.IntegerField(unique=True, primary_key=True)
+    #waterbody_type_desc = models.CharField(max_length=100, unique=True)
+
+    waterbody_type_id = models.IntegerField(unique=True)
+    waterbody_type_desc = models.CharField(
+        primary_key=True, max_length=100, unique=True)
 
     class Meta:
         db_table = 'waterbody_type_ref'

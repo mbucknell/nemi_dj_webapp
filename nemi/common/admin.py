@@ -61,7 +61,7 @@ class ReadOnlyMixin:
 
 
 class AbstractRevisionForm(forms.ModelForm):
-    pdf_file = forms.FileField(required=False)
+    pdf_file = forms.FileField(required=False, widget=admin.widgets.AdminFileWidget)
 
     def clean_pdf_file(self):
         if self.cleaned_data['pdf_file']:
