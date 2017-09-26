@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.urlresolvers import reverse
 from django.db import connection
 from django.db.models import Case, Count, Q, When
 from django.forms.models import BaseInlineFormSet
@@ -60,8 +61,50 @@ class ReadOnlyMixin:
         raise PermissionDenied
 
 
+class PDFFileWidget(admin.widgets.AdminFileWidget):
+    template_name = 'common/widgets/pdf_file_input.html'
+
+
+class PDFFileField(forms.FileField):
+    widget = PDFFileWidget
+
+    def clean(self, value, initial=None):
+        value = super(PDFFileField, self).clean(value)
+
+        # To validate the PDF, try to read it with PyPDF2.
+        if value:
+            try:
+                PyPDF2.PdfFileReader(value)
+            except PyPDF2.utils.PdfReadError:
+                raise ValidationError('Please upload a valid PDF file.')
+
+        return value
+
+
+class RevisionFile:
+    def __init__(self, revision, stage):
+        self.revision = revision
+        self.view_name = {
+            'live': 'revision-pdf',
+            'online': 'revision-pdf-online',
+            'stg': 'revision-pdf-staging',
+        }[stage]
+
+    @property
+    def url(self):
+        return reverse(self.view_name, args=[self.revision.pk])
+
+
 class AbstractRevisionForm(forms.ModelForm):
-    pdf_file = forms.FileField(required=False)
+    pdf_file = PDFFileField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        initial = kwargs.get('initial', {})
+        revision = kwargs.get('instance')
+        if revision and revision.method_pdf:
+            initial['pdf_file'] = RevisionFile(revision, self.STAGE)
+        kwargs['initial'] = initial
+        super(AbstractRevisionForm, self).__init__(*args, **kwargs)
 
     def clean_pdf_file(self):
         if self.cleaned_data['pdf_file']:
@@ -70,11 +113,13 @@ class AbstractRevisionForm(forms.ModelForm):
                 PyPDF2.PdfFileReader(self.cleaned_data['pdf_file'])
             except PyPDF2.utils.PdfReadError:
                 raise ValidationError('Please upload a valid PDF file.')
+        return self.cleaned_data['pdf_file']
 
     def save(self, commit=True):
         instance = super(AbstractRevisionForm, self).save(commit=False)
 
         if self.cleaned_data['pdf_file']:
+            self.cleaned_data['pdf_file'].seek(0)
             instance.method_pdf = self.cleaned_data['pdf_file'].read()
             instance.mimetype = 'application/pdf'
 
@@ -85,6 +130,7 @@ class AbstractRevisionForm(forms.ModelForm):
 
 
 class RevisionOnlineForm(AbstractRevisionForm):
+    STAGE = 'online'
     class Meta:
         model = models.RevisionJoinOnline
         fields = (
@@ -95,6 +141,7 @@ class RevisionOnlineForm(AbstractRevisionForm):
 
 
 class RevisionStgForm(AbstractRevisionForm):
+    STAGE = 'stg'
     class Meta:
         model = models.RevisionJoinStg
         fields = (
@@ -171,6 +218,22 @@ class RevisionStgAdmin(AbstractEditableRevisionInline):
 
 class RevisionAdmin(AbstractRevisionInline):
     model = models.RevisionJoin
+    readonly_fields = (
+        'mimetype', 'revision_flag', 'revision_information', 'insert_date',
+        'insert_person_name', 'last_update_date', 'last_update_person_name',
+        'pdf_insert_person', 'pdf_insert_date', 'source_citation',
+        'date_loaded', 'revision_pdf_url')
+
+    def revision_pdf_url(self, obj):
+        if not obj.pk:
+            return ''
+        return '<a href="%s">Download PDF</a>' % reverse('revision-pdf',
+                                                         args=[obj.pk])
+
+    revision_pdf_url.allow_tags = True
+
+    def get_readonly_fields(self, request, obj=None):
+        return self.readonly_fields
 
 
 class ActiveRevisionCountFilter(admin.SimpleListFilter):
@@ -260,12 +323,23 @@ class AbstractMethodAdmin(admin.ModelAdmin):
                 ('analysis_amt_ml', 'analysis_amt_g'),
                 'liquid_sample_flag', 'ph_of_analytical_sample', 'calc_waste_amt',
                 'quality_review_id', 'pbt', 'toxic', 'corrosive', 'waste',
-                'assumptions_comments', 'matrix', 'technique', 'etv_link',
-                'sam_complexity', 'level_of_training',
-                'media_emphasized_note', 'media_subcategory', 'notes'
+                'assumptions_comments',
             )
         }),
     )
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        field = super(AbstractMethodAdmin, self).formfield_for_dbfield(
+            db_field, **kwargs)
+
+        # Make fields required here rather than in DB models, so the
+        # statistical method forms' functionality won't be impacted.
+        if db_field.name in (
+                'method_subcategory', 'media_name', 'method_source',
+                'method_descriptive_name'):
+            field.required = True
+
+        return field
 
     def get_queryset(self, request):
         queryset = super(AbstractMethodAdmin, self).get_queryset(request)
