@@ -938,15 +938,14 @@ class ProtocolMethodStgRel(models.Model):
         return str(self.method)
 
 
-"""
 class AbstractAnalyteMethodJn(models.Model):
     class Meta:
         abstract = True
 
-    analyte_method_id = models.IntegerField(primary_key=True)
+    analyte_method_id = models.AutoField(primary_key=True)
     analyte = models.ForeignKey(refs.AnalyteRef)
     dl_value = models.DecimalField(max_digits=15, decimal_places=6, blank=True, null=True)
-    dl_units = models.ForeignKey(DlUnitsDom, models.DO_NOTHING, db_column='dl_units')
+    dl_units = models.ForeignKey(refs.DlUnitsDom, models.DO_NOTHING, db_column='dl_units')
     accuracy = models.DecimalField(max_digits=15, decimal_places=6, blank=True, null=True)
     accuracy_units = models.ForeignKey(refs.AccuracyUnitsDom, models.DO_NOTHING, db_column='accuracy_units', blank=True, null=True)
     false_positive_value = models.IntegerField(blank=True, null=True)
@@ -960,35 +959,45 @@ class AbstractAnalyteMethodJn(models.Model):
     last_update_person_name = models.CharField(max_length=50, blank=True, null=True)
     green_flag = models.CharField(max_length=1, blank=True, null=True)
     yellow_flag = models.CharField(max_length=1, blank=True, null=True)
-    confirmatory = models.CharField(max_length=8, blank=True, null=True)
+    confirmatory = models.CharField(max_length=8, blank=True, null=True, choices=(
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+        ('Possibly', 'Possibly'),
+        ('N/A', 'N/A'),
+    ))
+
+    def __str__(self):
+        return str(self.analyte_method_id)
 
 
 class AnalyteMethodJn(AbstractAnalyteMethodJn):
-    method = models.ForeignKey('Method', models.DO_NOTHING)
+    method = models.ForeignKey(Method, models.DO_NOTHING)
     date_loaded = models.DateField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'analyte_method_jn'
         unique_together = (('method', 'analyte'),)
+        verbose_name = 'method analyte'
 
 
 class AnalyteMethodJnOnline(AbstractAnalyteMethodJn):
-    method = models.ForeignKey('MethodOnline', models.DO_NOTHING)
+    method = models.ForeignKey(MethodOnline, models.DO_NOTHING)
     reviewer_name = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'analyte_method_jn_online'
         unique_together = (('method', 'analyte'),)
+        verbose_name = 'method analyte'
 
 
 class AnalyteMethodJnStg(AbstractAnalyteMethodJn):
-    method = models.ForeignKey('MethodStg', models.DO_NOTHING)
+    method = models.ForeignKey(MethodStg, models.DO_NOTHING)
     date_loaded = models.DateField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'analyte_method_jn_stg'
         unique_together = (('method', 'analyte'),)
-"""
+        verbose_name = 'method analyte'

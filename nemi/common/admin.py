@@ -238,6 +238,61 @@ class RevisionAdmin(AbstractRevisionInline):
         return self.readonly_fields
 
 
+class AbstractAnalyteMethodAdmin(admin.StackedInline):
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('analyte',),
+                ('dl_value', 'dl_units'),
+                ('accuracy', 'accuracy_units'),
+                ('false_positive_value', 'false_negative_value'),
+                ('precision', 'precision_units', 'prec_acc_conc_used'),
+            ),
+        }),
+        (None, {
+            'fields': (
+                ('insert_date', 'insert_person_name'),
+                ('last_update_date', 'last_update_person_name'),
+            ),
+        }),
+        (None, {
+            'fields': (
+                ('green_flag', 'yellow_flag', 'confirmatory'),
+            ),
+        }),
+    )
+    readonly_fields = (
+        'insert_date', 'insert_person_name', 'last_update_date',
+        'last_update_person_name', 'green_flag', 'yellow_flag', 'confirmatory'
+    )
+
+    extra = 0
+    class Meta:
+        abstract = True
+
+    def save_model(self, request, obj, form, change):
+        obj.last_update_date = datetime.now()
+        obj.last_update_person_name = request.user.username
+        if not obj.pk:
+            obj.insert_person_name = obj.last_update_person_name
+            obj.insert_date = obj.last_update_date
+
+        super(AbstractAnalyteMethodAdmin, self).save_model(
+            request, obj, form, change)
+
+
+class AnalyteMethodOnlineAdmin(AbstractAnalyteMethodAdmin):
+    model = models.AnalyteMethodJnOnline
+
+
+class AnalyteMethodStgAdmin(AbstractAnalyteMethodAdmin):
+    model = models.AnalyteMethodJnStg
+
+
+class AnalyteMethodAdmin(ReadOnlyMixin, AbstractAnalyteMethodAdmin):
+    model = models.AnalyteMethodJn
+
+
 class ActiveRevisionCountFilter(admin.SimpleListFilter):
     title = 'active revision count'
     parameter_name = 'active_revision_count'
@@ -378,7 +433,7 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
         model = models.MethodOnline
 
     list_filter = ('ready_for_review',) + AbstractMethodAdmin.list_filter
-    inlines = (RevisionOnlineAdmin,)
+    inlines = (AnalyteMethodOnlineAdmin, RevisionOnlineAdmin)
     actions = ('submit_for_review',)
     change_actions = actions
     fieldsets = (
@@ -427,7 +482,7 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
     class Meta:
         model = models.MethodStg
 
-    inlines = (RevisionStgAdmin,)
+    inlines = (AnalyteMethodStgAdmin, RevisionStgAdmin)
     actions = ('publish', 'archive')
     change_actions = actions
     fieldsets = (
@@ -479,7 +534,7 @@ class MethodAdmin(ReadOnlyMixin, AbstractMethodAdmin):
     class Meta:
         model = models.Method
 
-    inlines = (RevisionAdmin,)
+    inlines = (AnalyteMethodAdmin, RevisionAdmin)
 
 
 class ProtocolMethodInlineAdmin(admin.TabularInline):

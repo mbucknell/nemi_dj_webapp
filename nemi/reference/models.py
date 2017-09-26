@@ -246,3 +246,6 @@ class PrecisionUnitsDom(models.Model):
     class Meta:
         managed = False
         db_table = 'precision_units_dom'
+
+    def __str__(self):
+        return '%s %s' % (self.precision_units, self.precision_units_description)
