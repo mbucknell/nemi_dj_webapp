@@ -8,7 +8,6 @@ PROJECT_HOME = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 SITE_HOME = os.path.split(PROJECT_HOME)[0]
 
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     #('Mary Bucknell', 'mbucknell@usgs.gov'),
@@ -135,6 +134,8 @@ TEMPLATES = [
     },
 ]
 
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -147,6 +148,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'django.contrib.flatpages',
+    'django.forms',
 
     # Third party apps
     'django_object_actions',

@@ -960,6 +960,36 @@ class RevisionPdfView(PdfView):
             self.filename = self.kwargs['revision_id']
 
 
+class RevisionPdfOnlineView(PdfView):
+    '''
+    Extends PdfView to serve a revision's pdf file if it exists in the database.
+    '''
+    def get_pdf_info(self):
+        cursor = connection.cursor()
+        cursor.execute('SELECT mimetype, method_pdf, revision_information from nemi_data.revision_join_online where revision_id=%s', [self.kwargs['revision_id']])
+        results_list = dictfetchall(cursor)
+
+        if results_list:
+            self.mimetype = results_list[0]['MIMETYPE']
+            self.pdf = results_list[0]['METHOD_PDF']
+            self.filename = self.kwargs['revision_id']
+
+
+class RevisionPdfStagingView(PdfView):
+    '''
+    Extends PdfView to serve a revision's pdf file if it exists in the database.
+    '''
+    def get_pdf_info(self):
+        cursor = connection.cursor()
+        cursor.execute('SELECT mimetype, method_pdf, revision_information from nemi_data.revision_join_stg where revision_id=%s', [self.kwargs['revision_id']])
+        results_list = dictfetchall(cursor)
+
+        if results_list:
+            self.mimetype = results_list[0]['MIMETYPE']
+            self.pdf = results_list[0]['METHOD_PDF']
+            self.filename = self.kwargs['revision_id']
+
+
 class WQPWebProxyView(SimpleWebProxyView):
     service_url = settings.WQP_URL
     http_method_names = ['head', 'get']

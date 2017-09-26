@@ -3,6 +3,8 @@ from .base import *
 
 
 DEBUG = True
+TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
+
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 

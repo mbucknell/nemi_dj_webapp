@@ -59,6 +59,12 @@ urlpatterns = [
     url(r'^revision_pdf/(?P<revision_id>\d+)/$',
         views.RevisionPdfView.as_view(),
         name='revision-pdf'),
+    url(r'^revision_pdf_online/(?P<revision_id>\d+)/$',
+        views.RevisionPdfOnlineView.as_view(),
+        name='revision-pdf-online'),
+    url(r'^revision_pdf_staging/(?P<revision_id>\d+)/$',
+        views.RevisionPdfStagingView.as_view(),
+        name='revision-pdf-staging'),
 
     ## Ajax urls which return json objects
     url(r'^analyte_select/$',
