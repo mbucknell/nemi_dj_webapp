@@ -1,0 +1,8 @@
+{% if widget.value %}
+<p class="file-upload">
+    {{ widget.initial_text }}: <a href="{{ widget.value.url }}">Download PDF</a>
+    <br />
+    {{ widget.input_text }}:
+{% endif %}
+    <input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} />
+{% if widget.value %}</p>{% endif %}
