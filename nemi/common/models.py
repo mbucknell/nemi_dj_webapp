@@ -353,7 +353,7 @@ class MethodAbstract(models.Model):
         help_text='This field is designed to provide the user with a quick identification of a method, so include the analyte (ex: "nitrate") or group of analytes (ex; "nutrients"), the matrix (ex: "in water"), and instrumentation (ex: "using colorimetry"):\nEx. 1: Nitrate in Water by Colorimetry\nEx. 2: Anions in Water by CIE-UV\nNOTE: If the general method includes multiple procedures for different analytes, create a Method entry for each subpart.',)
     method_type = models.ForeignKey(MethodTypeRef)
     method_subcategory = models.ForeignKey(
-        MethodSubcategoryRef,
+        MethodSubcategoryRef, null=True, blank=True,
         help_text='The "Method subcategory" describes the class of analytes that are measured by the method. Choose the appropriate subcategory (e.g., INORGANIC, RADIOCHEMICAL, MICROBIOLOGICAL) from the list of values. If your method does not fit into the available subcategories, or if you have a question about the meaning of the subcategories, contact the NEMI manager.')
     method_source = models.ForeignKey(
         MethodSourceRef,

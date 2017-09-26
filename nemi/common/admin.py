@@ -334,7 +334,9 @@ class AbstractMethodAdmin(admin.ModelAdmin):
 
         # Make fields required here rather than in DB models, so the
         # statistical method forms' functionality won't be impacted.
-        if db_field.name in ('media_name', 'method_source', 'method_descriptive_name'):
+        if db_field.name in (
+                'method_subcategory', 'media_name', 'method_source',
+                'method_descriptive_name'):
             field.required = True
 
         return field
