@@ -25,7 +25,9 @@ class AbstractMethodAdmin(admin.ModelAdmin):
     has_module_permission = is_method_admin
     has_add_permission = is_method_admin
     has_change_permission = is_method_admin
-    has_delete_permission = is_method_admin
+
+    def has_delete_permission(self, request, *args, **kwargs):
+        return False
 
 
 class AbstractReferenceAdmin(AbstractMethodAdmin):
