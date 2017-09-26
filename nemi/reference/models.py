@@ -1,7 +1,5 @@
 from django.db import models
 
-from common.models import MethodStg
-
 
 YES_NO_CHOICES = (
     ('N', 'No'),
@@ -241,13 +239,6 @@ class ClassicSourceCitationStgRef(SourceCitationStgRef):
         verbose_name = 'classic NEMI source citation'
 
 
-class ProtocolSourceCitationStgRef(SourceCitationStgRef):
-    class Meta:
-        managed = False
-        proxy = True
-        verbose_name = 'protocol source citation'
-
-
 class PrecisionUnitsDom(models.Model):
     precision_units = models.CharField(primary_key=True, max_length=50)
     precision_units_description = models.CharField(max_length=100, blank=True, null=True)
@@ -255,16 +246,3 @@ class PrecisionUnitsDom(models.Model):
     class Meta:
         managed = False
         db_table = 'precision_units_dom'
-
-
-class ProtocolMethodStgRel(models.Model):
-    protocol_method_id = models.AutoField(primary_key=True)
-    source_citation = models.ForeignKey(SourceCitationStgRef, models.DO_NOTHING)
-    method = models.ForeignKey(MethodStg, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'protocol_method_stg_rel'
-
-    def __str__(self):
-        return str(self.method)

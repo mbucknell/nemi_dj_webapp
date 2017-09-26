@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-#from reference import models as refs
+from reference import models as refs
 
 
 class DefinitionsDOM(models.Model):
@@ -916,6 +916,27 @@ class RevisionJoinStg(AbstractRevision):
         managed = False
         db_table = 'revision_join_stg'
         unique_together = (('method', 'revision_information', 'source_citation'),)
+
+
+class ProtocolSourceCitationStgRef(refs.SourceCitationStgRef):
+    class Meta:
+        managed = False
+        proxy = True
+        verbose_name = 'protocol source citation'
+
+
+class ProtocolMethodStgRel(models.Model):
+    protocol_method_id = models.AutoField(primary_key=True)
+    source_citation = models.ForeignKey(refs.SourceCitationStgRef, models.DO_NOTHING)
+    method = models.ForeignKey(MethodStg, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'protocol_method_stg_rel'
+
+    def __str__(self):
+        return str(self.method)
+
 
 """
 class AbstractAnalyteMethodJn(models.Model):
