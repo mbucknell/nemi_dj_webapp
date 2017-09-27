@@ -36,6 +36,8 @@ def get_test_runner(base_class):
 
             models_by_table = defaultdict(list)
             for model in apps.get_models(include_auto_created=True):
+                if model._meta.proxy:
+                    continue
                 lst = models_by_table.setdefault(model._meta.db_table, [])
                 lst.append(model)
 
@@ -43,7 +45,6 @@ def get_test_runner(base_class):
                 max(models, key=field_count)
                 for models in models_by_table.values()
             ]
-
             for m in self.unmanaged_models:
                 m._meta.managed = True
 
