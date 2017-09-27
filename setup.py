@@ -8,7 +8,8 @@ from setuptools import setup, find_packages
 BUMPVERSION_CFG = '.bumpversion.cfg'
 
 
-# there's a [bumpversion:file:setup.py] feature in bumpversion, but this makes it so the version string is only hardcoded in one place
+# There's a [bumpversion:file:setup.py] feature in bumpversion, but this makes
+# it so the version string is only hardcoded in one place.
 def get_package_version():
     """
     Read the .bumpversion.cfg file return
