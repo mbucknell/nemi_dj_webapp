@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -236,6 +238,61 @@ class RevisionAdmin(AbstractRevisionInline):
         return self.readonly_fields
 
 
+class AbstractAnalyteMethodAdmin(admin.StackedInline):
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('analyte',),
+                ('dl_value', 'dl_units'),
+                ('accuracy', 'accuracy_units'),
+                ('false_positive_value', 'false_negative_value'),
+                ('precision', 'precision_units', 'prec_acc_conc_used'),
+            ),
+        }),
+        (None, {
+            'fields': (
+                ('insert_date', 'insert_person_name'),
+                ('last_update_date', 'last_update_person_name'),
+            ),
+        }),
+        (None, {
+            'fields': (
+                ('green_flag', 'yellow_flag', 'confirmatory'),
+            ),
+        }),
+    )
+    readonly_fields = (
+        'insert_date', 'insert_person_name', 'last_update_date',
+        'last_update_person_name', 'green_flag', 'yellow_flag', 'confirmatory'
+    )
+
+    extra = 0
+    class Meta:
+        abstract = True
+
+    def save_model(self, request, obj, form, change):
+        obj.last_update_date = datetime.now()
+        obj.last_update_person_name = request.user.username
+        if not obj.pk:
+            obj.insert_person_name = obj.last_update_person_name
+            obj.insert_date = obj.last_update_date
+
+        super(AbstractAnalyteMethodAdmin, self).save_model(
+            request, obj, form, change)
+
+
+class AnalyteMethodOnlineAdmin(AbstractAnalyteMethodAdmin):
+    model = models.AnalyteMethodJnOnline
+
+
+class AnalyteMethodStgAdmin(AbstractAnalyteMethodAdmin):
+    model = models.AnalyteMethodJnStg
+
+
+class AnalyteMethodAdmin(ReadOnlyMixin, AbstractAnalyteMethodAdmin):
+    model = models.AnalyteMethodJn
+
+
 class ActiveRevisionCountFilter(admin.SimpleListFilter):
     title = 'active revision count'
     parameter_name = 'active_revision_count'
@@ -376,7 +433,7 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
         model = models.MethodOnline
 
     list_filter = ('ready_for_review',) + AbstractMethodAdmin.list_filter
-    inlines = (RevisionOnlineAdmin,)
+    inlines = (AnalyteMethodOnlineAdmin, RevisionOnlineAdmin)
     actions = ('submit_for_review',)
     change_actions = actions
     fieldsets = (
@@ -425,7 +482,7 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
     class Meta:
         model = models.MethodStg
 
-    inlines = (RevisionStgAdmin,)
+    inlines = (AnalyteMethodStgAdmin, RevisionStgAdmin)
     actions = ('publish', 'archive')
     change_actions = actions
     fieldsets = (
@@ -477,9 +534,102 @@ class MethodAdmin(ReadOnlyMixin, AbstractMethodAdmin):
     class Meta:
         model = models.Method
 
-    inlines = (RevisionAdmin,)
+    inlines = (AnalyteMethodAdmin, RevisionAdmin)
+
+
+class ProtocolMethodInlineAdmin(admin.TabularInline):
+    model = models.ProtocolMethodStgRel
+    extra = 0
+    raw_id_fields = ('method',)
+
+
+class ProtocolSourceCitationAdmin(DjangoObjectActions, admin.ModelAdmin):
+    inlines = (ProtocolMethodInlineAdmin,)
+    list_display = (
+        'source_citation', 'source_citation_name',
+        'source_citation_information', 'insert_person_name', 'insert_date',
+        'update_date', 'title', 'author', 'publication_year',
+        'ready_for_review', 'approved', 'approved_date'
+    )
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('insert_person_name',),
+                ('insert_date', 'update_date'),
+                ('ready_for_review',),
+                ('approved', 'approved_date'),
+            ),
+        }),
+        (None, {
+            'fields': (
+                'source_citation', 'source_citation_name',
+                'source_citation_information', 'title', 'author',
+                'abstract_summary', 'table_of_contents', 'publication_year',
+                'link', 'notes',
+            ),
+        }),
+    )
+    readonly_fields = (
+        'insert_person_name', 'insert_date', 'update_date', 'ready_for_review',
+        'approved', 'approved_date'
+    )
+    actions = ('submit_for_review', 'approve_protocol')
+    change_actions = actions
+
+    def get_queryset(self, request):
+        queryset = super(ProtocolSourceCitationAdmin, self).get_queryset(request)
+        return queryset.filter(citation_type='PROTOCOL')
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        field = super(ProtocolSourceCitationAdmin, self).formfield_for_dbfield(
+            db_field, **kwargs)
+
+        if db_field.name in ('source_citation', 'source_citation_name',
+                             'source_citation_information', 'title', 'author',
+                             'abstract_summary', 'publication_year'):
+            field.required = True
+
+        if db_field.name in ('source_citation_information', 'title', 'author',
+                             'abstract_summary', 'table_of_contents', 'notes'):
+            field.widget = forms.Textarea(attrs=field.widget.attrs)
+
+        return field
+
+    @takes_instance_or_queryset
+    def submit_for_review(self, request, queryset):
+        rows_updated = queryset.update(ready_for_review='Y')
+        self.message_user(request, 'submitted %d protocol%s for review' % (
+            rows_updated, 's' if rows_updated > 1 else ''))
+
+    submit_for_review.label = 'Submit for review'
+    submit_for_review.short_description = 'Submit this protocol for review'
+
+    @takes_instance_or_queryset
+    def approve_protocol(self, request, queryset):
+        rows_updated = queryset.update(approved='Y', approved_date=datetime.now())
+        self.message_user(request, 'submitted %d protocol%s for review' % (
+            rows_updated, 's' if rows_updated > 1 else ''))
+
+    approve_protocol.label = 'Approve'
+    approve_protocol.short_description = 'Approve and publish this protocol'
+
+    def save_model(self, request, obj, form, change):
+        obj.citation_type = 'PROTOCOL'
+
+        obj.update_date = obj.approved_date
+        if not obj.pk:
+            obj.insert_person_name = request.user.username
+            obj.insert_date = obj.update_date
+
+        # Save to the staging table
+        super(ProtocolSourceCitationAdmin, self).save_model(
+            request, obj, form, change)
+
+    def has_delete_permission(self, request, *args, **kwargs):
+        return False
 
 
 method_admin.register(models.MethodOnline, MethodOnlineAdmin)
 method_admin.register(models.MethodStg, MethodStgAdmin)
 method_admin.register(models.Method, MethodAdmin)
+method_admin.register(models.ProtocolSourceCitationStgRef, ProtocolSourceCitationAdmin)
