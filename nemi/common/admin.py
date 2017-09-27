@@ -265,7 +265,7 @@ class AbstractAnalyteMethodAdmin(admin.StackedInline):
         'insert_date', 'insert_person_name', 'last_update_date',
         'last_update_person_name', 'green_flag', 'yellow_flag', 'confirmatory'
     )
-
+    raw_id_fields = ('analyte',)
     extra = 0
     class Meta:
         abstract = True

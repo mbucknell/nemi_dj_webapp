@@ -849,7 +849,15 @@ class LegacyUserAccount(models.Model):
         db_table = 'user_account'
 
 
+class RevisionManager(models.Manager):
+    def get_queryset(self):
+        queryset = super(RevisionManager, self).get_queryset()
+        return queryset.defer('method_pdf')
+
+
 class AbstractRevision(models.Model):
+    objects = RevisionManager()
+
     revision_id = models.AutoField(primary_key=True)
 
     revision_flag = models.BooleanField(db_column='revision_flag')
