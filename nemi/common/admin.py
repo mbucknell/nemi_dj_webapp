@@ -77,6 +77,7 @@ class PDFFileField(forms.FileField):
         if value:
             try:
                 PyPDF2.PdfFileReader(value)
+                value.seek(0)
             except PyPDF2.utils.PdfReadError:
                 raise ValidationError('Please upload a valid PDF file.')
 
@@ -108,20 +109,10 @@ class AbstractRevisionForm(forms.ModelForm):
         kwargs['initial'] = initial
         super(AbstractRevisionForm, self).__init__(*args, **kwargs)
 
-    def clean_pdf_file(self):
-        if self.cleaned_data['pdf_file']:
-            # To validate the PDF, try to read it with PyPDF2.
-            try:
-                PyPDF2.PdfFileReader(self.cleaned_data['pdf_file'])
-            except PyPDF2.utils.PdfReadError:
-                raise ValidationError('Please upload a valid PDF file.')
-        return self.cleaned_data['pdf_file']
-
     def save(self, commit=True):
         instance = super(AbstractRevisionForm, self).save(commit=False)
 
         if self.cleaned_data['pdf_file']:
-            self.cleaned_data['pdf_file'].seek(0)
             instance.method_pdf = self.cleaned_data['pdf_file'].read()
             instance.mimetype = 'application/pdf'
 
