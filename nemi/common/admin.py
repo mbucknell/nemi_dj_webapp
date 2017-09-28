@@ -460,6 +460,10 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
         # Currently, assume only admin users use the system.
         return request.user.is_superuser
 
+    def has_delete_permission(self, request, obj=None):
+        # For now, only admins have acesss.
+        return request.user.is_superuser
+
     @takes_instance_or_queryset
     def submit_for_review(self, request, queryset):
         rows_updated = queryset.update(ready_for_review='Y')
@@ -531,6 +535,10 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
 
     def has_change_permission(self, request, obj=None):
         # Admin may only edit staging methods
+        return request.user.is_superuser
+
+    def has_delete_permission(self, request, obj=None):
+        # For now, only admins have acesss.
         return request.user.is_superuser
 
 
