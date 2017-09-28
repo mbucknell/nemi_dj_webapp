@@ -895,6 +895,7 @@ class RevisionJoin(AbstractRevision):
         managed = False
         db_table = 'revision_join'
         unique_together = (('method', 'revision_information', 'source_citation'),)
+        verbose_name = 'revision'
 
 
 class RevisionJoinOnline(AbstractRevision):
@@ -910,6 +911,7 @@ class RevisionJoinOnline(AbstractRevision):
         managed = False
         db_table = 'revision_join_online'
         unique_together = (('method', 'revision_information'),)
+        verbose_name = 'pending revision'
 
 
 class RevisionJoinStg(AbstractRevision):
@@ -924,6 +926,7 @@ class RevisionJoinStg(AbstractRevision):
         managed = False
         db_table = 'revision_join_stg'
         unique_together = (('method', 'revision_information', 'source_citation'),)
+        verbose_name = 'staging revision'
 
 
 class ProtocolSourceCitationStgRef(refs.SourceCitationStgRef):

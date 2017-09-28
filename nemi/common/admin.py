@@ -177,6 +177,7 @@ class AbstractRevisionInline(ReadOnlyMixin, admin.TabularInline):
 
 
 class AbstractEditableRevisionInline(AbstractRevisionInline):
+    fields = ('revision_flag', 'revision_information', 'pdf_file')
     class Meta:
         abstract = True
 
