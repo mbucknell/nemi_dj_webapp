@@ -136,8 +136,7 @@ class RevisionOnlineForm(AbstractRevisionForm):
     class Meta:
         model = models.RevisionJoinOnline
         fields = (
-            'revision_flag', 'revision_information', 'source_citation',
-            'pdf_file',
+            'revision_flag', 'revision_information', 'pdf_file',
             #'reviewer_name'
         )
 
@@ -147,8 +146,7 @@ class RevisionStgForm(AbstractRevisionForm):
     class Meta:
         model = models.RevisionJoinStg
         fields = (
-            'revision_flag', 'revision_information', 'source_citation',
-            'pdf_file',
+            'revision_flag', 'revision_information', 'pdf_file',
             #'reviewer_name'
         )
 
@@ -216,6 +214,11 @@ class RevisionOnlineAdmin(AbstractEditableRevisionInline):
 
 class RevisionStgAdmin(AbstractEditableRevisionInline):
     model = models.RevisionJoinStg
+    form = RevisionStgForm
+
+
+class ProtocolRevisionStgAdmin(AbstractEditableRevisionInline):
+    model = models.ProtocolRevisionJoinStg
     form = RevisionStgForm
 
 
@@ -545,7 +548,7 @@ class ProtocolMethodInlineAdmin(admin.TabularInline):
 
 
 class ProtocolSourceCitationAdmin(DjangoObjectActions, admin.ModelAdmin):
-    inlines = (ProtocolMethodInlineAdmin,)
+    inlines = (ProtocolMethodInlineAdmin, ProtocolRevisionStgAdmin)
     list_display = (
         'source_citation', 'source_citation_name',
         'source_citation_information', 'insert_person_name', 'insert_date',
