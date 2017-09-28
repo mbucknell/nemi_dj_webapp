@@ -136,8 +136,7 @@ class RevisionOnlineForm(AbstractRevisionForm):
     class Meta:
         model = models.RevisionJoinOnline
         fields = (
-            'revision_flag', 'revision_information', 'source_citation',
-            'pdf_file',
+            'revision_flag', 'revision_information', 'pdf_file',
             #'reviewer_name'
         )
 
@@ -147,8 +146,7 @@ class RevisionStgForm(AbstractRevisionForm):
     class Meta:
         model = models.RevisionJoinStg
         fields = (
-            'revision_flag', 'revision_information', 'source_citation',
-            'pdf_file',
+            'revision_flag', 'revision_information', 'pdf_file',
             #'reviewer_name'
         )
 
@@ -177,6 +175,7 @@ class AbstractRevisionInline(ReadOnlyMixin, admin.TabularInline):
 
 
 class AbstractEditableRevisionInline(AbstractRevisionInline):
+    fields = ('revision_flag', 'revision_information', 'pdf_file')
     class Meta:
         abstract = True
 
@@ -215,6 +214,11 @@ class RevisionOnlineAdmin(AbstractEditableRevisionInline):
 
 class RevisionStgAdmin(AbstractEditableRevisionInline):
     model = models.RevisionJoinStg
+    form = RevisionStgForm
+
+
+class ProtocolRevisionStgAdmin(AbstractEditableRevisionInline):
+    model = models.ProtocolRevisionJoinStg
     form = RevisionStgForm
 
 
@@ -456,6 +460,10 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
         # Currently, assume only admin users use the system.
         return request.user.is_superuser
 
+    def has_delete_permission(self, request, obj=None):
+        # For now, only admins have acesss.
+        return request.user.is_superuser
+
     @takes_instance_or_queryset
     def submit_for_review(self, request, queryset):
         rows_updated = queryset.update(ready_for_review='Y')
@@ -529,6 +537,10 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
         # Admin may only edit staging methods
         return request.user.is_superuser
 
+    def has_delete_permission(self, request, obj=None):
+        # For now, only admins have acesss.
+        return request.user.is_superuser
+
 
 class MethodAdmin(ReadOnlyMixin, AbstractMethodAdmin):
     class Meta:
@@ -544,7 +556,7 @@ class ProtocolMethodInlineAdmin(admin.TabularInline):
 
 
 class ProtocolSourceCitationAdmin(DjangoObjectActions, admin.ModelAdmin):
-    inlines = (ProtocolMethodInlineAdmin,)
+    inlines = (ProtocolMethodInlineAdmin, ProtocolRevisionStgAdmin)
     list_display = (
         'source_citation', 'source_citation_name',
         'source_citation_information', 'insert_person_name', 'insert_date',

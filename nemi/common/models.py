@@ -118,7 +118,7 @@ class SourceCitationRefAbstract(models.Model):
     author = models.CharField(max_length=450)
     table_of_contents = models.CharField(max_length=1000)
     abstract_summary = models.CharField(max_length=2000)
-    link = models.CharField(max_length=450, blank=True)
+    link = models.URLField(max_length=450, blank=True)
     publication_year = models.IntegerField(null=True)
     country = models.CharField(max_length=100, blank=True)
     item_type = models.ForeignKey(StatisticalItemType)
@@ -407,7 +407,7 @@ class MethodAbstract(models.Model):
     max_holding_time = models.CharField(max_length=300, blank=True)
     sample_prep_methods = models.CharField(max_length=100, blank=True)
     relative_cost = models.ForeignKey(RelativeCostRef, null=True, blank=True)
-    link_to_full_method = models.CharField(
+    link_to_full_method = models.URLField(
         max_length=240, blank=True,
         verbose_name='Private Vendor URL (Do not enter URL for public methods)')
     regs_only = models.CharField(
@@ -895,6 +895,7 @@ class RevisionJoin(AbstractRevision):
         managed = False
         db_table = 'revision_join'
         unique_together = (('method', 'revision_information', 'source_citation'),)
+        verbose_name = 'revision'
 
 
 class RevisionJoinOnline(AbstractRevision):
@@ -910,6 +911,7 @@ class RevisionJoinOnline(AbstractRevision):
         managed = False
         db_table = 'revision_join_online'
         unique_together = (('method', 'revision_information'),)
+        verbose_name = 'pending revision'
 
 
 class RevisionJoinStg(AbstractRevision):
@@ -924,6 +926,7 @@ class RevisionJoinStg(AbstractRevision):
         managed = False
         db_table = 'revision_join_stg'
         unique_together = (('method', 'revision_information', 'source_citation'),)
+        verbose_name = 'staging revision'
 
 
 class ProtocolSourceCitationStgRef(refs.SourceCitationStgRef):
@@ -933,17 +936,20 @@ class ProtocolSourceCitationStgRef(refs.SourceCitationStgRef):
         verbose_name = 'protocol source citation'
 
 
-class ProtocolMethodStgRel(models.Model):
-    protocol_method_id = models.AutoField(primary_key=True)
-    source_citation = models.ForeignKey(refs.SourceCitationStgRef, models.DO_NOTHING)
-    method = models.ForeignKey(MethodStg, models.DO_NOTHING)
+class ProtocolRevisionJoinStg(AbstractRevision):
+    method = models.ForeignKey(
+        MethodStg, models.DO_NOTHING,
+        blank=True, null=True, related_name='protocol_revisions')
+    source_citation = models.ForeignKey(
+        ProtocolSourceCitationStgRef, models.DO_NOTHING,
+        blank=True, null=True)
+    date_loaded = models.DateField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'protocol_method_stg_rel'
-
-    def __str__(self):
-        return str(self.method)
+        db_table = 'revision_join_stg'
+        unique_together = (('method', 'revision_information', 'source_citation'),)
+        verbose_name = 'staging revision'
 
 
 class AbstractAnalyteMethodJn(models.Model):
@@ -1009,3 +1015,48 @@ class AnalyteMethodJnStg(AbstractAnalyteMethodJn):
         db_table = 'analyte_method_jn_stg'
         unique_together = (('method', 'analyte'),)
         verbose_name = 'method analyte'
+
+
+class AbstractProtocolMethodRel(models.Model):
+    protocol_method_id = models.AutoField(primary_key=True)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return str(self.method)
+
+
+class ProtocolMethodOnlineRel(AbstractProtocolMethodRel):
+    source_citation = models.ForeignKey(
+        SourceCitationOnlineRef, models.DO_NOTHING, related_name='protocols')
+    method = models.ForeignKey(
+        MethodOnline, models.DO_NOTHING, related_name='protocols')
+
+    class Meta:
+        managed = False
+        db_table = 'protocol_method_online_rel'
+
+
+class ProtocolMethodRel(AbstractProtocolMethodRel):
+    source_citation = models.ForeignKey(
+        SourceCitationRef, models.DO_NOTHING, related_name='protocols')
+    method = models.ForeignKey(
+        Method, models.DO_NOTHING, related_name='protocols')
+
+    class Meta:
+        managed = False
+        db_table = 'protocol_method_rel'
+
+
+class ProtocolMethodStgRel(AbstractProtocolMethodRel):
+    source_citation = models.ForeignKey(
+        ProtocolSourceCitationStgRef, models.DO_NOTHING,
+        related_name='protocols')
+    method = models.ForeignKey(
+        MethodStg, models.DO_NOTHING, related_name='protocols')
+
+    class Meta:
+        managed = False
+        db_table = 'protocol_method_stg_rel'
+        verbose_name = 'protocol method'
