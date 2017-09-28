@@ -15,10 +15,11 @@ class AbstractMethodAdmin(admin.ModelAdmin):
         abstract = True
 
     def is_method_admin(self, request, *args, **kwargs):
-        if not hasattr(self, '_admin'):
-            self._is_admin = request.user.groups.filter(
-                name='method_admin').exists()
-        return self._is_admin
+        # if not hasattr(self, '_admin'):
+        #     self._is_admin = request.user.groups.filter(
+        #         name='method_admin').exists()
+        # return self._is_admin
+        return request.user.is_superuser
 
     has_module_permission = is_method_admin
     has_add_permission = is_method_admin
