@@ -104,18 +104,17 @@ class TestMethodAdminPermissions(TestCase):
         pk2 = self.methods['stg_2'].pk
         self._get('method_admin:common_methodstg_add', False)
         response = self._get('method_admin:common_methodstg_change', True, args=[pk])
-        self._get('method_admin:common_methodstg_delete', False, args=[pk])
+        self._get('method_admin:common_methodstg_delete', True, args=[pk])
         # These GETs should support editing:
         self.assertContains(response, 'Save and continue editing')
         response = self._get('method_admin:common_methodstg_change', True, args=[pk2])
         self.assertContains(response, 'Save and continue editing')
 
-
         # MethodOnline table - admin may create and edit methods
         pk = self.methods['online_1'].pk
         pk2 = self.methods['online_2'].pk
         self._get('method_admin:common_methodonline_add', True)
-        self._get('method_admin:common_methodonline_delete', False, args=[pk])
+        self._get('method_admin:common_methodonline_delete', True, args=[pk])
         response = self._get('method_admin:common_methodonline_change', True, args=[pk])
         self.assertContains(response, 'Save and continue editing')
         response = self._get('method_admin:common_methodonline_change', True, args=[pk2])
