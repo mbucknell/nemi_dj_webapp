@@ -524,6 +524,10 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
     archive.label = 'Archive'
     archive.short_description = 'Archive the selected methods'
 
+    def has_add_permission(self, request):
+        # For now, only admins have acesss.
+        return request.user.is_superuser
+
     def has_change_permission(self, request, obj=None):
         # Admin may only edit staging methods
         return request.user.is_superuser
