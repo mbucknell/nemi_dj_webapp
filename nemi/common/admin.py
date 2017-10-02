@@ -2,11 +2,13 @@ from datetime import datetime
 
 from django import forms
 from django.contrib import admin
+from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.urlresolvers import reverse
 from django.db import connection
-from django.db.models import Case, Count, Q, When
+from django.db.models import Case, CharField, Count, Q, Value, When
 from django.forms.models import BaseInlineFormSet
+from django.http import HttpResponseRedirect
 from django.template.defaultfilters import slugify
 import PyPDF2
 
@@ -339,7 +341,7 @@ class AbstractMethodAdmin(admin.ModelAdmin):
 
     list_display = (
         'method_official_name', 'insert_date', 'last_update_date',
-        'approved', 'approved_date', 'active_revision_count'
+        'active_revision_count', 'analyte_count'
     )
     list_filter = (
         ActiveRevisionCountFilter,
@@ -348,7 +350,11 @@ class AbstractMethodAdmin(admin.ModelAdmin):
             Q(revisions__revision_flag=True) and Q(
                 revisions__method_pdf__isnull=False)
         ),
-        'approved', 'insert_date', 'approved_date', 'insert_person_name'
+        list_q_filter(
+            'has analytes',
+            Q(analyte_count__gt=0)
+        ),
+        'insert_person_name', 'insert_date'
     )
     fieldsets = (
         ('General Fields', {
@@ -396,18 +402,23 @@ class AbstractMethodAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         queryset = super(AbstractMethodAdmin, self).get_queryset(request)
 
-        # Add annotation for the count of active revisions per method.
+        # Add annotation for the count of active revisions, the number of
+        # analytes per method, and the completion status of the method.
         queryset = queryset.annotate(
             active_revision_count=Count(Case(When(
                 revisions__revision_flag=True,
                 then=1
-            )))
+            ))),
+            analyte_count=Count('analytes'),
         )
 
         return queryset
 
     def active_revision_count(self, obj):
         return obj.active_revision_count
+
+    def analyte_count(self, obj):
+        return obj.analyte_count
 
     def has_module_permission(self, request):
         # For now, only admins have access
@@ -422,12 +433,61 @@ class AbstractMethodAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
+    def method_is_valid(self, method):
+        return method.completion_status.startswith('COMPLETE')
 
-class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
+
+class AbstractEditableMethodAdmin(AbstractMethodAdmin):
+    list_display = AbstractMethodAdmin.list_display + ('completion_status',)
+    list_filter = (
+        list_q_filter(
+            'completion status',
+            Q(completion_status__startswith='COMPLETE')
+        ),
+    ) + AbstractMethodAdmin.list_filter
+
+    def get_queryset(self, request):
+        queryset = super(AbstractEditableMethodAdmin, self).get_queryset(request)
+
+        # Add the completion status of the method.
+        return queryset.annotate(
+            completion_status=Case(
+                When(
+                    active_revision_count=1,
+                    analyte_count__gt=0,
+                    then=Value('COMPLETE')),
+                When(
+                    active_revision_count=1,
+                    analyte_count=0,
+                    no_analyte_flag='Y',
+                    then=Value('COMPLETE')),
+                When(
+                    active_revision_count__gt=1,
+                    then=Value('INCOMPLETE - More than one active revision')),
+                When(
+                    active_revision_count=0,
+                    analyte_count=0,
+                    then=Value('INCOMPLETE - Needs analytes and revision')),
+                When(
+                    active_revision_count=0,
+                    then=Value('INCOMPLETE - Needs a revision')),
+                When(
+                    analyte_count=0,
+                    then=Value('INCOMPLETE - Needs an analyte')),
+                default=Value('UNKNOWN'),
+                output_field=CharField()
+            )
+        )
+
+    def completion_status(self, obj):
+        return obj.completion_status
+
+
+class MethodOnlineAdmin(DjangoObjectActions, AbstractEditableMethodAdmin):
     class Meta:
         model = models.MethodOnline
 
-    list_filter = ('ready_for_review',) + AbstractMethodAdmin.list_filter
+    list_filter = AbstractEditableMethodAdmin.list_filter
     inlines = (AnalyteMethodOnlineAdmin, RevisionOnlineAdmin)
     actions = ('submit_for_review',)
     change_actions = actions
@@ -435,11 +495,16 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
         ('Submission-Specific Fields', {
             'fields': (
                 ('no_analyte_flag',),
-                ('ready_for_review', 'delete_after_load'),
+                #('ready_for_review', 'delete_after_load'),
                 ('comments',),
             )
         }),
-    ) + AbstractMethodAdmin.fieldsets
+    ) + AbstractEditableMethodAdmin.fieldsets
+    ordering = ('-last_update_date',)
+
+    def get_queryset(self, request):
+        queryset = super(MethodOnlineAdmin, self).get_queryset(request)
+        return queryset.filter(ready_for_review='N')
 
     def has_add_permission(self, request):
         # For now, only admins have acesss.
@@ -457,9 +522,24 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
 
     @takes_instance_or_queryset
     def submit_for_review(self, request, queryset):
+        # If any of the methods are incomplete, bail.
+        if any(not self.method_is_valid(method) for method in queryset):
+            self.message_user(
+                request,
+                'Not submitted: Method is missing analytes or revisions.',
+                level=messages.ERROR
+            )
+            return
+
+        # Mark all methods as ready for review
         rows_updated = queryset.update(ready_for_review='Y')
+
+        # Redirect back to the list page and notify user of success.
         self.message_user(request, 'submitted %d method%s for review' % (
             rows_updated, 's' if rows_updated > 1 else ''))
+        return HttpResponseRedirect(
+            reverse('method_admin:common_methodonline_changelist')
+        )
 
     submit_for_review.label = 'Submit for review'
     submit_for_review.short_description = 'Submit method for review'
@@ -477,10 +557,15 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
         return super(MethodOnlineAdmin, self).get_readonly_fields(request, obj=obj)
 
 
-class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
+class MethodStgAdmin(DjangoObjectActions, AbstractEditableMethodAdmin):
     class Meta:
         model = models.MethodStg
 
+    list_display = AbstractEditableMethodAdmin.list_display + (
+        'approved', 'approved_date')
+    list_filter = (
+        'approved', 'approved_date'
+    ) + AbstractEditableMethodAdmin.list_filter
     inlines = (AnalyteMethodStgAdmin, RevisionStgAdmin)
     actions = ('publish', 'archive')
     change_actions = actions
@@ -490,7 +575,8 @@ class MethodStgAdmin(DjangoObjectActions, AbstractMethodAdmin):
                 ('no_analyte_flag',),
             )
         }),
-    ) + AbstractMethodAdmin.fieldsets
+    ) + AbstractEditableMethodAdmin.fieldsets
+    ordering = ('-last_update_date',)
 
     @takes_instance_or_queryset
     def publish(self, request, queryset):

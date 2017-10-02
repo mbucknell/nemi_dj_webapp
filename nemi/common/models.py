@@ -985,7 +985,8 @@ class AbstractAnalyteMethodJn(models.Model):
 
 
 class AnalyteMethodJn(AbstractAnalyteMethodJn):
-    method = models.ForeignKey(Method, models.DO_NOTHING)
+    method = models.ForeignKey(
+        Method, models.DO_NOTHING, related_name='analytes')
     date_loaded = models.DateField(blank=True, null=True)
 
     class Meta:
@@ -996,7 +997,8 @@ class AnalyteMethodJn(AbstractAnalyteMethodJn):
 
 
 class AnalyteMethodJnOnline(AbstractAnalyteMethodJn):
-    method = models.ForeignKey(MethodOnline, models.DO_NOTHING)
+    method = models.ForeignKey(
+        MethodOnline, models.DO_NOTHING, related_name='analytes')
     reviewer_name = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
@@ -1007,7 +1009,8 @@ class AnalyteMethodJnOnline(AbstractAnalyteMethodJn):
 
 
 class AnalyteMethodJnStg(AbstractAnalyteMethodJn):
-    method = models.ForeignKey(MethodStg, models.DO_NOTHING)
+    method = models.ForeignKey(
+        MethodStg, models.DO_NOTHING, related_name='analytes')
     date_loaded = models.DateField(blank=True, null=True)
 
     class Meta:
