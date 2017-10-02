@@ -538,7 +538,7 @@ class MethodOnline(MethodAbstract):
 
 class MethodStg(MethodAbstract):
 
-    method_id = models.IntegerField(primary_key=True)
+    method_id = models.AutoField(primary_key=True)
     no_analyte_flag = models.CharField(
         verbose_name='no analytes', max_length=4, blank=True, null=True,
         choices=YES_NO_CHOICES,

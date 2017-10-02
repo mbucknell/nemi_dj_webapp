@@ -102,7 +102,7 @@ class TestMethodAdminPermissions(TestCase):
         # Admin may publish all in-review methods.
         pk = self.methods['stg_1'].pk
         pk2 = self.methods['stg_2'].pk
-        self._get('method_admin:common_methodstg_add', False)
+        self._get('method_admin:common_methodstg_add', True)
         response = self._get('method_admin:common_methodstg_change', True, args=[pk])
         self._get('method_admin:common_methodstg_delete', True, args=[pk])
         # These GETs should support editing:
