@@ -43,7 +43,7 @@ class PdfViewTestCase(SimpleTestCase):
     def test_response_with_data(self):
         class TestPdfView(PdfView):
             mimetype = 'application/pdf'
-            pdf = StringIO('Test PDF String')
+            pdf = StringIO('Test PDF String').read()
             filename = 'test'
 
         test_view = TestPdfView()
