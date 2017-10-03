@@ -406,6 +406,16 @@ class AbstractMethodAdmin(admin.ModelAdmin):
                 'method_descriptive_name'):
             field.required = True
 
+        if db_field.name in (
+                'method_descriptive_name', 'brief_method_summary',
+                'method_official_name', 'scope_and_application', 'dl_note',
+                'applicable_conc_range', 'interferences',
+                'precision_descriptor_notes', 'qc_requirements',
+                'sample_handling', 'sample_prep_methods',
+                'assumptions_comments'):
+            field.widget.attrs['rows'] = 4
+            field.widget = forms.Textarea(attrs=field.widget.attrs)
+
         return field
 
     def get_queryset(self, request):
@@ -455,6 +465,16 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractMethodAdmin):
             )
         }),
     ) + AbstractMethodAdmin.fieldsets
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        field = super(MethodOnlineAdmin, self).formfield_for_dbfield(
+            db_field, **kwargs)
+
+        if db_field.name in ('comments',):
+            field.widget.attrs['rows'] = 4
+            field.widget = forms.Textarea(attrs=field.widget.attrs)
+
+        return field
 
     def has_add_permission(self, request):
         # For now, only admins have acesss.
