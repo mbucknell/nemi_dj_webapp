@@ -260,10 +260,10 @@ class InstrumentationRef(models.Model):
     class Meta:
         db_table = 'instrumentation_ref'
         managed = False
-        ordering = ('instrumentation',)
+        ordering = ('instrumentation_description',)
 
     def __str__(self):
-        return self.instrumentation
+        return self.instrumentation_description
 
 
 class WaterbodyTypeRef(models.Model):
