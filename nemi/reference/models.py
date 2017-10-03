@@ -25,6 +25,7 @@ class AccuracyUnitsDom(AbstractReferenceModel):
         managed = False
         db_table = 'accuracy_units_dom'
         verbose_name = 'accuracy unit'
+        ordering = ('accuracy_units',)
 
     def __str__(self):
         return self.accuracy_units
@@ -122,6 +123,7 @@ class DlUnitsDom(AbstractReferenceModel):
         managed = False
         db_table = 'dl_units_dom'
         verbose_name = 'detection limit unit'
+        ordering = ('dl_units',)
 
     def __str__(self):
         return self.dl_units
@@ -246,6 +248,7 @@ class PrecisionUnitsDom(models.Model):
     class Meta:
         managed = False
         db_table = 'precision_units_dom'
+        ordering = ('precision_units',)
 
     def __str__(self):
         return '%s %s' % (self.precision_units, self.precision_units_description)

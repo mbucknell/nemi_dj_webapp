@@ -135,6 +135,7 @@ class SourceCitationRefAbstract(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ('source_citation',)
 
     def __str__(self):
         return self.source_citation
@@ -215,6 +216,7 @@ class DlRef(models.Model):
     class Meta:
         db_table = 'dl_ref'
         managed = False
+        ordering = ('dl_type',)
 
     def __str__(self):
         return self.dl_type
@@ -224,9 +226,11 @@ class DlUnitsDom(models.Model):
 
     dl_units = models.CharField(max_length=20, primary_key=True, unique=True)
     dl_units_description = models.CharField(max_length=60, blank=True)
+
     class Meta:
         db_table = 'dl_units_dom'
         managed = False
+        ordering = ('dl_units',)
 
     def __str__(self):
         return self.dl_units
@@ -256,9 +260,10 @@ class InstrumentationRef(models.Model):
     class Meta:
         db_table = 'instrumentation_ref'
         managed = False
+        ordering = ('instrumentation_description',)
 
     def __str__(self):
-        return self.instrumentation
+        return self.instrumentation_description
 
 
 class WaterbodyTypeRef(models.Model):

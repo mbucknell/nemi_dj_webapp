@@ -335,6 +335,28 @@ def list_q_filter(label, q_object):
     return ListQFilter
 
 
+class SourceCitationAdmin(ReadOnlyMixin, admin.ModelAdmin):
+    search_fields = (
+        'source_citation', 'source_citation_name',
+        'title', 'source_citation_information',
+    )
+    list_display = (
+        'source_citation', 'source_citation_name',
+        'title', 'source_citation_information'
+    )
+    ordering = ('source_citation',)
+
+    def get_queryset(self, request):
+        queryset = super(SourceCitationAdmin, self).get_queryset(request)
+        return queryset.filter(citation_type='METHOD')
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict, thus hiding the model from admin index.
+        """
+        return {}
+
+
 class AbstractMethodAdmin(admin.ModelAdmin):
     class Meta:
         abstract = True
@@ -365,7 +387,8 @@ class AbstractMethodAdmin(admin.ModelAdmin):
                 'method_source', 'source_citation', 'brief_method_summary',
                 'media_name', 'method_official_name', 'instrumentation',
                 'waterbody_type', 'scope_and_application', 'dl_type',
-                'dl_note', 'applicable_conc_range', 'conc_range_units',
+                'dl_note',
+                ('applicable_conc_range', 'conc_range_units',),
                 'interferences', 'precision_descriptor_notes',
                 'qc_requirements', 'sample_handling', 'max_holding_time',
                 'sample_prep_methods', 'relative_cost',
@@ -385,6 +408,7 @@ class AbstractMethodAdmin(admin.ModelAdmin):
             )
         }),
     )
+    raw_id_fields = ('source_citation',)
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         field = super(AbstractMethodAdmin, self).formfield_for_dbfield(
@@ -396,6 +420,16 @@ class AbstractMethodAdmin(admin.ModelAdmin):
                 'method_subcategory', 'media_name', 'method_source',
                 'method_descriptive_name'):
             field.required = True
+
+        if db_field.name in (
+                'method_descriptive_name', 'brief_method_summary',
+                'method_official_name', 'scope_and_application', 'dl_note',
+                'applicable_conc_range', 'interferences',
+                'precision_descriptor_notes', 'qc_requirements',
+                'sample_handling', 'sample_prep_methods',
+                'assumptions_comments'):
+            field.widget.attrs['rows'] = 4
+            field.widget = forms.Textarea(attrs=field.widget.attrs)
 
         return field
 
@@ -505,6 +539,16 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractEditableMethodAdmin):
     def get_queryset(self, request):
         queryset = super(MethodOnlineAdmin, self).get_queryset(request)
         return queryset.filter(ready_for_review='N')
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        field = super(MethodOnlineAdmin, self).formfield_for_dbfield(
+            db_field, **kwargs)
+
+        if db_field.name in ('comments',):
+            field.widget.attrs['rows'] = 4
+            field.widget = forms.Textarea(attrs=field.widget.attrs)
+
+        return field
 
     def has_add_permission(self, request):
         # For now, only admins have acesss.
@@ -727,3 +771,4 @@ method_admin.register(models.MethodOnline, MethodOnlineAdmin)
 method_admin.register(models.MethodStg, MethodStgAdmin)
 method_admin.register(models.Method, MethodAdmin)
 method_admin.register(models.ProtocolSourceCitationStgRef, ProtocolSourceCitationAdmin)
+method_admin.register(models.SourceCitationRef, SourceCitationAdmin)
