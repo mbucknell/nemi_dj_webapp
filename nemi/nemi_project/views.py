@@ -3,6 +3,8 @@ Created on Aug 14, 2012
 
 @author: mbucknel
 '''
+import json
+
 from braces.views import LoginRequiredMixin
 from django.conf import settings
 from django.contrib.auth import login, authenticate
@@ -10,13 +12,14 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, FormView
 
 from domhelp.views import FieldHelpMixin
 from newsfeed.views import RecentNewsMixin
 
+from . import __version__
 from .forms import NEMIUserCreationForm
 
 
@@ -90,3 +93,9 @@ class HomeView(RecentNewsMixin, FieldHelpMixin, TemplateView):
 
 class MethodEntryView(TemplateView):
     template_name = 'method_entry.html'
+
+
+def version(request):
+    return HttpResponse(json.dumps({
+        'version': __version__
+    }), content_type='application/json')
