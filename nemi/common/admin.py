@@ -532,7 +532,7 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractEditableMethodAdmin):
             return
 
         # Mark all methods as ready for review
-        rows_updated = queryset.update(ready_for_review='Y')
+        rows_updated = queryset.update(ready_for_review='Y', approved='N')
 
         # Redirect back to the list page and notify user of success.
         self.message_user(request, 'submitted %d method%s for review' % (
@@ -667,6 +667,7 @@ class ProtocolSourceCitationAdmin(DjangoObjectActions, admin.ModelAdmin):
         'approved', 'approved_date'
     )
     actions = ('submit_for_review', 'approve_protocol')
+    ordering = ('-update_date',)
     change_actions = actions
 
     def get_queryset(self, request):
@@ -690,7 +691,7 @@ class ProtocolSourceCitationAdmin(DjangoObjectActions, admin.ModelAdmin):
 
     @takes_instance_or_queryset
     def submit_for_review(self, request, queryset):
-        rows_updated = queryset.update(ready_for_review='Y')
+        rows_updated = queryset.update(ready_for_review='Y', approved='N')
         self.message_user(request, 'submitted %d protocol%s for review' % (
             rows_updated, 's' if rows_updated > 1 else ''))
 
@@ -700,7 +701,7 @@ class ProtocolSourceCitationAdmin(DjangoObjectActions, admin.ModelAdmin):
     @takes_instance_or_queryset
     def approve_protocol(self, request, queryset):
         rows_updated = queryset.update(approved='Y', approved_date=datetime.now())
-        self.message_user(request, 'submitted %d protocol%s for review' % (
+        self.message_user(request, 'approved %d protocol%s' % (
             rows_updated, 's' if rows_updated > 1 else ''))
 
     approve_protocol.label = 'Approve'
