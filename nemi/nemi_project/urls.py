@@ -29,6 +29,7 @@ sitemaps = {
 }
 
 urlpatterns = [
+    url(r'^version/', views.version, {}, name='nemi_version'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^method-submission/', include(method_admin.urls)),
 
