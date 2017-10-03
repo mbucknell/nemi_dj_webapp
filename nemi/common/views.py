@@ -51,8 +51,7 @@ class PdfView(View):
         response = HttpResponse(content_type=self.mimetype)
         response['Content-Disposition'] = 'attachment;filename=%s.pdf' % self.filename
 
-        pdf_data = self.pdf.read()
-        response.write(pdf_data)
+        response.write(self.pdf)
 
         return response
 

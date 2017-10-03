@@ -728,6 +728,7 @@ ORDER BY method_summary_score desc;"
             cursor = connection.cursor()  # @UndefinedVariable
             cursor.execute(query)
             results_list = dictfetchall(cursor)
+            cursor.close()
             paginator = Paginator(results_list, 20)
 
             try:
@@ -940,9 +941,10 @@ class MethodPdfView(PdfView):
         results_list = dictfetchall(cursor)
         if results_list:
             self.mimetype = results_list[0]['MIMETYPE']
-            self.pdf = results_list[0]['METHOD_PDF']
+            self.pdf = results_list[0]['METHOD_PDF'].read()
             self.filename = _clean_name(results_list[0]['SOURCE_METHOD_IDENTIFIER'])
 
+        cursor.close()
 
 
 class RevisionPdfView(PdfView):
@@ -956,8 +958,10 @@ class RevisionPdfView(PdfView):
 
         if results_list:
             self.mimetype = results_list[0]['MIMETYPE']
-            self.pdf = results_list[0]['METHOD_PDF']
+            self.pdf = results_list[0]['METHOD_PDF'].read()
             self.filename = self.kwargs['revision_id']
+
+        cursor.close()
 
 
 class RevisionPdfOnlineView(PdfView):
@@ -971,8 +975,10 @@ class RevisionPdfOnlineView(PdfView):
 
         if results_list:
             self.mimetype = results_list[0]['MIMETYPE']
-            self.pdf = results_list[0]['METHOD_PDF']
+            self.pdf = results_list[0]['METHOD_PDF'].read()
             self.filename = self.kwargs['revision_id']
+
+        cursor.close()
 
 
 class RevisionPdfStagingView(PdfView):
@@ -986,8 +992,10 @@ class RevisionPdfStagingView(PdfView):
 
         if results_list:
             self.mimetype = results_list[0]['MIMETYPE']
-            self.pdf = results_list[0]['METHOD_PDF']
+            self.pdf = results_list[0]['METHOD_PDF'].read()
             self.filename = self.kwargs['revision_id']
+
+        cursor.close()
 
 
 class WQPWebProxyView(SimpleWebProxyView):
