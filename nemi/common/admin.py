@@ -336,8 +336,17 @@ def list_q_filter(label, q_object):
 class SourceCitationAdmin(ReadOnlyMixin, admin.ModelAdmin):
     search_fields = (
         'source_citation', 'source_citation_name',
-        'source_citation_information', 'title'
+        'title', 'source_citation_information',
     )
+    list_display = (
+        'source_citation', 'source_citation_name',
+        'title', 'source_citation_information'
+    )
+    ordering = ('source_citation',)
+
+    def get_queryset(self, request):
+        queryset = super(SourceCitationAdmin, self).get_queryset(request)
+        return queryset.filter(citation_type='METHOD')
 
     def get_model_perms(self, request):
         """
