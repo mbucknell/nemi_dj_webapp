@@ -135,6 +135,7 @@ class SourceCitationRefAbstract(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ('source_citation',)
 
     def __str__(self):
         return self.source_citation

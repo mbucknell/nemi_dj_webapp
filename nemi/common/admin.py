@@ -333,6 +333,19 @@ def list_q_filter(label, q_object):
     return ListQFilter
 
 
+class SourceCitationAdmin(ReadOnlyMixin, admin.ModelAdmin):
+    search_fields = (
+        'source_citation', 'source_citation_name',
+        'source_citation_information', 'title'
+    )
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict, thus hiding the model from admin index.
+        """
+        return {}
+
+
 class AbstractMethodAdmin(admin.ModelAdmin):
     class Meta:
         abstract = True
@@ -379,6 +392,7 @@ class AbstractMethodAdmin(admin.ModelAdmin):
             )
         }),
     )
+    raw_id_fields = ('source_citation',)
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         field = super(AbstractMethodAdmin, self).formfield_for_dbfield(
@@ -640,3 +654,4 @@ method_admin.register(models.MethodOnline, MethodOnlineAdmin)
 method_admin.register(models.MethodStg, MethodStgAdmin)
 method_admin.register(models.Method, MethodAdmin)
 method_admin.register(models.ProtocolSourceCitationStgRef, ProtocolSourceCitationAdmin)
+method_admin.register(models.SourceCitationRef, SourceCitationAdmin)
