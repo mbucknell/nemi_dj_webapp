@@ -185,7 +185,7 @@ class PublicationSourceRelAbstract(models.Model):
         abstract = True
 
     def __str__(self):
-        return unicode(self.source)
+        return str(self.source)
 
 
 class PublicationSourceRelStg(PublicationSourceRelAbstract):
@@ -619,7 +619,7 @@ class StatAnalysisRelAbstract(models.Model):
         abstract = True
 
     def __str__(self):
-        return unicode(self.analysis_type)
+        return str(self.analysis_type)
 
 
 class StatAnalysisRelStg(StatAnalysisRelAbstract):
@@ -648,7 +648,7 @@ class StatDesignRelAbstract(models.Model):
         abstract = True
 
     def __str__(self):
-        return unicode(self.design_objective)
+        return str(self.design_objective)
 
 
 class StatDesignRelStg(StatDesignRelAbstract):
@@ -677,7 +677,7 @@ class StatTopicRelAbstract(models.Model):
         abstract = True
 
     def __str__(self):
-        return unicode(self.topic)
+        return str(self.topic)
 
 
 class StatTopicRelStg(StatTopicRelAbstract):
@@ -706,7 +706,7 @@ class StatMediaRelAbstract(models.Model):
         abstract = True
 
     def __str__(self):
-        return unicode(self.media_name)
+        return str(self.media_name)
 
 
 class StatMediaRelStg(StatMediaRelAbstract):
