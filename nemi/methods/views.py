@@ -99,7 +99,7 @@ class AnalyteSelectView(View):
                     if subcategory != '':
                         qs = qs.filter(method_subcategory__iexact=subcategory)
 
-                elif request.GET.has_key('selection'):
+                elif 'selection' in request.GET:
                     qs = AnalyteCodeRel.objects.filter(analyte_name__icontains=request.GET['selection'])
 
                 else:
