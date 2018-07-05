@@ -30,7 +30,7 @@
 
 {% block content %}
 	<div id="classic-nemi-entry-div">
-		<a href="http://cida.usgs.gov/nemi_forms/apex/f?p=nemi_stg_forms:1">Go to classic NEMI method entry</a>
+		<a href="{% url 'method_admin:index' %}">Go to classic NEMI method entry</a>
 	</div>
 	<div id="separator-div">
 		OR
@@ -39,4 +39,4 @@
     	<a href="{% url 'sams-method_entry' %}">Go to SAMs NEMI methods</a>
     </div>
  {% endblock %}
-	
+
