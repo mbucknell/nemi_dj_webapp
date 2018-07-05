@@ -10,7 +10,7 @@ SITE_HOME = os.path.split(PROJECT_HOME)[0]
 DEBUG = False
 
 ADMINS = (
-    #('Mary Bucknell', 'mbucknell@usgs.gov'),
+    ('Mary Bucknell', 'mbucknell@usgs.gov'),
     ('Daniel Naab', 'dnaab@usgs.gov'),
 )
 MANAGERS = ADMINS
