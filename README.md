@@ -2,20 +2,6 @@
 
 Search interface for www.nemi.gov, written in Django.
 
-## On the network
-
-### Database
-
-NEMI_DATA@*trans.er.usgs.gov
-
-Connects via NEMI_USER@*trans.er.usgs.gov
-
-### Deployment Environments
-
-- Jenkins: http://cida-eros-nemidjdev.er.usgs.gov:8080/jenkins/
-- Development: http://cida-eros-nemidjdev.er.usgs.gov
-- QA: http://cida-eros-nemidjqa.er.usgs.gov
-- Production: http://cida-eros-nemidjprod.er.usgs.gov
 
 ## Local Development
 
@@ -26,17 +12,11 @@ example that connects to the dev database:
 #pylint: disable=W0401,W0614
 from .dev import *
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': DB_ENGINE,
-        'NAME': 'devtrans',
-        'USER': 'nemi_user',
-        'PASSWORD': '',
-        'HOST': 'cida-eros-dbdev.er.usgs.gov',
-        'PORT': '1521'
-    }
-}
+# Should be of form: oracle://USER:PASSWORD@HOST:PORT/NAME
+# To override in environment, set DATABASE_URL environment variable.
+# Add the if statement so that tests can be run if JENKINS_URL is defined
+if not os.getenv('JENKINS_URL', False):
+    DATABASES['default'] = dj_database_url.config(default='oracle://USER:PASSWORD@HOST:PORT/NAME')
 
 # Make this unique, and don't share it with anybody.
 # Get the dev SECRET_KEY from the live environment.
@@ -45,4 +25,35 @@ SECRET_KEY = ''
 # Note that using this seriously slows down page rendering and if set to True
 # the Browse page will not work.
 #show_debug_toolbar(globals())
+```
+
+### Building for local development
+Create a virtualenv and install the python dependencies:
+```
+% virtualenv --python=python3 env 
+% env/bin/pip install -r requirements.tx
+```
+
+The style sheets must be built as well. In order to build the style sheets from Sass. You must have
+the compass Gem installed as follows:
+```
+% gem install -i Gem compass -v 0.12.7
+```
+To build the style sheets execute:
+```
+% cd nemi/compass
+% ./compass.sh compile
+```
+
+### Running development server
+```
+% cd nemi
+% ./manage.py runserver
+```
+
+### Running python tests
+A local sqlite database is used to perform testing on the python code.
+```
+% cd nemi
+% DBA_SQL_DJANGO_ENGINE=django.db.backends.sqlite3 JENKINS_URL=anything ../env/bin/python ./manage.py jenkins --enable-coverage
 ```
