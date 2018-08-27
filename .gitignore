@@ -8,3 +8,5 @@ nemi/nemi_project/static/styles
 static/
 .idea/
 env/
+/reports
+nemi/reports
