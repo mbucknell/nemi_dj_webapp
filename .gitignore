@@ -6,3 +6,7 @@ nemi/compass/Gem
 nemi/nemi_project/settings/local.py
 nemi/nemi_project/static/styles
 static/
+.idea/
+env/
+/reports
+nemi/reports

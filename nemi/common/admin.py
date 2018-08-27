@@ -199,6 +199,9 @@ class AbstractEditableRevisionInline(AbstractRevisionInline):
         # As an inline, we defer to the parent permissions
         return True
 
+    def has_delete_permission(self, request, obj=None):
+        return True
+
 
 class RevisionOnlineAdmin(AbstractEditableRevisionInline):
     model = models.RevisionJoinOnline
