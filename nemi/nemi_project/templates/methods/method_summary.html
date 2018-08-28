@@ -203,6 +203,9 @@
             </h1>
             <div class="method-header-button">
                 <input type="button" class="download-button" value="DOWNLOAD METHOD" />
+                {% if user.is_authenticated %}
+                    <a class="edit-button" target="_blank" href="{% url 'method_admin:common_methodstg_change' method.details.method_id %}">Edit Method</a>
+                {% endif %}
             </div>
         </div>
         <div class="summary-content">
