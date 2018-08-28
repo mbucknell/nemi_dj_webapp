@@ -1003,7 +1003,7 @@ class AnalyteMethodJn(AbstractAnalyteMethodJn):
 
 class AnalyteMethodJnOnline(AbstractAnalyteMethodJn):
     method = models.ForeignKey(
-        MethodOnline, models.DO_NOTHING, related_name='analytes')
+        MethodOnline, models.CASCADE, related_name='analytes')
     reviewer_name = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
