@@ -201,11 +201,11 @@
                     <span class="method-name">{{ method.details.method_source }}: {{ method.details.source_method_identifier | safe}}:&nbsp;</span>
                     <span class="method-descriptive-name">{{ method.details.method_descriptive_name | safe}}</span>
             </h1>
-            {% load admin_urls %}
-                <a href="{% url common_methodstg|admin_urlname:'change' method.details.method_id %}">Edit Methd</a>
-
             <div class="method-header-button">
                 <input type="button" class="download-button" value="DOWNLOAD METHOD" />
+                {% if user.is_authenticated %}
+                    <a class="edit-button" target="_blank" href="{% url 'method_admin:common_methodstg_change' method.details.method_id %}">Edit Method</a>
+                {% endif %}
             </div>
         </div>
         <div class="summary-content">
