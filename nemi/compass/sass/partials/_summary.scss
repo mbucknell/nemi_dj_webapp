@@ -20,6 +20,9 @@
 		vertical-align: middle;
 		@include nemi-button;
 	}
+	.edit-button {
+		@include nemi-button;
+	}
 	.download-button.disabled {
 		color: $nemi-disabled-text-color;
 		background-color: $nemi-disabled-color;
