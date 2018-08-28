@@ -364,8 +364,11 @@ class AbstractMethodAdmin(admin.ModelAdmin):
     class Meta:
         abstract = True
 
+    def method_identifier(self, obj):
+        return '{0}: {1}'.format(obj.method_source, obj.source_method_identifier)
+
     list_display = (
-        'method_official_name', 'insert_date', 'last_update_date',
+        'method_identifier', 'method_official_name', 'insert_date', 'last_update_date',
         'active_revision_count', 'analyte_count'
     )
     list_filter = (
