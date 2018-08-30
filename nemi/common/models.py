@@ -890,7 +890,7 @@ class AbstractRevision(models.Model):
 
 class RevisionJoin(AbstractRevision):
     method = models.ForeignKey(
-        Method, models.DO_NOTHING,
+        Method, models.CASCADE,
         blank=True, null=True, related_name='revisions')
     source_citation = models.ForeignKey(
         SourceCitationRef, models.DO_NOTHING, blank=True, null=True)
@@ -991,7 +991,7 @@ class AbstractAnalyteMethodJn(models.Model):
 
 class AnalyteMethodJn(AbstractAnalyteMethodJn):
     method = models.ForeignKey(
-        Method, models.DO_NOTHING, related_name='analytes')
+        Method, models.CASCADE, related_name='analytes')
     date_loaded = models.DateField(blank=True, null=True)
 
     class Meta:
