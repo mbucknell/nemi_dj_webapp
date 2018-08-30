@@ -679,6 +679,10 @@ class MethodAdmin(ReadOnlyMixin, AbstractMethodAdmin):
 
     inlines = (AnalyteMethodAdmin, RevisionAdmin)
 
+    def has_delete_permission(self, request, obj=None):
+        # For now, only admins have acesss.
+        return request.user.is_superuser
+
 
 class ProtocolMethodInlineAdmin(admin.TabularInline):
     model = models.ProtocolMethodStgRel
