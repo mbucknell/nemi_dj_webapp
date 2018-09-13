@@ -92,7 +92,7 @@ class TestMethodAdminPermissions(TestCase):
         # Method table - published methods
         pk = self.methods['pub'].pk
         self._get('method_admin:common_method_add', False)
-        self._get('method_admin:common_method_delete', False, args=[pk])
+        self._get('method_admin:common_method_delete', True, args=[pk])
         # This GET is READ-only. Confirm by checking for string.
         response = self._get('method_admin:common_method_change',
                              True, args=[pk])
