@@ -1,6 +1,7 @@
 *.pyc
 *.egg-info/
 build/
+dist/
 nemi/compass/.sass-cache
 nemi/compass/Gem
 nemi/nemi_project/settings/local.py
@@ -10,3 +11,5 @@ static/
 env/
 /reports
 nemi/reports
+*.sublime-project
+*.sublime-workspace
