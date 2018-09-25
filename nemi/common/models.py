@@ -63,6 +63,7 @@ class StatisticalItemType(models.Model):
     class Meta:
         db_table = 'statistical_item_type'
         ordering = ['item']
+        managed = False
 
     def __str__(self):
         return self.item
@@ -102,6 +103,7 @@ class StatisticalSourceType(models.Model):
     class Meta:
         db_table = 'statistical_source_type'
         ordering = ['source']
+        managed = False
 
     def __str__(self):
         return self.source
@@ -195,6 +197,7 @@ class PublicationSourceRelStg(PublicationSourceRelAbstract):
     class Meta:
         db_table = 'publication_source_rel_stg'
         ordering = ['source']
+        managed = False
 
 
 class PublicationSourceRel(PublicationSourceRelAbstract):
@@ -205,6 +208,7 @@ class PublicationSourceRel(PublicationSourceRelAbstract):
     class Meta:
         db_table = 'publication_source_rel'
         ordering = ['source']
+        managed = False
 
 
 class DlRef(models.Model):
@@ -580,6 +584,7 @@ class StatisticalAnalysisType(models.Model):
     class Meta:
         db_table = 'statistical_analysis_type'
         ordering = ['analysis_type']
+        managed = False
 
     def __str__(self):
         return self.analysis_type
@@ -593,6 +598,7 @@ class StatisticalDesignObjective(models.Model):
     class Meta:
         db_table = 'statistical_design_objective'
         ordering = ['objective']
+        managed = False
 
     def __str__(self):
         return self.objective
@@ -606,6 +612,7 @@ class StatisticalTopics(models.Model):
     class Meta:
         db_table = 'statistical_topics'
         ordering = ['stat_special_topic']
+        managed = False
 
     def __str__(self):
         return self.stat_special_topic
@@ -629,6 +636,7 @@ class StatAnalysisRelStg(StatAnalysisRelAbstract):
     class Meta:
         db_table = 'stat_analysis_rel_stg'
         ordering = ['analysis_type']
+        managed = False
 
 
 class StatAnalysisRel(StatAnalysisRelAbstract):
@@ -638,6 +646,7 @@ class StatAnalysisRel(StatAnalysisRelAbstract):
     class Meta:
         db_table = 'stat_analysis_rel'
         ordering = ['analysis_type']
+        managed = False
 
 
 class StatDesignRelAbstract(models.Model):
@@ -658,6 +667,7 @@ class StatDesignRelStg(StatDesignRelAbstract):
     class Meta:
         db_table = 'stat_design_rel_stg'
         ordering = ['design_objective']
+        managed = False
 
 
 class StatDesignRel(StatDesignRelAbstract):
@@ -667,6 +677,7 @@ class StatDesignRel(StatDesignRelAbstract):
     class Meta:
         db_table = 'stat_design_rel'
         ordering = ['design_objective']
+        managed = False
 
 
 class StatTopicRelAbstract(models.Model):
@@ -687,6 +698,7 @@ class StatTopicRelStg(StatTopicRelAbstract):
     class Meta:
         db_table = 'stat_topic_rel_stg'
         ordering = ['topic']
+        managed = False
 
 
 class StatTopicRel(StatTopicRelAbstract):
@@ -696,6 +708,7 @@ class StatTopicRel(StatTopicRelAbstract):
     class Meta:
         db_table = 'stat_topic_rel'
         ordering = ['topic']
+        managed = False
 
 
 class StatMediaRelAbstract(models.Model):
@@ -716,6 +729,7 @@ class StatMediaRelStg(StatMediaRelAbstract):
     class Meta:
         db_table = 'stat_media_rel_stg'
         ordering = ['media_name']
+        managed = False
 
 
 class StatMediaRel(StatMediaRelAbstract):
@@ -725,6 +739,7 @@ class StatMediaRel(StatMediaRelAbstract):
     class Meta:
         db_table = 'stat_media_rel'
         ordering = ['media_name']
+        managed = False
 
 
 class AnalyteSummaryVW(models.Model):
@@ -817,6 +832,7 @@ class MethodAnalyteVW(models.Model):
     link_to_full_method = models.CharField(max_length=240, blank=True)
 
     class Meta:
+        managed = False
         db_table = 'method_analyte_vw'
 
 
