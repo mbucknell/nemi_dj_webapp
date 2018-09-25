@@ -48,8 +48,7 @@ def get_test_runner(base_class):
             for m in self.unmanaged_models:
                 m._meta.managed = True
 
-            super(TestRunner, self).setup_test_environment(
-                *args, **kwargs)
+            super(TestRunner, self).setup_test_environment(*args, **kwargs)
 
         def teardown_test_environment(self, *args, **kwargs):
             super(TestRunner, self).teardown_test_environment(

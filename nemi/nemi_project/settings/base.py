@@ -267,3 +267,15 @@ def show_debug_toolbar(settings):
     }
 
     settings['INSTALLED_APPS'] += ('debug_toolbar',)
+
+
+# If we are running the test suite, disable migrations. This avoids problems
+# caused by switching previously-unmanaged models to managed ones.
+if 'test' in sys.argv[1:]:
+    class DisableMigrations(object):
+        def __contains__(self, item):
+            return True
+        def __getitem__(self, item):
+            return None
+
+    MIGRATION_MODULES = DisableMigrations()
