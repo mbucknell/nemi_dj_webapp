@@ -541,7 +541,7 @@ class MethodOnline(MethodAbstract):
 
     class Meta:
         db_table = 'method_online'
-        managed = False
+        managed = True
         verbose_name = '#1 pending method'
 
 
@@ -561,7 +561,7 @@ class MethodStg(MethodAbstract):
 
     class Meta:
         db_table = 'method_stg'
-        managed = False
+        managed = True
         verbose_name = '#2 in-review method'
 
 
@@ -572,7 +572,7 @@ class Method(MethodAbstract):
 
     class Meta:
         db_table = 'method'
-        managed = False
+        managed = True
         verbose_name = '#3 published method'
 
 
