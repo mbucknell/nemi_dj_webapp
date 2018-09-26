@@ -271,7 +271,7 @@ def show_debug_toolbar(settings):
 
 # If we are running the test suite, disable migrations. This avoids problems
 # caused by switching previously-unmanaged models to managed ones.
-if 'test' in sys.argv[1:]:
+if any(arg in ('test', 'jenkins') for arg in sys.argv[1:]):
     class DisableMigrations(object):
         def __contains__(self, item):
             return True
