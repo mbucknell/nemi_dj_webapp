@@ -474,6 +474,90 @@ class MethodAbstract(models.Model):
     assumptions_comments = models.CharField(
         max_length=2000, blank=True, verbose_name='assumptions/comments')
 
+    # Bio-assessment fields
+    index_period = models.CharField(
+        verbose_name='Index period',
+        blank=True, null=True,
+        max_length=240,
+        help_text='If the method defines a sampling period, put that information here. Ex: "July 15 - Sept. 15"'
+    )
+    field_or_lab = models.CharField(
+        blank=True, null=True,
+        max_length=5,
+        choices=((None, 'N/A'), ('Field', 'Field'), ('Lab', 'Lab')),
+        verbose_name='Field or Lab',
+        help_text='If the method defines field or lab processing ("pick") of invert samples or field or lab ID of fish species, use this field.'
+    )
+    mesh_size = models.CharField(
+        blank=True, null=True,
+        max_length=50,
+        verbose_name='Mesh size',
+        help_text='Can apply to invert nets as well as fish dipnets. If the method defines a mesh size, list it here. Include units. Ex: "595 um"'
+    )
+    sampling_reach_length = models.CharField(
+        blank=True, null=True,
+        max_length=240,
+        verbose_name='Sampling reach length',
+        help_text='Ex: "minimum 100 m"; "20x channel width (may be extended to capture two riffle-run or glide-pool sequences)"'
+    )
+    habitats_sampled = models.CharField(
+        blank=True, null=True,
+        max_length=240,
+        verbose_name='Habitat(s) sampled',
+        help_text='Ex: "riffle. in absence of riffle, sample overhanging veg. or in-stream snags"'
+    )
+    num_subsamples_composited = models.CharField(
+        blank=True, null=True,
+        max_length=50,
+        verbose_name='Number of individual subsamples composited'
+    )
+    target_num_organisms = models.CharField(
+        blank=True, null=True,
+        max_length=240,
+        verbose_name='Target number of organisms',
+        help_text='Ex: "At least 200; extend sampling past 60 min to achieve if necessary"'
+    )
+    total_sampling_area = models.CharField(
+        blank=True, null=True,
+        max_length=240,
+        verbose_name='Total sampling area',
+        help_text='Ex: "All targeted habitats within reach"'
+    )
+    field_preservative = models.CharField(
+        blank=True, null=True,
+        max_length=16,
+        verbose_name='Field preservative',
+        choices=(
+            (None, 'N/A'),
+            ('Yes', 'Yes'),
+            ('No', 'No'),
+            ('Not Specified', 'Not Specified')
+        )
+    )
+    taxa_included = models.CharField(
+        blank=True, null=True,
+        max_length=240,
+        verbose_name='Taxa included'
+    )
+    laboratory_subsample = models.CharField(
+        blank=True, null=True,
+        max_length=240,
+        verbose_name='Laboratory subsample?',
+        help_text='Ex: "Yes"; "200 or 300 organisms +/- 20%"'
+    )
+    large_rare_pick = models.CharField(
+        blank=True, null=True,
+        verbose_name='Large/rare pick?',
+        max_length=16,
+        choices=(
+            (None, 'N/A'),
+            ('Yes', 'Yes'),
+            ('No', 'No'),
+            ('Not Specified', 'Not Specified')
+        ),
+        help_text='Choices: Yes. No. Not specified. N/A.'
+    )
+
     # These fields are in the database, but not expose in the admin interface.
     matrix = models.CharField(max_length=12, blank=True, choices=(
         ('Freshwater', 'Freshwater'),
@@ -541,7 +625,7 @@ class MethodOnline(MethodAbstract):
 
     class Meta:
         db_table = 'method_online'
-        managed = False
+        managed = True
         verbose_name = '#1 pending method'
 
 
@@ -561,7 +645,7 @@ class MethodStg(MethodAbstract):
 
     class Meta:
         db_table = 'method_stg'
-        managed = False
+        managed = True
         verbose_name = '#2 in-review method'
 
 
@@ -572,7 +656,7 @@ class Method(MethodAbstract):
 
     class Meta:
         db_table = 'method'
-        managed = False
+        managed = True
         verbose_name = '#3 published method'
 
 
