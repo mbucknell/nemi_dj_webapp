@@ -413,6 +413,22 @@ class AbstractMethodAdmin(admin.ModelAdmin):
                 'assumptions_comments',
             )
         }),
+        ('Biological assessment fields', {
+            'fields': (
+                'index_period',
+                'field_or_lab',
+                'mesh_size',
+                'sampling_reach_length',
+                'habitats_sampled',
+                'num_subsamples_composited',
+                'target_num_organisms',
+                'total_sampling_area',
+                'field_preservative',
+                'taxa_included',
+                'laboratory_subsample',
+                'large_rare_pick'
+            )
+        })
     )
     raw_id_fields = ('source_citation',)
 
