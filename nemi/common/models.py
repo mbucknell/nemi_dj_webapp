@@ -483,7 +483,7 @@ class MethodAbstract(models.Model):
     )
     field_or_lab = models.CharField(
         blank=True, null=True,
-        max_length=4,
+        max_length=5,
         choices=((None, 'N/A'), ('Field', 'Field'), ('Lab', 'Lab')),
         verbose_name='Field or Lab',
         help_text='If the method defines field or lab processing ("pick") of invert samples or field or lab ID of fish species, use this field.'
