@@ -94,7 +94,7 @@ STATICFILES_FINDERS = (
     #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
     'nemi_project.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -240,7 +240,7 @@ if os.getenv('JENKINS_URL', False):
     })
 
 def show_debug_toolbar(settings):
-    settings['MIDDLEWARE_CLASSES'] += (
+    settings['MIDDLEWARE'] += (
         'debug_toolbar.middleware.DebugToolbarMiddleware',
     )
 

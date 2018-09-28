@@ -11,8 +11,8 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, FormView
 

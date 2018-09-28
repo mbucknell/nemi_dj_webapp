@@ -30,8 +30,8 @@ sitemaps = {
 
 urlpatterns = [
     url(r'^version/', views.version, {}, name='nemi_version'),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^method-submission/', include(method_admin.urls)),
+    url(r'^admin/', admin.site.urls),
+    url(r'^method-submission/', method_admin.urls),
 
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     url(r'^robots\.txt$',
@@ -43,11 +43,11 @@ urlpatterns = [
     url(r'^tinymce/', include('tinymce.urls')),
 
     url(r'^accounts/login/$',
-        django.contrib.auth.views.login,
+        django.contrib.auth.views.LoginView.as_view(),
         {},
         name='nemi_login'),
     url(r'^accounts/logout/$',
-        django.contrib.auth.views.logout,
+        django.contrib.auth.views.LogoutView.as_view(),
         {'redirect_field_name' : 'redirect_url'},
         name='nemi_logout'),
     url(r'^accounts/password_change/$',

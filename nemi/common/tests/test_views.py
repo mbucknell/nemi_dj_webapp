@@ -1,9 +1,9 @@
 from io import StringIO
+from unittest import mock
 
 from django.http import Http404
 from django.test import SimpleTestCase
 from django.test.client import RequestFactory
-import mock
 
 from ..views import ChoiceJsonView, PdfView, SimpleWebProxyView
 
