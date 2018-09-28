@@ -1,4 +1,4 @@
-Django==2.0.8
+Django==2.1.1
 bumpversion==0.5.3
 cx-Oracle==6.0.2
 dj-database-url==0.4.2

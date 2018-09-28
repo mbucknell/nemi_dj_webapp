@@ -43,11 +43,11 @@ urlpatterns = [
     url(r'^tinymce/', include('tinymce.urls')),
 
     url(r'^accounts/login/$',
-        django.contrib.auth.views.login,
+        django.contrib.auth.views.LoginView.as_view(),
         {},
         name='nemi_login'),
     url(r'^accounts/logout/$',
-        django.contrib.auth.views.logout,
+        django.contrib.auth.views.LogoutView.as_view(),
         {'redirect_field_name' : 'redirect_url'},
         name='nemi_logout'),
     url(r'^accounts/password_change/$',
