@@ -1,14 +1,14 @@
-Django==1.11.5
+Django==2.0.8
 bumpversion==0.5.3
 cx-Oracle==6.0.2
 dj-database-url==0.4.2
-django-braces==1.2.2
+django-braces==1.13.0
 django-debug-toolbar==1.8
 django-filter==0.7
 django-jenkins==0.110.0
 django-object-actions==0.10.0
 django-tinymce==2.6.0
-djangorestframework==3.6.4
+djangorestframework==3.8.2
 factory-boy==2.9.2
 mock==1.0.1
 PyPDF2==1.26.0

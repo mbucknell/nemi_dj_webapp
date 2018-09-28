@@ -4,9 +4,9 @@ Created on Jul 26, 2012
 @author: mbucknel
 '''
 
-from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.urls import reverse
 
 from common.models import SourceCitationOnlineRef, PublicationSourceRelStg, MethodOnline
 from common.models import StatAnalysisRelStg, StatDesignRelStg, StatMediaRelStg, StatTopicRelStg

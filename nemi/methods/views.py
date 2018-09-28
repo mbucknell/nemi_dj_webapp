@@ -8,10 +8,10 @@ import re
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.core.urlresolvers import reverse_lazy
 from django.db import connection
 from django.db.models import Q
 from django.http import HttpResponse, Http404
+from django.urls import reverse_lazy
 from django.views.generic import View, ListView, DetailView
 from django.views.generic.list import MultipleObjectMixin
 from django.views.generic.edit import TemplateResponseMixin

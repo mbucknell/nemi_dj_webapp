@@ -94,7 +94,7 @@ STATICFILES_FINDERS = (
     #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
     'nemi_project.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

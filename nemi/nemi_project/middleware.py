@@ -1,6 +1,8 @@
 import re
 
 from django import http
+from django.utils.deprecation import MiddlewareMixin
+
 
 ACCESS_CONTROL_ALLOW_ORIGIN = 'Access-Control-Allow-Origin'
 ACCESS_CONTROL_EXPOSE_HEADERS = 'Access-Control-Expose-Headers'
@@ -24,39 +26,39 @@ CORS_ALLOW_METHODS = (
 )
 
 
-class CorsMiddleware(object):
+class CorsMiddleware(MiddlewareMixin):
     '''
     This is a simplified version of the middleware in django-cors-header, https://github.com/ottoyiu/django-cors-headers/
     '''
-        
+
     def process_request(self, request):
-            '''
-                If CORS preflight header, then create an empty body response (200 OK) and return it
-    
-                Django won't bother calling any other request view/exception middleware along with
-                the requested view; it will call any response middlewares
-            '''
-            if (self.is_enabled(request) and
-                request.method == 'OPTIONS' and
-                'HTTP_ACCESS_CONTROL_REQUEST_METHOD' in request.META):
-                response = http.HttpResponse()
-                return response
-            return None
-    
+        '''
+        If CORS preflight header, then create an empty body response (200 OK) and return it
+
+        Django won't bother calling any other request view/exception middleware along with
+        the requested view; it will call any response middlewares
+        '''
+        if (self.is_enabled(request) and
+            request.method == 'OPTIONS' and
+            'HTTP_ACCESS_CONTROL_REQUEST_METHOD' in request.META):
+            response = http.HttpResponse()
+            return response
+        return None
+
     def process_response(self, request, response):
         '''
         Add the respective CORS headers
         '''
-        
+
         if self.is_enabled(request):
             response[ACCESS_CONTROL_ALLOW_ORIGIN] = "*"
-            
+
         if request.method == 'OPTIONS':
                 response[ACCESS_CONTROL_ALLOW_HEADERS] = ', '.join(CORS_ALLOW_HEADERS)
                 response[ACCESS_CONTROL_ALLOW_METHODS] = ', '.join(CORS_ALLOW_METHODS)
-                
-        return response 
-            
-            
+
+        return response
+
+
     def is_enabled(self, request):
-            return re.match(CORS_URLS_REGEX, request.path_info)            
+            return re.match(CORS_URLS_REGEX, request.path_info)

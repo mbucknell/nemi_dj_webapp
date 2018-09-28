@@ -30,8 +30,8 @@ sitemaps = {
 
 urlpatterns = [
     url(r'^version/', views.version, {}, name='nemi_version'),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^method-submission/', include(method_admin.urls)),
+    url(r'^admin/', admin.site.urls),
+    url(r'^method-submission/', method_admin.urls),
 
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     url(r'^robots\.txt$',
