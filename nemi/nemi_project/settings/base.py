@@ -240,7 +240,7 @@ if os.getenv('JENKINS_URL', False):
     })
 
 def show_debug_toolbar(settings):
-    settings['MIDDLEWARE_CLASSES'] += (
+    settings['MIDDLEWARE'] += (
         'debug_toolbar.middleware.DebugToolbarMiddleware',
     )
 
