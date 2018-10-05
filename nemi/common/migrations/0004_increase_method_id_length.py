@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL(
-            'ALTER TABLE "METHOD" MODIFY "SOURCE_METHOD_IDENTIFIER" VARCHAR2(45);',
+            'ALTER TABLE "METHOD" MODIFY "SOURCE_METHOD_IDENTIFIER" VARCHAR2(45 CHAR);',
             state_operations=[
                 migrations.AlterField(
                     model_name='method',
@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
             ]
         ),
         migrations.RunSQL(
-            'ALTER TABLE "METHOD_ONLINE" MODIFY "SOURCE_METHOD_IDENTIFIER" VARCHAR2(45);',
+            'ALTER TABLE "METHOD_ONLINE" MODIFY "SOURCE_METHOD_IDENTIFIER" VARCHAR2(45 CHAR);',
             state_operations=[
                 migrations.AlterField(
                     model_name='methodonline',
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
             ]
         ),
         migrations.RunSQL(
-            'ALTER TABLE "METHOD_STG" MODIFY "SOURCE_METHOD_IDENTIFIER" VARCHAR2(45);',
+            'ALTER TABLE "METHOD_STG" MODIFY "SOURCE_METHOD_IDENTIFIER" VARCHAR2(45 CHAR);',
             state_operations=[
                 migrations.AlterField(
                     model_name='methodstg',
