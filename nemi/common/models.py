@@ -357,7 +357,7 @@ class MethodAbstract(models.Model):
 
     # General fields
     source_method_identifier = models.CharField(
-        verbose_name='method number/identifier', max_length=30, unique=True,
+        verbose_name='method number/identifier', max_length=45, unique=True,
         help_text='The method number / identifier can be numerical (e.g., 375.4), numerical w/text (e.g., 4500-SO4 C) or all text (e.g., Simplate). NOTE: If your method number ends in a "0" (e.g., 300.0), please contact the NEMI manager (entries ending in "0" are automatically truncated in Excel, and must be fixed by the NEMI manager).\nWhatever the format, you must choose a unique method number for your method. Also, keep things specific; do not use "Not Applicable," "Color Method" or something of that nature. If your method does not have a unique identifier, you must create one -- consider using a document number (e.g., EPA-XX-X-XXXX), product number, etc..\nIF a method has a published method number THEN include it ELSE create one',)
     method_descriptive_name = models.CharField(
         max_length=450, blank=True,
@@ -905,7 +905,7 @@ class MethodAnalyteVW(models.Model):
     precision_units_description = models.CharField(max_length=100, blank=True)
     accuracy_units_description = models.CharField(max_length=50, blank=True)
     method_id = models.IntegerField(null=True)
-    source_method_identifier = models.CharField(max_length=30)
+    source_method_identifier = models.CharField(max_length=45)
     method_descriptive_name = models.CharField(max_length=250)
     method_official_name = models.CharField(max_length=250)
     method_source_id = models.IntegerField()
