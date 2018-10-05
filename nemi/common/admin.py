@@ -4,12 +4,12 @@ from django import forms
 from django.contrib import admin
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ValidationError
-from django.core.urlresolvers import reverse
 from django.db import connection
 from django.db.models import Case, CharField, Count, Q, Value, When
 from django.forms.models import BaseInlineFormSet
 from django.http import HttpResponseRedirect
 from django.template.defaultfilters import slugify
+from django.urls import reverse
 import PyPDF2
 
 from django_object_actions import (

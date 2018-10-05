@@ -123,7 +123,7 @@ class SourceCitationRefAbstract(models.Model):
     link = models.URLField(max_length=450, blank=True)
     publication_year = models.IntegerField(null=True)
     country = models.CharField(max_length=100, blank=True)
-    item_type = models.ForeignKey(StatisticalItemType)
+    item_type = models.ForeignKey(StatisticalItemType, models.CASCADE)
     item_type_note = models.CharField(max_length=50,
                                       blank=True)
     sponser_type_note = models.CharField(max_length=50,
@@ -181,6 +181,7 @@ class SourceCitationRef(SourceCitationRefAbstract):
 class PublicationSourceRelAbstract(models.Model):
 
     source = models.ForeignKey(StatisticalSourceType,
+                               models.DO_NOTHING,
                                db_column='statisticalsourcetype_id')
 
     class Meta:
@@ -203,6 +204,7 @@ class PublicationSourceRelStg(PublicationSourceRelAbstract):
 class PublicationSourceRel(PublicationSourceRelAbstract):
 
     source_citation_ref = models.ForeignKey(SourceCitationRef,
+                                            models.CASCADE,
                                             db_column='sourcecitationref_id')
 
     class Meta:
@@ -360,38 +362,39 @@ class MethodAbstract(models.Model):
     method_descriptive_name = models.CharField(
         max_length=450, blank=True,
         help_text='This field is designed to provide the user with a quick identification of a method, so include the analyte (ex: "nitrate") or group of analytes (ex; "nutrients"), the matrix (ex: "in water"), and instrumentation (ex: "using colorimetry"):\nEx. 1: Nitrate in Water by Colorimetry\nEx. 2: Anions in Water by CIE-UV\nNOTE: If the general method includes multiple procedures for different analytes, create a Method entry for each subpart.',)
-    method_type = models.ForeignKey(MethodTypeRef)
+    method_type = models.ForeignKey(MethodTypeRef, models.CASCADE)
     method_subcategory = models.ForeignKey(
-        MethodSubcategoryRef, null=True, blank=True,
+        MethodSubcategoryRef, models.CASCADE,
+        null=True, blank=True,
         help_text='The "Method subcategory" describes the class of analytes that are measured by the method. Choose the appropriate subcategory (e.g., INORGANIC, RADIOCHEMICAL, MICROBIOLOGICAL) from the list of values. If your method does not fit into the available subcategories, or if you have a question about the meaning of the subcategories, contact the NEMI manager.')
     method_source = models.ForeignKey(
-        MethodSourceRef,
+        MethodSourceRef, models.CASCADE,
         null=True, blank=True,
         help_text='The "Method source" is the organization that publishes a method.\nIF a method has a publication source THEN include it ELSE do not include method in database')
     source_citation = models.ForeignKey(
-        SourceCitationRef, help_text='The "Source citation" is a reference to the publication/volume that contains the method. Choose the appropriate source citation (e.g., ASTM_11_01 - ASTM Vol. 11.01, MCAWW - Methods of Chemical Analysis for Water and Waste) from the list of values.\nIf your method does not fit into the available citations, contact the NEMI manager at jsulliv@usgs.gov.\nNOTE: Source citation acroynms are not always obvious -- always consult the Source citation list prior to selection one.')
+        SourceCitationRef, models.CASCADE, help_text='The "Source citation" is a reference to the publication/volume that contains the method. Choose the appropriate source citation (e.g., ASTM_11_01 - ASTM Vol. 11.01, MCAWW - Methods of Chemical Analysis for Water and Waste) from the list of values.\nIf your method does not fit into the available citations, contact the NEMI manager at jsulliv@usgs.gov.\nNOTE: Source citation acroynms are not always obvious -- always consult the Source citation list prior to selection one.')
     brief_method_summary = models.CharField(
         max_length=4000,
         help_text='Develop the "Brief method summary" using the Method Summary Section of the method. For example:\nSample, blanks and standards in sealed tubes are heated in an oven or block digestor in the presence of dichromate at 150 C. After two hours, the tubes are removed from the oven or digestor, cooled and measured spectrophotometrically at 600 nm.\nSome details in the summary are fine, but do not make it overly technical. The objective of the summary is to give the NEMI user an idea of how the method works and what it will take to run it, not how to run it.')
     media_name = models.ForeignKey(
-        MediaNameDOM,
+        MediaNameDOM, models.CASCADE,
         null=True, blank=True, db_column='media_name',
         help_text='The "Media" describes the basic form of the sample that is analyze (not the specific matrix-type such as drinking or ground water). Choose the appropriate media (e.g., AIR, WATER) from the list of values.\nSpecific information (e.g., the method is used for "drinking water and groundwater" analyses) should be provided in the "Scope and Application" section.')
     method_official_name = models.CharField(
         max_length=250,
         help_text='This is the main heading of the method. For example for D2036: Standard Test Methods for Total Cyanides in Water After Distillation')
     instrumentation = models.ForeignKey(
-        InstrumentationRef,
+        InstrumentationRef, models.CASCADE,
         help_text='The "Instrument" describes the instrumention used in the method. Choose the appropriate instrumentation from the list of values.\nNOTE: Only one value can be chosen for each method. If your method contains performance information for 2 or more instruments (e.g., GC-ECD and GC-MS), you make separate methods for each instrument, noting the instrument using "( )" after the method number (e.g. 502.2 (GC-PID) and 502.2 (GC-ELCD)).')
     waterbody_type = models.ForeignKey(
-        WaterbodyTypeRef,
+        WaterbodyTypeRef, models.CASCADE,
         null=True, db_column='waterbody_type',
         blank=True)
     scope_and_application = models.CharField(
         max_length=2000, blank=True,
         help_text='The "Scope and Application" field describes the (a) what is measured, and (b) under which conditions (e.g., matrices) the method can be used. For example:\nThis method covers the determination of acid semi-volatile compounds in surface waters, domestic and industrial wastes.')
     dl_type = models.ForeignKey(
-        DlRef,
+        DlRef, models.CASCADE,
         null=True, blank=True, verbose_name='detection limit type',
         help_text='The "Detection limit type" describes the kind of detection (or quantitation) limit information that is found in the method (e.g., MDL, LOQ).\nNote: If separate detection and quantitation limits are provided, use detection limits.')
     dl_note = models.CharField(
@@ -401,7 +404,7 @@ class MethodAbstract(models.Model):
         max_length=300, blank=True,
         help_text='The "Applicable concentration range" field describes the effective range of the method (e.g., 0.02 - 1mg/L, > 0.037 Bq/L). Remember to (a) include units, and (b) include a range (e.g., if a radiochem method - with a detection limit (DL) but no effective upper end of the range - the range should be " > DL").\nNOTE: For multi-analyte methods, give a general range of applicability, noting an large deviations (e.g., all analytes are measured in the ug/L range except two, note the two in the different range).')
     conc_range_units = models.ForeignKey(
-        DlUnitsDom,
+        DlUnitsDom, models.CASCADE,
         null=True, db_column='conc_range_units', blank=True,
         verbose_name='applicable concentration range')
     interferences = models.CharField(
@@ -415,7 +418,7 @@ class MethodAbstract(models.Model):
     sample_handling = models.CharField(max_length=3000, blank=True)
     max_holding_time = models.CharField(max_length=300, blank=True)
     sample_prep_methods = models.CharField(max_length=100, blank=True)
-    relative_cost = models.ForeignKey(RelativeCostRef, null=True, blank=True)
+    relative_cost = models.ForeignKey(RelativeCostRef, models.CASCADE, null=True, blank=True)
     link_to_full_method = models.URLField(
         max_length=240, blank=True,
         verbose_name='Private Vendor URL (Do not enter URL for public methods)')
@@ -704,7 +707,11 @@ class StatisticalTopics(models.Model):
 
 class StatAnalysisRelAbstract(models.Model):
 
-    analysis_type = models.ForeignKey(StatisticalAnalysisType, db_column='statisticalanalysistype_id')
+    analysis_type = models.ForeignKey(
+        StatisticalAnalysisType,
+        models.DO_NOTHING,
+        db_column='statisticalanalysistype_id'
+    )
 
     class Meta:
         abstract = True
@@ -725,7 +732,7 @@ class StatAnalysisRelStg(StatAnalysisRelAbstract):
 
 class StatAnalysisRel(StatAnalysisRelAbstract):
 
-    method = models.ForeignKey(Method)
+    method = models.ForeignKey(Method, models.CASCADE)
 
     class Meta:
         db_table = 'stat_analysis_rel'
@@ -735,7 +742,11 @@ class StatAnalysisRel(StatAnalysisRelAbstract):
 
 class StatDesignRelAbstract(models.Model):
 
-    design_objective = models.ForeignKey(StatisticalDesignObjective, db_column='statisticaldesignobjective_id')
+    design_objective = models.ForeignKey(
+        StatisticalDesignObjective,
+        models.DO_NOTHING,
+        db_column='statisticaldesignobjective_id'
+    )
 
     class Meta:
         abstract = True
@@ -756,7 +767,7 @@ class StatDesignRelStg(StatDesignRelAbstract):
 
 class StatDesignRel(StatDesignRelAbstract):
 
-    method = models.ForeignKey(Method)
+    method = models.ForeignKey(Method, models.CASCADE)
 
     class Meta:
         db_table = 'stat_design_rel'
@@ -766,7 +777,7 @@ class StatDesignRel(StatDesignRelAbstract):
 
 class StatTopicRelAbstract(models.Model):
 
-    topic = models.ForeignKey(StatisticalTopics, db_column='statisticaltopics_id')
+    topic = models.ForeignKey(StatisticalTopics, models.CASCADE, db_column='statisticaltopics_id')
 
     class Meta:
         abstract = True
@@ -787,7 +798,7 @@ class StatTopicRelStg(StatTopicRelAbstract):
 
 class StatTopicRel(StatTopicRelAbstract):
 
-    method = models.ForeignKey(Method)
+    method = models.ForeignKey(Method, models.CASCADE)
 
     class Meta:
         db_table = 'stat_topic_rel'
@@ -797,7 +808,7 @@ class StatTopicRel(StatTopicRelAbstract):
 
 class StatMediaRelAbstract(models.Model):
 
-    media_name = models.ForeignKey(MediaNameDOM, db_column='medianamedom_id')
+    media_name = models.ForeignKey(MediaNameDOM, models.CASCADE, db_column='medianamedom_id')
 
     class Meta:
         abstract = True
@@ -818,7 +829,7 @@ class StatMediaRelStg(StatMediaRelAbstract):
 
 class StatMediaRel(StatMediaRelAbstract):
 
-    method = models.ForeignKey(Method)
+    method = models.ForeignKey(Method, models.CASCADE)
 
     class Meta:
         db_table = 'stat_media_rel'
@@ -936,7 +947,7 @@ class LegacyUserAccount(models.Model):
     user_seq = models.FloatField(primary_key=True)
     user_name = models.CharField(unique=True, max_length=100)
     user_password = models.TextField(blank=True, null=True)  # This field type is a guess.
-    user_role = models.ForeignKey(UserRole, db_column='user_role')
+    user_role = models.ForeignKey(UserRole, models.DO_NOTHING, db_column='user_role')
     email = models.CharField(unique=True, max_length=200)
     forgot_pw_flag = models.CharField(max_length=1)
     data_entry_name = models.CharField(max_length=100)
@@ -993,7 +1004,7 @@ class RevisionJoin(AbstractRevision):
         Method, models.CASCADE,
         blank=True, null=True, related_name='revisions')
     source_citation = models.ForeignKey(
-        SourceCitationRef, models.DO_NOTHING, blank=True, null=True)
+        SourceCitationRef, models.SET_NULL, blank=True, null=True)
     date_loaded = models.DateField(blank=True, null=True)
 
     class Meta:
@@ -1006,10 +1017,10 @@ class RevisionJoin(AbstractRevision):
 class RevisionJoinOnline(AbstractRevision):
     #method_id = models.IntegerField()
     method = models.ForeignKey(
-        MethodOnline, models.DO_NOTHING,
+        MethodOnline, models.SET_NULL,
         blank=True, null=True, related_name='revisions')
     source_citation = models.ForeignKey(
-        SourceCitationOnlineRef, models.DO_NOTHING, blank=True, null=True)
+        SourceCitationOnlineRef, models.SET_NULL, blank=True, null=True)
     reviewer_name = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
@@ -1021,10 +1032,10 @@ class RevisionJoinOnline(AbstractRevision):
 
 class RevisionJoinStg(AbstractRevision):
     method = models.ForeignKey(
-        MethodStg, models.DO_NOTHING,
+        MethodStg, models.SET_NULL,
         blank=True, null=True, related_name='revisions')
     source_citation = models.ForeignKey(
-        SourceCitationStgRef, models.DO_NOTHING, blank=True, null=True)
+        SourceCitationStgRef, models.SET_NULL, blank=True, null=True)
     date_loaded = models.DateField(blank=True, null=True)
 
     class Meta:
@@ -1043,10 +1054,10 @@ class ProtocolSourceCitationStgRef(refs.SourceCitationStgRef):
 
 class ProtocolRevisionJoinStg(AbstractRevision):
     method = models.ForeignKey(
-        MethodStg, models.DO_NOTHING,
+        MethodStg, models.SET_NULL,
         blank=True, null=True, related_name='protocol_revisions')
     source_citation = models.ForeignKey(
-        ProtocolSourceCitationStgRef, models.DO_NOTHING,
+        ProtocolSourceCitationStgRef, models.SET_NULL,
         blank=True, null=True)
     date_loaded = models.DateField(blank=True, null=True)
 
@@ -1062,7 +1073,7 @@ class AbstractAnalyteMethodJn(models.Model):
         abstract = True
 
     analyte_method_id = models.AutoField(primary_key=True)
-    analyte = models.ForeignKey(refs.AnalyteRef)
+    analyte = models.ForeignKey(refs.AnalyteRef, models.DO_NOTHING)
     dl_value = models.DecimalField(max_digits=15, decimal_places=6, blank=True, null=True)
     dl_units = models.ForeignKey(refs.DlUnitsDom, models.DO_NOTHING, db_column='dl_units')
     accuracy = models.DecimalField(max_digits=15, decimal_places=6, blank=True, null=True)
@@ -1114,8 +1125,7 @@ class AnalyteMethodJnOnline(AbstractAnalyteMethodJn):
 
 
 class AnalyteMethodJnStg(AbstractAnalyteMethodJn):
-    method = models.ForeignKey(
-        MethodStg, models.DO_NOTHING, related_name='analytes')
+    method = models.ForeignKey(MethodStg, models.CASCADE, related_name='analytes')
     date_loaded = models.DateField(blank=True, null=True)
 
     class Meta:
@@ -1137,9 +1147,9 @@ class AbstractProtocolMethodRel(models.Model):
 
 class ProtocolMethodOnlineRel(AbstractProtocolMethodRel):
     source_citation = models.ForeignKey(
-        SourceCitationOnlineRef, models.DO_NOTHING, related_name='protocols')
+        SourceCitationOnlineRef, models.CASCADE, related_name='protocols')
     method = models.ForeignKey(
-        MethodOnline, models.DO_NOTHING, related_name='protocols')
+        MethodOnline, models.CASCADE, related_name='protocols')
 
     class Meta:
         managed = False
@@ -1148,9 +1158,9 @@ class ProtocolMethodOnlineRel(AbstractProtocolMethodRel):
 
 class ProtocolMethodRel(AbstractProtocolMethodRel):
     source_citation = models.ForeignKey(
-        SourceCitationRef, models.DO_NOTHING, related_name='protocols')
+        SourceCitationRef, models.CASCADE, related_name='protocols')
     method = models.ForeignKey(
-        Method, models.DO_NOTHING, related_name='protocols')
+        Method, models.CASCADE, related_name='protocols')
 
     class Meta:
         managed = False
@@ -1159,10 +1169,10 @@ class ProtocolMethodRel(AbstractProtocolMethodRel):
 
 class ProtocolMethodStgRel(AbstractProtocolMethodRel):
     source_citation = models.ForeignKey(
-        ProtocolSourceCitationStgRef, models.DO_NOTHING,
+        ProtocolSourceCitationStgRef, models.CASCADE,
         related_name='protocols')
     method = models.ForeignKey(
-        MethodStg, models.DO_NOTHING, related_name='protocols')
+        MethodStg, models.CASCADE, related_name='protocols')
 
     class Meta:
         managed = False
