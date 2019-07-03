@@ -83,8 +83,14 @@ Utils = {
                 } else {
                     select2El.select2('val', 'all');
                 }
+                // This is hack to get aria-label on the links
+                $('.select2-choice').attr('aria-label', 'Select choice');
+
                 select2El.on('change', function(e) {
                     sessionStorage[select2Id] = e.val;
+
+                    // Part of the hack
+                    $('.select2-search-choice-close').attr('aria-label', 'Close');
                 });
             }
         });
