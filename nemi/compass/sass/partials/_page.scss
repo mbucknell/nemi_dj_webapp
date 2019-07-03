@@ -3,7 +3,7 @@
 body {
 	
 	@include blueprint-typography(true);
-	
+
 	background-color: $blueprint-background-color;
 	background-image: url('../images/background.png');
 	margin-left: auto;
