@@ -5,10 +5,10 @@ Created on Aug 14, 2012
 '''
 import json
 
-from braces.views import LoginRequiredMixin
 from django.conf import settings
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.http import HttpResponse, HttpResponseRedirect
