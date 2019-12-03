@@ -1,8 +1,7 @@
 
 import datetime
 
-from braces.views import LoginRequiredMixin, StaffuserRequiredMixin
-
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Model
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -16,6 +15,14 @@ from common.models import StatAnalysisRelStg,  StatDesignRelStg, StatTopicRelStg
 from common.models import StatAnalysisRel, StatDesignRel, StatTopicRel, StatMediaRel
 
 from .forms import StatMethodEditForm
+
+class StaffuserRequiredMixin(UserPassesTestMixin):
+    '''
+    Extends UserPassesTestMixin to require that the logged in user is staff
+    '''
+
+    def test_func(self):
+        return self.request.user.is_staff
 
 
 class AddStatMethodOnlineView(LoginRequiredMixin, FormView):
@@ -405,4 +412,3 @@ class MethodEntryRedirectView(LoginRequiredMixin, RedirectView):
             return reverse('sams-method_review_list')
         else:
             return reverse('sams-update_method_list')
-

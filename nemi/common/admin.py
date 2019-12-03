@@ -32,7 +32,7 @@ class ReadOnlyMixin:
         # Blunt force, return every field on the model.
         return [field.name for field in self.model._meta.fields]
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return False
 
     def has_delete_permission(self, request, obj=None):
@@ -191,7 +191,7 @@ class AbstractEditableRevisionInline(AbstractRevisionInline):
         # For now, allow any admin to edit the online and staging tables.
         return ()
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         # As an inline, we defer to the parent permissions
         return True
 
@@ -480,7 +480,7 @@ class AbstractMethodAdmin(admin.ModelAdmin):
         # For now, only admins have access
         return request.user.is_superuser
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return False
 
     def has_change_permission(self, request, obj=None):
@@ -572,7 +572,7 @@ class MethodOnlineAdmin(DjangoObjectActions, AbstractEditableMethodAdmin):
 
         return field
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         # For now, only admins have acesss.
         return request.user.is_superuser
 
@@ -676,7 +676,7 @@ class MethodStgAdmin(DjangoObjectActions, AbstractEditableMethodAdmin):
     archive.label = 'Archive'
     archive.short_description = 'Archive the selected methods'
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         # For now, only admins have acesss.
         return request.user.is_superuser
 

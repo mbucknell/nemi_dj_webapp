@@ -28,9 +28,9 @@ class TestMethodGetInsertUser(TestCase):
             instrumentation_description='description')
         self.item_type = StatisticalItemType.objects.create(stat_item_index=1, item='Stat Item')
         self.method_type = MethodTypeRef.objects.create(method_type_id=1, method_type_desc='method_type_desc')
-
+        self.source_citation_ref = SourceCitationRef.objects.create(source_citation_id=1, source_citation_name="source citation name")
         self.m1 = self.DummyMethod.objects.create(dummy_field=1,
-                                                  source_citation_id=1,
+                                                  source_citation=self.source_citation_ref,
                                                   source_method_identifier='id1',
                                                   method_official_name='name1',
                                                   brief_method_summary='summary1',
