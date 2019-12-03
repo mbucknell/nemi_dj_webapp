@@ -14,7 +14,7 @@ class AbstractMethodAdmin(admin.ModelAdmin):
     class Meta:
         abstract = True
 
-    def is_method_admin(self, request, *args, **kwargs):
+    def is_method_admin(self, request, *args):
         # if not hasattr(self, '_admin'):
         #     self._is_admin = request.user.groups.filter(
         #         name='method_admin').exists()
@@ -22,8 +22,10 @@ class AbstractMethodAdmin(admin.ModelAdmin):
         return request.user.is_superuser
 
     has_module_permission = is_method_admin
-    has_add_permission = is_method_admin
     has_change_permission = is_method_admin
+
+    def has_add_permission(self, request, obj=None):
+        return self.is_method_admin(request)
 
     def has_delete_permission(self, request, *args, **kwargs):
         return False

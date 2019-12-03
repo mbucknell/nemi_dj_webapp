@@ -38,8 +38,10 @@ class TestMethodAdminPermissions(TestCase):
             method_type_id=1,
             method_type_desc='method_type_desc'
         )
+        source_citation_ref = models.SourceCitationRef.objects.create(source_citation_id=1, source_citation_name="source citation name")
+
         method_fields = {
-            'source_citation_id': 1,
+            'source_citation': source_citation_ref,
             'method_official_name': 'name1',
             'brief_method_summary': 'summary1',
             'method_type': method_type,
