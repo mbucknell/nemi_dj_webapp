@@ -31,7 +31,7 @@ SECRET_KEY = ''
 Create a virtualenv and install the python dependencies:
 ```
 % virtualenv --python=python3 env
-% env/bin/pip install -r requirements.tx
+% env/bin/pip install -r requirements.txt
 ```
 
 The style sheets must be built as well. In order to build the style sheets from Sass. You must have
