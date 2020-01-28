@@ -7,9 +7,10 @@ or resources that vary depending on the server should go in the local module.
 The `base.py` module contains fallback resources for all essential settings,
 and should be imported from `local.py`.
 """
+import warnings
 
 try:
     from .local import *  #pylint: disable=W0401
 except ImportError:
     msg = 'Create a local config module in nemi_project/settings/local.py'
-    raise NotImplementedError(msg)
+    warnings.warn(msg, RuntimeWarning)
