@@ -14,3 +14,7 @@ nemi/reports
 *.sublime-project
 *.sublime-workspace
 /Gem
+/.DS_Store
+/nemi/.DS_Store
+/nemi/nemi_project/.DS_store
+
