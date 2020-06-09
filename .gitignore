@@ -13,3 +13,4 @@ env/
 nemi/reports
 *.sublime-project
 *.sublime-workspace
+/Gem
