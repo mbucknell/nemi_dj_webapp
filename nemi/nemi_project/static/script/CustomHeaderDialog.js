@@ -26,7 +26,8 @@ CustomHeaderDialog = {
         CustomHeaderDialog.dialogEl.find('ul').append(checkboxHtml);
 
         CustomHeaderDialog.dialogEl.dialog({
-            autoOpen : false
+            autoOpen : false,
+            closeText: ''
         });
     },
     show : function() {
