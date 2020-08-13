@@ -150,3 +150,9 @@ $nemi-dialog-color: #D3E0C6;
 		margin-top: 1px;
 	}
 }
+
+.ui-dialog-buttonset .ui-button {
+	color: white;
+	background-color: $nemi-op-button-color;
+	padding: .4em 1em;
+}

@@ -6,10 +6,11 @@ HelpDialog = {
             autoOpen : false,
             title : 'Basic Dialog',
             height : 200,
-            width : 300
+            width : 300,
+            closeText: ''
         });
     },
-    show : function(header /* String */, info /* String */) {
+    show : function(header /* String */, info /* String */, element) {
         HelpDialog.dialogEl.html(info);
         // This preprends {{ STATIC_URL}} to any img tag in info
         HelpDialog.dialogEl.find('img').each(function() {
@@ -18,7 +19,11 @@ HelpDialog = {
         });
 
         HelpDialog.dialogEl.dialog('option', 'title', header);
-        HelpDialog.dialogEl.dialog('option', 'position', 'center');
+        HelpDialog.dialogEl.dialog('option', 'position', {
+            my: 'center',
+            at: 'center',
+            of: element
+        });
 
         if (!HelpDialog.dialogEl.dialog('isOpen')) {
             HelpDialog.dialogEl.dialog('option', 'height', 250);
